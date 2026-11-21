@@ -187,3 +187,23 @@ def test_betik_gecersiz_json_icin_hata_kodu_doner(tmp_path, capsys):
     (tmp_path / "t.json").write_text("{}", encoding="utf-8")
     assert betik.main([str(tmp_path / "t.json"), str(tmp_path / "g.json")]) == 2
     assert "geçersiz" in capsys.readouterr().err
+
+
+def test_dahil_bilgisi_sinir_yoksa_olculmez():
+    gold = dok([Sart(id="a", test_adi="A", sinir=Sinir(kriter_turu="metinsel", orijinal_metin="x"),
+                     kaynak=kaynak("3.1"), test_turleri={"kabul"})])
+    alanlar = alanlari_duzlestir(gold)
+    assert ("test.sinir.alt_dahil", "a") not in alanlar
+    assert ("test.sinir.ust_dahil", "a") not in alanlar
+
+
+def test_numune_baglantisi_olculur():
+    from malzeme_kabul.sema import NumuneHazirlama
+
+    s = sart("viskozite").model_copy(update={"numune_hazirlama_id": "panel_A"})
+    d = KabulDokumani(
+        standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K"),
+        testler=[s],
+        numune_hazirlama=[NumuneHazirlama(id="panel_A", kaynak=kaynak("TABLE I"))],
+    )
+    assert alanlari_duzlestir(d)[("test.numune_hazirlama_id", "viskozite")] == "panel_A"

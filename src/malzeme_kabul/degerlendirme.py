@@ -31,7 +31,7 @@ from .sema import KabulDokumani, Kaynak, Sinir
 Anahtar = tuple[str, str]
 
 _SINIR_ALANLARI = ("kriter_turu", "alt", "ust", "alt_dahil", "ust_dahil", "birim")
-_TEST_ALANLARI = ("test_adi", "test_metodu", "test_turleri", "uygulanabilirlik")
+_TEST_ALANLARI = ("test_adi", "test_metodu", "test_turleri", "uygulanabilirlik", "numune_hazirlama_id")
 _NUMUNE_ALANLARI = (
     "kupon_malzemesi", "kupon_boyutu", "yuzey_hazirligi", "uygulama_yontemi", "kurlenme",
 )
@@ -58,6 +58,9 @@ def _sinir_ekle(alanlar, onek: str, kayit: str, sinir: Sinir | None, ad_oneki: s
         return
     for ad in _SINIR_ALANLARI:
         deger = getattr(sinir, ad)
+        # "dahil mi" bilgisi yalnızca ilgili sınır varsa anlamlıdır; yoksa puanı şişirmesin.
+        if (ad == "alt_dahil" and sinir.alt is None) or (ad == "ust_dahil" and sinir.ust is None):
+            continue
         if ad == "birim" and deger is not None:
             deger = _Birim(deger)
         _kaydet(alanlar, f"{onek}.{ad_oneki}.{ad}", kayit, deger)
