@@ -4,8 +4,16 @@ Standarttan çıkarılan her şart burada tanımlı bir modele oturur. Her şart
 dayandığı standart maddesini (`Kaynak`) taşımak zorundadır; kabul dokümanında
 her satırın yanında bu madde numarası gösterilir.
 
-Şema yalnızca değeri ve birimi olduğu gibi tutar. Birim dönüşümü ve sınır
-karşılaştırması ayrı modüllerde kesin kurallarla yapılır (CLAUDE.md, kural 1).
+Her şart kendi kaynak belgesini ve revizyonunu taşır; böylece aynı kabul
+dokümanında askeri standart ile müşteri şartnamesi birlikte bulunabilir ve
+revizyon takibinde şartın hangi revizyondan geldiği bilinir.
+
+Şema değeri, birimi (pint'in tanıdığı biçimde) ve standarttaki özgün metni
+tutar. Birim dönüşümü ve sınır karşılaştırması ayrı modüllerde kesin
+kurallarla yapılır (CLAUDE.md, kural 1).
+
+Çapraz kontrolde tedarikçi sertifikası yalnızca kabul (conformance) testlerine
+göre denetlenir (`KabulDokumani.kabul_testleri`); yeterlilik testleri aranmaz.
 """
 
 from __future__ import annotations
@@ -15,17 +23,21 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-# "3.5.1", "4.6.12.3" gibi paragraf numaraları ya da "TABLE I", "TABLE IV".
-MADDE_KALIBI = re.compile(r"^(\d+(\.\d+)*|TABLE [IVXLC]+)$")
+from .birimler import birimi_coz, zaman_birimi_mi
+
+# "3.5.1", "4.6.12.3", ek maddeleri "A.3.1" ya da "TABLE I", "TABLE IV".
+MADDE_KALIBI = re.compile(r"^(([A-Z]\.)?\d+(\.\d+)*|TABLE [IVXLC]+)$")
 
 TestTuru = Literal["kabul", "omur_uzatma", "yeterlilik"]
 """kabul: her partide yapılan kabul (conformance) testi.
 omur_uzatma: raf ömrü dolan malzemenin ömrünü uzatmak için tekrarlanan test.
 yeterlilik: yalnızca ürün yeterliliğinde (qualification) yapılan test."""
 
-SinirTuru = Literal["aralik", "en_az", "en_cok", "esit", "nitel"]
+KriterTuru = Literal["sayisal", "gecti_kaldi", "metinsel"]
+"""sayisal: alt ve/veya üst sınırı olan ölçüm.
+gecti_kaldi: sayısal değeri olmayan, geçti/kaldı sonucu veren test.
+metinsel: "kabarma olmayacak" gibi sözel kriter."""
 KosulKategorisi = Literal["depolama", "kullanim"]
-SureBirimi = Literal["gün", "ay", "yıl"]
 
 
 class _Model(BaseModel):
@@ -35,7 +47,7 @@ class _Model(BaseModel):
 class Kaynak(_Model):
     """Şartın dayandığı standart maddesi."""
 
-    standart: str = Field(min_length=1, examples=["MIL-PRF-23377"])
+    belge_no: str = Field(min_length=1, examples=["MIL-PRF-23377", "MUSTERI-SPEC-001"])
     revizyon: str = Field(min_length=1, examples=["K"])
     madde: str = Field(min_length=1, examples=["3.5.1", "TABLE I"])
     sayfa: int | None = Field(default=None, ge=1)
@@ -49,44 +61,52 @@ class Kaynak(_Model):
         return deger
 
     @property
+    def belge_etiketi(self) -> str:
+        """MIL belgelerinde 'MIL-PRF-23377K', diğerlerinde 'X Rev. B'."""
+        if self.belge_no.startswith("MIL-"):
+            return f"{self.belge_no}{self.revizyon}"
+        return f"{self.belge_no} Rev. {self.revizyon}"
+
+    @property
     def etiket(self) -> str:
-        return f"{self.standart}{self.revizyon}, {self.madde}"
+        return f"{self.belge_etiketi}, {self.madde}"
 
 
 class Sinir(_Model):
-    """Bir test ya da koşulun sınırı.
+    """Bir test ya da koşulun kabul kriteri.
 
-    - aralik: alt ≤ değer ≤ ust
-    - en_az: değer ≥ alt
-    - en_cok: değer ≤ ust
-    - esit: değer = alt (ust boş)
-    - nitel: sayısal olmayan şart, ör. "kabarma ya da kalkma olmamalı"
+    Sayısal kriterde alt ve üst sınır isteğe bağlıdır ama en az biri bulunur:
+    yalnız alt "en az", yalnız üst "en çok", ikisi eşitse tam değer demektir.
+    Birim pint'in tanıdığı biçimde yazılır ("°C", "g/L", "mil"). Geçti/kaldı ve
+    metinsel kriterler sayı ya da birim almaz. Her durumda standarttaki özgün
+    metin saklanır.
     """
 
-    tur: SinirTuru
+    kriter_turu: KriterTuru
     alt: float | None = None
     ust: float | None = None
     alt_dahil: bool = True
     ust_dahil: bool = True
-    birim: str | None = Field(default=None, description="Standartta yazdığı gibi, ör. 'g/L', '°F'.")
-    ifade: str | None = Field(default=None, description="Nitel şartın metni.")
+    birim: str | None = Field(default=None, description="pint biçiminde birim, ör. '°C', 'g/L'.")
+    orijinal_metin: str = Field(min_length=1, description="Standarttaki kriter metni.")
+
+    @field_validator("birim")
+    @classmethod
+    def _pint_birimi(cls, deger: str | None) -> str | None:
+        if deger is None or deger == "":
+            return None
+        birimi_coz(deger)  # tanınmazsa ValueError
+        return deger
 
     @model_validator(mode="after")
-    def _tur_ile_tutarli(self) -> Sinir:
-        var = (self.alt is not None, self.ust is not None)
-        beklenen = {
-            "aralik": (True, True),
-            "en_az": (True, False),
-            "esit": (True, False),
-            "en_cok": (False, True),
-            "nitel": (False, False),
-        }[self.tur]
-        if var != beklenen:
-            raise ValueError(f"'{self.tur}' sınırı için alt/ust dolu olmalı mı: {beklenen}, gelen: {var}")
-        if self.tur == "aralik" and self.alt > self.ust:
-            raise ValueError(f"alt sınır üst sınırdan büyük: {self.alt} > {self.ust}")
-        if self.tur == "nitel" and not self.ifade:
-            raise ValueError("nitel sınır 'ifade' ister")
+    def _kriter_ile_tutarli(self) -> Sinir:
+        if self.kriter_turu == "sayisal":
+            if self.alt is None and self.ust is None:
+                raise ValueError("sayısal kriter için alt ya da üst sınırdan en az biri gerekli")
+            if self.alt is not None and self.ust is not None and self.alt > self.ust:
+                raise ValueError(f"alt sınır üst sınırdan büyük: {self.alt} > {self.ust}")
+        elif self.alt is not None or self.ust is not None or self.birim is not None:
+            raise ValueError(f"'{self.kriter_turu}' kriteri sayı ya da birim almaz")
         return self
 
 
@@ -111,7 +131,7 @@ class TestSarti(_Model):
     id: str = Field(min_length=1, description="Belge içinde benzersiz kısa ad, ör. 'viskozite'.")
     test_adi: str = Field(min_length=1)
     test_metodu: str | None = Field(default=None, examples=["ASTM D 1200", "FED-STD-141 Method 4321"])
-    metot_kaynagi: Kaynak | None = Field(default=None, description="Test metodunu anlatan madde (4.x).")
+    metot_kaynagi: Kaynak | None = Field(default=None, description="Test metodunu anlatan madde, ör. 4.6.3.")
     sinir: Sinir
     kaynak: Kaynak = Field(description="Şartın yazdığı madde (3.x ya da tablo).")
     test_turleri: set[TestTuru] = Field(min_length=1)
@@ -130,10 +150,20 @@ class TestSarti(_Model):
 
 
 class RafOmru(_Model):
+    """Raf ömrü: süre, zaman birimi (pint) ve depolama koşulu (ör. 4–38 °C)."""
+
     sure: float = Field(gt=0)
-    birim: SureBirimi
+    birim: str = Field(examples=["month", "day", "year"])
+    kosul: Sinir | None = Field(default=None, description="Raf ömrünün geçerli olduğu koşul, ör. sıcaklık aralığı.")
     baslangic: str | None = Field(default=None, description="Ör. 'üretim tarihinden itibaren'.")
     kaynak: Kaynak
+
+    @field_validator("birim")
+    @classmethod
+    def _zaman_birimi(cls, deger: str) -> str:
+        if not zaman_birimi_mi(deger):
+            raise ValueError(f"raf ömrü birimi pint'in tanıdığı bir zaman birimi olmalı: {deger!r}")
+        return deger
 
 
 class Kosul(_Model):
@@ -153,7 +183,9 @@ class Kosul(_Model):
 
 
 class StandartBilgisi(_Model):
-    standart: str = Field(min_length=1)
+    """Dokümanın üretildiği ana standart."""
+
+    belge_no: str = Field(min_length=1)
     revizyon: str = Field(min_length=1)
     baslik: str | None = None
     tarih: str | None = None
@@ -181,18 +213,11 @@ class KabulDokumani(_Model):
             if t.numune_hazirlama_id and t.numune_hazirlama_id not in numune_idleri:
                 raise ValueError(f"{t.id}: bilinmeyen numune hazırlama kimliği {t.numune_hazirlama_id!r}")
 
-        std = self.standart.standart
-        kaynaklar = [t.kaynak for t in self.testler] + [k.kaynak for k in self.kosullar]
-        kaynaklar += [n.kaynak for n in self.numune_hazirlama]
-        if self.raf_omru:
-            kaynaklar.append(self.raf_omru.kaynak)
-        yabanci = sorted({k.etiket for k in kaynaklar if k.standart != std})
-        if yabanci:
-            raise ValueError(f"başka standarda dayanan şartlar var ({std} bekleniyordu): {yabanci}")
         return self
 
     @property
     def kabul_testleri(self) -> list[TestSarti]:
+        """Çapraz kontrolde sertifikada aranacak testler (yeterlilik testleri hariç)."""
         return [t for t in self.testler if t.kabul_testi]
 
     @property

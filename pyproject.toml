@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "MIL-PRF-23377 standardı ile tedarikçi sertifikasını karşılaştıran belge kontrol sistemi"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["pdfplumber>=0.11", "pydantic>=2"]
+dependencies = ["pdfplumber>=0.11", "pydantic>=2", "pint>=0.23"]
 
 [project.optional-dependencies]
 dev = ["pytest", "reportlab", "pillow"]
