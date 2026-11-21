@@ -14,8 +14,9 @@ Her alan için:
 Yanlış değer hem yp hem yn sayılır. Boş (None) alanlar hesaba girmez.
 
 Metinler büyük/küçük harf ve boşluk farkı gözetmeden, sayılar küçük bir
-toleransla karşılaştırılır. Birim çevrilmez: birim alanı metin olarak
-karşılaştırılır.
+toleransla karşılaştırılır. Birimler pint ile çözülüp karşılaştırılır ("s" ile
+"second" aynıdır) ama değerler çevrilmez. Sınırın orijinal metni ölçülmez;
+yalnızca yapılandırılmış alanlar ölçülür.
 """
 
 from __future__ import annotations
@@ -24,11 +25,12 @@ import math
 from dataclasses import dataclass, field
 from typing import Any
 
-from .sema import KabulDokumani, Sinir
+from .birimler import birimi_coz
+from .sema import KabulDokumani, Kaynak, Sinir
 
 Anahtar = tuple[str, str]
 
-_SINIR_ALANLARI = ("tur", "alt", "ust", "birim", "ifade")
+_SINIR_ALANLARI = ("kriter_turu", "alt", "ust", "alt_dahil", "ust_dahil", "birim")
 _TEST_ALANLARI = ("test_adi", "test_metodu", "test_turleri", "uygulanabilirlik")
 _NUMUNE_ALANLARI = (
     "kupon_malzemesi", "kupon_boyutu", "yuzey_hazirligi", "uygulama_yontemi", "kurlenme",
@@ -47,11 +49,25 @@ def _kaydet(alanlar: dict[Anahtar, Any], alan: str, kayit: str, deger: Any) -> N
     alanlar[(alan, kayit)] = deger
 
 
-def _sinir_ekle(alanlar, onek: str, kayit: str, sinir: Sinir | None) -> None:
+class _Birim(str):
+    """Birim alanı: pint ile çözülerek karşılaştırılır."""
+
+
+def _sinir_ekle(alanlar, onek: str, kayit: str, sinir: Sinir | None, ad_oneki: str = "sinir") -> None:
     if sinir is None:
         return
     for ad in _SINIR_ALANLARI:
-        _kaydet(alanlar, f"{onek}.sinir.{ad}", kayit, getattr(sinir, ad))
+        deger = getattr(sinir, ad)
+        if ad == "birim" and deger is not None:
+            deger = _Birim(deger)
+        _kaydet(alanlar, f"{onek}.{ad_oneki}.{ad}", kayit, deger)
+
+
+def _kaynak_ekle(alanlar, onek: str, kayit: str, kaynak: Kaynak | None) -> None:
+    if kaynak is None:
+        return
+    for ad in ("belge_no", "revizyon", "madde"):
+        _kaydet(alanlar, f"{onek}.{ad}", kayit, getattr(kaynak, ad))
 
 
 def alanlari_duzlestir(dokuman: KabulDokumani) -> dict[Anahtar, Any]:
@@ -61,32 +77,37 @@ def alanlari_duzlestir(dokuman: KabulDokumani) -> dict[Anahtar, Any]:
         for ad in _TEST_ALANLARI:
             _kaydet(alanlar, f"test.{ad}", t.id, getattr(t, ad))
         _sinir_ekle(alanlar, "test", t.id, t.sinir)
-        _kaydet(alanlar, "test.kaynak.madde", t.id, t.kaynak.madde)
-        if t.metot_kaynagi:
-            _kaydet(alanlar, "test.metot_kaynagi.madde", t.id, t.metot_kaynagi.madde)
+        _kaynak_ekle(alanlar, "test.kaynak", t.id, t.kaynak)
+        _kaynak_ekle(alanlar, "test.metot_kaynagi", t.id, t.metot_kaynagi)
 
     if dokuman.raf_omru:
         r = dokuman.raf_omru
         _kaydet(alanlar, "raf_omru.sure", "raf_omru", r.sure)
-        _kaydet(alanlar, "raf_omru.birim", "raf_omru", r.birim)
-        _kaydet(alanlar, "raf_omru.kaynak.madde", "raf_omru", r.kaynak.madde)
+        _kaydet(alanlar, "raf_omru.birim", "raf_omru", _Birim(r.birim))
+        _sinir_ekle(alanlar, "raf_omru", "raf_omru", r.kosul, ad_oneki="kosul")
+        _kaynak_ekle(alanlar, "raf_omru.kaynak", "raf_omru", r.kaynak)
 
     for k in dokuman.kosullar:
         kayit = f"{k.kategori}:{_normal_metin(k.ad)}"
         _kaydet(alanlar, "kosul.aciklama", kayit, k.aciklama)
         _sinir_ekle(alanlar, "kosul", kayit, k.sinir)
-        _kaydet(alanlar, "kosul.kaynak.madde", kayit, k.kaynak.madde)
+        _kaynak_ekle(alanlar, "kosul.kaynak", kayit, k.kaynak)
 
     for n in dokuman.numune_hazirlama:
         for ad in _NUMUNE_ALANLARI:
             _kaydet(alanlar, f"numune.{ad}", n.id, getattr(n, ad))
-        _sinir_ekle(alanlar, "numune.kuru_film_kalinligi", n.id, n.kuru_film_kalinligi)
-        _kaydet(alanlar, "numune.kaynak.madde", n.id, n.kaynak.madde)
+        _sinir_ekle(alanlar, "numune", n.id, n.kuru_film_kalinligi, ad_oneki="kuru_film_kalinligi")
+        _kaynak_ekle(alanlar, "numune.kaynak", n.id, n.kaynak)
     return alanlar
 
 
 def degerler_esit(a: Any, b: Any) -> bool:
     """İki alan değerini karşılaştırır (metin: normalize, sayı: toleranslı)."""
+    if isinstance(a, _Birim) and isinstance(b, _Birim):
+        try:
+            return birimi_coz(a) == birimi_coz(b)
+        except ValueError:
+            return _normal_metin(a) == _normal_metin(b)
     if isinstance(a, bool) or isinstance(b, bool):
         return a == b
     if isinstance(a, (int, float)) and isinstance(b, (int, float)):

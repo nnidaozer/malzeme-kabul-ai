@@ -14,7 +14,7 @@ from malzeme_kabul.sema import TestSarti as Sart
 
 
 def kaynak(madde):
-    return Kaynak(standart="MIL-PRF-23377", revizyon="K", madde=madde)
+    return Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde=madde)
 
 
 def sart(id, alt=20.0, ust=30.0, birim="s", metot="ASTM D 1200", madde="3.5.1", ad=None):
@@ -22,7 +22,7 @@ def sart(id, alt=20.0, ust=30.0, birim="s", metot="ASTM D 1200", madde="3.5.1", 
         id=id,
         test_adi=ad or id.title(),
         test_metodu=metot,
-        sinir=Sinir(tur="aralik", alt=alt, ust=ust, birim=birim),
+        sinir=Sinir(kriter_turu="sayisal", alt=alt, ust=ust, birim=birim, orijinal_metin="20 to 30 s"),
         kaynak=kaynak(madde),
         test_turleri={"kabul"},
     )
@@ -30,7 +30,7 @@ def sart(id, alt=20.0, ust=30.0, birim="s", metot="ASTM D 1200", madde="3.5.1", 
 
 def dok(testler, raf=None, kosullar=()):
     return KabulDokumani(
-        standart=StandartBilgisi(standart="MIL-PRF-23377", revizyon="K"),
+        standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K"),
         testler=testler,
         raf_omru=raf,
         kosullar=list(kosullar),
@@ -55,7 +55,7 @@ def test_bos_alanlar_duzlestirilmez():
 def test_raf_omru_ve_kosullar_duzlestirilir():
     d = dok(
         [],
-        raf=RafOmru(sure=12, birim="ay", kaynak=kaynak("3.7")),
+        raf=RafOmru(sure=12, birim="month", kaynak=kaynak("3.7")),
         kosullar=[Kosul(kategori="kullanim", ad="Pot life", aciklama="4 hours", kaynak=kaynak("3.5.2"))],
     )
     alanlar = alanlari_duzlestir(d)
@@ -103,11 +103,33 @@ def test_metin_karsilastirmasi_buyuk_kucuk_harf_ve_bosluga_duyarsiz():
     assert degerlendir(tahmin, gold).alanlar["test.test_metodu"].f1 == 1.0
 
 
-def test_birim_farkli_yazilirsa_yanlis_sayilir():
-    # Değerlendirme birim çevirmez; "s" ile "sec" farklıdır. Birim normalizasyonu çıkarıcının işidir.
+def test_ayni_birimin_farkli_yazimi_dogru_sayilir():
+    # "s" ile "second" pint'te aynı birimdir.
     gold = dok([sart("viskozite", birim="s")])
-    tahmin = dok([sart("viskozite", birim="sec")])
-    assert degerlendir(tahmin, gold).alanlar["test.sinir.birim"].f1 == 0.0
+    tahmin = dok([sart("viskozite", birim="second")])
+    assert degerlendir(tahmin, gold).alanlar["test.sinir.birim"].f1 == 1.0
+
+
+def test_farkli_birim_yanlis_sayilir_ve_cevrilmez():
+    # 20-30 s ile 20-30 min farklıdır; değerlendirme değeri çevirip eşitlemeye çalışmaz.
+    gold = dok([sart("viskozite", birim="s")])
+    tahmin = dok([sart("viskozite", birim="minute")])
+    sonuc = degerlendir(tahmin, gold)
+    assert sonuc.alanlar["test.sinir.birim"].f1 == 0.0
+    assert sonuc.alanlar["test.sinir.alt"].f1 == 1.0
+
+
+def test_kaynak_belge_no_ve_revizyon_ayri_alan_olarak_olculur():
+    gold = dok([sart("viskozite")])
+    alanlar = degerlendir(gold, gold).alanlar
+    assert "test.kaynak.belge_no" in alanlar and "test.kaynak.revizyon" in alanlar
+
+
+def test_kriter_turu_olculur_orijinal_metin_olculmez():
+    gold = dok([sart("viskozite")])
+    alanlar = degerlendir(gold, gold).alanlar
+    assert "test.sinir.kriter_turu" in alanlar
+    assert "test.sinir.orijinal_metin" not in alanlar
 
 
 def test_sayisal_degerde_kayan_nokta_farki_dogru_sayilir():
