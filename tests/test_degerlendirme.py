@@ -28,11 +28,11 @@ def sart(id, alt=20.0, ust=30.0, birim="s", metot="ASTM D 1200", madde="3.5.1", 
     )
 
 
-def dok(testler, raf=None, kosullar=()):
+def dok(testler, raf=(), kosullar=()):
     return KabulDokumani(
         standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K"),
         testler=testler,
-        raf_omru=raf,
+        raf_omurleri=list(raf),
         kosullar=list(kosullar),
     )
 
@@ -55,11 +55,11 @@ def test_bos_alanlar_duzlestirilmez():
 def test_raf_omru_ve_kosullar_duzlestirilir():
     d = dok(
         [],
-        raf=RafOmru(sure=12, birim="month", kaynak=kaynak("3.7")),
+        raf=[RafOmru(sure=12, birim="month", kaynak=kaynak("3.7"))],
         kosullar=[Kosul(kategori="kullanim", ad="Pot life", aciklama="4 hours", kaynak=kaynak("3.5.2"))],
     )
     alanlar = alanlari_duzlestir(d)
-    assert alanlar[("raf_omru.sure", "raf_omru")] == 12
+    assert alanlar[("raf_omru.sure", "genel")] == 12
     assert alanlar[("kosul.aciklama", "kullanim:pot life")] == "4 hours"
 
 
@@ -207,3 +207,11 @@ def test_numune_baglantisi_olculur():
         numune_hazirlama=[NumuneHazirlama(id="panel_A", kaynak=kaynak("TABLE I"))],
     )
     assert alanlari_duzlestir(d)[("test.numune_hazirlama_id", "viskozite")] == "panel_A"
+
+
+def test_raf_omru_kayitlari_kap_turuyle_eslesir():
+    gold = dok([], raf=[RafOmru(kap_turu="metal", sure=1, birim="year", kaynak=kaynak("3.5.3")),
+                        RafOmru(kap_turu="plastik", sure=6, birim="month", kaynak=kaynak("3.5.3"))])
+    tahmin = dok([], raf=[RafOmru(kap_turu="Metal", sure=1, birim="year", kaynak=kaynak("3.5.3"))])
+    alan = degerlendir(tahmin, gold).alanlar["raf_omru.sure"]
+    assert (alan.dp, alan.yp, alan.yn) == (1, 0, 1)

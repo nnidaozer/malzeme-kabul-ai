@@ -250,7 +250,7 @@ def test_bilinmeyen_numune_hazirligina_bagli_test_reddedilir():
 
 def test_kabul_dokumani_json_gidis_donus():
     d = dokuman(
-        raf_omru=RafOmru(sure=12, birim="month", kosul=sayisal(4, 38, "°C"), kaynak=kaynak("3.7")),
+        raf_omurleri=[RafOmru(sure=12, birim="month", kosul=sayisal(4, 38, "°C"), kaynak=kaynak("3.7"))],
         kosullar=[Kosul(kategori="kullanim", ad="Kap ömrü", aciklama="4 saat", kaynak=kaynak("3.5.2"))],
     )
     assert KabulDokumani.model_validate_json(d.model_dump_json()) == d
@@ -274,3 +274,23 @@ def test_kabul_ve_omur_uzatma_testleri_ayri_listelenir():
 def test_test_turleri_json_da_sirali_yazilir():
     t = ornek_sart(test_turleri={"yeterlilik", "kabul", "omur_uzatma"})
     assert t.model_dump(mode="json")["test_turleri"] == ["kabul", "omur_uzatma", "yeterlilik"]
+
+
+def test_kap_turune_gore_birden_cok_raf_omru_kaydi():
+    d = dokuman(raf_omurleri=[
+        RafOmru(kap_turu="metal", sure=1, birim="year", kaynak=kaynak("3.5.3")),
+        RafOmru(kap_turu="plastik", sure=6, birim="month", kaynak=kaynak("3.5.3")),
+    ])
+    assert [(r.kap_turu, r.sure, r.birim) for r in d.raf_omurleri] == [("metal", 1, "year"), ("plastik", 6, "month")]
+
+
+def test_ayni_kap_turu_icin_iki_raf_omru_kaydi_reddedilir():
+    with pytest.raises(ValidationError):
+        dokuman(raf_omurleri=[
+            RafOmru(kap_turu="metal", sure=1, birim="year", kaynak=kaynak("3.5.3")),
+            RafOmru(kap_turu="Metal", sure=2, birim="year", kaynak=kaynak("3.5.3")),
+        ])
+
+
+def test_raf_omru_kap_turu_bossa_genel_kayittir():
+    assert RafOmru(sure=12, birim="month", kaynak=kaynak("3.7")).kap_turu is None

@@ -154,8 +154,14 @@ class TestSarti(_Model):
 
 
 class RafOmru(_Model):
-    """Raf ömrü: süre, zaman birimi (pint) ve depolama koşulu (ör. 4–38 °C)."""
+    """Raf ömrü: süre, zaman birimi (pint) ve depolama koşulu (ör. 4–38 °C).
 
+    Raf ömrü kap türüne göre değişebilir (ör. metal kap 1 yıl, plastik kap 6
+    ay); her kap türü ayrı bir kayıttır. `kap_turu` boşsa kayıt bütün kaplar
+    için geçerlidir.
+    """
+
+    kap_turu: str | None = Field(default=None, examples=["metal", "plastik"])
     sure: float = Field(gt=0)
     birim: str = Field(examples=["month", "day", "year"])
     kosul: Sinir | None = Field(default=None, description="Raf ömrünün geçerli olduğu koşul, ör. sıcaklık aralığı.")
@@ -201,7 +207,7 @@ class KabulDokumani(_Model):
     standart: StandartBilgisi
     durum: Literal["taslak", "onaylandi"] = "taslak"
     testler: list[TestSarti] = Field(default_factory=list)
-    raf_omru: RafOmru | None = None
+    raf_omurleri: list[RafOmru] = Field(default_factory=list, description="Kap türüne göre raf ömrü kayıtları.")
     kosullar: list[Kosul] = Field(default_factory=list)
     numune_hazirlama: list[NumuneHazirlama] = Field(default_factory=list)
 
@@ -217,6 +223,10 @@ class KabulDokumani(_Model):
             if t.numune_hazirlama_id and t.numune_hazirlama_id not in numune_idleri:
                 raise ValueError(f"{t.id}: bilinmeyen numune hazırlama kimliği {t.numune_hazirlama_id!r}")
 
+        kaplar = [(r.kap_turu or "").casefold() for r in self.raf_omurleri]
+        tekrar = sorted({k or "(genel)" for k in kaplar if kaplar.count(k) > 1})
+        if tekrar:
+            raise ValueError(f"her kap türü için tek raf ömrü kaydı olmalı, tekrar edenler: {tekrar}")
         return self
 
     @property
