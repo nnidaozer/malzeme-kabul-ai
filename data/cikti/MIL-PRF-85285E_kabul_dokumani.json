@@ -1,0 +1,28 @@
+{
+  "standart": {
+    "belge_no": "MIL-PRF-85285",
+    "revizyon": "E",
+    "baslik": "COATING: POLYURETHANE, AIRCRAFT AND SUPPORT EQUIPMENT",
+    "tarih": "12 January 2012"
+  },
+  "durum": "taslak",
+  "testler": [],
+  "raf_omurleri": [
+    {
+      "kap_turu": null,
+      "sure": 1.0,
+      "birim": "year",
+      "kosul": null,
+      "baslangic": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.2",
+        "sayfa": 7,
+        "alinti": "The unopened coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for a period of one year for metal containers and six months for plastic containers (see 4.6 and 6.5.2). The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46 oC (35 to 115 oF)."
+      }
+    }
+  ],
+  "kosullar": [],
+  "numune_hazirlama": []
+}

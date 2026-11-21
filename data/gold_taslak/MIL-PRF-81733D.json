@@ -1,0 +1,2194 @@
+{
+  "standart": {
+    "belge_no": "MIL-PRF-81733",
+    "revizyon": "D",
+    "baslik": "SEALING AND COATING COMPOUND, CORROSION INHIBITIVE",
+    "tarih": "15 May 1998"
+  },
+  "durum": "taslak",
+  "testler": [
+    {
+      "id": "appearance",
+      "test_adi": "Appearance",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The base compound and curing agent shall be of uniform blend and shall be free of skins, lumps, and jelled or coarse particles. There shall be no separation of ingredients which cannot be readily dispersed by mechanical agitation or mixing by hand."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "color",
+      "test_adi": "Color",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Unless otherwise specified in the contract or order, the color of the sealing compound shall be as furnished by the manufacturer (see 6.2). The curing agent, if furnished separately, shall be of contrasting color to facilitate mixing."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.2",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "nonvolatile_content_type_i",
+      "test_adi": "Nonvolatile content – Type I",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 84,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "TABLE I. Nonvolatile content, minimum percent by weight: Type I = 84."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "nonvolatile_content_type_ii",
+      "test_adi": "Nonvolatile content – Type II",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 92,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "TABLE I. Nonvolatile content, minimum percent by weight: Type II = 92."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "nonvolatile_content_type_iii",
+      "test_adi": "Nonvolatile content – Type III",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 65,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "TABLE I. Nonvolatile content, minimum percent by weight: Type III = 65."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "nonvolatile_content_type_iv_class_1",
+      "test_adi": "Nonvolatile content – Type IV Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 90,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "TABLE I. Nonvolatile content, minimum percent by weight: Type IV Class 1 = 90."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Class 1"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "nonvolatile_content_type_iv_class_2",
+      "test_adi": "Nonvolatile content – Type IV Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 95,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "TABLE I. Nonvolatile content, minimum percent by weight: Type IV Class 2 = 95."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Class 2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "flow_type_ii_only",
+      "test_adi": "Flow (Type II only)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.3",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 0.1,
+        "ust": 0.75,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "When tested as specified in 4.8.3, the flow measurement of the sealing compound shall be not less than 0.10 inch and not greater than 0.75 inch."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.4",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "initial_viscosity_type_i",
+      "test_adi": "Application life – initial viscosity – Type I",
+      "test_metodu": "Brookfield RVF",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.1",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 100,
+        "ust": 500,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "poise",
+        "orijinal_metin": "TABLE II. Initial viscosity: Type I = 100–500 poises."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "initial_viscosity_type_ii",
+      "test_adi": "Application life – initial viscosity – Type II",
+      "test_metodu": "Brookfield RVF",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.1",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 6000,
+        "ust": 16000,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "poise",
+        "orijinal_metin": "TABLE II. Initial viscosity: Type II = 6,000–16,000 poises."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "initial_viscosity_type_iii",
+      "test_adi": "Application life – initial viscosity – Type III",
+      "test_metodu": "Brookfield RVF",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.1",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 50,
+        "ust": 150,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "poise",
+        "orijinal_metin": "TABLE II. Initial viscosity: Type III = 50–150 poises."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "initial_viscosity_type_iv",
+      "test_adi": "Application life – initial viscosity – Type IV",
+      "test_metodu": "Brookfield RVF",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.1",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 1000,
+        "ust": 4000,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "poise",
+        "orijinal_metin": "TABLE II. Initial viscosity: Type IV = 1,000–4,000 poises."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application_time_type_i",
+      "test_adi": "Application life – application time – Type I",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 2500,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "poise",
+        "orijinal_metin": "The end of the application time shall be considered to be not greater than 2,500 poises for Type I, not less than 15 grams per minute for Type II, not greater than 300 poises for Type III, and not less than 30 grams per minute for Type IV, Class 1 or 50 grams per minute for Type IV Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application_time_type_ii",
+      "test_adi": "Application life – application time – Type II",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 15,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/min",
+        "orijinal_metin": "The end of the application time shall be considered to be not greater than 2,500 poises for Type I, not less than 15 grams per minute for Type II, not greater than 300 poises for Type III, and not less than 30 grams per minute for Type IV, Class 1 or 50 grams per minute for Type IV Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application_time_type_iii",
+      "test_adi": "Application life – application time – Type III",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 300,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "poise",
+        "orijinal_metin": "The end of the application time shall be considered to be not greater than 2,500 poises for Type I, not less than 15 grams per minute for Type II, not greater than 300 poises for Type III, and not less than 30 grams per minute for Type IV, Class 1 or 50 grams per minute for Type IV Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application_time_type_iv_class_1",
+      "test_adi": "Application life – application time – Type IV Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 30,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/min",
+        "orijinal_metin": "The end of the application time shall be considered to be not greater than 2,500 poises for Type I, not less than 15 grams per minute for Type II, not greater than 300 poises for Type III, and not less than 30 grams per minute for Type IV, Class 1 or 50 grams per minute for Type IV Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Class 1"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application_time_type_iv_class_2",
+      "test_adi": "Application life – application time – Type IV Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 50,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/min",
+        "orijinal_metin": "The end of the application time shall be considered to be not greater than 2,500 poises for Type I, not less than 15 grams per minute for Type II, not greater than 300 poises for Type III, and not less than 30 grams per minute for Type IV, Class 1 or 50 grams per minute for Type IV Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.5.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Class 2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_i_1_4_class_2",
+      "test_adi": "Tack-free time – Type I-1/4, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 4,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type I-1/4, Class 2 = 4 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Class 2",
+        "Dash -1/4"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_i_1_2_class_1",
+      "test_adi": "Tack-free time – Type I-1/2, Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 16,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type I-1/2, Class 1 = 16 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Class 1",
+        "Dash -1/2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_i_1_2_class_2",
+      "test_adi": "Tack-free time – Type I-1/2, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 8,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type I-1/2, Class 2 = 8 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Class 2",
+        "Dash -1/2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_i_2_class_1",
+      "test_adi": "Tack-free time – Type I-2, Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 24,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type I-2, Class 1 = 24 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Class 1",
+        "Dash -2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_i_2_class_2",
+      "test_adi": "Tack-free time – Type I-2, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 16,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type I-2, Class 2 = 16 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Class 2",
+        "Dash -2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_1_6_class_1",
+      "test_adi": "Tack-free time – Type II-1/6, Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 4,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-1/6, Class 1 = 4 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 1",
+        "Dash -1/6"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_1_4_class_1",
+      "test_adi": "Tack-free time – Type II-1/4, Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 8,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-1/4, Class 1 = 8 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 1",
+        "Dash -1/4"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_1_4_class_2",
+      "test_adi": "Tack-free time – Type II-1/4, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-1/4, Class 2 = 1 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 2",
+        "Dash -1/4"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_1_2_class_1",
+      "test_adi": "Tack-free time – Type II-1/2, Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 16,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-1/2, Class 1 = 16 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 1",
+        "Dash -1/2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_1_2_class_2",
+      "test_adi": "Tack-free time – Type II-1/2, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 2,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-1/2, Class 2 = 2 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 2",
+        "Dash -1/2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_2_class_1",
+      "test_adi": "Tack-free time – Type II-2, Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 24,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-2, Class 1 = 24 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 1",
+        "Dash -2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_2_class_2",
+      "test_adi": "Tack-free time – Type II-2, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 12,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-2, Class 2 = 12 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 2",
+        "Dash -2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_ii_4_class_2",
+      "test_adi": "Tack-free time – Type II-4, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 24,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type II-4, Class 2 = 24 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 2",
+        "Dash -4"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_iii_1_class_1",
+      "test_adi": "Tack-free time – Type III-1, Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 8,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type III-1, Class 1 = 8 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III",
+        "Class 1",
+        "Dash -1"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tack_free_time_type_iii_1_class_2",
+      "test_adi": "Tack-free time – Type III-1, Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 8,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "TABLE IV. Tack-free time: Type III-1, Class 2 = 8 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.6",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III",
+        "Class 2",
+        "Dash -1"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "assembly_time_type_iv_only",
+      "test_adi": "Assembly time (Type IV only)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.6",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.005,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "The sealant shall squeeze out to a thickness no greater than 0.005 inch at the bolts when tested as specified in 4.8.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.7",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "hardness_types_i_ii_iii",
+      "test_adi": "Hardness – Types I, II, III",
+      "test_metodu": "ASTM-D2240",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.7",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 35,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested as specified in 4.8.7, the Shore A-2 hardness of the cured sealing compound shall be not less than 35 for Types I, II, and III or 30 for Type IV."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type III"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "hardness_type_iv",
+      "test_adi": "Hardness – Type IV",
+      "test_metodu": "ASTM-D2240",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.7",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 30,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested as specified in 4.8.7, the Shore A-2 hardness of the cured sealing compound shall be not less than 35 for Types I, II, and III or 30 for Type IV."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "specific_gravity_class_1",
+      "test_adi": "Specific gravity – Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.8",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.65,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested as specified in 4.8.8, the specific gravity of the cured sealing compound shall be not greater than 1.65 for Class 1 or 1.50 for Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class 1"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "specific_gravity_class_2",
+      "test_adi": "Specific gravity – Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.8",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.5,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested as specified in 4.8.8, the specific gravity of the cured sealing compound shall be not greater than 1.65 for Class 1 or 1.50 for Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class 2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "corrosion",
+      "test_adi": "Corrosion",
+      "test_metodu": "ASTM-B117 Appendix 1 (salt-SO2)",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.9",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested as specified in 4.8.9, the cured sealing compound shall not in itself induce corrosion and shall protect the substrate metal. There shall be no visible evidence of corrosion at the metal-sealant interface."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "low_temperature_flexibility",
+      "test_adi": "Low-temperature flexibility",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.10",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested at temperatures and in accordance with the method specified in 4.8.10, the cured sealing compound shall withstand the bend test without cracking, checking, or separating from the panel."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.4",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "thermal_stability",
+      "test_adi": "Thermal stability",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.11",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested at temperatures and in accordance with the method specified in 4.8.11, the cured sealing compound shall not blister, crack, or show evidence of \"blowing\" at rest or when wrapped 180° on a mandrel."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.5",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "thermal_stability_hardness_change",
+      "test_adi": "Thermal stability (hardness change)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.11",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": -5,
+        "ust": 15,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The hardness, after exposure, shall be within -5 to +15 points of the original \"as cured\" hardness."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.5",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type IV"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tensile_strength_type_ii_only_class_1",
+      "test_adi": "Tensile strength (Type II only) – Class 1",
+      "test_metodu": "ASTM-D412",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.12",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 200,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "psi",
+        "orijinal_metin": "The tensile strength of the cured sealing compound shall be not less than 200 pounds per square inch (psi) for Class 1 or 250 psi for Class 2 (see 4.8.12)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.6",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 1"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "tensile_strength_type_ii_only_class_2",
+      "test_adi": "Tensile strength (Type II only) – Class 2",
+      "test_metodu": "ASTM-D412",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.12",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 250,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "psi",
+        "orijinal_metin": "The tensile strength of the cured sealing compound shall be not less than 200 pounds per square inch (psi) for Class 1 or 250 psi for Class 2 (see 4.8.12)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.6",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "elongation_type_ii_only_class_1",
+      "test_adi": "Elongation (Type II only) – Class 1",
+      "test_metodu": "ASTM-D412",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.12",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 150,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "The elongation of the cured sealing compound shall be not less than 150 percent for Class 1 or 250 percent for Class 2 (see 4.8.12)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.7",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 1"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "elongation_type_ii_only_class_2",
+      "test_adi": "Elongation (Type II only) – Class 2",
+      "test_metodu": "ASTM-D412",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.12",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 250,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "The elongation of the cured sealing compound shall be not less than 150 percent for Class 1 or 250 percent for Class 2 (see 4.8.12)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.7",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class 2"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "peel_strength_class_1",
+      "test_adi": "Peel strength – Class 1",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.13",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 15,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "lbf/inch",
+        "orijinal_metin": "When tested as specified in 4.8.13, the peel strength of the cured sealing compound, as received and after immersion, shall be not less than 15 pounds per inch width (piw) for Class 1 or 20 piw for Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.8",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type IV",
+        "Class 1"
+      ],
+      "numune_hazirlama_id": "adherend_1"
+    },
+    {
+      "id": "peel_strength_class_2",
+      "test_adi": "Peel strength – Class 2",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.13",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 20,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "lbf/inch",
+        "orijinal_metin": "When tested as specified in 4.8.13, the peel strength of the cured sealing compound, as received and after immersion, shall be not less than 15 pounds per inch width (piw) for Class 1 or 20 piw for Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.8",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type IV",
+        "Class 2"
+      ],
+      "numune_hazirlama_id": "adherend_1"
+    },
+    {
+      "id": "peel_strength_cohesive_failure",
+      "test_adi": "Peel strength (cohesive failure)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.13",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 100,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "All specimens shall exhibit 100 percent cohesive failure."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.8",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type IV"
+      ],
+      "numune_hazirlama_id": "adherend_1"
+    },
+    {
+      "id": "anchorage_wet_tape_type_iii_only",
+      "test_adi": "Anchorage (wet tape test, Type III only)",
+      "test_metodu": "MIL-F-18264 (wet tape adhesion)",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.14",
+        "sayfa": 21,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.125,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "When tested as specified in 4.8.14, the cured sealing compound shall show no more than a slight widening (1/8 inch) of the scratch."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.9",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "repairability",
+      "test_adi": "Repairability",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.15",
+        "sayfa": 21,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "A second coat of the sealing compound, applied over a freshly cured coating of the materials specified in 4.8.15, shall show satisfactory bonding with no lifting, blistering, loss of adhesion, or other coating irregularities."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.10",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "repairability_adhesion",
+      "test_adi": "Repairability (adhesion strength)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.15",
+        "sayfa": 21,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 10,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "lbf/inch",
+        "orijinal_metin": "When tested as specified in 4.8.15, the adhesion strength of the compound shall be not less than 10 piw for Types I, II, and IV; Type III repairability shall be as specified in 3.3.2.9."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.10",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type IV"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "air_content_type_ii_only",
+      "test_adi": "Air content (Type II only)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.16",
+        "sayfa": 21,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 4,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "When tested as specified in 4.8.16, the air content of the cured sealing compound shall be not greater than 4 percent."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.11",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "long_term_storage",
+      "test_adi": "Long-term storage",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.17",
+        "sayfa": 23,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested as specified in 4.8.17, the base compound and curing agent shall show no hardening, separating, or settling of material after being stored for 9 months. After the storage period, the mixed sealing compound shall meet the requirements for flow (3.3.1.4), application life (3.3.1.5), tack-free time (3.3.1.6), and hardness (3.3.2.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.3",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "unit_of_issue",
+      "test_adi": "Unit of issue",
+      "test_metodu": "Visual",
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "In order to interface with existing equipment and meet the required storage characteristics, the unit of issue for the sealing compound shall be in kits as described below."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.2.2",
+        "sayfa": 5,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "warning_label",
+      "test_adi": "Warning label",
+      "test_metodu": "Visual",
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Skin contact warning labels shall be added by the manufacturer."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.2.4",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    }
+  ],
+  "raf_omurleri": [
+    {
+      "kap_turu": null,
+      "sure": 9.0,
+      "birim": "month",
+      "kosul": {
+        "kriter_turu": "sayisal",
+        "alt": 22,
+        "ust": 28,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "orijinal_metin": "A 1-quart sample of sealing compound and the appropriate amount of curing agent shall be stored for 9 months at 77° ± 6° F (25° ± 3° C)."
+      },
+      "baslangic": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.3",
+        "sayfa": 9,
+        "alinti": null
+      }
+    }
+  ],
+  "kosullar": [
+    {
+      "kategori": "kullanim",
+      "ad": "Uygulama süresi (tire numarası)",
+      "sinir": null,
+      "aciklama": "The minimum application time, in hours, for each type and class is indicated by a dash number (e.g. Type I-1/2 = 1/2 hour).",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "1.2.4",
+        "sayfa": 2,
+        "alinti": null
+      }
+    }
+  ],
+  "numune_hazirlama": [
+    {
+      "id": "adherend_1",
+      "kupon_malzemesi": "Aluminum alloy 7075-T6 conforming to QQ-A-250/12",
+      "kupon_boyutu": "0.064 by 3 by 6 inches",
+      "yuzey_hazirligi": "Chemically treated with materials conforming to MIL-C-81706 Class 1A",
+      "uygulama_yontemi": "Adherends, measuring 0.064 by 3 by 6 inches, shall be coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 0.12,
+        "ust": 0.13,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound."
+      },
+      "kurlenme": "Curing shall be as specified in 4.7.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE X",
+        "sayfa": 20,
+        "alinti": null
+      }
+    },
+    {
+      "id": "adherend_2",
+      "kupon_malzemesi": "Aluminum alloy 7075-T6 conforming to QQ-A-250/12",
+      "kupon_boyutu": "0.064 by 3 by 6 inches",
+      "yuzey_hazirligi": "Chemically treated with MIL-A-8625 Type II",
+      "uygulama_yontemi": "Adherends, measuring 0.064 by 3 by 6 inches, shall be coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 0.12,
+        "ust": 0.13,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound."
+      },
+      "kurlenme": "Curing shall be as specified in 4.7.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE X",
+        "sayfa": 20,
+        "alinti": null
+      }
+    },
+    {
+      "id": "adherend_3",
+      "kupon_malzemesi": "Cadmium-plated steel (4130) conforming to ASTM-A108",
+      "kupon_boyutu": "0.064 by 3 by 6 inches",
+      "yuzey_hazirligi": "Treated in accordance with QQ-P-416 Type II, Class 1",
+      "uygulama_yontemi": "Adherends, measuring 0.064 by 3 by 6 inches, shall be coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 0.12,
+        "ust": 0.13,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound."
+      },
+      "kurlenme": "Curing shall be as specified in 4.7.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE X",
+        "sayfa": 20,
+        "alinti": null
+      }
+    },
+    {
+      "id": "adherend_4",
+      "kupon_malzemesi": "Magnesium alloy conforming to SAE-AMS4376",
+      "kupon_boyutu": "0.064 by 3 by 6 inches",
+      "yuzey_hazirligi": "Treated with materials conforming to MIL-C-81706 Class 1A",
+      "uygulama_yontemi": "Adherends, measuring 0.064 by 3 by 6 inches, shall be coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 0.12,
+        "ust": 0.13,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound."
+      },
+      "kurlenme": "Curing shall be as specified in 4.7.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE X",
+        "sayfa": 20,
+        "alinti": null
+      }
+    },
+    {
+      "id": "adherend_5",
+      "kupon_malzemesi": "Titanium conforming to MIL-T-9046 Type III, Composition C (6 Al - 4V)",
+      "kupon_boyutu": "0.064 by 3 by 6 inches",
+      "yuzey_hazirligi": null,
+      "uygulama_yontemi": "Adherends, measuring 0.064 by 3 by 6 inches, shall be coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 0.12,
+        "ust": 0.13,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound."
+      },
+      "kurlenme": "Curing shall be as specified in 4.7.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE X",
+        "sayfa": 20,
+        "alinti": null
+      }
+    },
+    {
+      "id": "adherend_6",
+      "kupon_malzemesi": "Aluminum alloy 7075-T6 conforming to QQ-A-250/12",
+      "kupon_boyutu": "0.064 by 3 by 6 inches",
+      "yuzey_hazirligi": "Chemically treated with MIL-A-8625 Type II, coated with MIL-PRF-23377 and cured 7 days @ standard conditions",
+      "uygulama_yontemi": "Adherends, measuring 0.064 by 3 by 6 inches, shall be coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 0.12,
+        "ust": 0.13,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound."
+      },
+      "kurlenme": "Curing shall be as specified in 4.7.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE X",
+        "sayfa": 20,
+        "alinti": null
+      }
+    },
+    {
+      "id": "adherend_7",
+      "kupon_malzemesi": "Composite material (as specified by the Qualifying activity)",
+      "kupon_boyutu": "0.064 by 3 by 6 inches",
+      "yuzey_hazirligi": null,
+      "uygulama_yontemi": "Adherends, measuring 0.064 by 3 by 6 inches, shall be coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 0.12,
+        "ust": 0.13,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "orijinal_metin": "coated respectively with a 0.125 ± 0.005 inch thickness of Types I, II, and IV sealing compound."
+      },
+      "kurlenme": "Curing shall be as specified in 4.7.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE X",
+        "sayfa": 20,
+        "alinti": null
+      }
+    }
+  ]
+}
