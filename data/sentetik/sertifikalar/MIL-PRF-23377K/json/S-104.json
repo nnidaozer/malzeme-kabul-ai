@@ -1,0 +1,133 @@
+{
+  "sertifika_no": "S-104",
+  "standart_atfi": "MIL-PRF-23377 Rev. K, Type II, Class N",
+  "tedarikci": "Ornek Aerospace Finishes Ltd. (kurgusal)",
+  "urun": "Epoxy primer, Type II, Class N",
+  "parti_no": "B73299",
+  "uretim_tarihi": "2026-04-13",
+  "son_kullanma_tarihi": "2027-04-13",
+  "siparis_no": "PO-1480",
+  "satirlar": [
+    {
+      "test_adi": "Lead and cadmium content",
+      "sonuc": "0.6",
+      "birim": "ppm",
+      "metot": "ASTM D3335",
+      "sart": "1 ppm max"
+    },
+    {
+      "test_adi": "Chromium content (class N only)",
+      "sonuc": "1.7",
+      "birim": "ppm",
+      "metot": "ASTM D3718",
+      "sart": "5 ppm max"
+    },
+    {
+      "test_adi": "VOC solvent content",
+      "sonuc": "251",
+      "birim": "g/l",
+      "metot": "ASTM D3960",
+      "sart": "340 g/L max"
+    },
+    {
+      "test_adi": "Fineness of grind",
+      "sonuc": "6",
+      "metot": "ASTM D1210",
+      "sart": "5 min"
+    },
+    {
+      "test_adi": "Condition in container",
+      "sonuc": "Pass",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Color – Type II",
+      "sonuc": "Pass",
+      "metot": "Visual",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Odor",
+      "sonuc": "Pass",
+      "metot": "ASTM D1296",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Viscosity",
+      "sonuc": "31",
+      "birim": "sec",
+      "metot": "ASTM D1200",
+      "sart": "40 s max"
+    },
+    {
+      "test_adi": "Pot life",
+      "sonuc": "47",
+      "birim": "sec",
+      "metot": "ASTM D1200",
+      "sart": "70 s max"
+    },
+    {
+      "test_adi": "Surface appearance",
+      "sonuc": "Pass",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Drying time",
+      "sonuc": "4.1",
+      "birim": "hrs",
+      "metot": "ASTM D5895",
+      "sart": "5 hour max"
+    },
+    {
+      "test_adi": "Lifting",
+      "sonuc": "Pass",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Adhesion",
+      "sonuc": "4A",
+      "metot": "ASTM D3359",
+      "sart": "4 min"
+    },
+    {
+      "test_adi": "Flexibility",
+      "sonuc": "27",
+      "birim": "%",
+      "metot": "ASTM D6905",
+      "sart": "10 % min"
+    },
+    {
+      "test_adi": "Infrared reflectance (type II only)",
+      "sonuc": "5.3",
+      "birim": "%",
+      "sart": "10 % max"
+    },
+    {
+      "test_adi": "Water resistance",
+      "sonuc": "Pass",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Solvent resistance (cure)",
+      "sonuc": "Pass",
+      "metot": "ASTM D5402",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Fluid resistance",
+      "sonuc": "Pass",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Mixing and dilution",
+      "sonuc": "Pass",
+      "sart": "See spec"
+    },
+    {
+      "test_adi": "Application",
+      "sonuc": "20",
+      "birim": "microns",
+      "sart": "15-23 µm"
+    }
+  ]
+}

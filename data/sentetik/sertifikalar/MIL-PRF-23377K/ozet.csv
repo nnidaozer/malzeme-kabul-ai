@@ -1,0 +1,151 @@
+sertifika_no,sablon,standart_atfi,hata_turu,aciklama,dogru_belge_karari
+S-001,A,MIL-PRF-23377K Type II Class C2,ad_farki,fluid_resistance -> 'Hydraulic fluid resistance',kabul
+S-002,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",temiz,,kabul
+S-003,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",algilama_siniri,lead_and_cadmium_content: '<1' ppm,kabul
+S-004,A,MIL-PRF-23377K Type II Class C1,temiz,,kabul
+S-005,B,"MIL-PRF-23377 Rev. J, Type I, Class N",revizyon,atıf MIL-PRF-23377J,inceleme
+S-006,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",sinir_disi,"lead_and_cadmium_content: 1,1",red
+S-007,A,MIL-PRF-23377K Type I Class C2,temiz,,kabul
+S-008,B,"MIL-PRF-23377 Rev. K, Type II, Class N",ad_farki,application -> 'Dry film thickness',kabul
+S-009,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",birim,"drying_time: 270 min (4,5 saat dakika olarak)",kabul
+S-010,A,MIL-PRF-23377K Type II Class C1,birim,drying_time: 180 min (3 saat dakika olarak),kabul
+S-011,B,"MIL-PRF-23377 Rev. K, Type I, Class C1",algilama_siniri,lead_and_cadmium_content: '< 1 ppm',kabul
+S-012,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf N",ad_farki,application -> 'DFT',kabul
+S-013,A,MIL-PRF-23377K Type I Class C2,temiz,,kabul
+S-014,B,"MIL-PRF-23377 Rev. K, Type I, Class C1",temiz,,kabul
+S-015,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",temiz,,kabul
+S-016,A,MIL-PRF-23377K Type II Class N,sinir_disi,infrared_reflectance_type_ii_only: 11.4,red
+S-017,B,"MIL-PRF-23377 Rev. K, Type I, Class C2",eksik_test,viscosity tabloda yok,inceleme
+S-018,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",sinira_yakin,voc_solvent_content: 340,kabul
+S-019,A,MIL-PRF-23377K Type II Class C1,sinir_disi,condition_in_container: Fail,red
+S-020,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",birim,"application: 0.8 mil (20,3 µm mil olarak)",kabul
+S-021,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",temiz,,kabul
+S-022,A,MIL-PRF-23377K Type II Class N,temiz,,kabul
+S-023,B,"MIL-PRF-23377 Rev. K, Type II, Class N",sinir_disi,flexibility: 6,red
+S-024,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",sinir_disi,adhesion: 2A,red
+S-025,A,MIL-PRF-23377K Type II Class C2,temiz,,kabul
+S-026,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-027,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C1",sinira_yakin,drying_time: 5,kabul
+S-028,A,MIL-PRF-23377K Type I Class N,temiz,,kabul
+S-029,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-030,C,"Şartname: MIL-PRF-23377H, Tip II, Sınıf C2",revizyon,atıf MIL-PRF-23377H,inceleme
+S-031,A,MIL-PRF-23377K Type II Class N,temiz,,kabul
+S-032,B,"MIL-PRF-23377 Rev. K, Type I, Class N",temiz,,kabul
+S-033,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C1",temiz,,kabul
+S-034,A,MIL-PRF-23377K Type II Class C1,temiz,,kabul
+S-035,B,"MIL-PRF-23377 Rev. K, Type II, Class C2",temiz,,kabul
+S-036,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",algilama_siniri,lead_and_cadmium_content: '<0.5' ppm,kabul
+S-037,A,MIL-PRF-23377K Type II Class C2,ad_farki,flexibility -> 'Esneklik',kabul
+S-038,B,"MIL-PRF-23377 Rev. K, Type I, Class C1",sinira_yakin,viscosity: 40,kabul
+S-039,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C1",temiz,,kabul
+S-040,A,MIL-PRF-23377K Type I Class C1,temiz,,kabul
+S-041,B,"MIL-PRF-23377 Rev. K, Type II, Class N",eksik_test,fineness_of_grind tabloda yok,inceleme
+S-042,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",temiz,,kabul
+S-043,A,MIL-PRF-23377K Type II Class N,eksik_test,drying_time tabloda yok,inceleme
+S-044,B,"MIL-PRF-23377 Rev. K, Type I, Class C2",sinira_yakin,application: 23,kabul
+S-045,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf N",sinira_yakin,flexibility: 10,kabul
+S-046,A,MIL-PRF-23377K Type I Class C2,birim,"application: 0.7 mils (17,8 µm mil olarak)",kabul
+S-047,B,"MIL-PRF-23377 Rev. K, Type II, Class C2",ad_farki,odor -> 'Odour',kabul
+S-048,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C1",sinir_disi,solvent_resistance_cure: Uygun değil,red
+S-049,A,MIL-PRF-23377K Type II Class C1,temiz,,kabul
+S-050,B,"MIL-PRF-23377 Rev. K, Type II, Class N",sinira_yakin,fineness_of_grind: 5,kabul
+S-051,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",temiz,,kabul
+S-052,A,MIL-PRF-23377K Type I Class C1,eksik_test,drying_time tabloda yok,inceleme
+S-053,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-054,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C1",sinira_yakin,voc_solvent_content: 339.8,kabul
+S-055,A,MIL-PRF-23377K Type II Class N,temiz,,kabul
+S-056,B,"MIL-PRF-23377 Rev. J, Type I, Class C1",revizyon,atıf MIL-PRF-23377J,inceleme
+S-057,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",temiz,,kabul
+S-058,A,MIL-PRF-23377K Type I Class N,ad_farki,mixing_and_dilution -> 'Mixing / thinning',kabul
+S-059,B,"MIL-PRF-23377 Rev. K, Type I, Class C2",sinira_yakin,drying_time: 4.9,kabul
+S-060,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf N",temiz,,kabul
+S-061,A,MIL-PRF-23377K Type I Class N,temiz,,kabul
+S-062,B,"MIL-PRF-23377 Rev. H, Type II, Class C1",revizyon,atıf MIL-PRF-23377H,inceleme
+S-063,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",temiz,,kabul
+S-064,A,MIL-PRF-23377K Type II Class N,birim,"voc_solvent_content: 2.6 lb/gal (311,5 g/L lb/gal olarak)",kabul
+S-065,B,"MIL-PRF-23377 Rev. J, Type I, Class C2",revizyon,atıf MIL-PRF-23377J,inceleme
+S-066,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",ad_farki,surface_appearance -> 'Appearance',kabul
+S-067,A,MIL-PRF-23377K Type II Class N,temiz,,kabul
+S-068,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-069,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",temiz,,kabul
+S-070,A,MIL-PRF-23377K Type II Class C1,temiz,,kabul
+S-071,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",temiz,,kabul
+S-072,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",sinir_disi,"lead_and_cadmium_content: 1,3",red
+S-073,A,MIL-PRF-23377K Type I Class N,eksik_test,voc_solvent_content tabloda yok,inceleme
+S-074,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",sinir_disi,application: 26,red
+S-075,C,"Şartname: MIL-PRF-23377H, Tip II, Sınıf N",revizyon,atıf MIL-PRF-23377H,inceleme
+S-076,A,MIL-PRF-23377K Type II Class C2,temiz,,kabul
+S-077,B,"MIL-PRF-23377 Rev. K, Type I, Class N",temiz,,kabul
+S-078,C,"Şartname: MIL-PRF-23377J, Tip I, Sınıf C1",revizyon,atıf MIL-PRF-23377J,inceleme
+S-079,A,MIL-PRF-23377K Type I Class N,sinira_yakin,viscosity: 39.5,kabul
+S-080,B,"MIL-PRF-23377 Rev. K, Type I, Class C2",birim,viscosity: 0.5 min (30 s dakika olarak),kabul
+S-081,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C1",algilama_siniri,lead_and_cadmium_content: 'ND (<0.5 ppm)',kabul
+S-082,A,MIL-PRF-23377K Type II Class N,eksik_test,infrared_reflectance_type_ii_only tabloda yok,inceleme
+S-083,B,"MIL-PRF-23377 Rev. K, Type II, Class C2",temiz,,kabul
+S-084,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",temiz,,kabul
+S-085,A,MIL-PRF-23377K Type II Class C1,sinira_yakin,application: 15.1,kabul
+S-086,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",temiz,,kabul
+S-087,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",temiz,,kabul
+S-088,A,MIL-PRF-23377K Type II Class C2,temiz,,kabul
+S-089,B,"MIL-PRF-23377 Rev. K, Type I, Class N",birim,drying_time: 0.25 day (6 saat gün olarak; sayı sınırdan küçük görünüyor),red
+S-090,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",temiz,,kabul
+S-091,A,MIL-PRF-23377H Type II Class C1,revizyon,atıf MIL-PRF-23377H,inceleme
+S-092,B,"MIL-PRF-23377 Rev. K, Type I, Class C2",birim,"drying_time: 0.3 day (7,2 saat gün olarak; sayı sınırdan küçük görünüyor)",red
+S-093,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",ad_farki,flexibility -> 'GE impact elongation',kabul
+S-094,A,MIL-PRF-23377J Type I Class C1,revizyon,atıf MIL-PRF-23377J,inceleme
+S-095,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",sinir_disi,condition_in_container: Fail,red
+S-096,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",birim,"voc_solvent_content: 2.9 lb/gal (347,5 g/L lb/gal olarak)",red
+S-097,A,MIL-PRF-23377K Type I Class C1,temiz,,kabul
+S-098,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",eksik_test,adhesion tabloda yok,inceleme
+S-099,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",temiz,,kabul
+S-100,A,MIL-PRF-23377K Type II Class C2,temiz,,kabul
+S-101,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-102,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",temiz,,kabul
+S-103,A,MIL-PRF-23377K Type I Class C1,sinir_disi,viscosity: 47,red
+S-104,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-105,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",eksik_test,viscosity tabloda yok,inceleme
+S-106,A,MIL-PRF-23377H Type II Class N,revizyon,atıf MIL-PRF-23377H,inceleme
+S-107,B,"MIL-PRF-23377 Rev. K, Type II, Class C2",sinir_disi,application: 26,red
+S-108,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",sinir_disi,color_type_ii: Uygun değil,red
+S-109,A,MIL-PRF-23377K Type II Class N,temiz,,kabul
+S-110,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-111,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",temiz,,kabul
+S-112,A,MIL-PRF-23377K Type I Class C1,temiz,,kabul
+S-113,B,"MIL-PRF-23377 Rev. K, Type II, Class N",temiz,,kabul
+S-114,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C1",algilama_siniri,lead_and_cadmium_content: 'ND (<1 ppm)',kabul
+S-115,A,MIL-PRF-23377K Type II Class C1,sinira_yakin,voc_solvent_content: 340.2,red
+S-116,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",sinir_disi,drying_time: 6.1,red
+S-117,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf N",temiz,,kabul
+S-118,A,MIL-PRF-23377K Type II Class C1,sinira_yakin,drying_time: 5.1,red
+S-119,B,"MIL-PRF-23377 Rev. K, Type I, Class C1",birim,"application: 1.0 mil (25,4 µm mil olarak)",red
+S-120,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf N",temiz,,kabul
+S-121,A,MIL-PRF-23377K Type II Class C1,algilama_siniri,lead_and_cadmium_content: '≤ 1' ppm,kabul
+S-122,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",eksik_test,application tabloda yok,inceleme
+S-123,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",temiz,,kabul
+S-124,A,MIL-PRF-23377K Type II Class C1,temiz,,kabul
+S-125,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",birim,viscosity: 45 cP (akış kabı saniyesi yerine dinamik viskozite (cP)),inceleme
+S-126,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",temiz,,kabul
+S-127,A,MIL-PRF-23377K Type II Class C2,sinir_disi,infrared_reflectance_type_ii_only: 11.0,red
+S-128,B,"MIL-PRF-23377 Rev. K, Type I, Class C2",temiz,,kabul
+S-129,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",algilama_siniri,lead_and_cadmium_content: 'ND' ppm,inceleme
+S-130,A,MIL-PRF-23377K Type I Class N,temiz,,kabul
+S-131,B,"MIL-PRF-23377 Rev. K, Type II, Class N",sinira_yakin,viscosity: 40.5,red
+S-132,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",temiz,,kabul
+S-133,A,MIL-PRF-23377K Type I Class C1,temiz,,kabul
+S-134,B,"MIL-PRF-23377 Rev. K, Type II, Class C2",temiz,,kabul
+S-135,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf N",temiz,,kabul
+S-136,A,MIL-PRF-23377K Type II Class C1,ad_farki,solvent_resistance_cure -> 'MEK rub resistance',kabul
+S-137,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",temiz,,kabul
+S-138,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",temiz,,kabul
+S-139,A,MIL-PRF-23377K Type I Class N,temiz,,kabul
+S-140,B,"MIL-PRF-23377 Rev. K, Type II, Class C2",temiz,,kabul
+S-141,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C1",eksik_test,odor tabloda yok,inceleme
+S-142,A,MIL-PRF-23377K Type I Class N,temiz,,kabul
+S-143,B,"MIL-PRF-23377 Rev. K, Type II, Class C1",ad_farki,adhesion -> 'Wet tape adhesion',kabul
+S-144,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",algilama_siniri,lead_and_cadmium_content: 'ND',inceleme
+S-145,A,MIL-PRF-23377K Type I Class N,temiz,,kabul
+S-146,B,"MIL-PRF-23377 Rev. K, Type I, Class C2",temiz,,kabul
+S-147,C,"Şartname: MIL-PRF-23377K, Tip I, Sınıf C2",birim,pot_life: 120 cP (akış kabı saniyesi yerine dinamik viskozite (cP)),inceleme
+S-148,A,MIL-PRF-23377K Type II Class C2,sinira_yakin,flexibility: 9.8,red
+S-149,B,"MIL-PRF-23377 Rev. K, Type I, Class C1",algilama_siniri,lead_and_cadmium_content: 'Not detected' ppm,inceleme
+S-150,C,"Şartname: MIL-PRF-23377K, Tip II, Sınıf C2",algilama_siniri,lead_and_cadmium_content: 'ND' ppm,inceleme
