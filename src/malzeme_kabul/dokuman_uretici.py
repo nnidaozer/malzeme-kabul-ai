@@ -75,12 +75,14 @@ def bolumler(dok: KabulDokumani) -> list[Bolum]:
         if testler:
             sonuc.append(Bolum(baslik, TEST_SUTUNLARI, [_test_satiri(t) for t in testler]))
 
-    if dok.raf_omru:
-        r = dok.raf_omru
-        sure = f"{_sayi(r.sure)} {r.birim}" + (f" ({r.baslangic})" if r.baslangic else "")
-        if r.kosul:
-            sure += f", {sinir_metni(r.kosul)}"
-        sonuc.append(Bolum("Raf ömrü", ["Şart", "Madde"], [[sure, r.kaynak.etiket]]))
+    if dok.raf_omurleri:
+        satirlar = []
+        for r in dok.raf_omurleri:
+            sure = f"{_sayi(r.sure)} {r.birim}" + (f" ({r.baslangic})" if r.baslangic else "")
+            if r.kosul:
+                sure += f", {sinir_metni(r.kosul)}"
+            satirlar.append([r.kap_turu or "Tümü", sure, r.kaynak.etiket])
+        sonuc.append(Bolum("Raf ömrü", ["Kap türü", "Şart", "Madde"], satirlar))
 
     for kategori, baslik in (("depolama", "Depolama koşulları"), ("kullanim", "Kullanım koşulları")):
         kosullar = [k for k in dok.kosullar if k.kategori == kategori]

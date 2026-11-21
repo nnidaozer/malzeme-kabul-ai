@@ -25,7 +25,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.4",
-        "sayfa": null,
+        "sayfa": 5,
         "alinti": null
       },
       "test_turleri": [
@@ -53,7 +53,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.4",
-        "sayfa": null,
+        "sayfa": 5,
         "alinti": null
       },
       "test_turleri": [
@@ -81,7 +81,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.4.1.3",
-        "sayfa": null,
+        "sayfa": 6,
         "alinti": null
       },
       "test_turleri": [
@@ -111,7 +111,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.4.2",
-        "sayfa": null,
+        "sayfa": 6,
         "alinti": null
       },
       "test_turleri": [
@@ -139,7 +139,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.5.1",
-        "sayfa": null,
+        "sayfa": 6,
         "alinti": null
       },
       "test_turleri": [
@@ -157,7 +157,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.1",
-        "sayfa": null,
+        "sayfa": 12,
         "alinti": null
       },
       "sinir": {
@@ -173,7 +173,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.5.2",
-        "sayfa": null,
+        "sayfa": 6,
         "alinti": null
       },
       "test_turleri": [
@@ -201,7 +201,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.5.3",
-        "sayfa": null,
+        "sayfa": 6,
         "alinti": null
       },
       "test_turleri": [
@@ -218,7 +218,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.2",
-        "sayfa": null,
+        "sayfa": 12,
         "alinti": null
       },
       "sinir": {
@@ -234,7 +234,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.5.4",
-        "sayfa": null,
+        "sayfa": 6,
         "alinti": null
       },
       "test_turleri": [
@@ -261,7 +261,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.6.1.1",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -291,7 +291,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.6.1.2",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -321,7 +321,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.6.2",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -349,7 +349,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.6.3",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -377,7 +377,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.6.4",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -395,7 +395,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.4.1",
-        "sayfa": null,
+        "sayfa": 10,
         "alinti": null
       },
       "sinir": {
@@ -411,7 +411,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.7.1",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -439,7 +439,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.7.2",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -467,7 +467,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.7.2",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -485,7 +485,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.3",
-        "sayfa": null,
+        "sayfa": 13,
         "alinti": null
       },
       "sinir": {
@@ -501,7 +501,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.7.3",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -519,7 +519,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.4",
-        "sayfa": null,
+        "sayfa": 13,
         "alinti": null
       },
       "sinir": {
@@ -535,7 +535,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.7.4",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -553,7 +553,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.5",
-        "sayfa": null,
+        "sayfa": 13,
         "alinti": null
       },
       "sinir": {
@@ -569,7 +569,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.7.5",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -587,7 +587,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.6",
-        "sayfa": null,
+        "sayfa": 13,
         "alinti": null
       },
       "sinir": {
@@ -603,7 +603,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.7.6",
-        "sayfa": null,
+        "sayfa": 7,
         "alinti": null
       },
       "test_turleri": [
@@ -623,7 +623,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.7",
-        "sayfa": null,
+        "sayfa": 13,
         "alinti": null
       },
       "sinir": {
@@ -639,7 +639,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.8.1",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -657,7 +657,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.8.1",
-        "sayfa": null,
+        "sayfa": 14,
         "alinti": null
       },
       "sinir": {
@@ -673,7 +673,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.8.2.1",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -690,7 +690,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.8.2",
-        "sayfa": null,
+        "sayfa": 14,
         "alinti": null
       },
       "sinir": {
@@ -706,7 +706,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.8.2.2",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -723,7 +723,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.8.2",
-        "sayfa": null,
+        "sayfa": 14,
         "alinti": null
       },
       "sinir": {
@@ -739,7 +739,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.8.2.2",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -756,7 +756,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.9",
-        "sayfa": null,
+        "sayfa": 14,
         "alinti": null
       },
       "sinir": {
@@ -772,7 +772,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.8.3",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -790,7 +790,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.10",
-        "sayfa": null,
+        "sayfa": 14,
         "alinti": null
       },
       "sinir": {
@@ -806,7 +806,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.8.4",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -824,7 +824,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.11.1",
-        "sayfa": null,
+        "sayfa": 14,
         "alinti": null
       },
       "sinir": {
@@ -840,7 +840,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.9.1",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -858,7 +858,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.11.2",
-        "sayfa": null,
+        "sayfa": 15,
         "alinti": null
       },
       "sinir": {
@@ -874,7 +874,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.9.2",
-        "sayfa": null,
+        "sayfa": 8,
         "alinti": null
       },
       "test_turleri": [
@@ -892,7 +892,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.12",
-        "sayfa": null,
+        "sayfa": 15,
         "alinti": null
       },
       "sinir": {
@@ -908,7 +908,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.3",
-        "sayfa": null,
+        "sayfa": 5,
         "alinti": null
       },
       "test_turleri": [
@@ -925,7 +925,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.5.13",
-        "sayfa": null,
+        "sayfa": 15,
         "alinti": null
       },
       "sinir": {
@@ -941,7 +941,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.12",
-        "sayfa": null,
+        "sayfa": 9,
         "alinti": null
       },
       "test_turleri": [
@@ -968,7 +968,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "4.3.2",
-        "sayfa": null,
+        "sayfa": 10,
         "alinti": null
       },
       "test_turleri": [
@@ -978,27 +978,52 @@
       "numune_hazirlama_id": null
     }
   ],
-  "raf_omru": {
-    "sure": 1.0,
-    "birim": "year",
-    "kosul": {
-      "kriter_turu": "sayisal",
-      "alt": 1.7,
-      "ust": 46.0,
-      "alt_dahil": true,
-      "ust_dahil": true,
-      "birim": "°C",
-      "orijinal_metin": "The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
+  "raf_omurleri": [
+    {
+      "kap_turu": "metal",
+      "sure": 1.0,
+      "birim": "year",
+      "kosul": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 46.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "orijinal_metin": "The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
+      },
+      "baslangic": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.3",
+        "sayfa": 6,
+        "alinti": null
+      }
     },
-    "baslangic": "metal kaplar",
-    "kaynak": {
-      "belge_no": "MIL-PRF-23377",
-      "revizyon": "K",
-      "madde": "3.5.3",
-      "sayfa": null,
-      "alinti": null
+    {
+      "kap_turu": "plastik",
+      "sure": 6.0,
+      "birim": "month",
+      "kosul": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 46.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "orijinal_metin": "The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
+      },
+      "baslangic": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.3",
+        "sayfa": 6,
+        "alinti": null
+      }
     }
-  },
+  ],
   "kosullar": [
     {
       "kategori": "depolama",
@@ -1017,20 +1042,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.5.3",
-        "sayfa": null,
-        "alinti": null
-      }
-    },
-    {
-      "kategori": "depolama",
-      "ad": "Plastik kaplarda raf ömrü",
-      "sinir": null,
-      "aciklama": "six months for plastic containers",
-      "kaynak": {
-        "belge_no": "MIL-PRF-23377",
-        "revizyon": "K",
-        "madde": "3.5.3",
-        "sayfa": null,
+        "sayfa": 6,
         "alinti": null
       }
     },
@@ -1051,7 +1063,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.11",
-        "sayfa": null,
+        "sayfa": 9,
         "alinti": null
       }
     },
@@ -1072,7 +1084,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "3.11",
-        "sayfa": null,
+        "sayfa": 9,
         "alinti": null
       }
     }
@@ -1098,7 +1110,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "TABLE I",
-        "sayfa": null,
+        "sayfa": 10,
         "alinti": null
       }
     },
@@ -1122,7 +1134,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "TABLE I",
-        "sayfa": null,
+        "sayfa": 10,
         "alinti": null
       }
     },
@@ -1146,7 +1158,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "TABLE I",
-        "sayfa": null,
+        "sayfa": 10,
         "alinti": null
       }
     },
@@ -1170,7 +1182,7 @@
         "belge_no": "MIL-PRF-23377",
         "revizyon": "K",
         "madde": "TABLE I",
-        "sayfa": null,
+        "sayfa": 10,
         "alinti": null
       }
     }

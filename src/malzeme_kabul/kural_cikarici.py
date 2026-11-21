@@ -336,7 +336,7 @@ def cikar(pdf_yolu: str | Path, belge_no: str, revizyon: str) -> KabulDokumani:
         ))
 
     # Raf ömrü ve depolama
-    raf_omru = None
+    raf_omurleri: list[RafOmru] = []
     kosullar: list[Kosul] = []
     depolama_p = next(
         (p for p in paragraflar.values()
@@ -352,10 +352,10 @@ def cikar(pdf_yolu: str | Path, belge_no: str, revizyon: str) -> KabulDokumani:
                 kriter_turu="sayisal", alt=_sayi(m.group(1)), ust=_sayi(m.group(2)), birim="°C",
                 orijinal_metin=_cumle(depolama_p.metin, m.start()),
             )
-        raf_omru = RafOmru(
+        raf_omurleri.append(RafOmru(
             sure=sure, birim=birim, kosul=sicaklik,
             kaynak=kaynak(depolama_p.no, alinti=_ilk_cumleler(depolama_p.metin)),
-        )
+        ))
         if sicaklik:
             kosullar.append(Kosul(kategori="depolama", ad="Depolama sıcaklığı", sinir=sicaklik,
                                   kaynak=kaynak(depolama_p.no)))
@@ -383,7 +383,7 @@ def cikar(pdf_yolu: str | Path, belge_no: str, revizyon: str) -> KabulDokumani:
     return KabulDokumani(
         standart=_standart_bilgisi(belge, belge_no, revizyon),
         testler=testler,
-        raf_omru=raf_omru,
+        raf_omurleri=raf_omurleri,
         kosullar=kosullar,
         numune_hazirlama=numuneler,
     )

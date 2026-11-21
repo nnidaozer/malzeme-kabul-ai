@@ -66,9 +66,9 @@ Durum: taslak
 
 ## Raf ömrü
 
-| Şart | Madde |
-|---|---|
-| 1 year, 1.7 – 46 °C | MIL-PRF-23377K, 3.5.3 |
+| Kap türü | Şart | Madde |
+|---|---|---|
+| Tümü | 1 year, 1.7 – 46 °C | MIL-PRF-23377K, 3.5.3 |
 
 ## Depolama koşulları
 

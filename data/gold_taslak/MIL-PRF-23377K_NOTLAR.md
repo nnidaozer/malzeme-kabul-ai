@@ -2,7 +2,8 @@
 
 `MIL-PRF-23377K.json`, standart metninden elle hazırlanmış **taslak** doğru
 cevaptır. Çıkarıcının çıktısından kopyalanmadı; her değer standarttaki maddeye
-bakılarak yazıldı. Nida kontrol edip düzelttikten sonra `data/gold/` altına
+bakılarak yazıldı. Durum: 1–5 ve 7–9 onaylandı, 6 aşağıdaki gibi düzeltildi. Değerler henüz
+kontrol edilmedi (`MIL-PRF-23377K_kontrol_listesi.md`). Nida kontrol edip düzelttikten sonra `data/gold/` altına
 kendisi taşıyacak (o klasöre kod yazmaz).
 
 Değerlendirme test kayıtlarını `id` ile, koşulları `kategori:ad` ile eşleştirir.
@@ -28,9 +29,10 @@ adları değiştirirken iki tarafı birlikte düşün.
 4. **Yapışma 4A:** ASTM D3359 derecesi; sayısal `alt = 4`, birimsiz yazdım.
    Harf (A: X-kesim yöntemi) birimde değil, orijinal metinde duruyor.
 5. **Inceltik (Hegman) değeri** pint'te birim olmadığı için birimsiz.
-6. **Raf ömrü:** metal kaplar için 1 yıl, 1,7–46 °C. Plastik kaplar için 6 ay
-   ayrı bir depolama koşulu olarak (açıklama metniyle) duruyor; şemada raf
-   ömrü tek kayıt olduğu için böyle yaptım.
+6. **Raf ömrü:** Nida'nın kararıyla şema kap türüne göre birden çok kayda izin
+   veriyor. Metal kap 1 yıl ve plastik kap 6 ay ayrı kayıtlar; ikisinde de
+   depolama sıcaklığı 1,7–46 °C (3.5.3). Önceki "Plastik kaplarda raf ömrü"
+   koşulu kaldırıldı.
 7. **Test türleri:** 4.2'ye göre bütün testler `yeterlilik`; 4.3'te istisna
    sayılanlar (depolama kararlılığı, hızlandırılmış depolama, korozyon direnci
    yani tuz sisi ve filiform, toksisite, sökülebilirlik) yalnız `yeterlilik`,
@@ -46,7 +48,10 @@ adları değiştirirken iki tarafı birlikte düşün.
 
 `python scripts/degerlendir.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json data/gold_taslak/MIL-PRF-23377K.json`
 
-Genel (mikro): P = 0,989, R = 0,877, F1 = 0,930. Ayrıntı:
+Genel (mikro): P = 0,959, R = 0,836, F1 = 0,893. Ayrıntı:
 `data/cikti/MIL-PRF-23377K_kural_degerlendirme.csv`. Kayıplar çoğunlukla
 yukarıdaki 1. ve 2. maddelerdeki eksik testlerden, kriter türünden
-(geçti/kaldı ↔ metinsel) ve kuruma süresinin panel bağlantısından geliyor.
+(geçti/kaldı ↔ metinsel), kuruma süresinin panel bağlantısından ve raf
+ömründen geliyor: çıkarıcı kap türü vermeden tek bir "1 yıl" kaydı üretiyor,
+taslak ise metal ve plastik için iki kayıt bekliyor. Gold onaylanana kadar
+çıkarıcı bu belgeye göre düzeltilmiyor.
