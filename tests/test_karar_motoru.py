@@ -178,7 +178,7 @@ def test_kaldi_ifadeleri(metin):
     assert sonucu_ayristir(metin).tur == "kaldi"
 
 
-@pytest.mark.parametrize("metin", ["ND", "see attached", "15-20", "", "Slight grit"])
+@pytest.mark.parametrize("metin", ["ND", "Not detected", "see attached", "15-20", "", "Slight grit"])
 def test_anlasilmayan_sonuc_belirsiz(metin):
     assert sonucu_ayristir(metin).tur == "belirsiz"
 
@@ -430,3 +430,49 @@ def test_baska_standart_atfi_uygun_degil(dokuman):
 def test_red_incelemeden_onceliklidir(dokuman):
     sert = _tam_sertifika(standart_atfi="MIL-PRF-23377J Type I Class C2", satirlar={"VOC solvent content": ("400", "g/L")})
     assert kontrol_et(dokuman, sert).belge_karari == "red"
+
+
+@pytest.mark.parametrize(
+    "metin, ust, ust_dahil, birim",
+    [
+        ("ND (<0.5 ppm)", 0.5, False, "ppm"),
+        ("ND, ≤ 1", 1.0, True, None),
+        ("Not detected (< 0.2 ppm)", 0.2, False, "ppm"),
+        ("Tespit edilmedi (<1 ppm)", 1.0, False, "ppm"),
+    ],
+)
+def test_algilama_siniri_verilmis_nd(metin, ust, ust_dahil, birim):
+    s = sonucu_ayristir(metin)
+    assert (s.tur, s.alt, s.ust, s.ust_dahil, s.birim_ek) == ("sayi", None, ust, ust_dahil, birim)
+
+
+@pytest.fixture
+def kadmiyum_dokumani() -> KabulDokumani:
+    return KabulDokumani.model_validate(
+        {
+            "standart": {"belge_no": "MIL-PRF-23377", "revizyon": "K"},
+            "testler": [_test("cd", "Cadmium content", _sayisal(ust=1, birim="ppm"), "3.4", turler=("kabul",))],
+        }
+    )
+
+
+@pytest.mark.parametrize(
+    "sonuc, birim, karar",
+    [
+        ("<1", "ppm", "uygun"),
+        ("< 1 ppm", None, "uygun"),
+        ("ND (<0.5 ppm)", None, "uygun"),
+        ("ND", "ppm", "insan_incelemeli"),
+        ("ND (<2 ppm)", None, "insan_incelemeli"),
+        ("<2", "ppm", "insan_incelemeli"),
+    ],
+)
+def test_algilama_siniri_kararlari(kadmiyum_dokumani, sonuc, birim, karar):
+    sert = Sertifika.model_validate(
+        {
+            "sertifika_no": "x",
+            "standart_atfi": "MIL-PRF-23377K",
+            "satirlar": [{"test_adi": "Cadmium content", "sonuc": sonuc, "birim": birim}],
+        }
+    )
+    assert kontrol_et(kadmiyum_dokumani, sert).satirlar[0].karar == karar

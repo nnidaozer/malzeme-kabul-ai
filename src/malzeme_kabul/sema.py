@@ -77,7 +77,8 @@ class Sinir(_Model):
 
     Sayısal kriterde alt ve üst sınır isteğe bağlıdır ama en az biri bulunur:
     yalnız alt "en az", yalnız üst "en çok", ikisi eşitse tam değer demektir.
-    Birim pint'in tanıdığı biçimde yazılır ("°C", "g/L", "mil"). Geçti/kaldı ve
+    Birim pint'in tanıdığı biçimde yazılır ("°C", "g/L", "mil"; "mil" inç/1000 olarak
+    okunur, bkz. `birimler.pint_ifadesi`). Geçti/kaldı ve
     metinsel kriterler sayı ya da birim almaz. Her durumda standarttaki özgün
     metin saklanır.
     """

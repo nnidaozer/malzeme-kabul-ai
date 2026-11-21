@@ -13,8 +13,8 @@ modeli kullanılmaz (CLAUDE.md, kural 1):
    benzerliğiyle (tek ve açık bir en iyi aday varsa) eşleştirilir.
 4. Sonuç: "320", "1,5", "<1", "5A", "Conforms", "Fail" gibi metinler sayı
    aralığına ya da geçti/kaldı sonucuna çevrilir.
-5. Birim: pint ile hedef birime çevrilir. "mil" pint'te açı birimi olduğu için
-   önce "thou" (inç/1000) yapılır. Çevrilemeyen birim insana bırakılır.
+5. Birim: pint ile hedef birime çevrilir ("mil" uzunluk olarak, bkz.
+   `birimler.pint_ifadesi`). Çevrilemeyen birim insana bırakılır.
 6. Karşılaştırma: okunan değer aralığı sınırın tamamen içindeyse uygun,
    tamamen dışındaysa uygun değil, ikisi de değilse ("<8 saat" ile "en çok 5
    saat") insan incelemeli. Yuvarlama yapılmaz.
@@ -32,7 +32,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
-from .birimler import kayit
+from .birimler import birimi_coz, kayit
 from .sema import KabulDokumani, Sinir, TestSarti
 from .sertifika import Sertifika
 
@@ -186,9 +186,20 @@ _KALDI = ("does not conform", "not conform", "non conform", "nonconform", "uygun
 _GECTI = ("pass", "passed", "conforms", "conform", "complies", "comply", "satisfactory", "meets", "uygun", "gecti", "ok", "kabul")
 
 
+_ALGILANMADI = re.compile(r"^(nd|n d|not detected|none detected|tespit edilmedi|saptanmadi|bulunmadi)\b")
+_ALGILAMA_SINIRI = re.compile(r"(<=|≤|<)\s*[+-]?\d+(?:[.,]\d+)?\s*(?:[A-Za-zµμ°%/][A-Za-z0-9µμ°%/.]*)?")
+
+
 def sonucu_ayristir(metin: str) -> Sonuc:
-    """Sonuç hücresini sayı aralığına ya da geçti/kaldı sonucuna çevirir."""
+    """Sonuç hücresini sayı aralığına ya da geçti/kaldı sonucuna çevirir.
+
+    "ND" (algılanmadı) ancak algılama sınırıyla birlikte verilmişse ("ND
+    (<0.5 ppm)") o sınır kullanılır; sınırsız "ND" belirsizdir.
+    """
     ham = (metin or "").strip()
+    if _ALGILANMADI.match(_normal(ham)):
+        m = _ALGILAMA_SINIRI.search(ham)
+        return sonucu_ayristir(m.group(0)) if m else Sonuc("belirsiz")
     m = _SAYI.match(ham)
     if m:
         sayi = float(m.group("sayi").replace(",", "."))
@@ -213,7 +224,6 @@ def sonucu_ayristir(metin: str) -> Sonuc:
 # --- birim dönüşümü -------------------------------------------------------
 
 BIRIM_ESANLAMLILARI = {
-    "mil": "thou", "mils": "thou", "thou": "thou",
     "um": "µm", "μm": "µm", "micron": "µm", "microns": "µm", "mikron": "µm",
     "min": "minute", "mins": "minute", "dk": "minute", "dak": "minute", "dakika": "minute",
     "h": "hour", "hr": "hour", "hrs": "hour", "hours": "hour", "sa": "hour", "saat": "hour",
@@ -243,8 +253,8 @@ def birimi_cevir(deger: float, kaynak: str | None, hedef: str | None) -> float:
     if not kaynak or not hedef:
         raise ValueError(f"birim eksik: {kaynak!r} -> {hedef!r}")
     try:
-        q = kayit().Quantity(deger, _pint_birimi(kaynak))
-        return _sayilastir(q.to(_pint_birimi(hedef)).magnitude)
+        q = kayit().Quantity(deger, birimi_coz(_pint_birimi(kaynak)))
+        return _sayilastir(q.to(birimi_coz(_pint_birimi(hedef))).magnitude)
     except Exception as hata:  # pint: tanımsız birim, boyut uyumsuzluğu, sözdizimi
         raise ValueError(f"birim çevrilemedi: {kaynak!r} -> {hedef!r}") from hata
 
