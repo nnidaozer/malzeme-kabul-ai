@@ -19,29 +19,31 @@ from malzeme_kabul.sema import TestSarti as Sart
 
 
 def kaynak(madde):
-    return Kaynak(standart="MIL-PRF-23377", revizyon="K", madde=madde)
+    return Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde=madde)
 
 
 @pytest.fixture
 def dokuman():
     return KabulDokumani(
-        standart=StandartBilgisi(standart="MIL-PRF-23377", revizyon="K", baslik="Primer coatings: epoxy"),
+        standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K", baslik="Primer coatings: epoxy"),
         testler=[
             Sart(
                 id="voc", test_adi="VOC content", test_metodu="ASTM D 3960",
-                sinir=Sinir(tur="en_cok", ust=340, birim="g/L"), kaynak=kaynak("3.4.1"),
+                sinir=Sinir(kriter_turu="sayisal", ust=340, birim="g/L", orijinal_metin="340 g/L max"), kaynak=kaynak("3.4.1"),
                 test_turleri={"kabul", "omur_uzatma"},
             ),
             Sart(
                 id="esneklik", test_adi="Flexibility", test_metodu="ASTM D 522",
-                sinir=Sinir(tur="nitel", ifade="No cracking"), kaynak=kaynak("3.6.4"),
+                sinir=Sinir(kriter_turu="metinsel", orijinal_metin="No cracking"), kaynak=kaynak("3.6.4"),
                 test_turleri={"yeterlilik"}, numune_hazirlama_id="panel",
             ),
         ],
-        raf_omru=RafOmru(sure=12, birim="ay", baslangic="üretim tarihinden itibaren", kaynak=kaynak("3.7")),
+        raf_omru=RafOmru(sure=12, birim="month", baslangic="üretim tarihinden itibaren",
+                         kosul=Sinir(kriter_turu="sayisal", alt=4, ust=38, birim="°C", orijinal_metin="4 to 38 °C"),
+                         kaynak=kaynak("3.7")),
         kosullar=[
             Kosul(kategori="depolama", ad="Depolama sıcaklığı",
-                  sinir=Sinir(tur="aralik", alt=40, ust=100, birim="°F"), kaynak=kaynak("3.7.1")),
+                  sinir=Sinir(kriter_turu="sayisal", alt=40, ust=100, birim="°F", orijinal_metin="40 to 100 °F"), kaynak=kaynak("3.7.1")),
             Kosul(kategori="kullanim", ad="Kap ömrü", aciklama="En az 4 saat", kaynak=kaynak("3.5.2")),
         ],
         numune_hazirlama=[
@@ -50,17 +52,22 @@ def dokuman():
     )
 
 
+def _s(kriter="sayisal", metin="orijinal", **ek):
+    return Sinir(kriter_turu=kriter, orijinal_metin=metin, **ek)
+
+
 @pytest.mark.parametrize(
     "sinir, beklenen",
     [
-        (Sinir(tur="aralik", alt=20, ust=30, birim="s"), "20 – 30 s"),
-        (Sinir(tur="en_az", alt=4, birim="saat"), "≥ 4 saat"),
-        (Sinir(tur="en_az", alt=4, alt_dahil=False, birim="saat"), "> 4 saat"),
-        (Sinir(tur="en_cok", ust=340, birim="g/L"), "≤ 340 g/L"),
-        (Sinir(tur="en_cok", ust=0.5, ust_dahil=False), "< 0.5"),
-        (Sinir(tur="esit", alt=7), "= 7"),
-        (Sinir(tur="nitel", ifade="No blistering"), "No blistering"),
-        (Sinir(tur="aralik", alt=0.6, ust=0.9, birim="mil"), "0.6 – 0.9 mil"),
+        (_s(alt=20, ust=30, birim="s"), "20 – 30 s"),
+        (_s(alt=4, birim="hour"), "≥ 4 hour"),
+        (_s(alt=4, alt_dahil=False, birim="hour"), "> 4 hour"),
+        (_s(ust=340, birim="g/L"), "≤ 340 g/L"),
+        (_s(ust=0.5, ust_dahil=False), "< 0.5"),
+        (_s(alt=7, ust=7), "= 7"),
+        (_s(alt=0.6, ust=0.9, birim="mil"), "0.6 – 0.9 mil"),
+        (_s("metinsel", "No blistering"), "No blistering"),
+        (_s("gecti_kaldi", "Shall pass"), "Geçti/kaldı: Shall pass"),
     ],
 )
 def test_sinir_metni(sinir, beklenen):
@@ -94,14 +101,14 @@ def test_markdown_testleri_turune_gore_bolumlere_ayirir(dokuman):
 
 def test_markdown_raf_omru_depolama_kullanim_numune_bolumleri(dokuman):
     md = markdown_uret(dokuman)
-    assert "12 ay (üretim tarihinden itibaren)" in md
+    assert "12 month (üretim tarihinden itibaren), 4 – 38 °C" in md
     assert "40 – 100 °F" in md
     assert "En az 4 saat" in md
     assert "2024-T3" in md
 
 
 def test_bos_bolum_yazilmaz():
-    d = KabulDokumani(standart=StandartBilgisi(standart="MIL-PRF-23377", revizyon="K"))
+    d = KabulDokumani(standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K"))
     md = markdown_uret(d)
     assert "## Kabul testleri" not in md
     assert "Raf ömrü" not in md
@@ -109,8 +116,8 @@ def test_bos_bolum_yazilmaz():
 
 def test_tablo_hucresindeki_dikey_cizgi_kacirilir():
     d = KabulDokumani(
-        standart=StandartBilgisi(standart="MIL-PRF-23377", revizyon="K"),
-        testler=[Sart(id="a", test_adi="A | B", sinir=Sinir(tur="nitel", ifade="x"),
+        standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K"),
+        testler=[Sart(id="a", test_adi="A | B", sinir=Sinir(kriter_turu="metinsel", orijinal_metin="x"),
                       kaynak=kaynak("3.1"), test_turleri={"kabul"})],
     )
     assert "A \\| B" in markdown_uret(d)
@@ -126,3 +133,12 @@ def test_word_dosyasi_tablolar_ve_madde_numaralariyla_yazilir(dokuman, tmp_path)
     assert "VOC content" in hucreler
     assert "MIL-PRF-23377K, 3.4.1" in hucreler
     assert "≤ 340 g/L" in hucreler
+
+
+def test_musteri_sartnamesine_dayanan_sartin_kaynagi_ayri_gosterilir(dokuman):
+    musteri = Sart(
+        id="musteri_voc", test_adi="VOC (müşteri)", sinir=Sinir(kriter_turu="sayisal", ust=250, birim="g/L", orijinal_metin="250 g/L max"),
+        kaynak=Kaynak(belge_no="MUSTERI-SPEC-001", revizyon="B", madde="2.1"), test_turleri={"kabul"},
+    )
+    d = dokuman.model_copy(update={"testler": dokuman.testler + [musteri]})
+    assert "MUSTERI-SPEC-001 Rev. B, 2.1" in markdown_uret(d)

@@ -28,17 +28,18 @@ def _sayi(x: float) -> str:
 
 
 def sinir_metni(sinir: Sinir) -> str:
-    """Sınırı okunur metne çevirir: '20 – 30 s', '≥ 4 saat', '≤ 340 g/L'."""
-    if sinir.tur == "nitel":
-        return sinir.ifade or ""
-    if sinir.tur == "aralik":
-        govde = f"{_sayi(sinir.alt)} – {_sayi(sinir.ust)}"
-    elif sinir.tur == "en_az":
-        govde = f"{'≥' if sinir.alt_dahil else '>'} {_sayi(sinir.alt)}"
-    elif sinir.tur == "en_cok":
-        govde = f"{'≤' if sinir.ust_dahil else '<'} {_sayi(sinir.ust)}"
-    else:  # esit
-        govde = f"= {_sayi(sinir.alt)}"
+    """Kriteri okunur metne çevirir: '20 – 30 s', '≥ 4 hour', '≤ 340 g/L'."""
+    if sinir.kriter_turu == "metinsel":
+        return sinir.orijinal_metin
+    if sinir.kriter_turu == "gecti_kaldi":
+        return f"Geçti/kaldı: {sinir.orijinal_metin}"
+    alt, ust = sinir.alt, sinir.ust
+    if alt is not None and ust is not None:
+        govde = f"= {_sayi(alt)}" if alt == ust else f"{_sayi(alt)} – {_sayi(ust)}"
+    elif alt is not None:
+        govde = f"{'≥' if sinir.alt_dahil else '>'} {_sayi(alt)}"
+    else:
+        govde = f"{'≤' if sinir.ust_dahil else '<'} {_sayi(ust)}"
     return f"{govde} {sinir.birim}" if sinir.birim else govde
 
 
@@ -77,6 +78,8 @@ def bolumler(dok: KabulDokumani) -> list[Bolum]:
     if dok.raf_omru:
         r = dok.raf_omru
         sure = f"{_sayi(r.sure)} {r.birim}" + (f" ({r.baslangic})" if r.baslangic else "")
+        if r.kosul:
+            sure += f", {sinir_metni(r.kosul)}"
         sonuc.append(Bolum("Raf ömrü", ["Şart", "Madde"], [[sure, r.kaynak.etiket]]))
 
     for kategori, baslik in (("depolama", "Depolama koşulları"), ("kullanim", "Kullanım koşulları")):
@@ -99,7 +102,7 @@ def bolumler(dok: KabulDokumani) -> list[Bolum]:
 
 
 def _baslik(dok: KabulDokumani) -> str:
-    return f"Kabul Dokümanı: {dok.standart.standart}{dok.standart.revizyon}"
+    return f"Kabul Dokümanı: {dok.standart.belge_no}{dok.standart.revizyon}"
 
 
 def _alt_bilgi(dok: KabulDokumani) -> list[str]:
