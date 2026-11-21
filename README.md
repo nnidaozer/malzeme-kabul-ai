@@ -57,6 +57,7 @@ pytest
 python scripts/pdf_tur_kontrol.py    # data/raw PDF'leri metin mi taranmış mı
 python scripts/kabul_dokumani_uret.py data/raw/MIL-PRF-23377K.pdf   # kural tabanlı kabul dokümanı taslağı
 python scripts/degerlendir.py TAHMIN.json GOLD.json                  # alan bazında P/R/F1
+python scripts/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-instruct-q4_K_M   # yerel dil modeliyle çıkarma
 ```
 
 Üretilen taslaklar `data/cikti/` altına JSON, Markdown ve Word olarak yazılır.
@@ -66,7 +67,8 @@ python scripts/degerlendir.py TAHMIN.json GOLD.json                  # alan baz�
 - `src/malzeme_kabul/`: üretim kodu
 - `tests/`: pytest testleri
 - `scripts/`: yardımcı betikler, hook'lar ve CI kontrolleri
-- `docs/`: proje tanımı ve belgeler
+- `docs/`: proje tanımı ve belgeler (dil modeli ortamı: [docs/dil_modeli_ortami.md](docs/dil_modeli_ortami.md))
+- `notebooks/`: Colab defteri (yalnız geliştirme ve ölçüm)
 - `data/raw/`: ham standart belgeleri
 - `data/gold_taslak/`: doğru cevap taslakları (gözden geçirilmeyi bekler)
 - `data/gold/`: elle etiketlenmiş doğru cevaplar (salt okunur)
