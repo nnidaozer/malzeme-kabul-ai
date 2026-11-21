@@ -24,6 +24,7 @@ def test_metin_sayfali_pdf_metin_tabanli(tmp_path):
     yol = pdf_yaz(tmp_path / "a.pdf", [{"metin": [UZUN, UZUN]}, {"metin": [UZUN]}])
     sonuc = pdf_turunu_belirle(yol)
     assert sonuc.tur == METIN
+    assert not sonuc.ocr_gerekli
     assert sonuc.sayfa_sayisi == 2
     assert sonuc.taranmis_sayfalar == []
 
@@ -40,6 +41,7 @@ def test_resim_ustunde_metin_katmani_ocr_katmanli_sayilir(tmp_path):
     sonuc = pdf_turunu_belirle(yol)
     assert sonuc.tur == OCR_KATMANLI
     assert sonuc.ocr_katmanli_sayfalar == [1]
+    assert sonuc.ocr_gerekli
 
 
 def test_metin_ve_taranmis_sayfa_karisik_pdf_karma(tmp_path):
@@ -56,6 +58,27 @@ def test_bos_sayfa_karari_etkilemez(tmp_path):
 
 def test_birkac_karakterlik_sayfa_numarasi_taranmis_sayfayi_metin_yapmaz(tmp_path):
     yol = pdf_yaz(tmp_path / "f.pdf", [{"gorsel": True, "metin": ["12"]}])
+    assert pdf_turunu_belirle(yol).tur == TARANMIS
+
+
+def test_seritlere_bolunmus_tarama_taranmis_sayilir(tmp_path):
+    yol = pdf_yaz(tmp_path / "s.pdf", [{"seritler": 6}])
+    assert pdf_turunu_belirle(yol).tur == TARANMIS
+
+
+def test_seritlere_bolunmus_ocrli_tarama_ocr_katmanli_sayilir(tmp_path):
+    yol = pdf_yaz(tmp_path / "so.pdf", [{"seritler": 6, "metin": [UZUN, UZUN]}])
+    assert pdf_turunu_belirle(yol).tur == OCR_KATMANLI
+
+
+def test_metni_resim_disinda_olan_sekil_sayfasi_metin_sayilir(tmp_path):
+    yol = pdf_yaz(tmp_path / "sk.pdf", [{"sekil": True, "metin": [UZUN, UZUN]}])
+    assert pdf_turunu_belirle(yol).tur == METIN
+
+
+def test_yalniz_filigran_satiri_olan_tarama_taranmis_sayilir(tmp_path):
+    # EverySpec her sayfaya "Downloaded from https://www.everyspec.com" ekler.
+    yol = pdf_yaz(tmp_path / "w.pdf", [{"gorsel": True, "metin": ["Downloaded from https://www.everyspec.com"]}])
     assert pdf_turunu_belirle(yol).tur == TARANMIS
 
 
