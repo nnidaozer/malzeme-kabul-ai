@@ -12,6 +12,7 @@ Bu proje, MIL-PRF-23377 askeri malzeme standardı ile tedarikçi sertifikasını
 
 ## Çalışma düzeni
 
+- Her oturumun başında scripts/oturum_kurulum.sh çalıştırılır.
 - Alt ajanlar `.claude/agents/` altındadır: `planlayici` → `test-yazari` → `uygulayici` → `gozden-geciren`. Metrikler için `degerlendirme-kosucusu`.
 - `uygulayici` ajanı `tests/` klasörünü değiştiremez (`scripts/hooks/tests_kilidi.py`).
 
