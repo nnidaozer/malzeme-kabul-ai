@@ -23,13 +23,22 @@ def pdf_yaz(yol: Path, sayfalar: list[dict]) -> Path:
     """Her sayfa için {"metin": [satırlar], "gorsel": bool, "tablo": [[hücreler]]} alır.
 
     "gorsel": True ise sayfanın tamamını kaplayan bir resim konur (taranmış sayfa
-    benzetimi). "tablo" verilirse çizgili basit bir tablo çizilir.
+    benzetimi). "seritler": n verilirse sayfa n yatay resim şeridiyle kaplanır
+    (bazı tarayıcılar sayfayı böyle böler). "sekil": True sayfanın alt
+    yarısına bir şekil resmi koyar; metin şeklin dışında kalır. "tablo"
+    verilirse çizgili basit bir tablo çizilir.
     """
     c = canvas.Canvas(str(yol), pagesize=A4)
     genislik, yukseklik = A4
     for sayfa in sayfalar:
         if sayfa.get("gorsel"):
             c.drawImage(str(_gorsel(yol.parent)), 0, 0, width=genislik, height=yukseklik)
+        if sayfa.get("seritler"):
+            n = sayfa["seritler"]
+            for i in range(n):
+                c.drawImage(str(_gorsel(yol.parent)), 0, i * yukseklik / n, width=genislik, height=yukseklik / n)
+        if sayfa.get("sekil"):
+            c.drawImage(str(_gorsel(yol.parent)), 0, 0, width=genislik, height=yukseklik * 0.55)
         y = yukseklik - 72
         for satir in sayfa.get("metin", []):
             c.drawString(72, y, satir)
