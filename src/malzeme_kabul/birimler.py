@@ -7,6 +7,7 @@ kurallarla yapılır; dil modeli birim çevirmez (CLAUDE.md, kural 1).
 
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 
 import pint
@@ -17,12 +18,23 @@ def kayit() -> pint.UnitRegistry:
     return pint.UnitRegistry()
 
 
+# pint "mil" birimini açı (miliradyan) olarak tanımlar. Kaplama ve film
+# kalınlığında "mil" inçin binde biridir (thou, 25,4 µm); bu yüzden her
+# ayrıştırmadan önce "mil"/"mils" kelimesi "thou" yapılır.
+_MIL = re.compile(r"(?<![A-Za-z_])mils?(?![A-Za-z_])")
+
+
+def pint_ifadesi(birim: str) -> str:
+    """Birim metnini pint'e verilecek ifadeye çevirir ("mil" -> "thou")."""
+    return _MIL.sub("thou", birim)
+
+
 def birimi_coz(birim: str) -> pint.Unit:
     """Birim metnini pint birimine çevirir; tanınmazsa ValueError verir."""
     if not birim or not birim.strip():
         raise ValueError("birim boş")
     try:
-        return kayit().parse_units(birim)
+        return kayit().parse_units(pint_ifadesi(birim))
     except (pint.errors.UndefinedUnitError, pint.errors.DefinitionSyntaxError, AttributeError, TypeError) as hata:
         raise ValueError(f"pint bu birimi tanımıyor: {birim!r}") from hata
     except Exception as hata:  # pint ayrıştırıcısı bozuk ifadelerde farklı hatalar verebilir
