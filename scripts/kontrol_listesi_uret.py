@@ -57,7 +57,7 @@ def kontrol_listesi(dok: KabulDokumani) -> str:
         f"# {belge} doğru cevap taslağı: kontrol listesi",
         "",
         "Her satırdaki değeri PDF'teki maddeyle karşılaştır; doğruysa `[ ]` kutusunu `[x]` yap, "
-        "yanlışsa satırın yanına doğrusunu yaz. Değerler `MIL-PRF-23377K.json` dosyasından üretildi; "
+        f"yanlışsa satırın yanına doğrusunu yaz. Değerler `{belge}.json` dosyasından üretildi; "
         "PDF sayfası, PDF görüntüleyicideki sayfa numarasıdır.",
         "",
         f"## Testler ({len(dok.testler)})",

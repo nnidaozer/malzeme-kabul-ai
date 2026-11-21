@@ -61,3 +61,10 @@ def test_sayfa_numarasi_yoksa_soru_isareti(betik, dokuman):
     d = dokuman.model_copy(update={"raf_omurleri": [
         RafOmru(sure=1, birim="year", kaynak=Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde="3.5.3"))]})
     assert "| [ ] | Raf ömrü (tümü) | 1 | year | 3.5.3 | ? |" in betik.kontrol_listesi(d)
+
+
+def test_giris_metni_belgenin_kendi_json_dosyasini_gosterir(betik, dokuman):
+    d = dokuman.model_copy(update={"standart": StandartBilgisi(belge_no="MIL-PRF-85285", revizyon="E")})
+    md = betik.kontrol_listesi(d)
+    assert "`MIL-PRF-85285E.json`" in md
+    assert "23377K" not in md.split("## Testler")[0]
