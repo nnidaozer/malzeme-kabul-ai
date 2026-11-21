@@ -312,7 +312,7 @@ def test_guncelleme_onerileri_raf_omru_kosul_ve_numune_icin():
 
     dokuman = _dokuman("H")
     k = Kaynak(belge_no="MIL-PRF-23377", revizyon="H", madde="3.5.3")
-    dokuman.raf_omru = RafOmru(sure=1, birim="year", kaynak=k)
+    dokuman.raf_omurleri = [RafOmru(sure=1, birim="year", kaynak=k)]
     dokuman.kosullar = [Kosul(kategori="depolama", ad="Depolama", aciklama="x", kaynak=k)]
     dokuman.numune_hazirlama = [NumuneHazirlama(id="panel_A", kaynak=k.model_copy(update={"madde": "6.7"}))]
     hedefler = {o.hedef: o for o in guncelleme_onerileri(_fark(), dokuman)}

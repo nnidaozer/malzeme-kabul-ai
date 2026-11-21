@@ -140,7 +140,7 @@ class TestFarki:
 @dataclass
 class GuncellemeOnerisi:
     hedef: str
-    """'test:<id>', 'raf_omru', 'kosul:<ad>', 'numune:<id>', 'yeni_test:<ad>',
+    """'test:<id>', 'raf_omru[:<kap türü>]', 'kosul:<ad>', 'numune:<id>', 'yeni_test:<ad>',
     'yeni_sart:<madde>' ya da 'kabul_kapsami:<test>'."""
     tur: OneriTuru
     madde: str
@@ -622,8 +622,8 @@ def guncelleme_onerileri(fark: RevizyonFarki, dokuman: KabulDokumani) -> list[Gu
                 hedef, "guncelle", t.kaynak.madde,
                 f"'{t.test_adi}' testinin {alanlar} bilgisi değişti ({ayrinti})."))
 
-    if dokuman.raf_omru:
-        sart_ekle("raf_omru", dokuman.raf_omru.kaynak.madde)
+    for r in dokuman.raf_omurleri:
+        sart_ekle(f"raf_omru:{r.kap_turu}" if r.kap_turu else "raf_omru", r.kaynak.madde)
     for k in dokuman.kosullar:
         sart_ekle(f"kosul:{k.ad}", k.kaynak.madde)
     for n in dokuman.numune_hazirlama:
