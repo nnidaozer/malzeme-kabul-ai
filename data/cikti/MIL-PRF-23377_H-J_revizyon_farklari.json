@@ -1,0 +1,2702 @@
+{
+  "belge_no": "MIL-PRF-23377",
+  "eski_revizyon": "H",
+  "yeni_revizyon": "J",
+  "sart_farklari": [
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "1.1",
+        "baslik": "Scope",
+        "metin": "This specification covers the requirements for corrosion inhibiting, chemical and solvent resistant, solvent-borne, epoxy primer coatings that have a maximum volatile organic compound (VOC) content of 340 grams per liter (g/L)(2.8 pounds per gallon [lb/gal]).",
+        "sayfa": 1,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "1.1",
+        "baslik": "Scope",
+        "metin": "This specification covers corrosion inhibiting, chemical and solvent resistant, solvent-borne, high-solids epoxy primer coatings that have a maximum volatile organic compound (VOC) content of 340 grams per liter (g/L)(2.8 pounds per gallon [lb/gal]).",
+        "sayfa": 1,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "the requirements for",
+          "yeni": ""
+        },
+        {
+          "eski": "",
+          "yeni": "high-solids"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "1.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "1.2",
+        "baslik": "Classification",
+        "metin": "The primer coatings will be of the following types and classes, as specified (see 6.2):",
+        "sayfa": 1,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "1.2",
+        "baslik": "Classification",
+        "metin": "The primer coatings are of the following types and classes, as specified (see 6.2):",
+        "sayfa": 1,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "will be",
+          "yeni": "are"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "1.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "1.2.2",
+        "baslik": "Classes",
+        "metin": "The classes of primer coatings are as follows: Class C - Strontium chromate based corrosion inhibitors Class N - Non-chromate based corrosion inhibitors Beneficial comments (recommendations, additions, deletions) and any pertinent data which may be of use in improving this document should be addressed to: Commander, Naval Air Warfare Center Aircraft Division, Code 414100B120-3, Highway 547, Lakehurst, NJ 08733-5100, by using the Standardization Document Improvement Proposal (DD Form 1426) appearing at the end of this document or by letter. AMSC N/A FSC 8010 DISTRIBUTION STATEMENT A. Approved for public release; distribution is unlimited.",
+        "sayfa": 1,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "1.2.2",
+        "baslik": "Classes",
+        "metin": "The classes of primer coatings are as follows: Class C1 - Barium chromate based corrosion inhibitors Class C2 - Strontium chromate based corrosion inhibitors Class N - Non-chromate based corrosion inhibitors Comments, suggestions, or questions on this document should be addressed to: Commander, Naval Air Warfare Center Aircraft Division, Code 491000B120-3, Highway 547, Lakehurst, NJ 08733-5100 or emailed to thomas.omara@navy.mil. Since contact information can change, you may want to verify the currency of this address information using the ASSIST Online database at http://assist.daps.dla.mil. AMSC N/A FSC 8010",
+        "sayfa": 1,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "sayisal",
+      "degisiklikler": [
+        {
+          "eski": "C",
+          "yeni": "C1 - Barium chromate based corrosion inhibitors Class C2"
+        },
+        {
+          "eski": "Beneficial comments (recommendations, additions, deletions) and any pertinent data which may be of use in improving",
+          "yeni": "Comments, suggestions, or questions on"
+        },
+        {
+          "eski": "414100B120-3,",
+          "yeni": "491000B120-3,"
+        },
+        {
+          "eski": "08733-5100, by",
+          "yeni": "08733-5100 or emailed to thomas.omara@navy.mil. Since contact information can change, you may want to verify the currency of this address information"
+        },
+        {
+          "eski": "Standardization Document Improvement Proposal (DD Form 1426) appearing",
+          "yeni": "ASSIST Online database"
+        },
+        {
+          "eski": "the end of this document or by letter.",
+          "yeni": "http://assist.daps.dla.mil."
+        },
+        {
+          "eski": "DISTRIBUTION STATEMENT A. Approved for public release; distribution is unlimited.",
+          "yeni": ""
+        }
+      ],
+      "eski_degerler": [
+        "1426"
+      ],
+      "yeni_degerler": [],
+      "madde": "1.2.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.7",
+        "baslik": "Part or Identifying Number (PIN)",
+        "metin": "The PIN to be used for primer coatings acquired to this specification is created as follows: M23377 - X - X - XXXX Specification Type designator Class designator Kit size designator identifier 1 = Type I (C or N) (see 6.7.1) 2 = Type II",
+        "sayfa": 16,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "1.3",
+        "baslik": "Part or Identifying Number (PIN)",
+        "metin": "The PINs to be used for primer coatings acquired to this specification are created as follows: M23377 - X - XX - XXXX Specification Type designator Class designator Kit size designator identifier 1 = Type I (C1, C2 or N) (see 1.3.1) 2 = Type II",
+        "sayfa": 2,
+        "ust": null
+      },
+      "yeniden_numaralandi": true,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "PIN",
+          "yeni": "PINs"
+        },
+        {
+          "eski": "is",
+          "yeni": "are"
+        },
+        {
+          "eski": "X",
+          "yeni": "XX"
+        },
+        {
+          "eski": "(C",
+          "yeni": "(C1, C2"
+        },
+        {
+          "eski": "6.7.1)",
+          "yeni": "1.3.1)"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "1.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.7.1",
+        "baslik": "Kit size",
+        "metin": "The primer coatings covered by this specification should be purchased by volume, the unit being a kit containing two components. The kit component sizes need not be of the same size. When this part numbering system is used, the kit size is to be identified as: Kit Size 1/ Kit Size Designator Less than one pint 2/ 4-pint (0.47-liter) 004P 4-quart (0.95-liter) 004Q 4-gallon (3.79-liter) 004G 20-gallon (75.7-liter) 020G 1/ The kit size and its designator may be modified for ease of procurement and is not limited. 2/ Designators for less than pint size kits (small touch-up kits) shall be expressed in cubic centimeters (cc) and shall be designated by “C.” Example: A type I, class C, 50 cc kit shall be designated M23377-1-C-050C.",
+        "sayfa": 16,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "1.3.1",
+        "baslik": "Kit size",
+        "metin": "The primer coatings covered by this specification should be purchased by volume, the unit being a kit containing two components. The kit component sizes need not be of the same size. When this part numbering system is used, the kit size is to be identified as: Kit Size 1/ Kit Size Designator Less than one pint 2/ 4-pint (0.47-liter) 004P 4-quart (0.95-liter) 004Q 4-gallon (3.79-liter) 004G 20-gallon (75.7-liter) 020G 1/ The kit size and its designator may be modified for ease of procurement and is not limited. 2/ Designators for less than pint size kits (small touch-up kits) should be expressed in cubic centimeters (cc) and should be designated by “C.” Example: A type I, class C2, 50 cc kit shall be designated M23377-1-C2-050C.",
+        "sayfa": 2,
+        "ust": null
+      },
+      "yeniden_numaralandi": true,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "shall",
+          "yeni": "should"
+        },
+        {
+          "eski": "shall",
+          "yeni": "should"
+        },
+        {
+          "eski": "C,",
+          "yeni": "C2,"
+        },
+        {
+          "eski": "M23377-1-C-050C.",
+          "yeni": "M23377-1-C2-050C."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "1.3.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "2.1",
+        "baslik": "General",
+        "metin": "The documents listed in this section are specified in sections 3 and 4 of this specification. This section does not include documents cited in other sections of this specification or recommended for additional information or as examples. While every effort has been made to ensure the completeness of this list, document users are cautioned that they must meet all specified requirements documents cited in sections 3 and 4 of this specification, whether or not they are listed.",
+        "sayfa": 2,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "2.1",
+        "baslik": "General",
+        "metin": "The documents listed in this section are specified in sections 3 and 4 of this specification. This section does not include documents cited in other sections of this specification or recommended for additional information or as examples. While every effort has been made to ensure the completeness of this list, document users are cautioned that they must meet all specified requirements of documents cited in sections 3 and 4 of this specification, whether or not they are listed.",
+        "sayfa": 2,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "",
+          "yeni": "of"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "2.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "2.2.1",
+        "baslik": "Specifications and standards",
+        "metin": "The following specifications and standards form a part of this document to the extent specified herein. Unless otherwise specified, the issues of these documents are those listed in the issue of the Department of Defense Index of Specifications and Standards (DoDISS) and supplement thereto, cited in the solicitation (see 6.2). SPECIFICATIONS DEPARTMENT OF DEFENSE MIL-C-5541 - Chemical Conversion Coatings on Aluminum and Aluminum Alloys MIL-C-8514 - Coating Compound, Metal Pretreatment, Resin-Acid MIL-A-8625 - Anodic Coatings, for Aluminum and Aluminum Alloys MIL-PRF-23699 - Lubricating Oil, Aircraft Turbine Engine, Synthetic Base, NATO Code Number 0-156 MIL-T-81772 - Thinner, Aircraft Coating MIL-PRF-83282 - Hydraulic Fluid, Fire Resistant, Synthetic Hydrocarbon Base, Metric, NATO Code Number H-537 MIL-PRF-85285 - Coating: Polyurethane, High-Solids STANDARDS FEDERAL FED-STD-141 - Paint, Varnish, Lacquer and Related Materials: Methods of Inspection, Sampling and Testing FED-STD-595 - Colors Used in Government Procurement (Unless otherwise indicated, copies of the above specifications and standards are available from the Standardization Document Order Desk, 700 Robbins Avenue, Building 4D, Philadelphia, PA 19111-5094.)",
+        "sayfa": 2,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "2.2.1",
+        "baslik": "Specifications and standards",
+        "metin": "The following specifications and standards form a part of this document to the extent specified herein. Unless otherwise specified, the issues of these documents are those cited in the solicitation or contract. FEDERAL STANDARDS FED-STD-141 - Paint, Varnish, Lacquer and Related Materials: Methods of Inspection, Sampling and Testing. FED-STD-595 - Colors Used in Government Procurement. DEPARTMENT OF DEFENSE SPECIFICATIONS MIL-C-5541 - Chemical Conversion Coatings on Aluminum and Aluminum Alloys. MIL-C-8514 - Coating Compound, Metal Pretreatment, Resin-Acid. MIL-A-8625 - Anodic Coatings for Aluminum and Aluminum Alloys. MIL-PRF-23699 - Lubricating Oil, Aircraft Turbine Engine, Synthetic Base, NATO Code Number 0-156. MIL-T-81772 - Thinner, Aircraft Coating. MIL-PRF-83282 - Hydraulic Fluid, Fire Resistant, Synthetic Hydrocarbon Base, Metric, NATO Code Number H-537. MIL-PRF-85285 - Coating: Polyurethane, Aircraft and Support Equipment. (Copies of these documents are available on line at http://assist.daps.dla.mil/quicksearch/ or http://assist.daps.dla.mil or from the Standardization Document Order Desk, 700 Robbins Avenue, Building 4D, Philadelphia, PA 19111-5094.)",
+        "sayfa": 2,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "listed in the issue of the Department of Defense Index of Specifications and Standards (DoDISS) and supplement thereto,",
+          "yeni": ""
+        },
+        {
+          "eski": "(see 6.2). SPECIFICATIONS",
+          "yeni": "or contract. FEDERAL STANDARDS FED-STD-141 - Paint, Varnish, Lacquer and Related Materials: Methods of Inspection, Sampling and Testing. FED-STD-595 - Colors Used in Government Procurement."
+        },
+        {
+          "eski": "",
+          "yeni": "SPECIFICATIONS"
+        },
+        {
+          "eski": "Alloys",
+          "yeni": "Alloys."
+        },
+        {
+          "eski": "Resin-Acid",
+          "yeni": "Resin-Acid."
+        },
+        {
+          "eski": "Coatings,",
+          "yeni": "Coatings"
+        },
+        {
+          "eski": "Alloys",
+          "yeni": "Alloys."
+        },
+        {
+          "eski": "0-156",
+          "yeni": "0-156."
+        },
+        {
+          "eski": "Coating",
+          "yeni": "Coating."
+        },
+        {
+          "eski": "H-537",
+          "yeni": "H-537."
+        },
+        {
+          "eski": "High-Solids STANDARDS FEDERAL FED-STD-141 - Paint, Varnish, Lacquer",
+          "yeni": "Aircraft"
+        },
+        {
+          "eski": "Related Materials: Methods",
+          "yeni": "Support Equipment. (Copies"
+        },
+        {
+          "eski": "Inspection, Sampling and Testing FED-STD-595 - Colors Used in Government Procurement (Unless otherwise indicated, copies of the above specifications and standards",
+          "yeni": "these documents"
+        },
+        {
+          "eski": "",
+          "yeni": "on line at http://assist.daps.dla.mil/quicksearch/ or http://assist.daps.dla.mil or"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "2.2.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "2.3",
+        "baslik": "Non-Government publications",
+        "metin": "The following documents form a part of this document to the extent specified herein. Unless otherwise specified, the issues of the documents which are DoD adopted are those listed in the issue of the DoDISS cited in the solicitation. Unless otherwise specified, the issues of documents not listed in the DoDISS are the issues of the documents cited in the solicitation (see 6.2). AMERICAN SOCIETY FOR TESTING AND MATERIALS (ASTM) ASTM-B117 - Salt Spray (Fog) Apparatus, Operating. (DoD adopted) ASTM-D1200 - Cup, Viscosity by Ford Viscosity. (DoD adopted) ASTM-D1210 - Fineness Of Dispersion Of Pigment-Vehicle Systems By Hegman-Type Gage. (DoD adopted) ASTM-D1296 - Solvents and Diluents, Volatile, Odor of. (DoD adopted) ASTM-D1640 - Organic Coating, Drying, Curing, or Film Formation of at Room Temperature. (DoD adopted) ASTM-D1649 - Strontium Chromate Pigment ASTM-D1849 - Paint, Package Stability of. (DoD adopted) ASTM-D2803 - Metal, Organic Coatings on, Filiform Corrosion Resistance of. (DoD adopted) ASTM-D3335 - Lead, Cadmium, and Cobalt in Paint by Atomic Absorption Spectroscopy, Test for Low Concentrations of. (DoD adopted) ASTM-D3718 - Paint, Chromium in, by Atomic Absorption Spectroscopy, Low Concentrations of. (DoD adopted) ASTM-D3742 - 1,1,1-Trichloroethane Content ASTM-D3924 - Paint, Varnish, Lacquer, and Related Materials, Conditioning and Testing, Standard Environment for. (DoD adopted) ASTM-D3960 - Paints and Related Coatings, Determining Volatile Organic Compound (VOC) Content of. (DoD adopted) (Application for copies should be addressed to the American Society for Testing and Materials, 100 Barr Harbor Drive, West Conshohocken, PA 19428-2959.) AMERICAN SOCIETY FOR QUALITY CONTROL (ASQC) ASQC-Z1.4 - Procedures, Sampling and Tables for Inspection by Attributes. (DoD adopted) (Application for copies should be addressed to the American Society for Quality Control, P.O. Box 3005, 611 East Wisconsin Avenue, Milwaukee, WI 53201-4606.) SOCIETY OF AUTOMOTIVE ENGINEERS (SAE) SAE-AMS1640 - Compound, Corrosion Removing for Aircraft Surfaces SAE-AMS-QQ-A-250/4 - Aluminum Alloy 2024, Plate and Sheet. (DoD adopted) SAE-AMS-QQ-A-250/5 - Aluminum Alloy Alclad 2024, Plate and Sheet. (DoD adopted) (Application for copies should be addressed to the Society of Automotive Engineers, 400 Commonwealth Drive, Warrendale, PA 15096-0001.)",
+        "sayfa": 3,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "2.3",
+        "baslik": "Non-Government publications",
+        "metin": "The following documents form a part of this document to the extent specified herein. Unless otherwise specified, the issues of these documents are those cited in the solicitation or contract. AMERICAN SOCIETY FOR TESTING AND MATERIALS (ASTM) INTERNATIONAL ASTM-B117 - Salt Spray (Fog) Apparatus, Operating. (DoD adopted) ASTM-D1200 - Cup, Viscosity by Ford Viscosity. (DoD adopted) ASTM-D1210 - Fineness Of Dispersion Of Pigment-Vehicle Systems By Hegman- Type Gage. (DoD adopted) ASTM-D1296 - Solvents and Diluents, Odor of, Volatile. (DoD adopted) ASTM-D1640 - Organic Coating, Drying, Curing, or Film Formation of at Room Temperature. (DoD adopted) ASTM-D1649 - Pigment, Strontium Chromate. ASTM-D1849 - Paint, Package Stability of. (DoD adopted) ASTM-D2803 - Metal, Organic Coatings on, Filiform Corrosion Resistance of. (DoD adopted) ASTM-D3335 - Lead, Cadmium, and Cobalt in Paint by Atomic Absorption Spectroscopy, Test for Low Concentrations of. (DoD adopted) ASTM-D3718 - Paint, Chromium in, by Atomic Absorption Spectroscopy, Low Concentrations of. (DoD adopted) ASTM-D3742 - Trichloroethane Content 1,1,1, Standard Test Method for. ASTM-D3924 - Paint, Varnish, Lacquer, and Related Materials, Conditioning and Testing, Standard Environment for. (DoD adopted) ASTM-D3960 - Paints and Related Coatings, Determining Volatile Organic Compound (VOC), Content of. (DoD adopted) (Copies of these documents are available from www.astm.org or ASTM International, 100 Barr Harbor Drive, West Conshohocken, PA 19428-2959.) AMERICAN SOCIETY FOR QUALITY (ASQ) ASQ-Z1.4 - Procedures, Sampling and Tables for Inspection by Attributes. (DoD adopted) (Copies of this document are available from www.asq.org or American Society for Quality, 600 Plankinton Avenue, Milwaukee, WI 53203) SOCIETY OF AUTOMOTIVE ENGINEERS (SAE) INTERNATIONAL SAE-AMS1640 - Compound, Corrosion Removing for Aircraft Surfaces SAE-AMS-QQ-A-250/4 - Aluminum Alloy 2024, Plate and Sheet. (DoD adopted) SAE-AMS-QQ-A-250/5 - Aluminum Alloy Alclad 2024, Plate and Sheet. (DoD adopted) (Copies of these documents are available from www.sae.org or SAE World Headquarters, 400 Commonwealth Drive, Warrendale, PA 15096-0001.)",
+        "sayfa": 3,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "sayisal",
+      "degisiklikler": [
+        {
+          "eski": "the",
+          "yeni": "these"
+        },
+        {
+          "eski": "which are DoD adopted",
+          "yeni": ""
+        },
+        {
+          "eski": "listed in the issue of the DoDISS cited in the solicitation. Unless otherwise specified, the issues of documents not listed in the DoDISS are the issues of the documents",
+          "yeni": ""
+        },
+        {
+          "eski": "(see 6.2).",
+          "yeni": "or contract."
+        },
+        {
+          "eski": "",
+          "yeni": "INTERNATIONAL"
+        },
+        {
+          "eski": "Hegman-Type",
+          "yeni": "Hegman- Type"
+        },
+        {
+          "eski": "Volatile,",
+          "yeni": ""
+        },
+        {
+          "eski": "of.",
+          "yeni": "of, Volatile."
+        },
+        {
+          "eski": "",
+          "yeni": "Pigment,"
+        },
+        {
+          "eski": "Chromate Pigment",
+          "yeni": "Chromate."
+        },
+        {
+          "eski": "1,1,1-Trichloroethane",
+          "yeni": "Trichloroethane"
+        },
+        {
+          "eski": "",
+          "yeni": "1,1,1, Standard Test Method for."
+        },
+        {
+          "eski": "(VOC)",
+          "yeni": "(VOC),"
+        },
+        {
+          "eski": "(Application for copies should be addressed to the American Society for Testing and Materials,",
+          "yeni": "(Copies of these documents are available from www.astm.org or ASTM International,"
+        },
+        {
+          "eski": "CONTROL (ASQC) ASQC-Z1.4",
+          "yeni": "(ASQ) ASQ-Z1.4"
+        },
+        {
+          "eski": "(Application for copies should be addressed to the",
+          "yeni": "(Copies of this document are available from www.asq.org or"
+        },
+        {
+          "eski": "Quality Control, P.O. Box 3005, 611 East Wisconsin",
+          "yeni": "Quality, 600 Plankinton"
+        },
+        {
+          "eski": "53201-4606.)",
+          "yeni": "53203)"
+        },
+        {
+          "eski": "",
+          "yeni": "INTERNATIONAL"
+        },
+        {
+          "eski": "(Application for copies should be addressed to the Society",
+          "yeni": "(Copies"
+        },
+        {
+          "eski": "Automotive Engineers,",
+          "yeni": "these documents are available from www.sae.org or SAE World Headquarters,"
+        }
+      ],
+      "eski_degerler": [
+        "3005",
+        "611"
+      ],
+      "yeni_degerler": [
+        "1",
+        "600",
+        "53203"
+      ],
+      "madde": "2.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.1",
+        "baslik": "Qualification",
+        "metin": "The primer coating furnished under this specification shall be a product that is authorized by the qualifying activity for listing on the applicable qualified products list before contract award (see 4.2 and 6.3).",
+        "sayfa": 4,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.1",
+        "baslik": "Qualification",
+        "metin": "The primer coatings furnished under this specification shall be products that are authorized by the qualifying activity for listing on the applicable qualified products list before contract award (see 4.2 and 6.3).",
+        "sayfa": 4,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "a product",
+          "yeni": "products"
+        },
+        {
+          "eski": "is",
+          "yeni": "are"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.2",
+        "baslik": "Material",
+        "metin": "Materials used in the manufacture of the primer coating supplied under this specification shall be of such a quality as to produce products conforming to the requirements of this specification.",
+        "sayfa": 4,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.2",
+        "baslik": "Material",
+        "metin": "Materials used in the manufacture of the primer coatings supplied under this specification shall be products conforming to the requirements of this specification.",
+        "sayfa": 4,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "of such a quality as to produce",
+          "yeni": ""
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.3",
+        "baslik": "Toxicity",
+        "metin": "The primer coating supplied under this specification shall have no adverse effect on the health of personnel (see 6.9), when used for its intended purpose and with the precautions listed in 3.11.",
+        "sayfa": 4,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.3",
+        "baslik": "Toxicity",
+        "metin": "The primer coatings shall have no adverse effect on the health of personnel when used for its intended purpose and with the precautions listed in 3.11, when evaluated in accordance with 4.5.12 (see 6.8).",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating supplied under this specification",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "(see 6.9),",
+          "yeni": ""
+        },
+        {
+          "eski": "3.11.",
+          "yeni": "3.11, when evaluated in accordance with 4.5.12 (see 6.8)."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.4",
+        "baslik": "Composition",
+        "metin": "The primer coating shall consist of two components, as follows: Component A - a base component composed of epoxy resin and solvents Component B - a curing agent containing polyamide or amine resin and solvents Component B shall act as the curing agent for component A. The components shall be packaged separately and furnished as a kit (see 6.7.1). When the components are mixed in the proportions specified by the manufacturer, a primer coating meeting the requirements of this specification shall result. Chlorinated solvents, except for para-chlorotrifluoromethylbenzene or equal, shall be prohibited in the formulation of this primer coating. Incidental cadmium and cadmium compounds shall be not greater than one part per million (ppm). The non-volatile portion shall contain not more than 0.06 percent by weight of lead metal or lead compounds.",
+        "sayfa": 4,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.4",
+        "baslik": "Composition",
+        "metin": "The primer coatings shall consist of two components, as follows: Component A - a base component composed of epoxy resin and solvents Component B - a curing agent containing polyamide or amine resin and solvents Component B shall act as the curing agent for component A. The components shall be packaged separately and furnished as a kit (see 1.3.1). Pigments may be included with either componet. When the components are mixed in the proportions specified by the manufacturer, a primer coating meeting the requirements of this specification shall result. Chlorinated solvents, except for para-chlorotrifluoromethylbenzene or equal, shall be prohibited in the formulation of these primer coatings. Incidental cadmium and cadmium compounds shall be not greater than one part per million (ppm). The non-volatile portion shall contain not more than 0.06 percent by weight of lead metal or lead compounds.",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "6.7.1).",
+          "yeni": "1.3.1). Pigments may be included with either componet."
+        },
+        {
+          "eski": "this",
+          "yeni": "these"
+        },
+        {
+          "eski": "coating.",
+          "yeni": "coatings."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.4"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.4.1.1",
+        "baslik": "Class C",
+        "metin": "Coatings containing strontium chromate conforming to ASTM-D1649 as the corrosion inhibitor, along with extenders and other pigments, shall be identified as class C.",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.4.1.1",
+        "baslik": "Class C1",
+        "metin": "Coatings containing barium chromate based corrosion inhibitors, along with extenders and other pigments, shall be identified as class C1.",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": true,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "strontium",
+          "yeni": "barium"
+        },
+        {
+          "eski": "conforming to ASTM-D1649 as the",
+          "yeni": "based"
+        },
+        {
+          "eski": "inhibitor,",
+          "yeni": "inhibitors,"
+        },
+        {
+          "eski": "C.",
+          "yeni": "C1."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.4.1.1"
+    },
+    {
+      "tur": "eklendi",
+      "eski": null,
+      "yeni": {
+        "madde": "3.4.1.2",
+        "baslik": "Class C2",
+        "metin": "Coatings containing strontium chromate conforming to ASTM-D1649 as the corrosion inhibitor, along with extenders and other pigments, shall be identified as class C2.",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.4.1.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.4.1.2",
+        "baslik": "Class N",
+        "metin": "Coatings containing non-chromium corrosion inhibitors, along with extenders and other pigments, shall be identified as class N. Incidental chromium content of class N shall be not greater than 5 ppm (see 4.5).",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.4.1.3",
+        "baslik": "Class N",
+        "metin": "Coatings containing non-chromium corrosion inhibitors, along with extenders and other pigments, shall be identified as class N. Incidental chromium content of class N shall be not greater than 5 ppm (see 4.5).",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeniden_numaralandi": true,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.4.1.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.4.2",
+        "baslik": "Volatile organic compound (VOC) solvent content",
+        "metin": "The VOC content of admixed primer coatings shall be not greater than 340 g/L (2.8 lb/gal). The resistivity of the solvents shall permit application of the coating by electrostatic spray application (see 4.5).",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.4.2",
+        "baslik": "Volatile organic compound (VOC) solvent content",
+        "metin": "The VOC content of admixed primer coatings shall be not greater than 340 g/L (2.8 lb/gal). The resistivity of the solvents shall permit application of the coatings by electrostatic spray application (see 4.5).",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.4.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.5.3",
+        "baslik": "Storage stability",
+        "metin": "The primer coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for not less than one year (see 4.5).",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.5.3",
+        "baslik": "Storage stability",
+        "metin": "The primer coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for not less than one year for metal containers and six months for plastic containers (see 4.5).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "sayisal",
+      "degisiklikler": [
+        {
+          "eski": "",
+          "yeni": "for metal containers and six months for plastic containers"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [
+        "6 month"
+      ],
+      "madde": "3.5.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.5.4",
+        "baslik": "Accelerated storage stability",
+        "metin": "The primer coating, as packaged by the manufacturer, shall meet all requirements of this specification after storage for 14 days (see 4.5.2). The container shall not become deformed or the lid shall not become unsealed during the storage period.",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.5.4",
+        "baslik": "Accelerated storage stability",
+        "metin": "The primer coatings, as packaged by the manufacturer, shall meet all requirements of this specification after storage for 14 days (see 4.5.2). The container shall not become deformed or the lid shall not become unsealed during the storage period.",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating,",
+          "yeni": "coatings,"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.5.4"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.6.1.1",
+        "baslik": "Type I",
+        "metin": "The color of the admixed type I primer coating shall be the natural color of the corrosion inhibiting pigments used, except that tinting to a darker shade is permitted.",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.6.1.1",
+        "baslik": "Type I",
+        "metin": "The color of the admixed type I primer coatings shall be the natural color of the corrosion inhibiting pigments used, except that tinting to a darker shade is permitted.",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.6.1.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.6.1.2",
+        "baslik": "Type II",
+        "metin": "The color of the admixed type II primer coating shall be dark green or gray.",
+        "sayfa": 5,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.6.1.2",
+        "baslik": "Type II",
+        "metin": "The color of the admixed type II primer coatings shall be dark green or gray.",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.6.1.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.6.2",
+        "baslik": "Odor",
+        "metin": "The odor of the admixed coating, wet or dry, shall be characteristic of the solvents used (see 4.5).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.6.2",
+        "baslik": "Odor",
+        "metin": "The odor of the admixed coatings, wet or dry, shall be characteristic of the solvents used (see 4.5).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating,",
+          "yeni": "coatings,"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.6.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.6.3",
+        "baslik": "Viscosity",
+        "metin": "Immediately after mixing components A and B, the maximum viscosity of the unthinned, admixed primer coating shall be 40 seconds through a #4 Ford cup (see 4.5).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.6.3",
+        "baslik": "Viscosity",
+        "metin": "Immediately after mixing components A and B, the maximum viscosity of the unthinned, admixed primer coatings shall be 40 seconds through a #4 Ford cup (see 4.5).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.6.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.6.4",
+        "baslik": "Pot life",
+        "metin": "After mixing and storage at room temperature in a closed container (see 4.5) for 4 hours, the maximum viscosity of the unthinned primer coating from 3.6.3 shall be 70 seconds through a #4 Ford cup (see 4.5).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.6.4",
+        "baslik": "Pot life",
+        "metin": "After mixing and storage at room temperature in a closed container (see 4.5) for 4 hours, the maximum viscosity of the unthinned primer coatings (see 3.6.3) shall be 70 seconds through a #4 Ford cup (see 4.5).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating from 3.6.3",
+          "yeni": "coatings (see 3.6.3)"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.6.4"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.7.1",
+        "baslik": "Surface appearance",
+        "metin": "The admixed primer coating, applied to a vertical surface, shall not sag, run, or streak. The dried film shall have a smooth, uniform surface free of grit, seeds, craters, blisters, and other irregularities (see 4.4.1). No orange peel (wavy appearance) shall be evident when viewed from at least six feet away.",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.7.1",
+        "baslik": "Surface appearance",
+        "metin": "The admixed primer coatings, applied to a vertical surface, shall not sag, run, or streak. The dried film shall have a smooth, uniform surface free of grit, seeds, craters, blisters, and other irregularities (see 4.4.1). No orange peel (wavy appearance) shall be evident when viewed from at least six feet away.",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating,",
+          "yeni": "coatings,"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.7.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.7.2",
+        "baslik": "Drying time",
+        "metin": "The admixed primer coating shall be tack free within 5 hours and shall dry hard within 8 hours (see table II).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.7.2",
+        "baslik": "Drying time",
+        "metin": "The admixed primer coatings shall be tack free within 5 hours and shall dry hard within 8 hours (see table II).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.7.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.7.3",
+        "baslik": "Lifting",
+        "metin": "There shall be no evidence of lifting or any other film irregularity after topcoating the admixed primer coating that has air dried for 5 hours (see 4.5.3).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.7.3",
+        "baslik": "Lifting",
+        "metin": "There shall be no evidence of lifting or any other film irregularity after topcoating the admixed primer coatings that have air dried for 5 hours (see 4.5.3).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "has",
+          "yeni": "have"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.7.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.7.4",
+        "baslik": "Adhesion",
+        "metin": "The primer coating shall not peel when tested in accordance with 4.5.4.",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.7.4",
+        "baslik": "Adhesion",
+        "metin": "The primer coatings shall not peel when tested in accordance with 4.5.4.",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.7.4"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.7.5",
+        "baslik": "Flexibility",
+        "metin": "The primer coating shall exhibit an elongation of not less than 10 percent when tested in accordance with 4.5.5.",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.7.5",
+        "baslik": "Flexibility",
+        "metin": "The primer coatings shall exhibit an elongation of not less than 10 percent when tested in accordance with 4.5.5.",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.7.5"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.7.6",
+        "baslik": "Infrared reflectance (type II primer coating only)",
+        "metin": "The total reflectance (specular and diffuse) of the type II primer coating, relative to barium sulfate, shall be not greater than ten percent throughout the range of 700 to 2,600 nanometers (nm) (see 4.5.6).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.7.6",
+        "baslik": "Infrared reflectance (type II primer coatings only)",
+        "metin": "The total reflectance (specular and diffuse) of the type II primer coatings, relative to barium sulfate, shall be not greater than ten percent throughout the range of 700 to 2,600 nanometers (nm) (see 4.5.6).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": true,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating,",
+          "yeni": "coatings,"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.7.6"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.8.1",
+        "baslik": "Water resistance",
+        "metin": "The topcoated primer coating shall withstand immersion in distilled water maintained at 49 ±3 °C (120 ±5 °F) for four days without exhibiting any evidence of wrinkling, blistering, or any other coating deficiency (see 4.5.7).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.8.1",
+        "baslik": "Water resistance",
+        "metin": "The topcoated primer coatings shall withstand immersion in distilled water maintained at 49 ± 3 °C (120 ± 5 °F) for 4 days without exhibiting any evidence of wrinkling, blistering, or any other coating deficiency (see 4.5.7).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "four",
+          "yeni": "4"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.8.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.8.2.1",
+        "baslik": "Salt spray",
+        "metin": "The primer coating, with and without a topcoat, shall not exhibit blistering, lifting of either coating, nor substrate pitting after exposure to a 5 percent salt spray for 2,000 hours. Class C primer shall exhibit no corrosion in the scribe (see 4.5.8.1).",
+        "sayfa": 6,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.8.2.1",
+        "baslik": "Salt spray",
+        "metin": "The primer coatings, with and without a topcoat, shall not exhibit blistering, lifting of either coating, nor substrate pitting after exposure to a 5 percent salt spray for 2,000 hours. Class C1 and C2 primers shall exhibit no corrosion in the scribe (see 4.5.8.1).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating,",
+          "yeni": "coatings,"
+        },
+        {
+          "eski": "C primer",
+          "yeni": "C1 and C2 primers"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.8.2.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.8.2.2",
+        "baslik": "Filiform",
+        "metin": "The topcoated primer coating shall not exhibit filiform corrosion extending beyond 6.35 millimeters (mm) (0.25 inch) from the scribe, and the majority of the filaments shall be less than 3.175 mm (0.125 inch) in length (see 4.5.8.2).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.8.2.2",
+        "baslik": "Filiform",
+        "metin": "The topcoated primer coatings shall not exhibit filiform corrosion extending beyond 6.35 millimeters (mm) (0.25 inch) from the scribe, and the majority of the filaments shall be less than 3.175 mm (0.125 inch) in length (see 4.5.8.2).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.8.2.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.8.3",
+        "baslik": "Solvent resistance (cure)",
+        "metin": "The primer coating shall withstand 50 passes (25 back and forth rubs) by a cloth rag soaked in methyl ethyl ketone (MEK). Rubbing through to bare substrate constitutes failure of the primer coating to properly cure (see 4.5.9).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.8.3",
+        "baslik": "Solvent resistance (cure)",
+        "metin": "The primer coatings shall withstand 50 passes (25 back and forth rubs) by a cloth rag soaked in methyl ethyl ketone (MEK). Rubbing through to bare substrate constitutes failure of the primer coatings to properly cure (see 4.5.9).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.8.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.8.4",
+        "baslik": "Fluid resistance",
+        "metin": "The primer coating shall withstand immersion for 24 hours in each of synthetic lubricating oil conforming to MIL-PRF-23699 and synthetic hydraulic fluid conforming to MIL-PRF-83282. Four hours after removal from the respective fluid, the coating shall not exhibit any softening, blistering, loss of adhesion, nor any other coating deficiency. Discoloration of the coating is acceptable and shall not be cause for rejection (see 4.5.10).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.8.4",
+        "baslik": "Fluid resistance",
+        "metin": "The primer coatings shall withstand immersion for 24 hours in synthetic lubricating oil conforming to MIL-PRF-23699, and synthetic hydraulic fluid conforming to MIL-PRF-83282. Four hours after removal from the respective fluid, the coatings shall not exhibit any softening, blistering, loss of adhesion, nor any other coating deficiency. Discoloration of the coatings is acceptable and shall not be cause for rejection (see 4.5.10).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "each of",
+          "yeni": ""
+        },
+        {
+          "eski": "MIL-PRF-23699",
+          "yeni": "MIL-PRF-23699,"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.8.4"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.9.1",
+        "baslik": "Mixing and dilution",
+        "metin": "The components of the primer coating, including thinner if required (see 6.11), shall homogeneously blend when mixed by a mechanical mixer in the volume mixing ratio specified by the manufacturer. Within one hour of mixing, the admixed coating shall not separate into visually distinct layers (see 4.5.11.1).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.9.1",
+        "baslik": "Mixing and dilution",
+        "metin": "The components of the primer coatings, including thinner if required (see 6.11), shall homogeneously blend when mixed by a mechanical mixer in the volume mixing ratio specified by the manufacturer. Within one hour of mixing, the admixed coatings shall not separate into visually distinct layers (see 4.5.11.1).",
+        "sayfa": 8,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating,",
+          "yeni": "coatings,"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.9.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.9.2",
+        "baslik": "Application",
+        "metin": "The admixed primer coating shall be capable of being applied by conventional, airless, high volume, low pressure (HVLP), or electrostatic spray equipment. Application shall yield a uniform film with no runs or sags at a dry-film thickness of 15 to 23 microns (µm) (0.6 to 0.9 mil) (see 4.5.11.2).",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.9.2",
+        "baslik": "Application",
+        "metin": "The admixed primer coatings shall be capable of being applied by conventional, airless, high volume/low pressure (HVLP) or electrostatic spray equipment. Application shall yield a uniform film with no runs or sags at a dry-film thickness of 15 to 23 microns (µm) (0.6 to 0.9 mil) (see 4.5.11.2).",
+        "sayfa": 8,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "volume, low",
+          "yeni": "volume/low"
+        },
+        {
+          "eski": "(HVLP),",
+          "yeni": "(HVLP)"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.9.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "3.10",
+        "baslik": "Identification of material",
+        "metin": "Individual containers greater than one pint and cases of containers less than one pint shall be identified with the following information: MIL-PRF-23377H, “Primer Coatings: Epoxy, High Solids” type I or II, class C or N Component identification (as applicable): Component A - base component or Component B - curing agent Manufacturer’s name and product number Date of manufacture (month/year) Batch number/net contents VOC content in grams/liter Mixing and thinning instructions",
+        "sayfa": 7,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "3.10",
+        "baslik": "Identification of material",
+        "metin": "Individual containers greater than one pint and cases of containers less than one pint shall be identified with the following information: MIL-PRF-23377J, “Primer Coatings: Epoxy, High-Solids” type I or II, class C1, C2, or N Component identification (as applicable): Component A - base component or Component B - curing agent Manufacturer’s name and product number Date of manufacture (month/year) Batch number/net contents VOC content in grams/liter Mixing and thinning instructions",
+        "sayfa": 8,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "MIL-PRF-23377H,",
+          "yeni": "MIL-PRF-23377J,"
+        },
+        {
+          "eski": "High Solids\"",
+          "yeni": "High-Solids\""
+        },
+        {
+          "eski": "C",
+          "yeni": "C1, C2,"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "3.10"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.2",
+        "baslik": "Qualification inspection",
+        "metin": "Qualification inspection shall consist of all the inspections listed in this specification. The qualification inspection performed by the qualification laboratory (see 6.3) shall consist of a review for approval of the submitted manufacturer’s test report and subjecting the qualification test sample to examination and testing to determine conformance to all requirements in section 3. The qualification test sample shall consist of not less than one quart of each component of the primer coating. The samples shall be legibly identified (see 6.3.1.1).",
+        "sayfa": 8,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.2",
+        "baslik": "Qualification inspection",
+        "metin": "Qualification inspection shall consist of all the inspections listed in this specification. The qualification test sample shall consist of not less than one quart of each component of the primer coating. The samples shall be legibly identified (see 6.3.1.1).",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "sayisal",
+      "degisiklikler": [
+        {
+          "eski": "The qualification inspection performed by the qualification laboratory (see 6.3) shall consist of a review for approval of the submitted manufacturer's test report and subjecting the qualification test sample to examination and testing to determine conformance to all requirements in section 3.",
+          "yeni": ""
+        }
+      ],
+      "eski_degerler": [
+        "3"
+      ],
+      "yeni_degerler": [],
+      "madde": "4.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.3",
+        "baslik": "Conformance inspection",
+        "metin": "",
+        "sayfa": 8,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.3",
+        "baslik": "Conformance inspection",
+        "metin": "The conformance inspection shall consist of all the tests specified in 4.5, with the exception of storage stability (see table II), accelerated storage stability (see 4.5.2), corrosion resistance (see 4.5.8), and toxicity (4.5.12). There shall be no failures (see 6.5).",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "",
+          "yeni": "The conformance inspection shall consist of all the tests specified in 4.5, with the exception of storage stability (see table II), accelerated storage stability (see 4.5.2), corrosion resistance (see 4.5.8), and toxicity (4.5.12). There shall be no failures (see 6.5)."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.3.1",
+        "baslik": "Primer coating inspection",
+        "metin": "The conformance inspection shall consist of all the tests specified in 4.5, with the exception of storage stability (see 3.5.3), accelerated storage stability (see 3.5.4), and corrosion resistance (see 3.8.2.1 and 3.8.2.2). There shall be no failures (see 6.5). Samples for tests shall consist of one complete unopened kit selected at random from each batch. Containers shall only be opened when being tested.",
+        "sayfa": 8,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.3.1",
+        "baslik": "Primer coating test samples",
+        "metin": "Samples for tests shall consist of one complete unopened kit selected at random from each batch (see 6.6). Containers shall only be opened when being tested.",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": true,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "The conformance inspection shall consist of all the tests specified in 4.5, with the exception of storage stability (see 3.5.3), accelerated storage stability (see 3.5.4), and corrosion resistance (see 3.8.2.1 and 3.8.2.2). There shall be no failures (see 6.5).",
+          "yeni": ""
+        },
+        {
+          "eski": "batch.",
+          "yeni": "batch (see 6.6)."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.3.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.3.2",
+        "baslik": "Visual inspection of filled containers",
+        "metin": "Samples shall be selected at random from each lot (see 6.6) in accordance with ASQC-Z1.4, inspection level S-2. The lot size for this inspection shall be the number of kits fully prepared for delivery. The selected samples shall be examined for container fill, proper location, and completion of item identification (see 3.10), warning statements (see 3.10.1), and the precaution sheet (see 3.11). There shall be no defects (see 6.5).",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.3.2",
+        "baslik": "Visual inspection of filled containers",
+        "metin": "Samples shall be selected at random from each lot (see 6.6) in accordance with ASQ-Z1.4, inspection level S-2. The lot size for this inspection shall be the number of kits fully prepared for delivery. The selected samples shall be examined for container fill, and completion of item identification (see 3.10), warning statements (see 3.10.1), and the precaution sheet (see 3.11). There shall be no defects (see 6.5).",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "ASQC-Z1.4,",
+          "yeni": "ASQ-Z1.4,"
+        },
+        {
+          "eski": "proper location,",
+          "yeni": ""
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.3.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.4",
+        "baslik": "Test panels",
+        "metin": "Test panels shall be prepared under laboratory conditions (see 4.5). Test panels shall be constructed of aluminum alloy. Alloy composition and pretreatments of test panels shall be in accordance with table I. Unless otherwise specified in the test method, the primer coating shall be applied in accordance with 4.4.1 and the topcoat, when required, shall be applied in accordance with 4.4.2.",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.4",
+        "baslik": "Test panels",
+        "metin": "Test panels shall be prepared under laboratory conditions (see 4.5). Test panels shall be constructed of aluminum alloy. Alloy composition and pretreatments of test panels shall be in accordance with table I. Unless otherwise specified in the test method, the primer coatings shall be applied in accordance with 4.4.1 and the topcoat, when required, shall be applied in accordance with 4.4.2.",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.4"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.4.1",
+        "baslik": "Application of primer coating",
+        "metin": "When required by the test method, the primer coating shall be prepared and applied as follows: a. Thoroughly mixing each component separately. b. Slowly pouring component B into component A while stirring the mixture to achieve the manufacturer's specified volume mixing ratio. c. Diluting the admixed primer coating, if necessary, with thinner conforming to MIL-T-81772, type II. If dilution of the primer coating is required, do not exceed 340 g/L (2.8 lb/gal) (see 6.11). d. Allowing admixed coating to stand undisturbed for 30 minutes prior to use, unless the manufacturer’s directions state otherwise. e. Spraying the test panels with primer coating to a dry-film thickness of 15 to 23 µm (0.6 to 0.9 mil). If a topcoat is not used, the primer coating shall be allowed to air dry for not less than 14 days, or air dry for not less than one hour followed by 24 hours at 65.5 ±3 °C (150 ±5 °F) prior to testing. If a topcoat is required, the primer coating shall be air-dried for 5 hours and then coated with a polyurethane coating conforming to MIL-PRF-85285 in accordance with 4.4.2.",
+        "sayfa": 9,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.4.1",
+        "baslik": "Application of primer coatings",
+        "metin": "When required by the test method, the primer coatings shall be prepared and applied as follows: a. Thoroughly mix each component separately. b. Slowly pour component B into component A while stirring the mixture to achieve the manufacturer's specified volume mixing ratio. c. Dilute the admixed primer coating, if necessary, with thinner conforming to MIL-T-81772, type II. If dilution of the primer coating is required, do not exceed 340 g/L (2.8 lb/gal) (see 6.11). d. Allow admixed coating to stand undisturbed for 30 minutes prior to use, unless the manufacturer’s directions state otherwise. e. Spray the test panels with primer coating to a dry-film thickness of 15 to 23 µm (0.6 to 0.9 mil). If a topcoat is not used, the primer coatings shall be allowed to air dry for not less than 14 days, or air dry for not less than one hour followed by 24 hours at 65.5 ± 3 °C (150 ± 5 °F) prior to testing. If a topcoat is required, the primer coatings shall be air-dried for 5 hours and then coated with a polyurethane coating conforming to MIL-PRF-85285 in accordance with 4.4.2.",
+        "sayfa": 10,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": true,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "mixing",
+          "yeni": "mix"
+        },
+        {
+          "eski": "pouring",
+          "yeni": "pour"
+        },
+        {
+          "eski": "Diluting",
+          "yeni": "Dilute"
+        },
+        {
+          "eski": "Allowing",
+          "yeni": "Allow"
+        },
+        {
+          "eski": "Spraying",
+          "yeni": "Spray"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.4.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5",
+        "baslik": "Test methods",
+        "metin": "The tests of this specification shall be conducted in accordance with table II and 4.5.1 through 4.5.11. Unless otherwise specified in the test method or paragraph, laboratory test conditions shall be in accordance with ASTM-D3924. Room temperature conditions are 18 to 29.5 °C (65 to 85 °F) and a relative humidity of 50 ±10 percent.",
+        "sayfa": 10,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5",
+        "baslik": "Test methods",
+        "metin": "The tests of this specification shall be conducted in accordance with table II and 4.5.1 through 4.5.12. Unless otherwise specified in the test method or paragraph, laboratory test conditions shall be in accordance with ASTM-D3924. Room temperature conditions shall be 18 to 29.5 °C (65 to 85 °F) and a relative humidity of 50 ± 10 percent.",
+        "sayfa": 11,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "4.5.11.",
+          "yeni": "4.5.12."
+        },
+        {
+          "eski": "are",
+          "yeni": "shall be"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.2",
+        "baslik": "Accelerated storage stability",
+        "metin": "Not less than one full, unopened, sealed container of each component shall be stored undisturbed for not less than 14 consecutive days in a location maintained at 60 ±3 °C (140 ±5 °F). At the end of 14 days, the container(s) shall be allowed to cool to room temperature (see 4.5). (During the storage period, it is advised that the unopened containers be placed in larger, vented containers to confine any splash that may occur if the lid of the unopened container is blown off by gassing.) If, upon removal, the unopened container is deformed, do not open. If the container is not deformed, open carefully and examine its contents for conformance to 3.5.4.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.2",
+        "baslik": "Accelerated storage stability",
+        "metin": "Not less than one full, unopened, sealed container of each component shall be stored undisturbed for not less than 14 consecutive days in a location maintained at 60 ±3 °C (140 ±5 °F). At the end of 14 days, the container(s) shall be allowed to cool to room temperature (see 4.5). During the storage period, it is advised that the unopened containers be placed in larger, vented containers to confine any splash that may occur if the lid of the unopened container is blown off by gassing. If, upon removal, the unopened container is deformed, do not open. If the container is not deformed, open carefully and examine its contents for conformance to 3.5.4.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "bicimsel",
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.3",
+        "baslik": "Lifting",
+        "metin": "The primer coating shall be applied to test panels designated A (see table I) in accordance with 4.4.1. Panels shall air dry for 5 hours and then be topcoated in accordance with 4.4.2. Examine for conformance to 3.7.3 during and after the drying of the topcoat.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.3",
+        "baslik": "Lifting",
+        "metin": "The primer coatings shall be applied to test panels designated A (see table I) in accordance with 4.4.1. Panels shall air dry for 5 hours and then be topcoated in accordance with 4.4.2. Examine for conformance to 3.7.3 during and after the drying of the topcoat.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.4",
+        "baslik": "Adhesion",
+        "metin": "The primer coating shall be applied to test panels designated C (see table I) in accordance with 4.4.1. The test panels shall be immersed in distilled water for not less than 24 hours at room temperature (see 4.5). After removal, the panels shall be dried with absorbent paper tissue and within 3 minutes after removal from the water, be tested in accordance with FED-STD-141, Method 6301, for conformance to 3.7.4.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.4",
+        "baslik": "Adhesion",
+        "metin": "The primer coatings shall be applied to test panels designated C (see table I) in accordance with 4.4.1. The test panels shall be immersed in distilled water for not less than 24 hours at room temperature (see 4.5). After removal, the panels shall be dried with absorbent paper tissue and within 3 minutes after removal from the water, be tested in accordance with FED-STD-141, Method 6301, for conformance to 3.7.4.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.4"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.5",
+        "baslik": "Flexibility",
+        "metin": "The primer coating shall be applied to test panels designated B (see table I) in accordance with 4.4.1. The flexibility of the coating shall then be tested at the room temperature and relative humidity conditions as specified in 4.5, using a Gardco GE Universal Impact Tester, Model #172 (see 6.8), using a specialized impacter that weighs 3.6 lb and has formed four convex spherical segments on each end, each of different radii and extension. Place the coated panel, film side downward, on the rubber pad at the bottom of the impacter guide. Drop the impacter on the panel through the impacter guide, ensuring that the impression of the entire rim of the impacter is made in the panel. Reverse the impacter ends and drop it through the guide on the panel adjacent to the first area of impact. Using 10 power magnification, examine for conformance to 3.7.5; record the percent elongation corresponding to the largest spherical impression at which no cracking occurs.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.5",
+        "baslik": "Flexibility",
+        "metin": "The primer coatings shall be applied to test panels designated B (see table I) in accordance with 4.4.1. The flexibility of the coatings shall then be tested at the room temperature and relative humidity conditions as specified in 4.5, using a Gardco GE Universal Impact Tester, Model #172 or equivalent as approved by the qualifying activity (see 6.7), using a specialized impacter that weighs 3.6 lb and has formed four convex spherical segments on each end, each of different radii and extension. Place the coated panel, film side downward, on the rubber pad at the bottom of the impacter guide. Drop the impacter on the panel through the impacter guide, ensuring that the impression of the entire rim of the impacter is made in the panel. Reverse the impacter ends and drop it through the guide on the panel adjacent to the first area of impact. Using 10 power magnification, examine for conformance to 3.7.5; observe the percent elongation corresponding to the largest spherical impression at which no cracking occurs.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "",
+          "yeni": "or equivalent as approved by the qualifying activity"
+        },
+        {
+          "eski": "6.8),",
+          "yeni": "6.7),"
+        },
+        {
+          "eski": "record",
+          "yeni": "observe"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.5"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.6",
+        "baslik": "Infrared reflectance (type II primer coating only)",
+        "metin": "The type II primer coating shall be applied to test panels designated A (see table I) in accordance with 4.4.1. The total reflectance (specular and diffuse) of the primer coating relative to barium sulfate shall be measured using a near infrared spectrophotometer over a range of 700 to 2,600 nm. Examine for conformance to 3.7.7.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.6",
+        "baslik": "Infrared reflectance (type II primer coatings only)",
+        "metin": "The type II primer coatings shall be applied to test panels designated A (see table I) in accordance with 4.4.1. The total reflectance (specular and diffuse) of the primer coatings relative to barium sulfate shall be measured using a near infrared spectrophotometer over a range of 700 to 2,600 nm. Examine for conformance to 3.7.6.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": true,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "3.7.7.",
+          "yeni": "3.7.6."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.6"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.7",
+        "baslik": "Water resistance",
+        "metin": "The primer coating shall be applied to test panels designated A (see table I) in accordance with 4.4.1 and topcoated in accordance with 4.4.2. The coated test panels shall then be completely immersed in distilled water maintained at 49 ±3 °C (120 ±5 °F) for four days. Two hours after removal from the water, the coating shall be examined for conformance to 3.8.1.",
+        "sayfa": 12,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.7",
+        "baslik": "Water resistance",
+        "metin": "The primer coatings shall be applied to test panels designated A (see table I) in accordance with 4.4.1 and topcoated in accordance with 4.4.2. The coated test panels shall then be completely immersed in distilled water maintained at 49 ± 3 °C (120 ± 5 °F) for four days. Two hours after removal from the water, the coatings shall be examined for conformance to 3.8.1.",
+        "sayfa": 13,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.7"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.8.2",
+        "baslik": "Filiform",
+        "metin": "The primer coating shall be applied to test panels designated D (see table I) in accordance with 4.4.1 and topcoated in accordance with 4.4.2. Two intersecting lines shall be scribed diagonally across the coated surface of the test panels, exposing the bare substrate. The test panels shall then be placed vertically in a desiccator containing 12 Normal (N) HCl for 1 hour at room temperature (see 4.5). Within 5 minutes of removal from the desiccator, the test panels shall be placed in a humidity cabinet maintained at 40 ±2 °C (104 ±3 °F) and relative humidity of 80 ±5 percent for 1,000 hours. The test panels shall then be examined for conformance to 3.8.2.2. Filiform corrosion appears as threadlike filaments initiating from the exposed substrate and spreading underneath the coating film. (A description of filiform growth in described in ASTM-D2803.)",
+        "sayfa": 13,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.8.2",
+        "baslik": "Filiform",
+        "metin": "The primer coatings shall be applied to test panels designated D (see table I) in accordance with 4.4.1 and topcoated in accordance with 4.4.2. Two intersecting lines shall be scribed diagonally across the coated surface of the test panels, exposing the bare substrate. The test panels shall then be placed vertically in a desiccator containing 12 Normal (N) HCl for 1 hour at room temperature (see 4.5). Within 5 minutes of removal from the desiccator, the test panels shall be placed in a humidity cabinet maintained at 40 ± 2 °C (104 ± 3 °F) and relative humidity of 80 ± 5 percent for 1,000 hours. The test panels shall then be examined for conformance to 3.8.2.2. Filiform corrosion appears as threadlike filaments initiating from the exposed substrate and spreading underneath the coating film. (A description of filiform growth is described in ASTM-D2803.)",
+        "sayfa": 13,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "in",
+          "yeni": "is"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.8.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.9",
+        "baslik": "Solvent resistance (cure)",
+        "metin": "The primer coating shall be applied to test panels designated A (see table I) in accordance with 4.4.1. The primer coating shall then be examined for cure, as follows: a. Soak a cotton terry cloth rag in MEK solvent (see 6.10). b. Rub the coating with the soaked rag for 50 passes (25 back and forth rubs) with firm finger pressure. c. Examine coating for conformance to 3.8.3.",
+        "sayfa": 13,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.9",
+        "baslik": "Solvent resistance (cure)",
+        "metin": "The primer coatings shall be applied to test panels designated A (see table I) in accordance with 4.4.1. The primer coatings shall then be examined for cure, as follows: a. Soak a cotton terry cloth rag in MEK solvent (see 6.9). b. Rub the coating with the soaked rag for 50 passes (25 back and forth rubs) with firm finger pressure. c. Examine coating for conformance to 3.8.3.",
+        "sayfa": 13,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        },
+        {
+          "eski": "6.10).",
+          "yeni": "6.9)."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.9"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.10",
+        "baslik": "Fluid resistance",
+        "metin": "The primer coating shall be applied to test panels designated A (see table I) in accordance with 4.4.1. The test panels shall then be separately immersed to half their length for 24 hours in glass covered beakers containing the following liquids: a. Lubricating oil conforming to MIL-PRF-23699, maintained at 121 ±3 °C (250 ±5 °F); b. Hydraulic fluid conforming to MIL-PRF-83282, maintained at 65.5 ±3 °C (150 ±5 °F). After removal from the test fluids, cool the test panels to room temperature (see 4.5) and examine for conformance to 3.8.4.",
+        "sayfa": 13,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.10",
+        "baslik": "Fluid resistance",
+        "metin": "The primer coatings shall be applied to test panels designated A (see table I) in accordance with 4.4.1. The test panels shall then be separately immersed to half their length for 24 hours in glass covered beakers containing the following liquids: a. Lubricating oil conforming to MIL-PRF-23699, maintained at 121 ± 3 °C (250 ± 5 °F); b. Hydraulic fluid conforming to MIL-PRF-83282, maintained at 65.5 ± 3 °C (150 ± 5 °F). After removal from the test fluids, cool the test panels to room temperature (see 4.5) and examine for conformance to 3.8.4.",
+        "sayfa": 13,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.10"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "4.5.11.2",
+        "baslik": "Application",
+        "metin": "Using conventional, airless, high volume, low pressure (HVLP), or electrostatic spray equipment, apply the primer coating to test panels to a dry film thickness of 15 to 23 µm (0.6 to 0.9 mil) in accordance with 4.4.1. Examine for conformance to 3.7.1 and 3.9.2.",
+        "sayfa": 14,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "4.5.11.2",
+        "baslik": "Application",
+        "metin": "Using conventional, airless, high volume/low pressure (HVLP), or electrostatic spray equipment, apply the primer coating to test panels to a dry film thickness of 15 to 23 µm (0.6 to 0.9 mil) in accordance with 4.4.1. Examine for conformance to 3.7.1 and 3.9.2.",
+        "sayfa": 14,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "bicimsel",
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.11.2"
+    },
+    {
+      "tur": "eklendi",
+      "eski": null,
+      "yeni": {
+        "madde": "4.5.12",
+        "baslik": "Toxicity",
+        "metin": "The product shall be evaluated by the Navy Environmental Health Center (NAVENVIRHLTHCEN) using the administrative Health Hazard Assessment (HHA) (see 6.8).",
+        "sayfa": 14,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "4.5.12"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "TABLE II",
+        "baslik": "Test methods",
+        "metin": "1/ The daily ambient air temperature at the storage location shall be within the range of 1.7 to 46 °C (35 to 115 °F). 2/ The primer coating shall be mixed with a mechanical shaker for 10 minutes instead of 300 stirs in 2 minutes. 3/ Use panels designated A in table I.",
+        "sayfa": 10,
+        "ust": "4.5.1"
+      },
+      "yeni": {
+        "madde": "TABLE II",
+        "baslik": "Test methods",
+        "metin": "1/ The daily ambient air temperature at the storage location shall be within the range of 1.7 to 46 °C (35 to 115 °F). 2/ The primer coatings shall be mixed with a mechanical shaker for 10 minutes instead of 300 stirs in 2 minutes. 3/ Use panels designated A in table I.",
+        "sayfa": 11,
+        "ust": "4.5"
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "coating",
+          "yeni": "coatings"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "TABLE II"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "5.1",
+        "baslik": "Packaging",
+        "metin": "For acquisition purposes, the packaging requirements shall be as specified in the contract or order (see 6.2). When actual packaging of materiel is to be performed by DoD personnel, these personnel need to contact the responsible packaging activity to ascertain requisite packaging requirements. Packaging requirements are maintained by the Inventory Control Point’s packaging activity within the Military Department or Defense Agency, or within the Military Department’s System Command. Packaging data retrieval is available from the managing Military Department’s or Defense Agency’s automated packaging files, CD-ROM products, or by contacting the responsible packaging activity.",
+        "sayfa": 14,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "5.1",
+        "baslik": "Packaging",
+        "metin": "For acquisition purposes, the packaging requirements shall be as specified in the contract or order (see 6.2). When actual packaging of materiel is to be performed by DoD or in-house contractor personnel, these personnel need to contact the responsible packaging activity to ascertain packaging requirements. Packaging requirements are maintained by the Inventory Control Point’s packaging activities within the Military Service or Defense Agency, or within the military service’s system commands. Packaging data retrieval is available from the managing Military Department’s or Defense Agency’s automated packaging files, CD-ROM products, or by contacting the responsible packaging activity.",
+        "sayfa": 14,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "",
+          "yeni": "or in-house contractor"
+        },
+        {
+          "eski": "requisite",
+          "yeni": ""
+        },
+        {
+          "eski": "activity",
+          "yeni": "activities"
+        },
+        {
+          "eski": "Department",
+          "yeni": "Service"
+        },
+        {
+          "eski": "Military Department's System Command.",
+          "yeni": "military service's system commands."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "5.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.1",
+        "baslik": "Intended use",
+        "metin": "The materials covered by this specification are low VOC, corrosion- inhibitive, chemical resistant, and strippable primer coatings. These primer coatings are formulated for the unique performance requirements of military aircraft. These requirements include adhesion to a wide variety of metals and composites, flexibility to withstand tactical maneuvers at low temperatures, corrosion resistance in a marine environment, resistance to leaking aircraft fluids, and low-infrared reflectance for stealth in combat. Type I is for general use. Type II is for use where low infrared reflectance is required. Unless a specific type or class is referenced in a contract or purchase order, type I, class C is the default reference. The non- chromated (class N) primer coatings are for use where federal, state, or local regulations restrict the use of chromate based materials. Class N primer coatings may only be used when authorization for their use is given by the engineering authority for the system or item to which the primer coatings are to be applied. For users of MIL-PRF-23377F, class 2, high-solids coating, use class C of this document.",
+        "sayfa": 14,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.1",
+        "baslik": "Intended use",
+        "metin": "The materials covered by this specification are low VOC, corrosion- inhibitive, chemical resistant, and strippable primer coatings. These primer coatings are formulated for the unique performance requirements of military aircraft. These requirements include adhesion to a wide variety of metals and composites, flexibility to withstand tactical maneuvers at low temperatures, corrosion resistance in a marine environment, resistance to leaking aircraft fluids, and low-infrared reflectance for stealth in combat. Type I is for general use. Type II is for use where low infrared reflectance is required. Unless a specific type or class is referenced in a contract or order, type I, class C2 is the default reference. The non-chromated (class N) primer coatings are for use where federal, state, or local regulations restrict the use of chromate based materials. Class N primer coatings may only be used when authorization for their use is given by the engineering authority for the system or item to which the primer coatings are to be applied. For users of MIL-PRF-23377F, class 2, high-solids coating, use class C2 of this document. For users of MIL-PRF-23377G and MIL-PRF-23377H, class C, use class C2 of this document.",
+        "sayfa": 14,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "purchase",
+          "yeni": ""
+        },
+        {
+          "eski": "C",
+          "yeni": "C2"
+        },
+        {
+          "eski": "non- chromated",
+          "yeni": "non-chromated"
+        },
+        {
+          "eski": "C",
+          "yeni": "C2"
+        },
+        {
+          "eski": "",
+          "yeni": "For users of MIL-PRF-23377G and MIL-PRF-23377H, class C, use class C2 of this document."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.1.1",
+        "baslik": "Compatibility",
+        "metin": "For some applications, and only when authorized by the procuring activity, MIL-PRF-85582, Primer Coatings: Epoxy, Waterborne, may be substituted for MIL-PRF-23377. Both MIL-PRF-23377 and MIL-PRF-85582 are compatible with the following coatings: TT-P-2756, Polyurethane Coating: Self-Priming Topcoat, Low Volatile Organic Compounds (VOC); MIL-PRF-22750, Coating, Epoxy, High-Solids; MIL-C-46168, Coating, Aliphatic Polyurethane, Chemical Agent Resistant; and, MIL-C-53039, Coating, Aliphatic Polyurethane, Single Component; MIL-PRF-85285 Coating: Polyurethane, High Solids.",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.1.1",
+        "baslik": "Compatibility",
+        "metin": "For some applications, and only when authorized by the procuring activity, MIL-PRF-85582, Primer Coatings: Epoxy, Waterborne, may be substituted for MIL-PRF-23377. Both MIL-PRF-23377 and MIL-PRF-85582 are compatible with the following coatings: TT-P-2756, Polyurethane Coating: Self-Priming Topcoat, Low Volatile Organic Compounds (VOC); MIL-PRF-22750, Coating, Epoxy, High-Solids; MIL-C-46168, Coating, Aliphatic Polyurethane, Chemical Agent Resistant; and MIL-C-53039, Coating, Aliphatic Polyurethane, Single Component; MIL-PRF-85285 Coating: Polyurethane, Aircraft and Support Equipment..",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "and,",
+          "yeni": "and"
+        },
+        {
+          "eski": "High Solids.",
+          "yeni": "Aircraft and Support Equipment.."
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.1.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.2",
+        "baslik": "Acquisition requirements",
+        "metin": "Acquisition documents must specify the following: a. Title, number, and date of the specification. b. Type and class required (see 1.2) c. Issue of DoDISS to be cited in the solicitation, and if required, the specific issue of individual documents referenced (see 2.2 and 2.3). d. Packaging requirements (see 5.1) e. Quantity and kit size identification (see 6.7.1)",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.2",
+        "baslik": "Acquisition requirements",
+        "metin": "Acquisition documents should specify the following: a. Title, number, and date of the specification. b. Type and class required (see 1.2) c. Quantity and kit size identification (see 1.3.1) d. Packaging requirements (see 5.1)",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "must",
+          "yeni": "should"
+        },
+        {
+          "eski": "Issue of DoDISS to be cited in the solicitation, and if required, the specific issue of individual documents referenced (see 2.2 and 2.3). d. Packaging requirements (see 5.1) e.",
+          "yeni": ""
+        },
+        {
+          "eski": "6.7.1)",
+          "yeni": "1.3.1) d. Packaging requirements (see 5.1)"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.2"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.3",
+        "baslik": "Qualification",
+        "metin": "With respect to products requiring qualification, awards will be made only for products which are, at the time of award of contract, qualified for inclusion in Qualified Products List QPL-23377, whether or not such products have actually been so listed by that date. The attention of the contractors is called to these requirements, and manufacturers are urged to arrange to have the products that they propose to offer to the Federal Government tested for qualification in order that they may be eligible to be awarded contracts or purchase orders for the products covered by this specification. Information pertaining to qualification of products may be obtained from the Commander, Naval Air Warfare Center Aircraft Division, Code 4.3.4.1, Building 2188, Patuxent River, MD 20670-1908.",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.3",
+        "baslik": "Qualification",
+        "metin": "With respect to products requiring qualification, awards will be made only for products which are, at the time of award of contract, qualified for inclusion in Qualified Products List QPL-23377, whether or not such products have actually been so listed by that date. The attention of the contractors is called to these requirements, and manufacturers are urged to arrange to have the products that they propose to offer to the Federal Government tested for qualification in order that they may be eligible to be awarded contracts or orders for the products covered by this specification. Information pertaining to qualification of products may be obtained from the Commander, Naval Air Warfare Center Aircraft Division, Code 4.9.7.2, Building 2188, Patuxent River, MD 20670-1908.",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "purchase",
+          "yeni": ""
+        },
+        {
+          "eski": "4.3.4.1,",
+          "yeni": "4.9.7.2,"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.3"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.3.1",
+        "baslik": "Inspection report and other information",
+        "metin": "When authorizing the forwarding of qualification samples, the qualifying activity will request the manufacturer to submit the qualification inspection sample, the Material Safety Data Sheet (MSDS) (see 6.9), and a test report (see 4.2) showing that the material conforms to the requirements of this specification.",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.3.1",
+        "baslik": "Inspection report and other information",
+        "metin": "When authorizing the forwarding of qualification samples, the qualifying activity will request the manufacturer to submit the qualification inspection sample, the Material Safety Data Sheet (MSDS) (see 6.8), and a test report (see 4.2) showing that the material conforms to the requirements of this specification.",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "6.9),",
+          "yeni": "6.8),"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.3.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.3.1.1",
+        "baslik": "Qualification inspection sample identification",
+        "metin": "Qualification inspection samples are to be forwarded to the laboratory designated in the letter of authorization (see 6.3) and identified as follows: Qualification test samples. Specification MIL-PRF-23377H, type I or II, class C or N (as applicable) Primer Coatings: Epoxy, High-Solids Manufacturer's name and product number Submitted by (name and date) for qualification testing in accordance with authorization (reference authorizing letter)",
+        "sayfa": 15,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.3.1.1",
+        "baslik": "Qualification inspection sample identification",
+        "metin": "Qualification inspection samples are to be forwarded to the laboratory designated in the letter of authorization (see 6.3) and identified as follows: Qualification test samples. Specification MIL-PRF-23377J, type I or II, class C1, C2, or N (as applicable) Primer Coatings: Epoxy, High-Solids Manufacturer's name and product number Submitted by (name and date) for qualification testing in accordance with authorization (reference authorizing letter)",
+        "sayfa": 16,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "MIL-PRF-23377H,",
+          "yeni": "MIL-PRF-23377J,"
+        },
+        {
+          "eski": "C",
+          "yeni": "C1, C2,"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.3.1.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.6",
+        "baslik": "Lot and batch formation",
+        "metin": "A lot shall consist of all of the primer coatings manufactured at one time from one batch, forming part of one contract or purchase order and submitted for acceptance. A batch shall consist of all primer coatings manufactured during one continuous operation.",
+        "sayfa": 16,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.6",
+        "baslik": "Lot and batch formation",
+        "metin": "A lot shall consist of all of the primer coatings manufactured at one time from one batch, forming part of one contract or order and submitted for acceptance. A batch shall consist of all primer coatings manufactured during one continuous operation.",
+        "sayfa": 16,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "purchase",
+          "yeni": ""
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.6"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.8",
+        "baslik": "Impact tester source",
+        "metin": "An instrument for conducting the flexibility (see 4.5.5) is the Gardco GE Universal Impact Tester, Model #172, available from the Paul N. Gardner Company, 316 NE First Street, PO Box 10688, Pompano Beach, FL 33061-6688. There may be other instruments equivalent to this unit.",
+        "sayfa": 17,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.7",
+        "baslik": "Impact tester source",
+        "metin": "An instrument for conducting the flexibility (see 4.5.5) is the Gardco GE Universal Impact Tester, Model #172, available from the Paul N. Gardner Company, 316 NE First Street, PO Box 10688, Pompano Beach, FL 33061-6688. There may be other instruments equivalent to this unit.",
+        "sayfa": 16,
+        "ust": null
+      },
+      "yeniden_numaralandi": true,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.7"
+    },
+    {
+      "tur": "eklendi",
+      "eski": null,
+      "yeni": {
+        "madde": "6.8",
+        "baslik": "Toxicty evaluation",
+        "metin": "A flowchart for the HHA process can be found as enclosure (1) of BUMEDINST 6270.8. The HHA is a review of the product based on information submitted by the manufacturer, to assess health hazards associated with the handling, application, use and removal of the product. Sufficient data to permit a HHA of the product should be provided by the manufacturer/distributor to the NAVENVIRHLTHCEN. To obtain current technical information requirements specified by the NAVENVIRHLTHCEN or any questions concerning toxicity, information required to conduct a HHA, and requests for a HHA should be addressed to the Commanding Officer, Navy Environmental Health Center, ATTN: Hazardous Materials Department, Industrial Hygiene Directorate, 620 John Paul Jones Circle, Suite 1100, Portsmouth, VA 20378-2103. Upon receipt of the HHA, a copy should be provided to Commander, Naval Sea Systems Command, ATTN: SEA 05M1, 1333 Isaac Hull Ave., SE, Stop 5133 Washington Navy Yard, DC 20376-5133.",
+        "sayfa": 16,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [
+        "1",
+        "6270.8",
+        "620",
+        "1100",
+        "1333",
+        "5133"
+      ],
+      "madde": "6.8"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.9",
+        "baslik": "Material Safety Data Sheet (MSDS)",
+        "metin": "An MSDS must be prepared and submitted in accordance with FED-STD-313. The MSDS must also meet the requirements of 29 CFR 1910.1200. The 29 CFR 1910.1200 requires that the MSDS for each hazardous chemical used in an operation must be readily available to personnel using the material. Questions pertinent to the effect(s) of these coatings on the health of personnel using them shall be referred by the procuring activity to the appropriate medical service, who will act as its adviser. Contracting officers will identify the activities requiring copies of the MSDS.",
+        "sayfa": 17,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.9",
+        "baslik": "Material Safety Data Sheet (MSDS)",
+        "metin": "An MSDS must be prepared and submitted in accordance with FED-STD-313. The MSDS must also meet the requirements of 29 CFR 1910.1200. The 29 CFR 1910.1200 requires that the MSDS for each hazardous chemical used in an operation must be readily available to personnel using the material. Questions pertinent to the effect(s) of these coatings on the health of personnel using them should be referred by the procuring activity to the appropriate medical service, who will act as its adviser. Contracting officers will identify the activities requiring copies of the MSDS.",
+        "sayfa": 17,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "shall",
+          "yeni": "should"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.9"
+    },
+    {
+      "tur": "eklendi",
+      "eski": null,
+      "yeni": {
+        "madde": "6.12",
+        "baslik": "Shelf life",
+        "metin": "This specification covers items where shelf life is a consideration. Specific shelf-life requirements should be specified in the contract or purchase order. The shelf-life codes are contained in the Federal Logistics Information System Total Item Record. Additive information for shelf-life management may be obtained from DoD 4140.27-M Shelf-life Management Manual, or the designated shelf-life Points of Contact (POC). The POC should be contacted in the following order: (1) the Inventory Control Points (ICPs), and (2) the DoD Service and Agency administrators for the DoD Shelf-Life Program. Appropriate POCs for the DoD Shelf-Life Program can be contacted through the DoD Shelf-Life Management website: http://www.shelflife.hq.dla.mil/ .",
+        "sayfa": 17,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [
+        "1",
+        "2"
+      ],
+      "madde": "6.12"
+    },
+    {
+      "tur": "eklendi",
+      "eski": null,
+      "yeni": {
+        "madde": "6.12.1",
+        "baslik": "Plastic container touchup kits",
+        "metin": "It is recommended that the plastic container touchup kits be shelf-life nonrenewable, or in accordance with DoD 4140.27-M, Type I. Code F.",
+        "sayfa": 17,
+        "ust": null
+      },
+      "yeniden_numaralandi": false,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.12.1"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.12",
+        "baslik": "Subject term (key word) listing",
+        "metin": "Chemical resistance Corrosion inhibitive Flammable Hydrochloric acid (HCl) Low infrared reflectance Methyl ethyl ketone (MEK) Strontium chromate",
+        "sayfa": 17,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.14",
+        "baslik": "Subject term (key word) listing",
+        "metin": "Barium chromate Chemical resistance Corrosion inhibitive Flammable Hydrochloric acid (HCl) Low infrared reflectance Methyl ethyl ketone (MEK) Strontium chromate",
+        "sayfa": 18,
+        "ust": null
+      },
+      "yeniden_numaralandi": true,
+      "baslik_degisti": false,
+      "onem": "metin",
+      "degisiklikler": [
+        {
+          "eski": "",
+          "yeni": "Barium chromate"
+        }
+      ],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.14"
+    },
+    {
+      "tur": "degisti",
+      "eski": {
+        "madde": "6.13",
+        "baslik": "Changes from previous issue",
+        "metin": "Marginal notations are not used in this revision to identify changes with respect to the previous issue due to the extent of the changes.",
+        "sayfa": 18,
+        "ust": null
+      },
+      "yeni": {
+        "madde": "6.15",
+        "baslik": "Changes from previous issue",
+        "metin": "Marginal notations are not used in this revision to identify changes with respect to the previous issue due to the extent of the changes.",
+        "sayfa": 18,
+        "ust": null
+      },
+      "yeniden_numaralandi": true,
+      "baslik_degisti": false,
+      "onem": null,
+      "degisiklikler": [],
+      "eski_degerler": [],
+      "yeni_degerler": [],
+      "madde": "6.15"
+    }
+  ],
+  "ayni_kalan": 28,
+  "test_farklari": [
+    {
+      "tur": "degisti",
+      "ad": "Chromium content (class N only)",
+      "eski": {
+        "ad": "Chromium content (class N only)",
+        "sart_maddesi": "3.4.1.2",
+        "test_maddesi": null,
+        "metot": "ASTM-D3718",
+        "sayfa": 11
+      },
+      "yeni": {
+        "ad": "Chromium content (class N only)",
+        "sart_maddesi": "3.4.1.3",
+        "test_maddesi": null,
+        "metot": "ASTM-D3718",
+        "sayfa": 11
+      },
+      "degisen_alanlar": [
+        "sart_maddesi"
+      ]
+    },
+    {
+      "tur": "eklendi",
+      "ad": "Toxicity",
+      "eski": null,
+      "yeni": {
+        "ad": "Toxicity",
+        "sart_maddesi": "3.3",
+        "test_maddesi": "4.5.12",
+        "metot": null,
+        "sayfa": 11
+      },
+      "degisen_alanlar": []
+    }
+  ],
+  "eski_kabul_disi": [
+    "accelerated storage stability",
+    "corrosion resistance",
+    "storage stability"
+  ],
+  "yeni_kabul_disi": [
+    "accelerated storage stability",
+    "corrosion resistance",
+    "storage stability",
+    "toxicity"
+  ],
+  "ozet": {
+    "eklenen_sart": 5,
+    "kaldirilan_sart": 0,
+    "degisen_sart": 61,
+    "sayisal_degisen_sart": 4,
+    "yeniden_numaralanan_sart": 6,
+    "ayni_kalan_sart": 28,
+    "eklenen_test": 1,
+    "kaldirilan_test": 0,
+    "degisen_test": 1
+  },
+  "guncelleme_onerileri": [
+    {
+      "hedef": "test:lead_and_cadmium_content",
+      "tur": "gozden_gecir",
+      "madde": "3.4",
+      "oneri": "3.4 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:chlorinated_solvent_content",
+      "tur": "gozden_gecir",
+      "madde": "3.4",
+      "oneri": "3.4 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:chromium_content_class_n_only",
+      "tur": "numara",
+      "madde": "3.4.1.2",
+      "oneri": "Madde numarası 3.4.1.2 → 3.4.1.3 olarak güncellenmeli."
+    },
+    {
+      "hedef": "test:chromium_content_class_n_only",
+      "tur": "guncelle",
+      "madde": "3.4.1.2",
+      "oneri": "'Chromium content (class N only)' testinin sart_maddesi bilgisi değişti (sart_maddesi: 3.4.1.2 → 3.4.1.3)."
+    },
+    {
+      "hedef": "test:voc_solvent_content",
+      "tur": "gozden_gecir",
+      "madde": "3.4.2",
+      "oneri": "3.4.2 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:storage_stability",
+      "tur": "guncelle",
+      "madde": "3.5.3",
+      "oneri": "3.5.3 maddesinde sayısal değerler değişti (kaldırılan değerler: yok; eklenen değerler: 6 month); sınır yeniden çıkarılıp onaylanmalı."
+    },
+    {
+      "hedef": "test:accelerated_storage_stability",
+      "tur": "gozden_gecir",
+      "madde": "3.5.4",
+      "oneri": "3.5.4 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:odor",
+      "tur": "gozden_gecir",
+      "madde": "3.6.2",
+      "oneri": "3.6.2 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:viscosity",
+      "tur": "gozden_gecir",
+      "madde": "3.6.3",
+      "oneri": "3.6.3 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:pot_life",
+      "tur": "gozden_gecir",
+      "madde": "3.6.4",
+      "oneri": "3.6.4 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:surface_appearance",
+      "tur": "gozden_gecir",
+      "madde": "3.7.1",
+      "oneri": "3.7.1 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:surface_appearance",
+      "tur": "gozden_gecir",
+      "madde": "4.4.1",
+      "oneri": "4.4.1 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:drying_time",
+      "tur": "gozden_gecir",
+      "madde": "3.7.2",
+      "oneri": "3.7.2 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:lifting",
+      "tur": "gozden_gecir",
+      "madde": "3.7.3",
+      "oneri": "3.7.3 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:lifting",
+      "tur": "gozden_gecir",
+      "madde": "4.5.3",
+      "oneri": "4.5.3 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:adhesion",
+      "tur": "gozden_gecir",
+      "madde": "3.7.4",
+      "oneri": "3.7.4 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:adhesion",
+      "tur": "gozden_gecir",
+      "madde": "4.5.4",
+      "oneri": "4.5.4 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:flexibility",
+      "tur": "gozden_gecir",
+      "madde": "3.7.5",
+      "oneri": "3.7.5 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:flexibility",
+      "tur": "gozden_gecir",
+      "madde": "4.5.5",
+      "oneri": "4.5.5 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:infrared_reflectance_type_ii_only",
+      "tur": "gozden_gecir",
+      "madde": "3.7.6",
+      "oneri": "3.7.6 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:infrared_reflectance_type_ii_only",
+      "tur": "gozden_gecir",
+      "madde": "4.5.6",
+      "oneri": "4.5.6 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:water_resistance",
+      "tur": "gozden_gecir",
+      "madde": "3.8.1",
+      "oneri": "3.8.1 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:water_resistance",
+      "tur": "gozden_gecir",
+      "madde": "4.5.7",
+      "oneri": "4.5.7 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:salt_spray_corrosion_resistance",
+      "tur": "gozden_gecir",
+      "madde": "3.8.2.1",
+      "oneri": "3.8.2.1 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:filiform_corrosion_resistance",
+      "tur": "gozden_gecir",
+      "madde": "3.8.2.2",
+      "oneri": "3.8.2.2 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:filiform_corrosion_resistance",
+      "tur": "gozden_gecir",
+      "madde": "4.5.8.2",
+      "oneri": "4.5.8.2 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:solvent_resistance_cure",
+      "tur": "gozden_gecir",
+      "madde": "3.8.3",
+      "oneri": "3.8.3 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:solvent_resistance_cure",
+      "tur": "gozden_gecir",
+      "madde": "4.5.9",
+      "oneri": "4.5.9 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:fluid_resistance",
+      "tur": "gozden_gecir",
+      "madde": "3.8.4",
+      "oneri": "3.8.4 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:fluid_resistance",
+      "tur": "gozden_gecir",
+      "madde": "4.5.10",
+      "oneri": "4.5.10 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:mixing_and_dilution",
+      "tur": "gozden_gecir",
+      "madde": "3.9.1",
+      "oneri": "3.9.1 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "test:application",
+      "tur": "gozden_gecir",
+      "madde": "3.9.2",
+      "oneri": "3.9.2 maddesinin metni değişti; kriter metni gözden geçirilmeli."
+    },
+    {
+      "hedef": "raf_omru",
+      "tur": "guncelle",
+      "madde": "3.5.3",
+      "oneri": "3.5.3 maddesinde sayısal değerler değişti (kaldırılan değerler: yok; eklenen değerler: 6 month); sınır yeniden çıkarılıp onaylanmalı."
+    },
+    {
+      "hedef": "yeni_test:Toxicity",
+      "tur": "ekle",
+      "madde": "3.3",
+      "oneri": "'Toxicity' testi MIL-PRF-23377J test tablosuna eklendi (şart 3.3, test 4.5.12); kabul dokümanına eklenmeli."
+    },
+    {
+      "hedef": "yeni_sart:3.4.1.2",
+      "tur": "gozden_gecir",
+      "madde": "3.4.1.2",
+      "oneri": "Yeni şart 3.4.1.2 Class C2: kabul dokümanına eklenip eklenmeyeceği incelenmeli."
+    },
+    {
+      "hedef": "kabul_kapsami:toxicity",
+      "tur": "gozden_gecir",
+      "madde": "4.3",
+      "oneri": "'toxicity' MIL-PRF-23377J revizyonunda kabul muayenesi dışında; test türü 'yeterlilik' olmalı."
+    }
+  ]
+}
