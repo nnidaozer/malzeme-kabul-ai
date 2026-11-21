@@ -862,27 +862,30 @@
       "numune_hazirlama_id": null
     }
   ],
-  "raf_omru": {
-    "sure": 1.0,
-    "birim": "year",
-    "kosul": {
-      "kriter_turu": "sayisal",
-      "alt": 1.7,
-      "ust": 46.0,
-      "alt_dahil": true,
-      "ust_dahil": true,
-      "birim": "°C",
-      "orijinal_metin": "The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
-    },
-    "baslangic": null,
-    "kaynak": {
-      "belge_no": "MIL-PRF-23377",
-      "revizyon": "K",
-      "madde": "3.5.3",
-      "sayfa": 6,
-      "alinti": "The unopened coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for a period of one year for metal containers and six months for plastic containers. The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
+  "raf_omurleri": [
+    {
+      "kap_turu": null,
+      "sure": 1.0,
+      "birim": "year",
+      "kosul": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 46.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "orijinal_metin": "The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
+      },
+      "baslangic": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.3",
+        "sayfa": 6,
+        "alinti": "The unopened coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for a period of one year for metal containers and six months for plastic containers. The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
+      }
     }
-  },
+  ],
   "kosullar": [
     {
       "kategori": "depolama",

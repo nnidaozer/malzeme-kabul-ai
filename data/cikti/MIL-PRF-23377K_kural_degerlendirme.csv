@@ -1,8 +1,7 @@
 alan,dp,yp,yn,precision,recall,f1
-kosul.aciklama,0,0,1,0.0,0.0,0.0
-kosul.kaynak.belge_no,3,0,1,1.0,0.75,0.8571
-kosul.kaynak.madde,3,0,1,1.0,0.75,0.8571
-kosul.kaynak.revizyon,3,0,1,1.0,0.75,0.8571
+kosul.kaynak.belge_no,3,0,0,1.0,1.0,1.0
+kosul.kaynak.madde,3,0,0,1.0,1.0,1.0
+kosul.kaynak.revizyon,3,0,0,1.0,1.0,1.0
 kosul.sinir.alt,2,0,0,1.0,1.0,1.0
 kosul.sinir.alt_dahil,2,0,0,1.0,1.0,1.0
 kosul.sinir.birim,3,0,0,1.0,1.0,1.0
@@ -22,17 +21,17 @@ numune.kuru_film_kalinligi.ust,4,0,0,1.0,1.0,1.0
 numune.kuru_film_kalinligi.ust_dahil,4,0,0,1.0,1.0,1.0
 numune.uygulama_yontemi,4,0,0,1.0,1.0,1.0
 numune.yuzey_hazirligi,4,0,0,1.0,1.0,1.0
-raf_omru.birim,1,0,0,1.0,1.0,1.0
-raf_omru.kaynak.belge_no,1,0,0,1.0,1.0,1.0
-raf_omru.kaynak.madde,1,0,0,1.0,1.0,1.0
-raf_omru.kaynak.revizyon,1,0,0,1.0,1.0,1.0
-raf_omru.kosul.alt,1,0,0,1.0,1.0,1.0
-raf_omru.kosul.alt_dahil,1,0,0,1.0,1.0,1.0
-raf_omru.kosul.birim,1,0,0,1.0,1.0,1.0
-raf_omru.kosul.kriter_turu,1,0,0,1.0,1.0,1.0
-raf_omru.kosul.ust,1,0,0,1.0,1.0,1.0
-raf_omru.kosul.ust_dahil,1,0,0,1.0,1.0,1.0
-raf_omru.sure,1,0,0,1.0,1.0,1.0
+raf_omru.birim,0,1,2,0.0,0.0,0.0
+raf_omru.kaynak.belge_no,0,1,2,0.0,0.0,0.0
+raf_omru.kaynak.madde,0,1,2,0.0,0.0,0.0
+raf_omru.kaynak.revizyon,0,1,2,0.0,0.0,0.0
+raf_omru.kosul.alt,0,1,2,0.0,0.0,0.0
+raf_omru.kosul.alt_dahil,0,1,2,0.0,0.0,0.0
+raf_omru.kosul.birim,0,1,2,0.0,0.0,0.0
+raf_omru.kosul.kriter_turu,0,1,2,0.0,0.0,0.0
+raf_omru.kosul.ust,0,1,2,0.0,0.0,0.0
+raf_omru.kosul.ust_dahil,0,1,2,0.0,0.0,0.0
+raf_omru.sure,0,1,2,0.0,0.0,0.0
 test.kaynak.belge_no,27,0,4,1.0,0.871,0.931
 test.kaynak.madde,27,0,4,1.0,0.871,0.931
 test.kaynak.revizyon,27,0,4,1.0,0.871,0.931
@@ -50,4 +49,4 @@ test.test_adi,27,0,4,1.0,0.871,0.931
 test.test_metodu,14,0,3,1.0,0.8235,0.9032
 test.test_turleri,27,0,4,1.0,0.871,0.931
 test.uygulanabilirlik,4,0,0,1.0,1.0,1.0
-GENEL (mikro),358,4,50,0.989,0.8775,0.9299
+GENEL (mikro),347,15,68,0.9586,0.8361,0.8932

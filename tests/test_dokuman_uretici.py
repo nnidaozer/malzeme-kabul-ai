@@ -38,9 +38,9 @@ def dokuman():
                 test_turleri={"yeterlilik"}, numune_hazirlama_id="panel",
             ),
         ],
-        raf_omru=RafOmru(sure=12, birim="month", baslangic="üretim tarihinden itibaren",
+        raf_omurleri=[RafOmru(sure=12, birim="month", baslangic="üretim tarihinden itibaren",
                          kosul=Sinir(kriter_turu="sayisal", alt=4, ust=38, birim="°C", orijinal_metin="4 to 38 °C"),
-                         kaynak=kaynak("3.7")),
+                         kaynak=kaynak("3.7"))],
         kosullar=[
             Kosul(kategori="depolama", ad="Depolama sıcaklığı",
                   sinir=Sinir(kriter_turu="sayisal", alt=40, ust=100, birim="°F", orijinal_metin="40 to 100 °F"), kaynak=kaynak("3.7.1")),
@@ -142,3 +142,14 @@ def test_musteri_sartnamesine_dayanan_sartin_kaynagi_ayri_gosterilir(dokuman):
     )
     d = dokuman.model_copy(update={"testler": dokuman.testler + [musteri]})
     assert "MUSTERI-SPEC-001 Rev. B, 2.1" in markdown_uret(d)
+
+
+def test_raf_omru_kap_turuyle_ayri_satirlarda_yazilir():
+    d = KabulDokumani(
+        standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K"),
+        raf_omurleri=[RafOmru(kap_turu="metal", sure=1, birim="year", kaynak=kaynak("3.5.3")),
+                      RafOmru(kap_turu="plastik", sure=6, birim="month", kaynak=kaynak("3.5.3"))],
+    )
+    md = markdown_uret(d)
+    assert "| metal | 1 year | MIL-PRF-23377K, 3.5.3 |" in md
+    assert "| plastik | 6 month | MIL-PRF-23377K, 3.5.3 |" in md

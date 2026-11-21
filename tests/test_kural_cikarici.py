@@ -163,7 +163,7 @@ def test_k_kabul_disi_testler_yalniz_yeterlilikte(k_dokumani):
 
 @k_yok
 def test_k_raf_omru_ve_depolama_kosulu(k_dokumani):
-    r = k_dokumani.raf_omru
+    (r,) = k_dokumani.raf_omurleri
     assert (r.sure, r.birim, r.kaynak.madde) == (1, "year", "3.5.3")
     assert (r.kosul.alt, r.kosul.ust, r.kosul.birim) == (1.7, 46, "°C")
 

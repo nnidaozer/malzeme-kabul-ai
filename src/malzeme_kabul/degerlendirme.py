@@ -5,7 +5,7 @@ düz bir sözlüğe çevrilir:
 
 - testler `id` ile eşleşir: ("test.sinir.alt", "viskozite")
 - koşullar "kategori:ad" ile eşleşir: ("kosul.aciklama", "kullanim:pot life")
-- numune hazırlama `id` ile, raf ömrü tek kayıttır.
+- numune hazırlama `id` ile, raf ömrü kap türüyle ("genel" kap türü boşsa).
 
 Her alan için:
 - doğru pozitif (dp): iki tarafta da var ve değerler eşit,
@@ -83,12 +83,12 @@ def alanlari_duzlestir(dokuman: KabulDokumani) -> dict[Anahtar, Any]:
         _kaynak_ekle(alanlar, "test.kaynak", t.id, t.kaynak)
         _kaynak_ekle(alanlar, "test.metot_kaynagi", t.id, t.metot_kaynagi)
 
-    if dokuman.raf_omru:
-        r = dokuman.raf_omru
-        _kaydet(alanlar, "raf_omru.sure", "raf_omru", r.sure)
-        _kaydet(alanlar, "raf_omru.birim", "raf_omru", _Birim(r.birim))
-        _sinir_ekle(alanlar, "raf_omru", "raf_omru", r.kosul, ad_oneki="kosul")
-        _kaynak_ekle(alanlar, "raf_omru.kaynak", "raf_omru", r.kaynak)
+    for r in dokuman.raf_omurleri:
+        kayit = _normal_metin(r.kap_turu) if r.kap_turu else "genel"
+        _kaydet(alanlar, "raf_omru.sure", kayit, r.sure)
+        _kaydet(alanlar, "raf_omru.birim", kayit, _Birim(r.birim))
+        _sinir_ekle(alanlar, "raf_omru", kayit, r.kosul, ad_oneki="kosul")
+        _kaynak_ekle(alanlar, "raf_omru.kaynak", kayit, r.kaynak)
 
     for k in dokuman.kosullar:
         kayit = f"{k.kategori}:{_normal_metin(k.ad)}"
