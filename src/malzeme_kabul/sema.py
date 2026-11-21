@@ -21,7 +21,7 @@ from __future__ import annotations
 import re
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator, model_validator
 
 from .birimler import birimi_coz, zaman_birimi_mi
 
@@ -139,6 +139,10 @@ class TestSarti(_Model):
         default_factory=list, description="Geçerli tip/sınıflar, ör. ['Type I', 'Class C2']. Boşsa hepsi."
     )
     numune_hazirlama_id: str | None = None
+
+    @field_serializer("test_turleri")
+    def _sirali_turler(self, turler: set[str]) -> list[str]:
+        return sorted(turler)  # JSON çıktısı her çalıştırmada aynı olsun
 
     @property
     def kabul_testi(self) -> bool:

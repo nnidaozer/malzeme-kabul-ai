@@ -55,7 +55,11 @@ Kullanılan standartlar (kaynaklar: [data/raw/KAYNAKLAR.md](data/raw/KAYNAKLAR.m
 pip install -e ".[dev]"
 pytest
 python scripts/pdf_tur_kontrol.py    # data/raw PDF'leri metin mi taranmış mı
+python scripts/kabul_dokumani_uret.py data/raw/MIL-PRF-23377K.pdf   # kural tabanlı kabul dokümanı taslağı
+python scripts/degerlendir.py TAHMIN.json GOLD.json                  # alan bazında P/R/F1
 ```
+
+Üretilen taslaklar `data/cikti/` altına JSON, Markdown ve Word olarak yazılır.
 
 ## Klasörler
 

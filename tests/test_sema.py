@@ -269,3 +269,8 @@ def test_kabul_ve_omur_uzatma_testleri_ayri_listelenir():
     assert [t.id for t in d.omur_uzatma_testleri] == ["b", "c"]
     # Çapraz kontrol yalnızca kabul testlerine bakar; yeterlilik testleri aranmaz.
     assert "d" not in [t.id for t in d.kabul_testleri]
+
+
+def test_test_turleri_json_da_sirali_yazilir():
+    t = ornek_sart(test_turleri={"yeterlilik", "kabul", "omur_uzatma"})
+    assert t.model_dump(mode="json")["test_turleri"] == ["kabul", "omur_uzatma", "yeterlilik"]
