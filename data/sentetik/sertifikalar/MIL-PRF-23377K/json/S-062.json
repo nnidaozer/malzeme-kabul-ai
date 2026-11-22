@@ -9,7 +9,7 @@
   "siparis_no": "PO-9629",
   "satirlar": [
     {
-      "test_adi": "Lead and cadmium content",
+      "test_adi": "Cadmium content",
       "sonuc": "0.1",
       "birim": "ppm",
       "metot": "ASTM D3335",
