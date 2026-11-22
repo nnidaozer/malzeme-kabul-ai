@@ -35,6 +35,7 @@ Yontem = Literal["anahtar", "benzerlik"]
 BENZERLIK_ESIGI = 0.6
 VARSAYILAN_ORAN = 0.2
 VARSAYILAN_SEED = 20261209
+ORNEK_DISI_ALANLAR = (".belge_no", ".revizyon")
 
 # Düzleştirilmiş alan adının öneki -> kayıt türü
 _ONEK_TUR = {"test": "test", "kosul": "kosul", "raf_omru": "raf_omru", "numune": "numune"}
@@ -62,6 +63,15 @@ class Satir:
     b: Any
     eslesme: Yontem | None
     madde: str | None = None
+    sayfa_a: int | None = None  # kaydın A'daki kaynak sayfası
+    sayfa_b: int | None = None
+
+    @property
+    def sayfa(self) -> str:
+        """Kontrol için sayfa: iki taslak aynı sayfayı veriyorsa tek numara, yoksa ikisi."""
+        if self.sayfa_a and self.sayfa_b and self.sayfa_a != self.sayfa_b:
+            return f"A {self.sayfa_a} / B {self.sayfa_b}"
+        return str(self.sayfa_a or self.sayfa_b or "")
 
     @property
     def kayit(self) -> str:
@@ -262,12 +272,22 @@ class Karsilastirma:
             sonuc.append({"alan": alan, **d, "toplam": toplam, "oran": round(d["uyusan"] / toplam, 4)})
         return sonuc
 
-    def kontrol_ornegi(self, oran: float = VARSAYILAN_ORAN, seed: int = VARSAYILAN_SEED) -> list[Satir]:
-        """Uyuşan satırlardan tekrarlanabilir rastgele örnek (oran yukarı yuvarlanır)."""
+    def kontrol_ornegi(
+        self, oran: float = VARSAYILAN_ORAN, seed: int = VARSAYILAN_SEED,
+        haric: tuple[str, ...] = ORNEK_DISI_ALANLAR,
+    ) -> list[Satir]:
+        """Uyuşan satırlardan tekrarlanabilir rastgele örnek.
+
+        Örnek büyüklüğü bütün uyuşan satırların `oran` kadarıdır (yukarı
+        yuvarlanır). Adı `haric` soneklerinden biriyle biten alanlar (varsayılan:
+        belge numarası ve revizyon; iki taslakta hep aynıdır, kontrole değmez)
+        örneğe seçilmez; yerlerine başka uyuşan satırlar seçilir.
+        """
         if not 0.0 <= oran <= 1.0:
             raise ValueError(f"oran 0 ile 1 arasında olmalı: {oran}")
-        havuz = sorted(self.uyusan, key=lambda s: s.sira)
-        adet = math.ceil(round(len(havuz) * oran, 9))
+        adet = math.ceil(round(len(self.uyusan) * oran, 9))
+        havuz = sorted((s for s in self.uyusan if not s.alan.endswith(haric)), key=lambda s: s.sira)
+        adet = min(adet, len(havuz))
         return sorted(random.Random(seed).sample(havuz, adet), key=lambda s: s.sira)
 
 
@@ -288,6 +308,14 @@ def karsilastir(a: KabulDokumani, b: KabulDokumani) -> Karsilastirma:
     for e in eslesmeler:
         bilgi[(e.tur, anahtar(e.tur, e.a, a))] = (e.a, e.b, e.yontem, e.madde)
 
+    def sayfalar(d: KabulDokumani) -> dict[tuple[str, str], int | None]:
+        s: dict[tuple[str, str], int | None] = {("test", t.id): t.kaynak.sayfa for t in d.testler}
+        s |= {("kosul", f"{k.kategori}:{k.ad}"): k.kaynak.sayfa for k in d.kosullar}
+        s |= {("raf_omru", r.kap_turu or "genel"): r.kaynak.sayfa for r in d.raf_omurleri}
+        s |= {("numune", n.id): n.kaynak.sayfa for n in d.numune_hazirlama}
+        return s
+
+    sayfa_a, sayfa_b = sayfalar(a), sayfalar(b)
     ta, tb = alanlari_duzlestir(a), alanlari_duzlestir(b_yeni)
     satirlar = []
     for alan, kayit in ta.keys() | tb.keys():
@@ -299,6 +327,10 @@ def karsilastir(a: KabulDokumani, b: KabulDokumani) -> Karsilastirma:
             durum: Durum = "uyusan" if degerler_esit(va, vb) else "ayrisan"
         else:
             durum = "yalniz_a" if a_var else "yalniz_b"
-        satirlar.append(Satir(durum, alan, kimlik_a, kimlik_b, va, vb, yontem, madde))
+        satirlar.append(Satir(
+            durum, alan, kimlik_a, kimlik_b, va, vb, yontem, madde,
+            sayfa_a.get((tur, kimlik_a)) if kimlik_a else None,
+            sayfa_b.get((tur, kimlik_b)) if kimlik_b else None,
+        ))
     satirlar.sort(key=lambda s: s.sira)
     return Karsilastirma(satirlar=satirlar, eslesmeler=eslesmeler)

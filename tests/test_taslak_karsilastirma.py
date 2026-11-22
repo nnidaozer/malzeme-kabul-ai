@@ -184,7 +184,7 @@ def test_kontrol_ornegi_girdi_sirasindan_bagimsizdir():
 def test_kontrol_ornegi_orani_ayarlanabilir_ve_sinirlidir():
     d = _cok_testli(5)
     k = karsilastir(d, d)
-    assert len(k.kontrol_ornegi(oran=1.0)) == len(k.uyusan)
+    assert len(k.kontrol_ornegi(oran=1.0, haric=())) == len(k.uyusan)
     assert k.kontrol_ornegi(oran=0.0) == []
     with pytest.raises(ValueError):
         k.kontrol_ornegi(oran=1.5)
@@ -300,3 +300,32 @@ def test_eslesmeyen_kayitlar_kayit_duzeyinde_listelenir():
     k = karsilastir(a, b)
     assert k.eslesmeyen_kayitlar("a") == [("test", "odor", "3.6.2")]
     assert k.eslesmeyen_kayitlar("b") == [("test", "toxicity", "3.3")]
+
+
+# --- Kontrol örneği alan dışlama ve sayfa ------------------------------------------
+
+
+def test_kontrol_ornegi_belge_no_ve_revizyonu_secmez_ama_buyuklugu_korur():
+    d = _cok_testli(10)
+    k = karsilastir(d, d)
+    ornek = k.kontrol_ornegi()
+    assert len(ornek) == math.ceil(round(len(k.uyusan) * 0.2, 9))
+    assert not any(s.alan.endswith((".belge_no", ".revizyon")) for s in ornek)
+    # Dışlama kapatılırsa bu alanlar yine seçilebilir.
+    hepsi = k.kontrol_ornegi(oran=1.0, haric=())
+    assert any(s.alan.endswith(".belge_no") for s in hepsi)
+
+
+def test_kontrol_ornegi_havuz_yetmezse_havuzun_tamami_secilir():
+    d = _cok_testli(2)
+    k = karsilastir(d, d)
+    uygun = [s for s in k.uyusan if not s.alan.endswith((".belge_no", ".revizyon"))]
+    assert len(k.kontrol_ornegi(oran=1.0)) == len(uygun)
+
+
+def test_satirlar_kaynak_sayfasini_tasir():
+    a = dok([sart("viscosity", ust=30).model_copy(update={"kaynak": Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde="3.5.1", sayfa=7)})])
+    b = dok([sart("viscosity", ust=40).model_copy(update={"kaynak": Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde="3.5.1", sayfa=8)})])
+    [s] = [s for s in karsilastir(a, b).ayrisan if s.alan == "test.sinir.ust"]
+    assert (s.sayfa_a, s.sayfa_b, s.sayfa) == (7, 8, "A 7 / B 8")
+    assert karsilastir(a, a).satirlar[0].sayfa == "7"
