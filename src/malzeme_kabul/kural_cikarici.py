@@ -202,6 +202,28 @@ def _ilk_cumleler(metin: str, adet: int = 2) -> str:
     return " ".join(parcalar[:adet]).strip()
 
 
+# --- Test adı ---------------------------------------------------------------------
+
+# "Lead and cadmium content": iki bileşen ortak bir ada bağlanmış tablo satırı.
+_BIRLESIK_AD = re.compile(r"(?P<a>[A-Za-z-]+) and (?P<b>[A-Za-z-]+) (?P<kuyruk>[A-Za-z][\w ()-]*)")
+
+
+def test_adi_ayir(tablo_adi: str, sart_cumlesi: str) -> str:
+    """Tablo satırı iki bileşeni birleştiriyorsa, şart cümlesinin kapsadığı bileşenin adını döner.
+
+    "Lead and cadmium content" satırında ≤ 1 ppm şartının cümlesi yalnız
+    kadmiyumdan söz ediyorsa ad "Cadmium content" olur. Cümle iki bileşeni de
+    anıyorsa ya da hiçbirini anmıyorsa tablo adı değişmez.
+    """
+    m = _BIRLESIK_AD.fullmatch(tablo_adi.strip())
+    if not m:
+        return tablo_adi
+    anilan = [b for b in (m["a"], m["b"]) if re.search(rf"\b{re.escape(b)}\b", sart_cumlesi, flags=re.I)]
+    if len(anilan) != 1:
+        return tablo_adi
+    return f"{anilan[0].capitalize()} {m['kuyruk']}"
+
+
 # --- Test tablosu ve test türleri ----------------------------------------------
 
 
@@ -323,12 +345,14 @@ def cikar(pdf_yolu: str | Path, belge_no: str, revizyon: str) -> KabulDokumani:
             if m and f"panel_{m.group(1)}" in numune_idleri:
                 panel = f"panel_{m.group(1)}"
 
+        sinir = sinir_cikar(metin)
         testler.append(TestSarti(
             id=kimlik,
-            test_adi=ad,
+            test_adi=test_adi_ayir(ad, sinir.orijinal_metin),
+            kaynak_tablo_adi=ad,
             test_metodu=_bos(metot),
             metot_kaynagi=kaynak(test_maddesi) if test_p else None,
-            sinir=sinir_cikar(metin),
+            sinir=sinir,
             kaynak=kaynak(sart_maddesi, sayfa=None if sart_p else sayfa_no),
             test_turleri=turler,
             uygulanabilirlik=uygulanabilirlik_cikar(ad) or uygulanabilirlik_cikar(sart_p.baslik if sart_p else ""),

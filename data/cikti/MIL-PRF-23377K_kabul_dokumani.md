@@ -10,7 +10,7 @@ Durum: taslak
 
 | Test | Test metodu | Sınır | Uygulanabilirlik | Madde |
 |---|---|---|---|---|
-| Lead and cadmium content | ASTM D3335 | ≤ 1 ppm | Tümü | MIL-PRF-23377K, 3.4 |
+| Cadmium content (tabloda: Lead and cadmium content) | ASTM D3335 | ≤ 1 ppm | Tümü | MIL-PRF-23377K, 3.4 |
 | Chromium content (class N only) | ASTM D3718 | ≤ 5 ppm | Class N | MIL-PRF-23377K, 3.4.1.3 |
 | VOC solvent content | ASTM D3960 | ≤ 340 g/L | Tümü | MIL-PRF-23377K, 3.4.2 |
 | Fineness of grind | ASTM D1210 | ≥ 5 | Tümü | MIL-PRF-23377K, 3.5.1 |
@@ -36,7 +36,7 @@ Durum: taslak
 
 | Test | Test metodu | Sınır | Uygulanabilirlik | Madde |
 |---|---|---|---|---|
-| Lead and cadmium content | ASTM D3335 | ≤ 1 ppm | Tümü | MIL-PRF-23377K, 3.4 |
+| Cadmium content (tabloda: Lead and cadmium content) | ASTM D3335 | ≤ 1 ppm | Tümü | MIL-PRF-23377K, 3.4 |
 | Chromium content (class N only) | ASTM D3718 | ≤ 5 ppm | Class N | MIL-PRF-23377K, 3.4.1.3 |
 | VOC solvent content | ASTM D3960 | ≤ 340 g/L | Tümü | MIL-PRF-23377K, 3.4.2 |
 | Fineness of grind | ASTM D1210 | ≥ 5 | Tümü | MIL-PRF-23377K, 3.5.1 |

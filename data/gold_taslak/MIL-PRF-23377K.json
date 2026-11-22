@@ -9,7 +9,8 @@
   "testler": [
     {
       "id": "lead_and_cadmium_content",
-      "test_adi": "Lead and cadmium content",
+      "test_adi": "Cadmium content",
+      "kaynak_tablo_adi": "Lead and cadmium content",
       "test_metodu": "ASTM D3335",
       "metot_kaynagi": null,
       "sinir": {
@@ -38,6 +39,7 @@
     {
       "id": "lead_and_cadmium_content_lead",
       "test_adi": "Lead content",
+      "kaynak_tablo_adi": "Lead and cadmium content",
       "test_metodu": "ASTM D3335",
       "metot_kaynagi": null,
       "sinir": {

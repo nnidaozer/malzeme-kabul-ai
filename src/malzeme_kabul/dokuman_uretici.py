@@ -51,8 +51,9 @@ class Bolum:
 
 
 def _test_satiri(t: TestSarti) -> list[str]:
+    ad = f"{t.test_adi} (tabloda: {t.kaynak_tablo_adi})" if t.kaynak_tablo_adi else t.test_adi
     return [
-        t.test_adi,
+        ad,
         t.test_metodu or "—",
         sinir_metni(t.sinir),
         ", ".join(t.uygulanabilirlik) or "Tümü",

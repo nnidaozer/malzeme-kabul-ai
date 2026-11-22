@@ -31,7 +31,7 @@ from .sema import KabulDokumani, Kaynak, Sinir
 Anahtar = tuple[str, str]
 
 _SINIR_ALANLARI = ("kriter_turu", "alt", "ust", "alt_dahil", "ust_dahil", "birim")
-_TEST_ALANLARI = ("test_adi", "test_metodu", "test_turleri", "uygulanabilirlik", "numune_hazirlama_id")
+_TEST_ALANLARI = ("test_adi", "kaynak_tablo_adi", "test_metodu", "test_turleri", "uygulanabilirlik", "numune_hazirlama_id")
 _NUMUNE_ALANLARI = (
     "kupon_malzemesi", "kupon_boyutu", "yuzey_hazirligi", "uygulama_yontemi", "kurlenme",
 )
