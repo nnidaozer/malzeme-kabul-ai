@@ -24,9 +24,29 @@ belge numarasını ve revizyonu yaz (ör. `MIL-PRF-12345X`).
 sisteminin doğru cevap anahtarı olacak. Hız değil doğruluk önemli: her değeri
 PDF'teki maddeye bakarak yaz, tahmin etme.
 
+## PDF'i nasıl okuyacaksın
+
+Sayfaları mümkünse **görüntü olarak** oku: her sayfayı resme çevir ve resme
+bak. PDF'ten metin çıkarmak tablolarda sütunları karıştırabilir, `±`, `≤`, `°`
+gibi işaretleri ve üst/alt simgeleri bozabilir. Sayfaları resme çevirmek için
+örneğin:
+
+```bash
+pdftoppm -r 150 -png <BELGE>.pdf sayfa   # sayfa-01.png, sayfa-02.png, ...
+```
+
+Sayfa numarası (`kaynak.sayfa`) bu resimlerin sırasıdır (1'den başlar).
+Görüntü okuyamıyorsan metni kullan, ama bunu `_NOTLAR.md` dosyasının başında
+belirt. Bir değeri metinle görüntü arasında farklı görürsen görüntüdekini al ve
+farkı notlara yaz.
+
 ## Okuma yasağı
 
-Yalnızca standardın PDF'ini ve bu istemi kullan. Depodaysan şunları
+**`data/gold_taslak/` klasörünü açma, listeleme, içinde arama yapma.** Orada
+aynı belge için başka bir modelin hazırladığı taslak var; tek bir değerini
+görmek bile bu işin amacını bozar.
+
+Yalnızca standardın PDF'ini ve bu istemi kullan. Depodaysan ayrıca şunları
 **açma, okuma, arama**: `src/` (aşağıdaki doğrulama komutunu çalıştırmak
 serbest, kaynak kodu okumak değil), `data/gold/`, `data/gold_taslak/`,
 `data/cikti/`, `data/sentetik/`, `tests/`, `notebooks/`, `docs/` (bu dosya
@@ -37,17 +57,17 @@ görmek bu işin amacını bozar.
 
 ## Çıktı
 
-1. `<BELGE>_bagimsiz.json`: `KabulDokumani` şemasına uyan tek JSON nesnesi.
+1. `<BELGE>.json`: `KabulDokumani` şemasına uyan tek JSON nesnesi.
    UTF-8, girintili (2 boşluk). JSON dışında hiçbir şey yazma; şemada olmayan
    alan ekleme (şema fazladan alanı reddeder).
-2. `<BELGE>_bagimsiz_NOTLAR.md`: Emin olmadığın her karar için bir madde:
+2. `<BELGE>_NOTLAR.md`: Emin olmadığın her karar için bir madde:
    hangi kayıt, hangi madde, neden emin değilsin, hangi seçeneği neden seçtin.
 
-Depoda çalışıyorsan dosyaları `data/bagimsiz_taslak/` altına yaz ve şu
-komutla doğrula (hata verirse düzelt):
+İki dosyayı da `data/gold_codex/` klasörüne yaz (yoksa oluştur); başka bir
+klasöre yazma. Sonra şu komutla doğrula (hata verirse düzelt):
 
 ```bash
-python -c "from pathlib import Path; from malzeme_kabul.sema import KabulDokumani; KabulDokumani.model_validate_json(Path('data/bagimsiz_taslak/<BELGE>_bagimsiz.json').read_text(encoding='utf-8')); print('geçerli')"
+python -c "from pathlib import Path; from malzeme_kabul.sema import KabulDokumani; KabulDokumani.model_validate_json(Path('data/gold_codex/<BELGE>.json').read_text(encoding='utf-8')); print('geçerli')"
 ```
 
 ## Şema

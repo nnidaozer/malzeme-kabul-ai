@@ -67,3 +67,13 @@ def test_modele_verilen_metin_sema_dosyasini_okutmaz():
 
 def test_istem_kaynak_tablo_adi_alanini_tanimlar():
     assert "`kaynak_tablo_adi`" in _istem()
+
+
+def test_istem_goruntu_okuma_cikti_klasoru_ve_taslak_yasagini_soyler():
+    model_metni = _istem().split("\n---\n", 1)[1]
+    assert "görüntü olarak" in model_metni
+    assert "data/gold_codex/" in model_metni
+    assert "**`data/gold_taslak/` klasörünü açma" in model_metni
+    # Doğrulama komutu çıktıyı gold_codex altında arar; data/gold/ altına yazdırmaz.
+    assert "Path('data/gold_codex/<BELGE>.json')" in model_metni
+    assert "data/gold/<" not in model_metni
