@@ -9,7 +9,7 @@
   "siparis_no": "PO-5173",
   "satirlar": [
     {
-      "test_adi": "Lead and cadmium content",
+      "test_adi": "Cadmium content",
       "sonuc": "ND (<1 ppm)",
       "metot": "ASTM D3335",
       "sart": "1 ppm max"

@@ -3,7 +3,7 @@
 150 sentetik sertifika; belge okuma kusursuz varsayıldı (ham hücreler JSON'dan).
 Yanlış kabul yalnız motor "kabul" (satırda "uygun") dediğinde oluşur; "inceleme" kabul sayılmaz.
 
-Belge başına süre: ortalama 10.03 ms, en çok 18.87 ms.
+Belge başına süre: ortalama 10.58 ms, en çok 17.05 ms.
 
 ### Belge düzeyi (150)
 
