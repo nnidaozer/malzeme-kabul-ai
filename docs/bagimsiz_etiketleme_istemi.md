@@ -3,7 +3,9 @@
 Bu dosya, doğru cevap (gold) taslağını ikinci, bağımsız bir modele (ör. Codex)
 hazırlatmak için kullanılır. İki taslak `scripts/taslak_karsilastir.py` ile
 karşılaştırılır; proje sahibi yalnızca ayrışan satırlara ve uyuşan satırlardan
-seçilen kontrol örneğine bakar.
+seçilen kontrol örneğine bakar. Karşılaştırmadan önce iki taslağa da
+`scripts/kanit_kontrol.py` uygulanır: her sayısal değerin kaynak sayfasında
+PDF metninde geçip geçmediğine bakar ve bulamadıklarını listeler.
 
 **Bağımsızlık için:** Modele mümkünse depoyu değil yalnızca iki dosyayı ver:
 bu istem ve standardın PDF'i (`data/raw/<BELGE>.pdf`). İstem şemayı kendi
