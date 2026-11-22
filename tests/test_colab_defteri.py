@@ -34,3 +34,19 @@ def test_defter_yerel_istemciyi_kullanir_ve_golde_yazmaz():
     assert "YerelModelIstemcisi" in kod and "scripts/dil_modeli_cikar.py" in kod
     assert "127.0.0.1" in kod
     assert "data/gold/" not in kod  # yalnız data/gold_taslak okunur
+
+
+def test_klonlama_belirteci_secretstan_alir_ve_sizdirmaz():
+    kod = "\n".join(_hucreler("code"))
+    assert 'userdata.get("GITHUB_TOKEN")' in kod
+    assert "http.extraHeader" in kod  # belirteç adrese ve .git/config'e yazılmaz
+    assert "@github.com" not in kod and ":{belirtec}@" not in kod
+    assert not re.search(r"print\([^)]*belirtec", kod)
+    assert 'replace(belirtec, "***")' in kod  # hata çıktısında maskelenir
+
+
+def test_kurulum_dogrulama_hucresi_var():
+    kod = "\n".join(_hucreler("code"))
+    assert '"pip", "install", "-q", "-e", "."' in kod
+    assert "sys.path.insert(0, SRC)" in kod  # çalışan çekirdek yeni kurulumu görsün
+    assert "import malzeme_kabul" in kod and "Kurulum doğrulandı" in kod

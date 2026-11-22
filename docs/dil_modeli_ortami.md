@@ -56,6 +56,45 @@ kesinleşince aynı yöntemle eklenir.
 | Llama-3.1-8B-Instruct | `llama3.1:8b-instruct-q4_K_M` | ~4,9 GB | Llama 3.1 Community | En yaygın taban çizgisi; literatürde karşılaştırma için sık kullanılır, sonuçlar başka çalışmalarla kıyaslanabilir. |
 | Qwen3-8B | `qwen3:8b` | ~5,2 GB | Apache 2.0 | Daha yeni nesil; talimat izleme daha iyi. Düşünme kipi kapatılarak (`--dusunme-kapali`) kullanılır, yoksa çıktı uzar ve süre artar. |
 
+## Colab için GitHub belirteci
+
+Depo gizli olduğu için defter, depoyu Colab'ın Secrets bölümündeki bir
+belirteçle klonlar. Belirteç yalnız bu depoyu, yalnız okuyabilen, süreli bir
+"fine-grained" belirteç olmalıdır.
+
+**Belirteci oluştur (GitHub):**
+
+1. GitHub'da sağ üstte profil resmi → **Settings**.
+2. Sol menünün en altında **Developer settings** → **Personal access tokens** →
+   **Fine-grained tokens** → **Generate new token**.
+3. **Token name:** `colab-malzeme-kabul`. **Expiration:** ör. 30 gün (süre
+   dolunca yenisini oluşturursun).
+4. **Resource owner:** kendi hesabın.
+5. **Repository access:** **Only select repositories** → yalnız
+   `malzeme-kabul-ai`.
+6. **Permissions → Repository permissions → Contents: Read-only**. Başka
+   izin verme (Metadata: Read-only kendiliğinden eklenir).
+7. **Generate token** → çıkan değeri kopyala. GitHub onu bir daha göstermez.
+
+**Colab'a ekle:**
+
+1. Defteri aç, sol menüde anahtar simgesine (🔑 **Secrets**) tıkla.
+2. **Add new secret** → **Name:** `GITHUB_TOKEN`, **Value:** kopyaladığın
+   belirteç.
+3. Aynı satırdaki **Notebook access** anahtarını aç.
+4. 2a, 2b, 2c hücrelerini sırayla çalıştır. Colab erişim izni sorarsa
+   **Grant access** de. 2c "✓ Kurulum doğrulandı" yazmalı.
+
+Belirteci hiçbir hücreye yapıştırma, ekran görüntüsüne ya da depoya koyma.
+Defter belirteci yazdırmaz; adrese ya da `.git/config` dosyasına yazmaz,
+yalnız klonlama komutuna başlık olarak verir; hata çıktısında maskeler.
+Belirteç sızdığını düşünürsen GitHub'da aynı sayfadan **Revoke** ile iptal et.
+
+"No module named 'malzeme_kabul'" hatasının iki nedeni vardı: gizli depo
+belirteçsiz klonlanamıyordu, klonlansa bile çalışan çekirdek `pip install -e .`
+ile eklenen yolu yeniden başlatılmadan görmüyordu. 2b hücresi `src/`
+klasörünü yola ekleyerek ikincisini çözer.
+
 ## Dizüstü adayları (1–3B, 4 bit)
 
 Dizüstünde 2 GB GPU belleği var. 3B model (Q4_K_M ~1,9–2,0 GB) bağlam belleğiyle
