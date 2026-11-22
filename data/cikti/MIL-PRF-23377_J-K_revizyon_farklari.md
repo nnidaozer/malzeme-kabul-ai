@@ -32,6 +32,12 @@ Bu rapor kurallarla üretilmiş bir taslaktır; değişikliklerin kabul doküman
 - MIL-PRF-23377J kabul dışı: accelerated storage stability, corrosion resistance, storage stability, toxicity
 - MIL-PRF-23377K kabul dışı: accelerated storage stability, corrosion resistance, storage stability, strippability, toxicity
 
+## Şüpheli değişiklikler (insan incelemeli)
+
+Bu değişiklikler standarttaki bir yazım hatası olabilir. Doğrulanmadan kabul dokümanına taşınmamalı.
+
+- **4.5 Test methods**: sıfır tolerans (±0) eklendi; standartta yazım hatası olabilir; % biriminde değer sıfıra indi (10 → 0)
+
 ## Şart ve doğrulama maddeleri (bölüm 3–4)
 
 | Madde | Başlık | Fark | Önem | Değerler (eski → yeni) | Değişiklik |
@@ -60,7 +66,7 @@ Bu rapor kurallarla üretilmiş bir taslaktır; değişikliklerin kabul doküman
 | 4.4.1 | Application of primer coatings | Değişti | sayısal | 340 g/L, 1 hour, 24 hour, 65.5 °C, 3 °C, 150 °F, 5 °F → — | ~~coating, if~~ → **coating with component C (if applicable). If**<br>**+ dilute the admixed coating**<br>~~II. If dilution of the primer coating is required, do not exceed 340 g/L (2.8 l…~~ → **II**<br>~~the test panels with~~ → **apply one cross-coat of**<br>(+2 değişiklik daha) |
 | 4.4.2 | Application of topcoat | Değişti | sayısal | 1 hour, 24 hour, 65.5 °C, 3 °C, 150 °F, 5 °F → 17925, 36375 | ~~MIL-PRF-85285 (untinted gloss white conforming to FED-STD-595, color number 179…~~ → **MIL-PRF-85285, Type I or IV,**<br>**+ Type I primer coatings shall be coated with untinted gloss white conforming to FED-STD-595, color n…**<br>~~coating~~ → **topcoat**<br>~~mils).~~ → **mils) in accordance with ASTM D823 Method D.**<br>(+2 değişiklik daha) |
 | TABLE I | Aluminum test panels | Değişti | metin | — | ~~SAE-AMS-QQ-A-250/4~~ → **SAE AMS-QQ-A-250/4**<br>~~MIL-C-5541,~~ → **MIL-DTL-5541,**<br>~~SAE-AMS-QQ-A-250/4~~ → **SAE AMS-QQ-A-250/4**<br>~~SAE-AMS-QQ-A-250/5~~ → **SAE AMS-QQ-A-250/5**<br>(+3 değişiklik daha) |
-| 4.5 | Test methods | Değişti | sayısal | 10 % → 0 % | ~~±10~~ → **±0** |
+| 4.5 | Test methods | Değişti | sayısal ⚠ şüpheli, insan incelemeli | 10 % → 0 % | ~~±10~~ → **±0** |
 | 4.5.2 | Accelerated storage stability | Değişti | sayısal | — → 300, 2 minute | ~~contents~~ → **contents. The primer coatings shall be admixed by 300 hand stirs in 2 minutes a…** |
 | 4.5.4 | Adhesion | Değişti | sayısal | 6301 → 2 inch, 250, 1 year | ~~The~~ → **Primer only in accordance with 4.4.1 and**<br>~~coatings~~ → **with topcoat in accordance with 4.4.1 and 4.4.2**<br>~~I) in accordance with 4.4.1.~~ → **I).**<br>~~not less than~~<br>(+9 değişiklik daha) |
 | 4.5.5 | Flexibility | Değişti | sayısal | 3.6 → — | ~~coatings~~ → **coating**<br>~~flexibility of the coatings~~ → **coating**<br>~~then~~<br>~~4.5,~~ → **4.5 and in accordance with ASTM D6905,**<br>(+4 değişiklik daha) |

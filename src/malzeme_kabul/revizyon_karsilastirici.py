@@ -99,6 +99,8 @@ class SartFarki:
     """Eski metinde olup yenide olmayan sayı/birim değerleri."""
     yeni_degerler: list[str] = field(default_factory=list)
     """Yeni metinde olup eskide olmayan sayı/birim değerleri."""
+    supheli: list[str] = field(default_factory=list)
+    """Değişiklik yazım hatası olabilir; insan incelemeli. Boşsa şüphe yok."""
 
     @property
     def madde(self) -> str:
@@ -179,6 +181,7 @@ class RevizyonFarki:
             "eklenen_test": sum(t.tur == "eklendi" for t in self.test_farklari),
             "kaldirilan_test": sum(t.tur == "kaldirildi" for t in self.test_farklari),
             "degisen_test": sum(t.tur == "degisti" for t in self.test_farklari),
+            "supheli_sart": sum(bool(f.supheli) for f in sf),
         }
 
     def sozluk(self) -> dict:
@@ -393,6 +396,54 @@ def _metin_degisiklikleri(eski: str, yeni: str) -> list[MetinDegisikligi]:
     return parcalar
 
 
+_SIFIR_TOLERANS = re.compile(r"±\s*0(?:\.0+)?(?![\d.])")
+
+
+def _deger_ayir(deger: str) -> tuple[float, str | None]:
+    sayi, _, birim = deger.partition(" ")
+    return float(sayi), birim or None
+
+
+def supheli_nedenleri(eski_metin: str, yeni_metin: str,
+                      eski_degerler: list[str], yeni_degerler: list[str]) -> list[str]:
+    """Bir değişikliğin standarttaki yazım hatası olabileceğine dair nedenler.
+
+    Kurallar:
+    - Yeni metinde eskide olmayan sıfır tolerans ("±0") var.
+    - Aynı birimdeki sıfırdan farklı bir değer sıfıra indi.
+    - Aynı birimde tek bir değer tek bir değerle değişti ve oran 10 kat ya da fazla.
+    Şüpheli değişiklik kabul dokümanına kendiliğinden taşınmaz; insan inceler.
+    """
+    nedenler = []
+    if len(_SIFIR_TOLERANS.findall(_goruntu_metni(yeni_metin))) > len(_SIFIR_TOLERANS.findall(_goruntu_metni(eski_metin))):
+        nedenler.append("sıfır tolerans (±0) eklendi; standartta yazım hatası olabilir")
+
+    def birime_gore(degerler: list[str]) -> dict[str | None, list[float]]:
+        gruplar: dict[str | None, list[float]] = {}
+        for d in degerler:
+            sayi, birim = _deger_ayir(d)
+            gruplar.setdefault(birim, []).append(sayi)
+        return gruplar
+
+    eski_b, yeni_b = birime_gore(eski_degerler), birime_gore(yeni_degerler)
+    for birim, yeniler in yeni_b.items():
+        eskiler = eski_b.get(birim, [])
+        if birim is None or not eskiler:
+            continue
+        if 0 in yeniler and all(e != 0 for e in eskiler):
+            nedenler.append(f"{birim} biriminde değer sıfıra indi ({', '.join(map(_sayi_yaz, eskiler))} → 0)")
+        elif len(eskiler) == 1 and len(yeniler) == 1 and eskiler[0] and yeniler[0]:
+            oran = max(eskiler[0], yeniler[0]) / min(eskiler[0], yeniler[0])
+            if oran >= 10:
+                nedenler.append(f"{birim} biriminde değer 10 kattan fazla değişti "
+                                f"({_sayi_yaz(eskiler[0])} → {_sayi_yaz(yeniler[0])})")
+    return nedenler
+
+
+def _sayi_yaz(x: float) -> str:
+    return f"{x:g}"
+
+
 def sart_farki(eski: Sart | None, yeni: Sart | None) -> SartFarki | None:
     """İki paragrafın farkı; aynıysa None."""
     if eski is None and yeni is None:
@@ -423,6 +474,7 @@ def sart_farki(eski: Sart | None, yeni: Sart | None) -> SartFarki | None:
         fark.yeni_degerler = list((y_say - e_say).elements())
         if fark.eski_degerler or fark.yeni_degerler:
             fark.onem = "sayisal"
+        fark.supheli = supheli_nedenleri(eski_metin, yeni_metin, fark.eski_degerler, fark.yeni_degerler)
         fark.degisiklikler = _metin_degisiklikleri(eski_metin, yeni_metin)
     return fark
 
@@ -577,6 +629,10 @@ def _sart_onerisi(hedef: str, f: SartFarki, yeni_etiket: str) -> GuncellemeOneri
         parcalar.append(f"Madde numarası {f.eski.madde} → {f.yeni.madde} olarak güncellenmeli.")
     if not parcalar:
         return None
+    if f.supheli:
+        tur = "gozden_gecir"
+        parcalar.insert(0, f"Şüpheli, insan incelemeli ({'; '.join(f.supheli)}); değişiklik doğrulanmadan "
+                           "kabul dokümanına taşınmamalı.")
     return GuncellemeOnerisi(hedef, tur, madde, " ".join(parcalar))
 
 
@@ -743,6 +799,15 @@ def markdown_raporu(fark: RevizyonFarki, oneriler: list[GuncellemeOnerisi] | Non
         "",
     ]
 
+    supheliler = [f for f in fark.sart_farklari if f.supheli]
+    if supheliler:
+        satirlar += ["## Şüpheli değişiklikler (insan incelemeli)", "",
+                     "Bu değişiklikler standarttaki bir yazım hatası olabilir. Doğrulanmadan kabul "
+                     "dokümanına taşınmamalı.", ""]
+        for f in supheliler:
+            satirlar.append(f"- **{_madde_md(f)} {f.baslik}**: {'; '.join(f.supheli)}")
+        satirlar.append("")
+
     icerik = [f for f in fark.sart_farklari if f.onem != "bicimsel"]
     for bolumler, baslik in (((3, 4), "Şart ve doğrulama maddeleri (bölüm 3–4)"),
                              ((1, 2, 5, 6), "Diğer bölümler (1, 2, 5, 6)")):
@@ -755,6 +820,8 @@ def markdown_raporu(fark: RevizyonFarki, oneriler: list[GuncellemeOnerisi] | Non
                      "|---|---|---|---|---|---|"]
         for f in secilen:
             onem = _ONEM_ADI[f.onem] if f.tur == "degisti" else "—"
+            if f.supheli:
+                onem += " ⚠ şüpheli, insan incelemeli"
             degerler = f"{', '.join(f.eski_degerler) or '—'} → {', '.join(f.yeni_degerler) or '—'}"
             if not (f.eski_degerler or f.yeni_degerler):
                 degerler = "—"
