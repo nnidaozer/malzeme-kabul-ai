@@ -29,7 +29,7 @@ from malzeme_kabul.taslak_karsilastirma import (
     VARSAYILAN_ORAN, VARSAYILAN_SEED, Karsilastirma, Satir, karsilastir,
 )
 
-SUTUNLAR = ["durum", "alan", "kayit_a", "kayit_b", "deger_a", "deger_b", "madde", "eslesme", "kontrol_ornegi"]
+SUTUNLAR = ["durum", "alan", "kayit_a", "kayit_b", "deger_a", "deger_b", "madde", "sayfa_a", "sayfa_b", "eslesme", "kontrol_ornegi"]
 
 
 def _oku(yol: str) -> KabulDokumani:
@@ -56,7 +56,10 @@ def _hucre(deger: Any) -> str:
 
 
 def _madde(s: Satir) -> str:
-    return f" (madde {s.madde})" if s.madde else ""
+    parca = [f"madde {s.madde}"] if s.madde else []
+    if s.sayfa:
+        parca.append(f"sayfa {s.sayfa}")
+    return f" ({', '.join(parca)})" if parca else ""
 
 
 def rapor_md(k: Karsilastirma, ad_a: str, ad_b: str, oran: float, seed: int) -> str:
@@ -72,7 +75,8 @@ def rapor_md(k: Karsilastirma, ad_a: str, ad_b: str, oran: float, seed: int) -> 
         f"- **Ortak satırlarda uyuşma: {k.ortak_uyusma_orani:.1%}** (uyuşan / (uyuşan + ayrışan); "
         "kapsam farkını dışarıda bırakır)",
         f"- Yalnız bir taslakta olan kayıt: A {len(k.eslesmeyen_kayitlar('a'))}, B {len(k.eslesmeyen_kayitlar('b'))}",
-        f"- Kontrol örneği: uyuşan satırların %{oran * 100:g}'i, {len(ornek)} satır, seed {seed}",
+        f"- Kontrol örneği: uyuşan satırların %{oran * 100:g}'i, {len(ornek)} satır, seed {seed} "
+        "(belge numarası ve revizyon alanları örneğe seçilmez)",
         "",
         "Kontrol edilecekler: ayrışan satırlar, yalnız bir taslakta olan satırlar,",
         "ad benzerliğiyle eşleşen kayıtlar ve kontrol örneği. Doğruysa `[ ]` kutusunu `[x]` yap,",
@@ -133,7 +137,8 @@ def csv_yaz(k: Karsilastirma, yol: Path, oran: float, seed: int) -> None:
             yazici.writerow({
                 "durum": s.durum, "alan": s.alan, "kayit_a": s.kayit_a or "", "kayit_b": s.kayit_b or "",
                 "deger_a": "" if s.a is None else _goster(s.a), "deger_b": "" if s.b is None else _goster(s.b),
-                "madde": s.madde or "", "eslesme": s.eslesme or "",
+                "madde": s.madde or "", "sayfa_a": s.sayfa_a or "", "sayfa_b": s.sayfa_b or "",
+                "eslesme": s.eslesme or "",
                 "kontrol_ornegi": "evet" if id(s) in ornek else "",
             })
 
