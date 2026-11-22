@@ -12,7 +12,8 @@ Bir "satır", bir kayıttaki tek bir alanın değeridir (ör. viskozite testinin
 İki model aynı kayda farklı kimlik verebilir. Kayıtlar önce anahtarla
 eşleşir (test ve numune: `id`, koşul: kategori + ad, raf ömrü: kap türü).
 Anahtarı tutmayan kayıtlar, aynı kaynak maddesinde (koşulda aynı kategoride)
-ve adları yeterince benzerse eşleştirilir; bu eşleşmeler `benzerlik` diye
+ve adları yeterince benzerse eşleştirilir (testlerde kaynak tablo adı da
+denenir); bu eşleşmeler `benzerlik` diye
 işaretlenir, çünkü yanlış eşleşme olabilirler ve elle bakılmaları gerekir.
 """
 
@@ -81,10 +82,19 @@ class _Kayit:
     ad: str  # benzerlik için ad
     madde: str
     grup: str = ""  # yalnızca aynı gruptakiler eşleşir (koşulda kategori)
+    diger_adlar: tuple[str, ...] = ()  # benzerlikte ayrıca denenen adlar (test: kaynak tablo adı)
+
+    @property
+    def adlar(self) -> tuple[str, ...]:
+        return (self.ad, *self.diger_adlar)
 
 
 def _kayitlar(d: KabulDokumani) -> list[_Kayit]:
-    sonuc = [_Kayit("test", t.id, t.id, t.test_adi, t.kaynak.madde) for t in d.testler]
+    sonuc = [
+        _Kayit("test", t.id, t.id, t.test_adi, t.kaynak.madde,
+               diger_adlar=(t.kaynak_tablo_adi,) if t.kaynak_tablo_adi else ())
+        for t in d.testler
+    ]
     sonuc += [
         _Kayit("kosul", f"{k.kategori}:{k.ad}", f"{k.kategori}:{_normal_metin(k.ad)}", k.ad, k.kaynak.madde, k.kategori)
         for k in d.kosullar
@@ -134,7 +144,8 @@ def kaydi_eslestir(a: KabulDokumani, b: KabulDokumani) -> list[Eslesme]:
         for y in kalan_b:
             if x.tur != y.tur or x.madde != y.madde or x.grup != y.grup:
                 continue
-            puan = ad_benzerligi(x.ad, y.ad)
+            # Bir model tablo satır adını test adı yapmış olabilir: bütün ad çiftlerini dene.
+            puan = max(ad_benzerligi(p, q) for p in x.adlar for q in y.adlar)
             if puan >= BENZERLIK_ESIGI:
                 karakter = SequenceMatcher(None, x.ad.casefold(), y.ad.casefold()).ratio()
                 adaylar.append((-puan, -karakter, x.kimlik, y.kimlik, x, y, puan))

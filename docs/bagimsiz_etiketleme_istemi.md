@@ -5,9 +5,11 @@ hazırlatmak için kullanılır. İki taslak `scripts/taslak_karsilastir.py` ile
 karşılaştırılır; proje sahibi yalnızca ayrışan satırlara ve uyuşan satırlardan
 seçilen kontrol örneğine bakar.
 
-**Bağımsızlık için:** Modele mümkünse depoyu değil yalnızca üç dosyayı ver:
-bu istem, standardın PDF'i (`data/raw/<BELGE>.pdf`) ve
-`src/malzeme_kabul/sema.py`. Depoya erişimi varsa aşağıdaki "Okuma yasağı"
+**Bağımsızlık için:** Modele mümkünse depoyu değil yalnızca iki dosyayı ver:
+bu istem ve standardın PDF'i (`data/raw/<BELGE>.pdf`). İstem şemayı kendi
+içinde tanımlar. `src/malzeme_kabul/sema.py` dosyasını verme: içindeki
+açıklama örneklerinin bir kısmı MIL-PRF-23377K taslağından geliyor (ör. raf
+ömrü ve 3.4 adlandırması). Depoya erişimi varsa aşağıdaki "Okuma yasağı"
 bölümü geçerlidir.
 
 Aşağıdaki çizginin altı modele olduğu gibi verilecek metindir. `<BELGE>` yerine
@@ -24,10 +26,11 @@ PDF'teki maddeye bakarak yaz, tahmin etme.
 
 ## Okuma yasağı
 
-Yalnızca standardın PDF'ini ve `src/malzeme_kabul/sema.py` (gerekirse
-`src/malzeme_kabul/birimler.py`) dosyasını kullan. Depodaysan şunları
-**açma, okuma, arama**: `data/gold/`, `data/gold_taslak/`, `data/cikti/`,
-`data/sentetik/`, `tests/`, `notebooks/`, `docs/` (bu dosya hariç), `scripts/`,
+Yalnızca standardın PDF'ini ve bu istemi kullan. Depodaysan şunları
+**açma, okuma, arama**: `src/` (aşağıdaki doğrulama komutunu çalıştırmak
+serbest, kaynak kodu okumak değil), `data/gold/`, `data/gold_taslak/`,
+`data/cikti/`, `data/sentetik/`, `tests/`, `notebooks/`, `docs/` (bu dosya
+hariç), `scripts/`,
 git geçmişi (`git log`, `git show`, eski commit'ler), açık ya da kapalı PR'lar.
 Bunlarda başka bir modelin aynı belge için hazırladığı cevaplar var; onları
 görmek bu işin amacını bozar.
@@ -49,8 +52,8 @@ python -c "from pathlib import Path; from malzeme_kabul.sema import KabulDokuman
 
 ## Şema
 
-Kesin tanım `src/malzeme_kabul/sema.py` dosyasındadır; aşağıdaki özet onunla
-çelişirse dosya geçerlidir. `null` yazılabilen alanlar "isteğe bağlı" diye
+Şema aşağıda tam olarak tanımlıdır; doğrulama komutu çıktının ona uyup
+uymadığını denetler. `null` yazılabilen alanlar "isteğe bağlı" diye
 işaretli.
 
 ### KabulDokumani (en üst nesne)
@@ -126,7 +129,8 @@ Sayı ve birim kuralları:
 | Alan | Tür | Açıklama |
 |---|---|---|
 | `id` | metin | Belge içinde benzersiz kimlik; aşağıdaki kurala göre. |
-| `test_adi` | metin | Testin standarttaki İngilizce adı. |
+| `test_adi` | metin | Bu kaydın gerçekten kapsadığı testin İngilizce adı. |
+| `kaynak_tablo_adi` | metin, isteğe bağlı | Şart bir test tablosunda (ör. TABLE I) `test_adi`'ndan farklı bir satır adıyla geçiyorsa o satır adı, tablodaki gibi. Ad aynıysa ya da şart tabloda yoksa `null`. |
 | `test_metodu` | metin, isteğe bağlı | Uygulanan test metodu, ör. `"ASTM D 0000"`, `"FED-STD-141 Method 0000"`. Standart bir metot belirtmiyorsa `null`. |
 | `metot_kaynagi` | Kaynak, isteğe bağlı | Testin nasıl yapılacağını anlatan madde (genellikle 4.x). |
 | `sinir` | Sinir | Kabul kriteri. |
@@ -140,7 +144,8 @@ Test kuralları:
 - **Bir kayıt, bir kriter.** Bir madde ya da tablo satırı birden fazla ayrı
   kriter içeriyorsa (ör. iki farklı madde için iki ayrı sınır, ya da iki
   ayrı süre), her kriter ayrı bir test kaydıdır. `test_adi` o kaydın neyi
-  ölçtüğünü söyler; tablodaki ortak satır adını değil.
+  ölçtüğünü söyler; tablodaki ortak satır adını değil. Ortak satır adı
+  `kaynak_tablo_adi` alanına yazılır.
 - **`id` kuralı:** `test_adi` küçük harfe çevrilir, harf ve rakam dışındaki
   her karakter dizisi tek `_` olur, baştaki ve sondaki `_` atılır (ör.
   `"Example Property (Type I)"` → `example_property_type_i`). Aynı ad iki kez
@@ -210,6 +215,7 @@ gösterir. Değerlerini ve adlarını gerçek belgeye taşıma.
     {
       "id": "example_density",
       "test_adi": "Example density",
+      "kaynak_tablo_adi": "Example density and gloss",
       "test_metodu": "ASTM D 0000",
       "metot_kaynagi": {"belge_no": "MIL-PRF-00000", "revizyon": "A", "madde": "4.9.1", "sayfa": 12, "alinti": null},
       "sinir": {
@@ -229,6 +235,7 @@ gösterir. Değerlerini ve adlarını gerçek belgeye taşıma.
     {
       "id": "example_appearance",
       "test_adi": "Example appearance",
+      "kaynak_tablo_adi": null,
       "test_metodu": null,
       "metot_kaynagi": null,
       "sinir": {
