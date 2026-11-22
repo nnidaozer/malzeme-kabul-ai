@@ -83,16 +83,24 @@ class _Kayit:
     madde: str
     grup: str = ""  # yalnızca aynı gruptakiler eşleşir (koşulda kategori)
     diger_adlar: tuple[str, ...] = ()  # benzerlikte ayrıca denenen adlar (test: kaynak tablo adı)
+    deger: tuple | None = None  # ad benzerliği eşitse sayısal değeri aynı olan aday seçilir
 
     @property
     def adlar(self) -> tuple[str, ...]:
         return (self.ad, *self.diger_adlar)
 
 
+def _sinir_imzasi(s) -> tuple | None:
+    if s is None or s.kriter_turu != "sayisal":
+        return None
+    return (s.alt, s.ust)
+
+
 def _kayitlar(d: KabulDokumani) -> list[_Kayit]:
     sonuc = [
         _Kayit("test", t.id, t.id, t.test_adi, t.kaynak.madde,
-               diger_adlar=(t.kaynak_tablo_adi,) if t.kaynak_tablo_adi else ())
+               diger_adlar=(t.kaynak_tablo_adi,) if t.kaynak_tablo_adi else (),
+               deger=_sinir_imzasi(t.sinir))
         for t in d.testler
     ]
     sonuc += [
@@ -148,8 +156,11 @@ def kaydi_eslestir(a: KabulDokumani, b: KabulDokumani) -> list[Eslesme]:
             puan = max(ad_benzerligi(p, q) for p in x.adlar for q in y.adlar)
             if puan >= BENZERLIK_ESIGI:
                 karakter = SequenceMatcher(None, x.ad.casefold(), y.ad.casefold()).ratio()
-                adaylar.append((-puan, -karakter, x.kimlik, y.kimlik, x, y, puan))
-    adaylar.sort(key=lambda t: t[:4])
+                # Aynı maddede adları eşit derecede benzeyen iki kayıt varsa (ör. iki
+                # kuruma süresi) sınırı aynı olan aday önce gelir.
+                deger_ayni = x.deger is not None and x.deger == y.deger
+                adaylar.append((-puan, -deger_ayni, -karakter, x.kimlik, y.kimlik, x, y, puan))
+    adaylar.sort(key=lambda t: t[:5])
     alinan_a, alinan_b = set(), set()
     for *_, x, y, puan in adaylar:
         if (x.tur, x.anahtar) in alinan_a or (y.tur, y.anahtar) in alinan_b:
@@ -218,6 +229,26 @@ class Karsilastirma:
     def uyusma_orani(self) -> float:
         """Uyuşan satır sayısı / bütün satırlar (ayrışan ve tek tarafta olanlar dahil)."""
         return len(self.uyusan) / len(self.satirlar) if self.satirlar else 0.0
+
+    @property
+    def ortak_uyusma_orani(self) -> float:
+        """İki taslakta da olan satırlarda uyuşma: uyuşan / (uyuşan + ayrışan).
+
+        Taslakların kapsamı farklıysa (biri çok daha fazla kayıt çıkarmışsa)
+        `uyusma_orani` düşer; bu oran yalnızca ortak satırlardaki değer
+        uyuşmasını gösterir.
+        """
+        ortak = len(self.uyusan) + len(self.ayrisan)
+        return len(self.uyusan) / ortak if ortak else 0.0
+
+    def eslesmeyen_kayitlar(self, taraf: Literal["a", "b"]) -> list[tuple[str, str, str | None]]:
+        """Yalnız bir taslakta olan kayıtlar: (tür, kimlik, madde)."""
+        sonuc = set()
+        for s in self.satirlar:
+            kimlik = s.kayit_a if taraf == "a" else s.kayit_b
+            if s.eslesme is None and s.durum == f"yalniz_{taraf}" and kimlik:
+                sonuc.add((_ONEK_TUR[s.alan.split(".", 1)[0]], kimlik, s.madde))
+        return sorted(sonuc, key=lambda k: (k[0], k[1]))
 
     def alan_dokumu(self) -> list[dict[str, Any]]:
         sayac: dict[str, dict[str, int]] = {}
