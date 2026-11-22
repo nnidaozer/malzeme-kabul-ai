@@ -213,7 +213,7 @@ def test_betik_rapor_ve_csv_yazar(taslaklar, tmp_path, capsys):
     assert betik.main([str(taslaklar[0]), str(taslaklar[1]), "--md", str(md), "--csv", str(cs), "--seed", "5"]) == 0
     assert "Uyuşma oranı" in capsys.readouterr().out
     metin = md.read_text(encoding="utf-8")
-    for baslik in ("Uyuşma oranı", "Ayrışan satırlar", "Yalnız A", "Yalnız B", "Kontrol örneği", "Ad benzerliğiyle eşleşen kayıtlar"):
+    for baslik in ("Uyuşma oranı", "Ortak satırlarda uyuşma", "Yalnız A'da olan kayıtlar", "Ayrışan satırlar", "Yalnız A", "Yalnız B", "Kontrol örneği", "Ad benzerliğiyle eşleşen kayıtlar"):
         assert baslik in metin
     assert "viscosity_b" in metin and "- [ ]" in metin
     with open(cs, encoding="utf-8") as f:
@@ -269,3 +269,34 @@ def test_tablo_satir_adini_test_adi_yapan_taslak_tablo_adiyla_eslesir():
     assert (e.a, e.b, e.yontem) == ("cd", "lead_and_cadmium_content", "benzerlik")
     assert {s.alan for s in k.ayrisan} == {"test.test_adi"}
     assert {s.alan for s in k.yalniz_a} == {"test.kaynak_tablo_adi"}
+
+
+# --- Kapsam farkı ve eşit benzerlik -----------------------------------------------
+
+
+def test_ad_benzerligi_esitse_siniri_ayni_olan_aday_secilir():
+    # A: "Drying time" ≤ 5 ve "Drying time (dry hard)" ≤ 8; B: iki ad da A'nın
+    # adlarına eşit derecede benziyor. Sınırı aynı olanlar eşleşmeli.
+    a = dok([sart("drying_time", ad="Drying time", ust=5, madde="3.7.2"),
+             sart("drying_time_dry_hard", ad="Drying time (dry hard)", ust=8, madde="3.7.2")])
+    b = dok([sart("hard_drying_time", ad="Hard drying time", ust=8, madde="3.7.2"),
+             sart("tack_free_drying_time", ad="Tack-free drying time", ust=5, madde="3.7.2")])
+    ciftler = {(e.a, e.b) for e in kaydi_eslestir(a, b)}
+    assert ciftler == {("drying_time", "tack_free_drying_time"), ("drying_time_dry_hard", "hard_drying_time")}
+    assert "test.sinir.ust" not in {s.alan for s in karsilastir(a, b).ayrisan}
+
+
+def test_ortak_uyusma_orani_tek_taraftaki_satirlari_saymaz():
+    a = dok([sart("viscosity", ust=30)])
+    b = dok([sart("viscosity", ust=40)] + [sart(f"t{i}", ad=f"Test {i}", madde=f"3.{i + 10}") for i in range(5)])
+    k = karsilastir(a, b)
+    assert k.ortak_uyusma_orani == pytest.approx(len(k.uyusan) / (len(k.uyusan) + len(k.ayrisan)))
+    assert k.ortak_uyusma_orani > k.uyusma_orani
+
+
+def test_eslesmeyen_kayitlar_kayit_duzeyinde_listelenir():
+    a = dok([sart("viscosity"), sart("odor", ad="Odor", madde="3.6.2")])
+    b = dok([sart("viscosity", metot=None), sart("toxicity", ad="Toxicity", madde="3.3")])
+    k = karsilastir(a, b)
+    assert k.eslesmeyen_kayitlar("a") == [("test", "odor", "3.6.2")]
+    assert k.eslesmeyen_kayitlar("b") == [("test", "toxicity", "3.3")]

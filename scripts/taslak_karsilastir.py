@@ -69,6 +69,9 @@ def rapor_md(k: Karsilastirma, ad_a: str, ad_b: str, oran: float, seed: int) -> 
         f"- Satır: {len(k.satirlar)} (uyuşan {len(k.uyusan)}, ayrışan {len(k.ayrisan)}, "
         f"yalnız A {len(k.yalniz_a)}, yalnız B {len(k.yalniz_b)})",
         f"- **Uyuşma oranı: {k.uyusma_orani:.1%}** (uyuşan / bütün satırlar)",
+        f"- **Ortak satırlarda uyuşma: {k.ortak_uyusma_orani:.1%}** (uyuşan / (uyuşan + ayrışan); "
+        "kapsam farkını dışarıda bırakır)",
+        f"- Yalnız bir taslakta olan kayıt: A {len(k.eslesmeyen_kayitlar('a'))}, B {len(k.eslesmeyen_kayitlar('b'))}",
         f"- Kontrol örneği: uyuşan satırların %{oran * 100:g}'i, {len(ornek)} satır, seed {seed}",
         "",
         "Kontrol edilecekler: ayrışan satırlar, yalnız bir taslakta olan satırlar,",
@@ -100,6 +103,14 @@ def rapor_md(k: Karsilastirma, ad_a: str, ad_b: str, oran: float, seed: int) -> 
         return f"- [ ] `{s.kayit}` · `{s.alan}`{_madde(s)}: A = {_goster(s.a)} · B = {_goster(s.b)}{isaret}"
 
     liste("Ayrışan satırlar", k.ayrisan, iki_deger)
+    for taraf, ad in (("a", "A'da"), ("b", "B'de")):
+        kayitlar = k.eslesmeyen_kayitlar(taraf)
+        y.extend(["", f"## Yalnız {ad} olan kayıtlar ({len(kayitlar)})", "",
+                  "Diğer taslakta karşılığı bulunamayan kayıtlar. Kapsam kararı: bu şart doğru cevapta olmalı mı?", ""])
+        if kayitlar:
+            y.extend(f"- [ ] {tur}: `{kimlik}`" + (f" (madde {madde})" if madde else "") for tur, kimlik, madde in kayitlar)
+        else:
+            y.append("Yok.")
     liste("Yalnız A'da olan satırlar", k.yalniz_a,
           lambda s: f"- [ ] `{s.kayit}` · `{s.alan}`{_madde(s)}: {_goster(s.a)}")
     liste("Yalnız B'de olan satırlar", k.yalniz_b,
@@ -156,7 +167,7 @@ def main(argv: list[str] | None = None) -> int:
         f"yalnız A: {len(k.yalniz_a)}  yalnız B: {len(k.yalniz_b)}  "
         f"benzerlikle eşleşen kayıt: {len(k.benzerlik_eslesmeleri)}"
     )
-    print(f"Uyuşma oranı: {k.uyusma_orani:.1%}")
+    print(f"Uyuşma oranı: {k.uyusma_orani:.1%}  ortak satırlarda: {k.ortak_uyusma_orani:.1%}")
     print(f"Kontrol örneği: {len(k.kontrol_ornegi(args.oran, args.seed))} satır (seed {args.seed})")
 
     if args.md:
