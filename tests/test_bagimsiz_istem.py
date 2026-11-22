@@ -77,3 +77,11 @@ def test_istem_goruntu_okuma_cikti_klasoru_ve_taslak_yasagini_soyler():
     # Doğrulama komutu çıktıyı gold_codex altında arar; data/gold/ altına yazdırmaz.
     assert "Path('data/gold_codex/<BELGE>.json')" in model_metni
     assert "data/gold/<" not in model_metni
+
+
+def test_istem_etiketleme_kilavuzunun_kurallarini_icerir():
+    model_metni = _istem().split("\n---\n", 1)[1]
+    assert "## Kapsam: neyi çıkaracaksın" in model_metni
+    for ifade in ("Ürün tanımları girmez", "Bir kayıt, bir kriter", "\"Notes\" bölümü", "Muayene ve örnekleme"):
+        assert ifade in model_metni
+    assert (KOK / "docs" / "etiketleme_kilavuzu.md").is_file()

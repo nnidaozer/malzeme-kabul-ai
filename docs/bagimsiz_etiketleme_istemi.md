@@ -26,6 +26,39 @@ belge numarasını ve revizyonu yaz (ör. `MIL-PRF-12345X`).
 sisteminin doğru cevap anahtarı olacak. Hız değil doğruluk önemli: her değeri
 PDF'teki maddeye bakarak yaz, tahmin etme.
 
+## Kapsam: neyi çıkaracaksın
+
+Bu kurallar `docs/etiketleme_kilavuzu.md` ile aynıdır; iki model aynı
+kapsamla çalışsın diye buraya aynen kondu.
+
+1. **Şartlar `testler` altına girer.** Şart bölümündeki (genellikle 3.x)
+   sayısal sınırlı testler, geçti/kaldı kriterleri ("shall be compatible
+   with", "shall permit", "shall meet all requirements"), yasaklar ("shall be
+   prohibited", "shall not contain") ve sözel kabul kriterleri ("shall not
+   exhibit ...").
+2. **Ürün tanımları girmez.** Tip, sınıf ve kompozisyon tanımları ("X içeren
+   ürünler sınıf Y olarak adlandırılır") şart değildir. Bunları JSON'a yazma;
+   `_NOTLAR.md` dosyasında "Ürün tanımları" başlığı altına madde numarasıyla
+   listele.
+3. **Bir kayıt, bir kriter.** Ayrı cümlelerde ayrı gözlenen ya da ölçülen
+   kriterler ayrı kayıttır. Aynı cümlede "or", "nor", "and" ile sayılan
+   kusurlar tek kayıttır. Aynı kriter farklı numunelere ya da farklı ortamlara
+   (ör. iki ayrı test sıvısı) ayrı uygulanıyorsa her biri ayrı kayıttır.
+4. **Başarısızlık tanımı ayrı kayıt değildir.** "X constitutes failure" gibi
+   bir cümle, ilgili kriterin `orijinal_metin` alanına eklenir.
+5. **Koşullar `kosullar` altına** ancak ölçülebilir bir sınır (süre,
+   sıcaklık, oran, nem) ya da açık bir yasak taşıyorsa girer. Uygulama
+   talimatının ölçülemeyen adımları ("ekipmanı temizle", "sırayla ekle")
+   girmez. Bir testte zaten yazılı olan sınırı koşul olarak tekrar yazma.
+6. **"Notes" bölümü (genellikle 6.x) girmez.** Oradaki öneri ve açıklamalar
+   zorunlu değildir.
+7. **Muayene ve örnekleme kuralları test değildir** (parti kabulü, örnekleme
+   planı, "there shall be no failures"). Test panelleri `numune_hazirlama`
+   altına, doğru cevaptaki bir testte kullanılıyorsa girer.
+
+Bir şeyin kapsama girip girmediğinden emin değilsen JSON'a yazma; `_NOTLAR.md`
+dosyasında "Kapsam dışı bıraktıklarım" başlığı altına madde numarasıyla yaz.
+
 ## PDF'i nasıl okuyacaksın
 
 Sayfaları mümkünse **görüntü olarak** oku: her sayfayı resme çevir ve resme
@@ -64,6 +97,8 @@ görmek bu işin amacını bozar.
    alan ekleme (şema fazladan alanı reddeder).
 2. `<BELGE>_NOTLAR.md`: Emin olmadığın her karar için bir madde:
    hangi kayıt, hangi madde, neden emin değilsin, hangi seçeneği neden seçtin.
+   Ayrıca "Ürün tanımları" ve "Kapsam dışı bıraktıklarım" başlıkları (bkz.
+   Kapsam).
 
 İki dosyayı da `data/gold_codex/` klasörüne yaz (yoksa oluştur); başka bir
 klasöre yazma. Sonra şu komutla doğrula (hata verirse düzelt):
@@ -177,7 +212,7 @@ Test kuralları:
   belirle. Her partide yapılan test `kabul`; yalnız ürün yeterliliğinde
   yapılan `yeterlilik`; raf ömrü uzatmak için tekrarlanan `omur_uzatma`. Bir
   test birden fazla türde olabilir.
-- Standardın kapsamındaki bütün test şartlarını çıkar; yalnız kabul
+- "Kapsam" bölümüne giren bütün test şartlarını çıkar; yalnız kabul
   testlerini değil.
 
 ### RafOmru
