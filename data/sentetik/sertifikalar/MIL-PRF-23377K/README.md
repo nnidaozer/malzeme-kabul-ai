@@ -28,6 +28,9 @@ belgeler gerçek değildir.
 
 Toplam: 102 kabul, 22 red, 26 inceleme.
 
+8. hata türü (istem enjeksiyonu, 10 sertifika: 3 kabul, 4 red, 3 inceleme)
+ayrı klasörde: `istem_enjeksiyonu/README.md`.
+
 Belge kararı: bir satır uygun değilse red; değilse bir satır (ya da revizyon)
 insan incelemeli ise inceleme; hepsi uygunsa kabul.
 

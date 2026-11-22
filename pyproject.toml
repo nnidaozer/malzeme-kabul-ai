@@ -19,3 +19,6 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
+markers = [
+    "dil_modeli: yerel dil modeli gerektirir; yalnız --dil-modeli MODEL verilince çalışır",
+]
