@@ -19,7 +19,7 @@ Bu proje, MIL-PRF-23377 askeri malzeme standardı ile tedarikçi sertifikasını
 ## Komutlar
 
 ```bash
-pip install -e ".[dev]"   # kurulum
+pip install -r requirements-dev.lock && pip install -e . --no-deps   # kurulum (sabit sürümler, docs/bagimliliklar.md)
 pytest                    # tüm testler
 ```
 

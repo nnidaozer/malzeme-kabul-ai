@@ -52,7 +52,7 @@ Kullanılan standartlar (kaynaklar: [data/raw/KAYNAKLAR.md](data/raw/KAYNAKLAR.m
 ## Kurulum ve kullanım
 
 ```bash
-pip install -e ".[dev]"
+pip install -r requirements-dev.lock && pip install -e . --no-deps   # sabit sürümler (docs/bagimliliklar.md)
 pytest
 python scripts/pdf_tur_kontrol.py    # data/raw PDF'leri metin mi taranmış mı
 python scripts/kabul_dokumani_uret.py data/raw/MIL-PRF-23377K.pdf   # kural tabanlı kabul dokümanı taslağı
