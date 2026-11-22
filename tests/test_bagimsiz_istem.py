@@ -35,6 +35,8 @@ def _taslak_adlari(yol: Path) -> set[str]:
     adlar = set()
     for t in d.get("testler", []):
         adlar |= {t["id"], t["test_adi"]}
+        if t.get("kaynak_tablo_adi"):
+            adlar.add(t["kaynak_tablo_adi"])
     for k in d.get("kosullar", []):
         adlar.add(k["ad"])
     for n in d.get("numune_hazirlama", []):
@@ -53,3 +55,15 @@ def test_istem_taslaktan_ad_sizdirmaz(yol):
         if (" " in a.strip() or "_" in a) and len(a) >= 10 and a.casefold() in metin
     )
     assert not sizanlar, f"istem taslaktaki adları içeriyor: {sizanlar}"
+
+
+def test_modele_verilen_metin_sema_dosyasini_okutmaz():
+    # sema.py içindeki açıklama örneklerinin bir kısmı 23377K taslağından geliyor;
+    # modele verilen bölüm (çizginin altı) o dosyayı kaynak olarak göstermemeli.
+    model_metni = _istem().split("\n---\n", 1)[1]
+    assert "sema.py" not in model_metni
+    assert "`src/`" in model_metni  # okuma yasağında
+
+
+def test_istem_kaynak_tablo_adi_alanini_tanimlar():
+    assert "`kaynak_tablo_adi`" in _istem()

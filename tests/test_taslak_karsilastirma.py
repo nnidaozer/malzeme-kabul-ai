@@ -244,3 +244,28 @@ def test_betik_data_gold_altina_yazmayi_reddeder(taslaklar, tmp_path):
     hedef = tmp_path / "data" / "gold" / "rapor.md"
     assert betik.main([str(taslaklar[0]), str(taslaklar[1]), "--md", str(hedef)]) == 2
     assert not hedef.exists()
+
+
+# --- Kaynak tablo adı -------------------------------------------------------------
+
+
+def _tablolu(id, ad, tablo):
+    return sart(id, ad=ad, madde="3.4").model_copy(update={"kaynak_tablo_adi": tablo})
+
+
+def test_kaynak_tablo_adi_alan_olarak_karsilastirilir():
+    a = dok([_tablolu("cadmium", "Cadmium content", "Lead and cadmium content")])
+    b = dok([_tablolu("cadmium", "Cadmium content", None)])
+    k = karsilastir(a, b)
+    assert [(s.alan, s.a) for s in k.yalniz_a] == [("test.kaynak_tablo_adi", "Lead and cadmium content")]
+
+
+def test_tablo_satir_adini_test_adi_yapan_taslak_tablo_adiyla_eslesir():
+    # A test adını ayırmış, B tablo satır adını test adı olarak bırakmış.
+    a = dok([_tablolu("cd", "Cd ppm", "Lead and cadmium content")])
+    b = dok([sart("lead_and_cadmium_content", ad="Lead and cadmium content", madde="3.4")])
+    k = karsilastir(a, b)
+    [e] = k.eslesmeler
+    assert (e.a, e.b, e.yontem) == ("cd", "lead_and_cadmium_content", "benzerlik")
+    assert {s.alan for s in k.ayrisan} == {"test.test_adi"}
+    assert {s.alan for s in k.yalniz_a} == {"test.kaynak_tablo_adi"}
