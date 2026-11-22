@@ -241,7 +241,7 @@ def test_karsilastirma_ozeti():
     assert fark.ozet() == {
         "eklenen_sart": 1, "kaldirilan_sart": 0, "degisen_sart": 2, "sayisal_degisen_sart": 1,
         "yeniden_numaralanan_sart": 1, "ayni_kalan_sart": 1,
-        "eklenen_test": 1, "kaldirilan_test": 1, "degisen_test": 2,
+        "eklenen_test": 1, "kaldirilan_test": 1, "degisen_test": 2, "supheli_sart": 0,
     }
     assert fark.eski_kabul_disi == ["storage stability"]
     assert fark.yeni_kabul_disi == ["storage stability", "strippability"]
@@ -440,3 +440,47 @@ def test_betik_farkli_belgeleri_reddeder(tmp_path):
     betik = betik_yukle("scripts/revizyon_karsilastir.py")
     with pytest.raises(SystemExit):
         betik.main([str(RAW / "MIL-PRF-23377J.pdf"), str(RAW / "MIL-PRF-85285E.pdf"), "--cikti", str(tmp_path)])
+
+
+# --- Şüpheli değişiklikler ---------------------------------------------------------
+
+
+def test_sifir_tolerans_supheli_isaretlenir():
+    eski = sart("4.5", "Test methods", "a relative humidity of 50 ± 10 percent.")
+    yeni = sart("4.5", "Test methods", "a relative humidity of 50 ±0 percent.")
+    fark = sart_farki(eski, yeni)
+    assert fark.onem == "sayisal"
+    assert any("±0" in n for n in fark.supheli)
+
+
+def test_sifira_inen_deger_supheli_isaretlenir():
+    from malzeme_kabul.revizyon_karsilastirici import supheli_nedenleri
+
+    assert any("sıfır" in n for n in supheli_nedenleri("x", "y", ["5 minute"], ["0 minute"]))
+
+
+def test_on_kattan_buyuk_degisim_supheli_isaretlenir():
+    from malzeme_kabul.revizyon_karsilastirici import supheli_nedenleri
+
+    assert any("10 kat" in n for n in supheli_nedenleri("x", "y", ["24 hour"], ["240 hour"]))
+    # Olağan sınır değişikliği şüpheli değildir.
+    assert supheli_nedenleri("x", "y", ["0.06 %"], ["0.05 %"]) == []
+    assert supheli_nedenleri("x", "y", [], ["6 month"]) == []
+
+
+def test_supheli_fark_raporda_ve_oneride_insan_incelemeli_gorunur():
+    fark = _fark()
+    fark.sart_farklari.append(sart_farki(
+        sart("3.6.3", "Viscosity", "20 to 40 seconds at 50 ± 10 percent"),
+        sart("3.6.3", "Viscosity", "20 to 40 seconds at 50 ±0 percent")))
+    assert fark.ozet()["supheli_sart"] == 1
+    md = markdown_raporu(fark, guncelleme_onerileri(fark, _dokuman("H")))
+    assert "## Şüpheli değişiklikler (insan incelemeli)" in md
+    visk = [o for o in guncelleme_onerileri(fark, _dokuman("H")) if o.hedef == "test:viscosity"]
+    assert visk and visk[0].tur == "gozden_gecir" and visk[0].oneri.startswith("Şüpheli, insan incelemeli")
+
+
+def test_j_k_bagil_nem_toleransi_supheli(j_k):
+    f = _bul(j_k, "4.5")
+    assert f.supheli and any("±0" in n for n in f.supheli)
+    assert sum(bool(x.supheli) for x in j_k.sart_farklari) <= 3  # gürültü üretmemeli
