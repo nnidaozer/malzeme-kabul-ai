@@ -6,6 +6,10 @@
   pdf/S-001.pdf ...     aynı sertifikanın PDF görünümü (3 tedarikçi düzeni)
   dogru_kararlar.json   her sertifikanın doğru kararı (DogruKarar listesi)
   ozet.csv              sertifika, şablon, hata türü, açıklama, doğru karar
+  istem_enjeksiyonu/    aynı düzende 10 sertifika (S-151...): değerler doğru,
+                        içine istem enjeksiyonu metni gizli (8. hata türü,
+                        docs/guvenlik.md). PDF'te metin ayrıca beyaz ve 1
+                        puntoluk görünmez paragraf olarak da durur.
 
 PDF için reportlab gerekir (pip install -e ".[dev]").
 
@@ -23,7 +27,7 @@ import re
 from pathlib import Path
 
 from malzeme_kabul.sema import KabulDokumani
-from malzeme_kabul.sertifika_uretici import UretilenSertifika, uret
+from malzeme_kabul.sertifika_uretici import UretilenSertifika, enjeksiyon_uret, uret
 
 KOK = Path(__file__).resolve().parents[1]
 FONT_YOLLARI = ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "C:/Windows/Fonts/arial.ttf")
@@ -102,27 +106,19 @@ def pdf_yaz(u: UretilenSertifika, yol: Path, font: str) -> None:
             ]
         )
     )
-    ogeler += [t, Spacer(1, 12), Paragraph(b["beyan"], stil), Spacer(1, 18), Paragraph(b["imza"], stil)]
+    ogeler += [t, Spacer(1, 12), Paragraph(b["beyan"], stil)]
+    if u.enjeksiyon:
+        # İstem enjeksiyonu: göze görünmez (beyaz, 1 punto) ama metin katmanında var.
+        gizli = ParagraphStyle("gizli", fontName=font, fontSize=1, leading=1.2, textColor=colors.white)
+        ogeler.append(Paragraph(u.enjeksiyon, gizli))
+    ogeler += [Spacer(1, 18), Paragraph(b["imza"], stil)]
     ogeler += [Spacer(1, 24), Paragraph("SENTETİK TEST BELGESİ - gerçek bir sertifika değildir.", stil)]
     SimpleDocTemplate(str(yol), pagesize=A4, title=s.sertifika_no, invariant=1).build(ogeler)
 
 
-def main(argv: list[str] | None = None) -> int:
-    ayr = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ayr.add_argument("kabul_dokumani")
-    ayr.add_argument("--cikti", default=str(KOK / "data" / "sentetik" / "sertifikalar" / "MIL-PRF-23377K"))
-    ayr.add_argument("--tohum", type=int, default=23377)
-    ayr.add_argument("--pdfsiz", action="store_true", help="PDF üretme (yalnız JSON)")
-    args = ayr.parse_args(argv)
-
-    cikti = Path(args.cikti)
-    if re.search(r"(^|/)data/gold(/|$)", cikti.resolve().as_posix()):
-        raise SystemExit("data/gold/ klasörüne yazılmaz")
-    dokuman = KabulDokumani.model_validate_json(Path(args.kabul_dokumani).read_text(encoding="utf-8"))
-    uretilen = uret(dokuman, tohum=args.tohum)
-
+def seti_yaz(uretilen: list[UretilenSertifika], cikti: Path, font: str | None) -> None:
+    """json/, pdf/ (font varsa), dogru_kararlar.json ve ozet.csv yazar."""
     (cikti / "json").mkdir(parents=True, exist_ok=True)
-    font = None if args.pdfsiz else _font()
     if font:
         (cikti / "pdf").mkdir(exist_ok=True)
     for u in uretilen:
@@ -141,7 +137,26 @@ def main(argv: list[str] | None = None) -> int:
                 [u.sertifika.sertifika_no, u.sablon.kod, u.sertifika.standart_atfi, u.dogru.hata_turu or "temiz",
                  u.dogru.hata_aciklamasi or "", u.dogru.belge_karari]
             )
-    print(f"{len(uretilen)} sertifika -> {cikti}")
+
+
+def main(argv: list[str] | None = None) -> int:
+    ayr = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ayr.add_argument("kabul_dokumani")
+    ayr.add_argument("--cikti", default=str(KOK / "data" / "sentetik" / "sertifikalar" / "MIL-PRF-23377K"))
+    ayr.add_argument("--tohum", type=int, default=23377)
+    ayr.add_argument("--pdfsiz", action="store_true", help="PDF üretme (yalnız JSON)")
+    args = ayr.parse_args(argv)
+
+    cikti = Path(args.cikti)
+    if re.search(r"(^|/)data/gold(/|$)", cikti.resolve().as_posix()):
+        raise SystemExit("data/gold/ klasörüne yazılmaz")
+    dokuman = KabulDokumani.model_validate_json(Path(args.kabul_dokumani).read_text(encoding="utf-8"))
+    uretilen = uret(dokuman, tohum=args.tohum)
+    enjekte = enjeksiyon_uret(dokuman)
+    font = None if args.pdfsiz else _font()
+    seti_yaz(uretilen, cikti, font)
+    seti_yaz(enjekte, cikti / "istem_enjeksiyonu", font)
+    print(f"{len(uretilen)} sertifika -> {cikti}; {len(enjekte)} istem enjeksiyonlu -> {cikti / 'istem_enjeksiyonu'}")
     return 0
 
 

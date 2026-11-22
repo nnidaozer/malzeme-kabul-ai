@@ -45,3 +45,35 @@ def hook_calistir(betik: str, girdi: dict, proje_dizini: Path) -> subprocess.Com
         env=ortam,
         cwd=proje_dizini,
     )
+
+
+# --- Dil modeli gerektiren testler (pytest -m dil_modeli --dil-modeli MODEL) ---
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--dil-modeli",
+        metavar="MODEL",
+        default=None,
+        help="dil_modeli işaretli testleri bu yerel modelle çalıştır (ör. qwen2.5:7b-instruct-q4_K_M)",
+    )
+    parser.addoption("--dil-modeli-arka-uc", default="ollama", help="ollama ya da llamacpp")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--dil-modeli"):
+        return
+    atla = pytest.mark.skip(reason="yerel dil modeli verilmedi; çalıştırmak için --dil-modeli MODEL")
+    for item in items:
+        if "dil_modeli" in item.keywords:
+            item.add_marker(atla)
+
+
+@pytest.fixture(scope="session")
+def dil_modeli_istemcisi(request):
+    from malzeme_kabul.yerel_model import YerelModelIstemcisi
+
+    return YerelModelIstemcisi(
+        model=request.config.getoption("--dil-modeli"),
+        arka_uc=request.config.getoption("--dil-modeli-arka-uc"),
+    )
