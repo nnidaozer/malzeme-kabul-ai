@@ -48,10 +48,22 @@ adları değiştirirken iki tarafı birlikte düşün.
 
 `python scripts/degerlendir.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json data/gold_taslak/MIL-PRF-23377K.json`
 
-Genel (mikro): P = 0,959, R = 0,836, F1 = 0,893. Ayrıntı:
+Genel (mikro): P = 0,959, R = 0,835, F1 = 0,892. Ayrıntı:
 `data/cikti/MIL-PRF-23377K_kural_degerlendirme.csv`. Kayıplar çoğunlukla
 yukarıdaki 1. ve 2. maddelerdeki eksik testlerden, kriter türünden
 (geçti/kaldı ↔ metinsel), kuruma süresinin panel bağlantısından ve raf
 ömründen geliyor: çıkarıcı kap türü vermeden tek bir "1 yıl" kaydı üretiyor,
 taslak ise metal ve plastik için iki kayıt bekliyor. Gold onaylanana kadar
 çıkarıcı bu belgeye göre düzeltilmiyor.
+
+## Nida'nın kontrolü (ilk 5 satır)
+
+- 2–5. satırlar doğru.
+- 1. satır: 3.4'teki ≤ 1 ppm şartı yalnızca kadmiyum içindir. Test adı
+  "Cadmium content" yapıldı; tablodaki "Lead and cadmium content" adı yeni
+  `kaynak_tablo_adi` alanında tutuluyor (kurşun satırında da). Çıkarıcı, tablo
+  satırı "X and Y content" biçimindeyse adı şart cümlesinin andığı bileşenden
+  alıyor; karar motoru sertifikada önce test adını, sonra tablo adını arıyor
+  ve tablo adı birden çok teste uyuyorsa satırı insan incelemesine bırakıyor.
+  Çıkarıcı hâlâ ayrı kurşun satırı üretmiyor; F1'deki küçük düşüş
+  (0,893 → 0,892) bu satırın tablo adı alanından geliyor.

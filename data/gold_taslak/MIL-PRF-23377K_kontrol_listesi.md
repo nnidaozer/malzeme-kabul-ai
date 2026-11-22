@@ -6,8 +6,8 @@ Her satırdaki değeri PDF'teki maddeyle karşılaştır; doğruysa `[ ]` kutusu
 
 | ✓ | Ad | Değer | Birim | Madde | PDF sayfası | Kriter türü | Test türü |
 |---|---|---|---|---|---|---|---|
-| [ ] | Lead and cadmium content | ≤ 1 | ppm | 3.4 | 5 | sayısal | kabul, yeterlilik |
-| [ ] | Lead content | ≤ 0.05 | % | 3.4 | 5 | sayısal | kabul, yeterlilik |
+| [ ] | Cadmium content (tabloda: Lead and cadmium content) | ≤ 1 | ppm | 3.4 | 5 | sayısal | kabul, yeterlilik |
+| [ ] | Lead content (tabloda: Lead and cadmium content) | ≤ 0.05 | % | 3.4 | 5 | sayısal | kabul, yeterlilik |
 | [ ] | Chromium content (class N only) | ≤ 5 | ppm | 3.4.1.3 | 6 | sayısal | kabul, yeterlilik |
 | [ ] | VOC solvent content | ≤ 340 | g/L | 3.4.2 | 6 | sayısal | kabul, yeterlilik |
 | [ ] | Fineness of grind | ≥ 5 |  | 3.5.1 | 6 | sayısal | kabul, yeterlilik |

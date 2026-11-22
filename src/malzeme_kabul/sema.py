@@ -130,7 +130,14 @@ class TestSarti(_Model):
     __test__ = False  # pytest bu sınıfı test sınıfı sanmasın
 
     id: str = Field(min_length=1, description="Belge içinde benzersiz kısa ad, ör. 'viskozite'.")
-    test_adi: str = Field(min_length=1)
+    test_adi: str = Field(min_length=1, description="Şartın gerçekten kapsadığı test, ör. 'Cadmium content'.")
+    kaynak_tablo_adi: str | None = Field(
+        default=None,
+        description=(
+            "Test tablosundaki satır adı, test adından farklıysa. Ör. 3.4'teki ≤ 1 ppm şartı yalnız "
+            "kadmiyum içindir: test_adi 'Cadmium content', kaynak_tablo_adi 'Lead and cadmium content'."
+        ),
+    )
     test_metodu: str | None = Field(default=None, examples=["ASTM D 1200", "FED-STD-141 Method 4321"])
     metot_kaynagi: Kaynak | None = Field(default=None, description="Test metodunu anlatan madde, ör. 4.6.3.")
     sinir: Sinir
@@ -140,6 +147,12 @@ class TestSarti(_Model):
         default_factory=list, description="Geçerli tip/sınıflar, ör. ['Type I', 'Class C2']. Boşsa hepsi."
     )
     numune_hazirlama_id: str | None = None
+
+    @model_validator(mode="after")
+    def _tablo_adi_farkli(self) -> TestSarti:
+        if self.kaynak_tablo_adi and self.kaynak_tablo_adi.casefold() == self.test_adi.casefold():
+            self.kaynak_tablo_adi = None  # aynıysa tekrar tutulmaz
+        return self
 
     @field_serializer("test_turleri")
     def _sirali_turler(self, turler: set[str]) -> list[str]:

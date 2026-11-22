@@ -9,8 +9,9 @@ modeli kullanılmaz (CLAUDE.md, kural 1):
 2. Aranacak testler: yalnız kabul testleri (yeterlilik testleri aranmaz) ve
    yalnız sertifikadaki tip/sınıfa uygulananlar.
 3. Eşleştirme: sertifikadaki test adı normalleştirilir; kabul dokümanındaki
-   ad, kimlik ve `ESANLAMLILAR` tablosuyla birebir, olmazsa kelime
-   benzerliğiyle (tek ve açık bir en iyi aday varsa) eşleştirilir.
+   ad, kimlik ve `ESANLAMLILAR` tablosuyla birebir; olmazsa kaynak tablo adıyla
+   (ör. "Lead and cadmium content"; birden çok teste uyarsa belirsiz); o da
+   olmazsa kelime benzerliğiyle (tek ve açık bir en iyi aday varsa) eşleştirilir.
 4. Sonuç: "320", "1,5", "<1", "5A", "Conforms", "Fail" gibi metinler sayı
    aralığına ya da geçti/kaldı sonucuna çevrilir.
 5. Birim: pint ile hedef birime çevrilir ("mil" uzunluk olarak, bkz.
@@ -265,7 +266,8 @@ def birimi_cevir(deger: float, kaynak: str | None, hedef: str | None) -> float:
 # Kabul dokümanındaki test kimliğine göre yazılmıştır; sertifika üreticisinden
 # önce, standart terminolojisinden hazırlandı.
 ESANLAMLILAR: dict[str, list[str]] = {
-    "lead_and_cadmium_content": ["cadmium content", "lead and cadmium", "cadmium", "kursun ve kadmiyum", "kadmiyum"],
+    # "Lead and cadmium content" tablo adıdır (kaynak_tablo_adi); burada yalnız kadmiyum adları durur.
+    "lead_and_cadmium_content": ["cadmium content", "cadmium", "kadmiyum", "kadmiyum icerigi"],
     "chromium_content_class_n_only": ["hexavalent chromium", "chromium", "cr vi", "krom", "krom icerigi"],
     "voc_solvent_content": [
         "voc", "voc content", "volatile organic compound content", "volatile organic compounds",
@@ -297,12 +299,22 @@ _DOLGU = {"of", "the", "and", "test", "a", "ve", "testi"}
 
 
 def _taban_adlar(test: TestSarti) -> set[str]:
-    adlar = {test.test_adi, test.id.replace("_", " ")}
+    adlar = {test.test_adi}
+    kimlik = test.id.replace("_", " ")
+    if not (test.kaynak_tablo_adi and _normal(kimlik).startswith(_normal(test.kaynak_tablo_adi))):
+        adlar.add(kimlik)  # tablo adından türeyen kimlik tablo adı gibi ikinci sırada kalır
     adlar |= {_EK_TEMIZLE.sub("", a) for a in list(adlar)}
     normal = {_normal(a) for a in adlar}
     normal |= {_TIP_EKI.sub("", a) for a in list(normal)}
     normal |= {_normal(a) for a in ESANLAMLILAR.get(test.id, [])}
     return {a for a in normal if a}
+
+
+def _tablo_adlari(test: TestSarti) -> set[str]:
+    """Test tablosundaki satır adı (test adından farklıysa); ikinci sırada denenir."""
+    if not test.kaynak_tablo_adi:
+        return set()
+    return {a for a in {_normal(test.kaynak_tablo_adi), _normal(_EK_TEMIZLE.sub("", test.kaynak_tablo_adi))} if a}
 
 
 def _kelimeler(metin: str) -> set[str]:
@@ -312,11 +324,14 @@ def _kelimeler(metin: str) -> set[str]:
 def eslestir(ad: str, testler: list[TestSarti], esik: float = 0.6) -> str | None:
     """Sertifikadaki test adını kabul dokümanındaki bir teste eşler; yoksa None."""
     adaylar = {_normal(ad), _normal(_EK_TEMIZLE.sub("", ad))} - {""}
-    birebir = [t.id for t in testler if adaylar & _taban_adlar(t)]
-    if len(birebir) == 1:
-        return birebir[0]
-    if len(birebir) > 1:
-        return None  # belirsiz
+    # Önce testin kendi adı ve eş anlamlıları, sonra kaynak tablo adı. Aynı tablo
+    # satırından gelen iki test (kadmiyum, kurşun) tablo adıyla belirsiz kalır.
+    for ad_kumesi in (_taban_adlar, _tablo_adlari):
+        birebir = [t.id for t in testler if adaylar & ad_kumesi(t)]
+        if len(birebir) == 1:
+            return birebir[0]
+        if len(birebir) > 1:
+            return None  # belirsiz
     puanlar: list[tuple[float, str]] = []
     for t in testler:
         en_iyi = 0.0

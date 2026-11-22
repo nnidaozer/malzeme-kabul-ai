@@ -67,7 +67,8 @@ def kontrol_listesi(dok: KabulDokumani) -> str:
     for t in dok.testler:
         deger, birim = _deger(t.sinir)
         ek = [KRITER_ADI[t.sinir.kriter_turu], ", ".join(sorted(t.test_turleri))]
-        satirlar.append(_satir(t.test_adi, deger, birim, t.kaynak, *ek))
+        ad = f"{t.test_adi} (tabloda: {t.kaynak_tablo_adi})" if t.kaynak_tablo_adi else t.test_adi
+        satirlar.append(_satir(ad, deger, birim, t.kaynak, *ek))
     parcalar += _tablo(TEST_SUTUNLARI, satirlar)
 
     if dok.raf_omurleri:
