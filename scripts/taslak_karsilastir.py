@@ -5,8 +5,8 @@ Kullanım:
   python scripts/taslak_karsilastir.py A.json B.json [--md rapor.md] [--csv rapor.csv]
                                        [--oran 0.2] [--seed 20261209]
 
-A ve B, KabulDokumani JSON'udur (ör. A: data/gold_taslak altındaki taslak,
-B: bağımsız modelin taslağı). Rapor ayrışan satırları, yalnız bir taslakta olan
+A ve B, KabulDokumani JSON'udur (ör. A: data/gold_taslak/MIL-PRF-23377K.json,
+B: bağımsız modelin taslağı data/gold_codex/MIL-PRF-23377K.json). Rapor ayrışan satırları, yalnız bir taslakta olan
 satırları, ad benzerliğiyle eşleşen kayıtları ve uyuşan satırlardan seçilen
 kontrol örneğini `[ ]` kutularıyla listeler. Aynı girdi ve seed hep aynı örneği
 verir. data/gold/ altına yazmaz.
