@@ -1,7 +1,7 @@
 # Bağımsız etiketleme istemi
 
 Bu dosya, doğru cevap (gold) taslağını ikinci, bağımsız bir modele (ör. Codex)
-hazırlatmak için kullanılır. İki taslak `scripts/taslak_karsilastir.py` ile (ayrı PR)
+hazırlatmak için kullanılır. İki taslak `scripts/taslak_karsilastir.py` ile
 karşılaştırılır; proje sahibi yalnızca ayrışan satırlara ve uyuşan satırlardan
 seçilen kontrol örneğine bakar.
 
