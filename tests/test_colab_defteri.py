@@ -31,7 +31,7 @@ def test_defter_colabin_yalniz_gelistirme_icin_oldugunu_soyler():
 
 def test_defter_yerel_istemciyi_kullanir_ve_golde_yazmaz():
     kod = "\n".join(_hucreler("code"))
-    assert "YerelModelIstemcisi" in kod and "scripts/dil_modeli_cikar.py" in kod
+    assert "YerelModelIstemcisi" in kod and "deney/dil_modeli_cikar.py" in kod
     assert "127.0.0.1" in kod
     assert "data/gold/" not in kod  # yalnız data/gold_taslak okunur
 

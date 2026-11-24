@@ -25,8 +25,8 @@ import math
 from dataclasses import dataclass, field
 from typing import Any
 
-from .birimler import birimi_coz
-from .sema import KabulDokumani, Kaynak, Sinir
+from malzeme_kabul.kural.birimler import birimi_coz
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Sinir
 
 Anahtar = tuple[str, str]
 

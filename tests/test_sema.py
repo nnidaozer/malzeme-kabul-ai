@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from malzeme_kabul.sema import (
+from malzeme_kabul.sozlesme.sema import (
     KabulDokumani,
     Kaynak,
     Kosul,
@@ -14,7 +14,7 @@ from malzeme_kabul.sema import (
     Sinir,
     StandartBilgisi,
 )
-from malzeme_kabul.sema import TestSarti as Sart  # "Test" önekli ad pytest'e sınıf gibi görünmesin
+from malzeme_kabul.sozlesme.sema import TestSarti as Sart  # "Test" önekli ad pytest'e sınıf gibi görünmesin
 
 
 def kaynak(madde="3.5.1", belge_no="MIL-PRF-23377", revizyon="K", **ek):

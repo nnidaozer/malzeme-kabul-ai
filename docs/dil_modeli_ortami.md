@@ -23,18 +23,19 @@ belleğine sığmaz, 7,7 GB RAM'de de işletim sistemi ve PDF okuma ile birlikte
 
 ## Bileşenler
 
-- `src/malzeme_kabul/yerel_model.py`: yerel model istemcisi. Yalnız
+- `src/malzeme_kabul/cikarim/yerel_model.py`: yerel model istemcisi. Yalnız
   `localhost` / `127.0.0.1` / `::1` adreslerini kabul eder, vekil sunucu
   ayarlarını yok sayar. Ollama (`/api/chat`, şema `format` alanında) ve
   llama.cpp (`/v1/chat/completions`, şema `response_format.json_schema`
   içinde) desteklenir. İki sunucu da şemayı dilbilgisine çevirip üretimi ona
   zorlar.
-- Şema: modelin çıktısı `CikarimYaniti` (`{"testler": [TestSarti, ...]}`)
-  JSON şemasına zorlanır. `TestSarti` mevcut `sema.py` modelidir. Şemadan
+- `deney/yalniz_dil_modeli.py` ("yalnız dil modeli" deneyi, ürünün parçası
+  değil): modelin çıktısı `CikarimYaniti` (`{"testler": [TestSarti, ...]}`)
+  JSON şemasına zorlanır. `TestSarti`, `sozlesme/sema.py` modelidir. Şemadan
   geçen çıktı ayrıca Pydantic ile doğrulanır (pint birimi, madde biçimi gibi
   kurallar yalnız doğrulayıcılarda vardır); geçmeyen şart atılır ve rapora
   yazılır, diğerleri korunur.
-- `scripts/dil_modeli_cikar.py`: PDF'i sayfa sayfa modele okutur, kabul
+- `deney/dil_modeli_cikar.py`: PDF'i sayfa sayfa modele okutur, kabul
   dokümanı JSON'u ve sayfa başına süre/hata raporu yazar
   (`data/cikti/dil_modeli/`).
 - `notebooks/colab_dil_modeli.ipynb`: Colab defteri. Ollama kurar, adayı
@@ -127,7 +128,7 @@ bölüm, tablolar) modele göndermek belge başına süreyi düşürür
 3. Çalıştır:
 
 ```bash
-python scripts/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:3b-instruct-q4_K_M
+python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:3b-instruct-q4_K_M
 ```
 
 Bağlamı 8192'de bırak. Bir sayfanın istemi (şema dahil) yaklaşık 2.500 token,

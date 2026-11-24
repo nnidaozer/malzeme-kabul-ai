@@ -25,8 +25,12 @@ pytest                    # tüm testler
 
 ## Klasörler
 
-- `src/malzeme_kabul/`: üretim kodu
+- `src/malzeme_kabul/`: üretim kodu; katmanlar ve sınırları docs/mimari.md
+  (`sozlesme`, `belge`, `cikarim`, `kural`, `revizyon`, `katalog`, `kayit`, `hat`, `arayuz`)
+- `deney/`: "yalnız dil modeli" deneyi ve ölçüm; ürün bu paketi içe aktarmaz
 - `tests/`: pytest testleri
-- `scripts/`: yardımcı betikler, hook'lar ve CI kontrolleri
+- `scripts/`: ürün betikleri, hook'lar ve CI kontrolleri
 - `data/raw/`: ham belgeler
 - `data/gold/`: elle etiketlenmiş doğru cevaplar (salt okunur)
+- `data/bolunme.yaml`: geliştirme / test bölünmesi; test kümesi dil modeli çıkarıcısı bitene kadar kullanılmaz
+- `data/calisma/`: yerel çalışma verisi; git'e girmez

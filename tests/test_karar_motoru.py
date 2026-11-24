@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from malzeme_kabul.karar_motoru import (
+from malzeme_kabul.kural.karar_motoru import (
     KararAyarlari,
     atfi_coz,
     birimi_cevir,
@@ -17,8 +17,8 @@ from malzeme_kabul.karar_motoru import (
     eslestir,
     uygulanir_mi,
 )
-from malzeme_kabul.sema import KabulDokumani
-from malzeme_kabul.sertifika import Sertifika, SertifikaSatiri
+from malzeme_kabul.sozlesme.sema import KabulDokumani
+from malzeme_kabul.sozlesme.sertifika import Sertifika, SertifikaSatiri
 
 
 def _kaynak(madde: str) -> dict:

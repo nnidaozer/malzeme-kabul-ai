@@ -14,7 +14,7 @@
 PDF için reportlab gerekir (pip install -e ".[dev]").
 
 Kullanım:
-  python scripts/sertifika_uret.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json \
+  python deney/sertifika_uret.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json \
       --cikti data/sentetik/sertifikalar/MIL-PRF-23377K
 """
 
@@ -24,10 +24,15 @@ import argparse
 import csv
 import json
 import re
+import sys
 from pathlib import Path
 
-from malzeme_kabul.sema import KabulDokumani
-from malzeme_kabul.sertifika_uretici import UretilenSertifika, enjeksiyon_uret, uret
+# `python deney/<betik>.py` ile doğrudan çalışınca depo kökü yolda olsun (deney paketi için).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from malzeme_kabul.sozlesme.sema import KabulDokumani
+from deney.sertifika_uretici import UretilenSertifika, enjeksiyon_uret, uret
 
 KOK = Path(__file__).resolve().parents[1]
 FONT_YOLLARI = ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "C:/Windows/Fonts/arial.ttf")

@@ -4,8 +4,8 @@ Doğru cevaba (gold) neyin girdiğini tanımlar. Taslağı hazırlayan her model
 kişi aynı kapsamla çalışsın diye yazıldı. Bağımsız etiketleme istemi
 (`docs/bagimsiz_etiketleme_istemi.md`) bu kuralları modele aynen verir.
 
-Durum: K1 ve K2'yi Nida belirledi. K3–K7 Claude'un önerisi, Nida'nın onayını
-bekliyor.
+Durum: K1 ve K2'yi Nida belirledi. K3–K7'yi Claude önerdi, Nida 24 Kasım
+2026'da onayladı.
 
 ## Kurallar
 
@@ -19,8 +19,16 @@ bölümündeki (genellikle 3.x) şu ifadeler şarttır:
 
 **K2. Ürün tanımları (doğru cevaba girmez).** Tip, sınıf ve kompozisyon
 tanımları şart değildir. Örnek: "X içeren astarlar sınıf Y olarak adlandırılır".
-Bunlar ayrı bir "ürün tanımı" alanına girer. Şemada bu alan henüz yok; o zamana
-kadar `_NOTLAR.md` dosyasında "Ürün tanımları" başlığı altına yazılır.
+Bunlar ayrı bir "ürün tanımı" alanına girer: `KabulDokumani.urun_tanimi`
+(`tipler`, `siniflar`, `kompozisyonlar`; bkz. docs/mimari.md). Bu alan şartlar
+gibi F1'e girmez. Bir şartın yalnız bazı tip/sınıflar için geçerli olduğu
+(ör. "Chromium content (class N only)") şartın `uygulanabilirlik` alanına
+yazılır (`["Class N"]`).
+
+**K2a. Yönü belirsiz sınırlar.** Metinden "en az" mı "tam" mı olduğu
+anlaşılmayan sayısal sınırlarda (ör. MIL-PRF-23377K 3.11) okunan değer
+yazılır ve `sinir.yon` alanına `"belirsiz"` konur. Karar motoru bu şartlara
+karar vermez, insan incelemesine gönderir.
 
 **K3. Bir kayıt, bir kriter.**
 - Ayrı cümlelerde, ayrı ayrı gözlenen ya da ölçülen kriterler ayrı kayıttır.

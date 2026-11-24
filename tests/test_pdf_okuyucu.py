@@ -6,7 +6,7 @@ import pytest
 
 from pdf_uretici import pdf_yaz
 
-from malzeme_kabul.pdf_okuyucu import Belge, pdf_oku
+from malzeme_kabul.belge.pdf_okuyucu import Belge, pdf_oku
 
 TABLO = [
     ["Characteristic", "Requirement", "Paragraph"],
@@ -82,7 +82,7 @@ def test_pdf_olmayan_dosya_valueerror_verir(tmp_path):
 
 # --- Güvenlik sınırları (docs/guvenlik.md, tehdit 2) ---------------------------
 
-from malzeme_kabul.pdf_okuyucu import VARSAYILAN_SINIRLAR, PdfSiniri, PdfSiniriAsildi  # noqa: E402
+from malzeme_kabul.belge.pdf_okuyucu import VARSAYILAN_SINIRLAR, PdfSiniri, PdfSiniriAsildi  # noqa: E402
 
 
 def _uc_sayfa(tmp_path):
@@ -104,7 +104,7 @@ def test_sinir_asimi_valueerror_turundendir():
 def test_buyuk_dosya_acilmadan_reddedilir(tmp_path, monkeypatch):
     yol = _uc_sayfa(tmp_path)
     acildi = []
-    monkeypatch.setattr("malzeme_kabul.pdf_okuyucu.pdfplumber.open", lambda *a, **k: acildi.append(1))
+    monkeypatch.setattr("malzeme_kabul.belge.pdf_okuyucu.pdfplumber.open", lambda *a, **k: acildi.append(1))
     with pytest.raises(PdfSiniriAsildi, match="boyut"):
         pdf_oku(yol, sinirlar=PdfSiniri(en_cok_bayt=100))
     assert acildi == []

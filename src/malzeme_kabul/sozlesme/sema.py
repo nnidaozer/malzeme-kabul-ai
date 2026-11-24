@@ -14,6 +14,12 @@ kurallarla yapılır (CLAUDE.md, kural 1).
 
 Çapraz kontrolde tedarikçi sertifikası yalnızca kabul (conformance) testlerine
 göre denetlenir (`KabulDokumani.kabul_testleri`); yeterlilik testleri aranmaz.
+
+Ürün tanımı (tip, sınıf, kompozisyon; etiketleme kılavuzu K2) şart değildir,
+`KabulDokumani.urun_tanimi` alanında durur. Her şart (test, koşul, raf ömrü,
+numune hazırlığı) hangi tip/sınıf için geçerli olduğunu `uygulanabilirlik`
+alanında taşır; ürün tanımı doluysa bu alandaki her değer orada tanımlı
+olmalıdır. Bkz. docs/mimari.md.
 """
 
 from __future__ import annotations
@@ -23,7 +29,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator, model_validator
 
-from .birimler import birimi_coz, zaman_birimi_mi
+from malzeme_kabul.kural.birimler import birimi_coz, zaman_birimi_mi
 
 # "3.5.1", "4.6.12.3", ek maddeleri "A.3.1" ya da "TABLE I", "TABLE IV".
 MADDE_KALIBI = re.compile(r"^(([A-Z]\.)?\d+(\.\d+)*|TABLE [IVXLC]+)$")
@@ -38,6 +44,21 @@ KriterTuru = Literal["sayisal", "gecti_kaldi", "metinsel"]
 gecti_kaldi: sayısal değeri olmayan, geçti/kaldı sonucu veren test.
 metinsel: "kabarma olmayacak" gibi sözel kriter."""
 KosulKategorisi = Literal["depolama", "kullanim"]
+
+SinirYonu = Literal["en_az", "en_cok", "aralik", "tam", "belirsiz"]
+"""Sayısal sınırın yönü. en_az: yalnız alt; en_cok: yalnız üst; aralik: alt < üst;
+tam: alt == üst. belirsiz: standart metninden "en az" mı "tam" mı olduğu
+anlaşılmıyor (ör. MIL-PRF-23377K 3.11); karar motoru bu şartlara karar vermez,
+insan incelemesine gönderir."""
+
+SonucKaynagi = Literal["coc", "ic_laboratuvar"]
+"""Test sonucunun nereden geldiği. coc: tedarikçinin CoC / test raporu
+(varsayılan); ic_laboratuvar: sonuç iç laboratuvarda ölçülür ve ekrandan girilir."""
+
+UYGULANABILIRLIK_ACIKLAMASI = (
+    "Şartın geçerli olduğu tip/sınıf/kompozisyon kodları, ör. ['Class N'] "
+    "('Chromium content (class N only)'). Boşsa bütün tip ve sınıflar için geçerlidir."
+)
 
 
 class _Model(BaseModel):
@@ -89,6 +110,10 @@ class Sinir(_Model):
     alt_dahil: bool = True
     ust_dahil: bool = True
     birim: str | None = Field(default=None, description="pint biçiminde birim, ör. '°C', 'g/L'.")
+    yon: SinirYonu | None = Field(
+        default=None,
+        description="Yalnız sayısal kriterde. Boşsa alt/üst sınırdan çıkarılır; 'belirsiz' insan incelemesi ister.",
+    )
     orijinal_metin: str = Field(min_length=1, description="Standarttaki kriter metni.")
 
     @field_validator("birim")
@@ -106,9 +131,32 @@ class Sinir(_Model):
                 raise ValueError("sayısal kriter için alt ya da üst sınırdan en az biri gerekli")
             if self.alt is not None and self.ust is not None and self.alt > self.ust:
                 raise ValueError(f"alt sınır üst sınırdan büyük: {self.alt} > {self.ust}")
+            if self.yon not in (None, "belirsiz") and self.yon != self._turetilmis_yon():
+                raise ValueError(
+                    f"yön '{self.yon}' alt/üst sınırla uyuşmuyor (alt={self.alt}, üst={self.ust}); "
+                    "emin değilsen 'belirsiz' yaz"
+                )
         elif self.alt is not None or self.ust is not None or self.birim is not None:
             raise ValueError(f"'{self.kriter_turu}' kriteri sayı ya da birim almaz")
+        elif self.yon is not None:
+            raise ValueError(f"'{self.kriter_turu}' kriteri yön almaz")
         return self
+
+    def _turetilmis_yon(self) -> SinirYonu:
+        if self.alt is not None and self.ust is not None:
+            return "tam" if self.alt == self.ust else "aralik"
+        return "en_az" if self.alt is not None else "en_cok"
+
+    @property
+    def yonu(self) -> SinirYonu | None:
+        """Sınırın yönü: açıkça yazılmışsa o, değilse alt/üst sınırdan çıkarılan. Sayısal değilse None."""
+        if self.kriter_turu != "sayisal":
+            return None
+        return self.yon or self._turetilmis_yon()
+
+    @property
+    def yon_belirsiz(self) -> bool:
+        return self.yon == "belirsiz"
 
 
 class NumuneHazirlama(_Model):
@@ -121,6 +169,7 @@ class NumuneHazirlama(_Model):
     uygulama_yontemi: str | None = None
     kuru_film_kalinligi: Sinir | None = None
     kurlenme: str | None = Field(default=None, description="Süre ve koşul, ör. '7 gün, 77 °F, %50 BN'.")
+    uygulanabilirlik: list[str] = Field(default_factory=list, description=UYGULANABILIRLIK_ACIKLAMASI)
     kaynak: Kaynak
 
 
@@ -143,8 +192,9 @@ class TestSarti(_Model):
     sinir: Sinir
     kaynak: Kaynak = Field(description="Şartın yazdığı madde (3.x ya da tablo).")
     test_turleri: set[TestTuru] = Field(min_length=1)
-    uygulanabilirlik: list[str] = Field(
-        default_factory=list, description="Geçerli tip/sınıflar, ör. ['Type I', 'Class C2']. Boşsa hepsi."
+    uygulanabilirlik: list[str] = Field(default_factory=list, description=UYGULANABILIRLIK_ACIKLAMASI)
+    sonuc_kaynagi: SonucKaynagi = Field(
+        default="coc", description="Sonuç CoC'den mi gelir, iç laboratuvarda mı ölçülür. Varsayılan CoC."
     )
     numune_hazirlama_id: str | None = None
 
@@ -180,6 +230,7 @@ class RafOmru(_Model):
     birim: str = Field(examples=["month", "day", "year"])
     kosul: Sinir | None = Field(default=None, description="Raf ömrünün geçerli olduğu koşul, ör. sıcaklık aralığı.")
     baslangic: str | None = Field(default=None, description="Ör. 'üretim tarihinden itibaren'.")
+    uygulanabilirlik: list[str] = Field(default_factory=list, description=UYGULANABILIRLIK_ACIKLAMASI)
     kaynak: Kaynak
 
     @field_validator("birim")
@@ -197,6 +248,7 @@ class Kosul(_Model):
     ad: str = Field(min_length=1)
     sinir: Sinir | None = None
     aciklama: str | None = None
+    uygulanabilirlik: list[str] = Field(default_factory=list, description=UYGULANABILIRLIK_ACIKLAMASI)
     kaynak: Kaynak
 
     @model_validator(mode="after")
@@ -204,6 +256,44 @@ class Kosul(_Model):
         if self.sinir is None and not self.aciklama:
             raise ValueError("koşul için 'sinir' ya da 'aciklama' gerekli")
         return self
+
+
+def _kod_anahtari(kod: str) -> str:
+    """'class  n' ve 'Class N' aynı koddur."""
+    return " ".join(kod.split()).casefold()
+
+
+class TanimKaydi(_Model):
+    """Ürün tanımındaki tek bir tip, sınıf ya da kompozisyon."""
+
+    kod: str = Field(min_length=1, examples=["Type I", "Class N"])
+    aciklama: str | None = Field(default=None, examples=["Non-chromate inhibitors"])
+    kaynak: Kaynak
+
+
+class UrunTanimi(_Model):
+    """Standardın tanımladığı tip, sınıf ve kompozisyonlar (şart değildir; K2).
+
+    Şartların `uygulanabilirlik` alanı bu kodlara başvurur. Katalogda her
+    malzeme kodu tek bir tip/sınıf kombinasyonuna bağlanır (docs/mimari.md).
+    """
+
+    tipler: list[TanimKaydi] = Field(default_factory=list)
+    siniflar: list[TanimKaydi] = Field(default_factory=list)
+    kompozisyonlar: list[TanimKaydi] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _kodlar_benzersiz(self) -> UrunTanimi:
+        anahtarlar = [_kod_anahtari(k.kod) for k in self.tipler + self.siniflar + self.kompozisyonlar]
+        tekrar = sorted({a for a in anahtarlar if anahtarlar.count(a) > 1})
+        if tekrar:
+            raise ValueError(f"ürün tanımında tekrar eden kodlar: {tekrar}")
+        return self
+
+    def kod_tanimli_mi(self, kod: str) -> bool:
+        return _kod_anahtari(kod) in {
+            _kod_anahtari(k.kod) for k in self.tipler + self.siniflar + self.kompozisyonlar
+        }
 
 
 class StandartBilgisi(_Model):
@@ -220,6 +310,7 @@ class KabulDokumani(_Model):
 
     standart: StandartBilgisi
     durum: Literal["taslak", "onaylandi"] = "taslak"
+    urun_tanimi: UrunTanimi | None = Field(default=None, description="Tip, sınıf ve kompozisyon tanımları.")
     testler: list[TestSarti] = Field(default_factory=list)
     raf_omurleri: list[RafOmru] = Field(default_factory=list, description="Kap türüne göre raf ömrü kayıtları.")
     kosullar: list[Kosul] = Field(default_factory=list)
@@ -241,6 +332,19 @@ class KabulDokumani(_Model):
         tekrar = sorted({k or "(genel)" for k in kaplar if kaplar.count(k) > 1})
         if tekrar:
             raise ValueError(f"her kap türü için tek raf ömrü kaydı olmalı, tekrar edenler: {tekrar}")
+
+        if self.urun_tanimi is not None:
+            sartlar = [
+                *((f"test {t.id}", t.uygulanabilirlik) for t in self.testler),
+                *((f"koşul {k.ad}", k.uygulanabilirlik) for k in self.kosullar),
+                *((f"raf ömrü {r.kap_turu or '(genel)'}", r.uygulanabilirlik) for r in self.raf_omurleri),
+                *((f"numune {n.id}", n.uygulanabilirlik) for n in self.numune_hazirlama),
+            ]
+            bilinmeyen = [
+                f"{ad}: {kod!r}" for ad, kodlar in sartlar for kod in kodlar if not self.urun_tanimi.kod_tanimli_mi(kod)
+            ]
+            if bilinmeyen:
+                raise ValueError(f"uygulanabilirlikte ürün tanımında olmayan kodlar: {bilinmeyen}")
         return self
 
     @property

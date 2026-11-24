@@ -6,13 +6,13 @@ import pytest
 
 from conftest import betik_yukle
 
-from malzeme_kabul.sema import KabulDokumani, Kaynak, Kosul, RafOmru, Sinir, StandartBilgisi
-from malzeme_kabul.sema import TestSarti as Sart
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Kosul, RafOmru, Sinir, StandartBilgisi
+from malzeme_kabul.sozlesme.sema import TestSarti as Sart
 
 
 @pytest.fixture
 def betik():
-    return betik_yukle("scripts/kontrol_listesi_uret.py")
+    return betik_yukle("deney/kontrol_listesi_uret.py")
 
 
 def kaynak(madde, sayfa):

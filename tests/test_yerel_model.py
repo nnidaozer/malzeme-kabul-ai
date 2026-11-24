@@ -14,19 +14,10 @@ import pytest
 
 from conftest import betik_yukle
 
-from malzeme_kabul.pdf_okuyucu import Belge, Sayfa
-from malzeme_kabul.sema import KabulDokumani, TestSarti
-from malzeme_kabul.yerel_model import (
-    CikarimYaniti,
-    YerelModelIstemcisi,
-    adres_yerel_mi,
-    belgeden_cikar,
-    cikarim_semasi,
-    istek_govdesi,
-    istem_olustur,
-    yanit_metni,
-    yaniti_coz,
-)
+from malzeme_kabul.belge.pdf_okuyucu import Belge, Sayfa
+from malzeme_kabul.sozlesme.sema import KabulDokumani, TestSarti
+from malzeme_kabul.cikarim.yerel_model import YerelModelIstemcisi, adres_yerel_mi, istek_govdesi, yanit_metni
+from deney.yalniz_dil_modeli import CikarimYaniti, belgeden_cikar, cikarim_semasi, istem_olustur, yaniti_coz
 
 
 def _test_json(id_="viskozite", madde="3.6.3", birim="s", sayfa=7) -> dict:
@@ -298,14 +289,14 @@ def test_belgeden_cikar_yalniz_istenen_sayfalari_okur():
 
 
 def test_betik_sayfa_araligini_cozer():
-    betik = betik_yukle("scripts/dil_modeli_cikar.py")
+    betik = betik_yukle("deney/dil_modeli_cikar.py")
     assert betik.sayfa_araligi("3-5,8") == {3, 4, 5, 8}
     with pytest.raises(ValueError):
         betik.sayfa_araligi("5-3")
 
 
 def test_betik_model_adini_dosya_adina_cevirir():
-    betik = betik_yukle("scripts/dil_modeli_cikar.py")
+    betik = betik_yukle("deney/dil_modeli_cikar.py")
     assert betik.dosya_eki("qwen2.5:7b-instruct-q4_K_M") == "qwen2.5_7b-instruct-q4_K_M"
 
 
@@ -315,7 +306,7 @@ def test_betik_sahte_sunucuyla_cikti_yazar(sahte_sunucu, tmp_path):
     adres, _ = sahte_sunucu
     pdf = tmp_path / "MIL-PRF-23377K.pdf"
     pdf_yaz(pdf, [{"metin": ["3.6.3 Viscosity. The viscosity shall be 15 to 30 seconds."]}])
-    betik = betik_yukle("scripts/dil_modeli_cikar.py")
+    betik = betik_yukle("deney/dil_modeli_cikar.py")
     kod = betik.main([str(pdf), "--model", "deneme:7b", "--adres", adres, "--cikti", str(tmp_path / "cikti")])
     assert kod == 0
     dokuman = KabulDokumani.model_validate_json(

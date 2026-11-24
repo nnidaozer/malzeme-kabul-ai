@@ -1,15 +1,15 @@
 # Bağımsız etiketleme istemi
 
 Bu dosya, doğru cevap (gold) taslağını ikinci, bağımsız bir modele (ör. Codex)
-hazırlatmak için kullanılır. İki taslak `scripts/taslak_karsilastir.py` ile
+hazırlatmak için kullanılır. İki taslak `deney/taslak_karsilastir.py` ile
 karşılaştırılır; proje sahibi yalnızca ayrışan satırlara ve uyuşan satırlardan
 seçilen kontrol örneğine bakar. Karşılaştırmadan önce iki taslağa da
-`scripts/kanit_kontrol.py` uygulanır: her sayısal değerin kaynak sayfasında
+`deney/kanit_kontrol.py` uygulanır: her sayısal değerin kaynak sayfasında
 PDF metninde geçip geçmediğine bakar ve bulamadıklarını listeler.
 
 **Bağımsızlık için:** Modele mümkünse depoyu değil yalnızca iki dosyayı ver:
 bu istem ve standardın PDF'i (`data/raw/<BELGE>.pdf`). İstem şemayı kendi
-içinde tanımlar. `src/malzeme_kabul/sema.py` dosyasını verme: içindeki
+içinde tanımlar. `src/malzeme_kabul/sozlesme/sema.py` dosyasını verme: içindeki
 açıklama örneklerinin bir kısmı MIL-PRF-23377K taslağından geliyor (ör. raf
 ömrü ve 3.4 adlandırması). Depoya erişimi varsa aşağıdaki "Okuma yasağı"
 bölümü geçerlidir.
@@ -104,7 +104,7 @@ görmek bu işin amacını bozar.
 klasöre yazma. Sonra şu komutla doğrula (hata verirse düzelt):
 
 ```bash
-python -c "from pathlib import Path; from malzeme_kabul.sema import KabulDokumani; KabulDokumani.model_validate_json(Path('data/gold_codex/<BELGE>.json').read_text(encoding='utf-8')); print('geçerli')"
+python -c "from pathlib import Path; from malzeme_kabul.sozlesme.sema import KabulDokumani; KabulDokumani.model_validate_json(Path('data/gold_codex/<BELGE>.json').read_text(encoding='utf-8')); print('geçerli')"
 ```
 
 ## Şema

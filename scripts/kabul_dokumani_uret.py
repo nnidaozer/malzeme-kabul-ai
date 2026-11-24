@@ -11,22 +11,20 @@ Kullanım:
 from __future__ import annotations
 
 import argparse
-import re
 import sys
 from pathlib import Path
 
-from malzeme_kabul.dokuman_uretici import markdown_uret, word_uret
-from malzeme_kabul.kural_cikarici import cikar
+from malzeme_kabul.arayuz.dokuman_uretici import markdown_uret, word_uret
+from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
+from malzeme_kabul.cikarim.kural_cikarici import cikar
+
+# Test kümesi kilidi deney/bolunme.py'de; betik doğrudan çalışınca depo kökü yolda olsun.
+if str(Path(__file__).resolve().parents[1]) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from deney.bolunme import VARSAYILAN_YOL, betik_korumasi  # noqa: E402
 
 KOK = Path(__file__).resolve().parents[1]
-
-
-def belge_no_ve_revizyon(dosya_adi: str) -> tuple[str, str]:
-    """'MIL-PRF-23377K.pdf' -> ('MIL-PRF-23377', 'K')."""
-    m = re.fullmatch(r"(.+\d)([A-Z])", Path(dosya_adi).stem)
-    if not m:
-        raise ValueError(f"dosya adından belge no ve revizyon çıkarılamadı: {dosya_adi}")
-    return m.group(1), m.group(2)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -35,12 +33,15 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("--belge-no")
     ayr.add_argument("--revizyon")
     ayr.add_argument("--cikti", default=str(KOK / "data" / "cikti"))
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
 
     if args.belge_no and args.revizyon:
         belge_no, revizyon = args.belge_no, args.revizyon
     else:
         belge_no, revizyon = belge_no_ve_revizyon(args.pdf)
+    if (kod := betik_korumasi(f"{belge_no}{revizyon}", args.bolunme, "kabul_dokumani_uret")) is not None:
+        return kod
 
     dokuman = cikar(args.pdf, belge_no=belge_no, revizyon=revizyon)
     klasor = Path(args.cikti)

@@ -24,7 +24,7 @@ yaratacağı yer burası.
 
 ## Nerede zorlandı
 
-Satır numaraları `src/malzeme_kabul/kural_cikarici.py` içindir.
+Satır numaraları `src/malzeme_kabul/cikarim/kural_cikarici.py` içindir.
 
 ### 1. Test tablosu bulunamıyor ya da okunamıyor (iki belgede de 0 testin nedeni)
 
@@ -98,7 +98,7 @@ Satır numaraları `src/malzeme_kabul/kural_cikarici.py` içindir.
 
 `data/gold_taslak/` altında her belge için üç dosya: `<belge>.json` (taslak
 doğru cevap, yeni `raf_omurleri` şemasıyla), `<belge>_kontrol_listesi.md`
-(`scripts/kontrol_listesi_uret.py` ile, 23377K listesiyle aynı biçim) ve
+(`deney/kontrol_listesi_uret.py` ile, 23377K listesiyle aynı biçim) ve
 `<belge>_NOTLAR.md` (kontrol etmen gereken kararlar). Taslaklar standart
 metninden elle yazıldı; madde/sayfa çiftleri PDF'in paragraf sayfalarıyla
 karşılaştırıldı (farklar yalnız değerin tabloda, sonraki sayfada durduğu

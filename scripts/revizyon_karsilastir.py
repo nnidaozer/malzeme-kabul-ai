@@ -15,17 +15,23 @@ Kullanım:
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
-from malzeme_kabul.kural_cikarici import cikar
-from malzeme_kabul.revizyon_karsilastirici import (
+from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
+from malzeme_kabul.cikarim.kural_cikarici import cikar
+from malzeme_kabul.revizyon.revizyon_karsilastirici import (
     guncelleme_onerileri,
     markdown_raporu,
     revizyonlari_karsilastir,
 )
-from malzeme_kabul.sema import KabulDokumani
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
-from kabul_dokumani_uret import belge_no_ve_revizyon
+# Test kümesi kilidi deney/bolunme.py'de; betik doğrudan çalışınca depo kökü yolda olsun.
+if str(Path(__file__).resolve().parents[1]) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from deney.bolunme import VARSAYILAN_YOL, betik_korumasi  # noqa: E402
 
 KOK = Path(__file__).resolve().parents[1]
 
@@ -36,12 +42,16 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("yeni_pdf")
     ayr.add_argument("--dokuman", help="Eski revizyonun kabul dokümanı (JSON).")
     ayr.add_argument("--cikti", default=str(KOK / "data" / "cikti"))
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
 
     belge_no, eski_rev = belge_no_ve_revizyon(args.eski_pdf)
     yeni_belge_no, yeni_rev = belge_no_ve_revizyon(args.yeni_pdf)
     if belge_no != yeni_belge_no:
         ayr.error(f"iki PDF aynı standardın revizyonları olmalı: {belge_no} ≠ {yeni_belge_no}")
+    for rev in (eski_rev, yeni_rev):
+        if (kod := betik_korumasi(f"{belge_no}{rev}", args.bolunme, "revizyon_karsilastir")) is not None:
+            return kod
 
     fark = revizyonlari_karsilastir(args.eski_pdf, args.yeni_pdf, belge_no, eski_rev, yeni_rev)
     if args.dokuman:

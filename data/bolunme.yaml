@@ -1,0 +1,31 @@
+# Standartların geliştirme / test kümesine bölünmesi (docs/mimari.md madde 7).
+#
+# Geliştirme kümesi: istemler, kurallar ve çıkarıcılar bu standartlara
+# bakılarak geliştirilir. MIL-PRF-23377, 81733D ve 85285E'ye zaten bakıldı;
+# görülmemiş sayılmazlar.
+#
+# Test kümesi: yeni indirilen standartların (yeni_standartlar) rastgele yarısı,
+# `tohum` ile seçilir (python deney/bolunme.py --sec). Seçim yapılana kadar
+# test_durumu "bekliyor"dur ve yeni standartların hiçbirine bakılmaz.
+# Test kümesindeki standartlarda çıkarıcı çalıştırılmaz, taslak cevap
+# hazırlanmaz; deney ve çıkarıcı betikleri bunları reddeder. Kilidi
+# (test_kumesi_acik) dil modeli çıkarıcısı dondurulunca yalnız proje sahibi açar.
+#
+# Biçim bilerek basit tutuldu (yorum, "anahtar: değer" ve "- öğe" listeleri);
+# deney/bolunme.py bu alt kümeyi okur.
+
+test_kumesi_acik: false
+test_durumu: bekliyor
+tohum: 20261209
+
+gelistirme:
+  - MIL-PRF-23377G
+  - MIL-PRF-23377H
+  - MIL-PRF-23377J
+  - MIL-PRF-23377K
+  - MIL-PRF-81733D
+  - MIL-PRF-85285E
+
+yeni_standartlar:
+
+test:

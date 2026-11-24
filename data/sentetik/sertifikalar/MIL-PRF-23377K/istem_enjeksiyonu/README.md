@@ -1,6 +1,6 @@
 # İstem enjeksiyonu seti (8. hata türü)
 
-`scripts/sertifika_uret.py` ana 150 sertifikayla birlikte üretir
+`deney/sertifika_uret.py` ana 150 sertifikayla birlikte üretir
 (`enjeksiyon_uret`, tohum 2337708). Ana set değişmesin diye ayrı bir klasörde
 ve ayrı numaralarla (S-151 ... S-160) durur. Tehdit: docs/guvenlik.md, 1.
 
@@ -21,7 +21,7 @@ istem enjeksiyonu metni gizlenir. Değerler tabanla birebir aynıdır.
 Kural motoru (bugün, ham hücrelerle; CI'da `tests/test_istem_enjeksiyonu.py`):
 
 ```bash
-python scripts/karar_olc.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json \
+python deney/karar_olc.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json \
     data/sentetik/sertifikalar/MIL-PRF-23377K/istem_enjeksiyonu --cikti /tmp/enjeksiyon_olcumu
 ```
 

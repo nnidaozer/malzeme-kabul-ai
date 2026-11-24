@@ -33,9 +33,9 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from .karar_olcumu import DogruKarar
-from .sema import KabulDokumani, TestSarti
-from .sertifika import Sertifika, SertifikaSatiri
+from deney.karar_olcumu import DogruKarar
+from malzeme_kabul.sozlesme.sema import KabulDokumani, TestSarti
+from malzeme_kabul.sozlesme.sertifika import Sertifika, SertifikaSatiri
 
 # Hata türü -> sertifika adedi (toplam 150; 70 temiz, 80 hatalı)
 DAGILIM: dict[str | None, int] = {

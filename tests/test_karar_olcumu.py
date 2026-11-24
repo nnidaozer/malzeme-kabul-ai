@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from malzeme_kabul.karar_motoru import KararSatiri, KontrolSonucu
-from malzeme_kabul.karar_olcumu import DogruKarar, olc
+from malzeme_kabul.kural.karar_motoru import KararSatiri, KontrolSonucu
+from deney.karar_olcumu import DogruKarar, olc
 
 
 def _tahmin(no, belge, satirlar=None):
@@ -79,3 +79,28 @@ def test_payda_sifirsa_oran_none():
     o = olc([_tahmin("1", "kabul")], [_dogru("1", "kabul")])
     assert o.belge.yanlis_kabul_orani is None
     assert o.belge.yakalama_orani is None
+
+
+# --- Güven aralığı (docs/mimari.md madde 7) ---------------------------------------
+
+
+def test_wilson_araligi_bilinen_degerler():
+    from deney.karar_olcumu import wilson_araligi
+
+    alt, ust = wilson_araligi(0, 150)
+    assert alt == 0.0 and ust == pytest.approx(0.0249, abs=5e-4)  # sıfır yanlış kabulde bile üst sınır var
+    alt, ust = wilson_araligi(5, 10)
+    assert (alt, ust) == (pytest.approx(0.2366, abs=5e-4), pytest.approx(0.7634, abs=5e-4))
+    assert wilson_araligi(0, 0) is None
+    with pytest.raises(ValueError):
+        wilson_araligi(3, 2)
+
+
+def test_yanlis_kabul_araligi_parti_ve_parametre_duzeyinde():
+    dogrular = [_dogru("1", "red", "sinir_disi", {"a": "uygun_degil"}), _dogru("2", "red", "sinir_disi", {"a": "uygun_degil"})]
+    tahminler = [_tahmin("1", "kabul", {"a": "uygun"}), _tahmin("2", "red", {"a": "uygun_degil"})]
+    o = olc(tahminler, dogrular)
+    for oran in (o.belge, o.satir):
+        alt, ust = oran.yanlis_kabul_araligi
+        assert alt < oran.yanlis_kabul_orani == 0.5 < ust
+    assert olc([_tahmin("1", "kabul")], [_dogru("1", "kabul")]).belge.yanlis_kabul_araligi is None

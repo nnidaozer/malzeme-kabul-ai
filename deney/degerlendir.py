@@ -2,7 +2,7 @@
 """Çıkarıcı çıktısını gold ile karşılaştırıp alan bazında precision, recall ve F1 yazar.
 
 Kullanım:
-  python scripts/degerlendir.py TAHMIN.json GOLD.json [--csv sonuc.csv]
+  python deney/degerlendir.py TAHMIN.json GOLD.json [--csv sonuc.csv]
 
 İki dosya da KabulDokumani JSON'udur. Çıkış kodu: 0 başarılı, 2 geçersiz girdi.
 """
@@ -16,8 +16,13 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from malzeme_kabul.degerlendirme import degerlendir
-from malzeme_kabul.sema import KabulDokumani
+# `python deney/<betik>.py` ile doğrudan çalışınca depo kökü yolda olsun (deney paketi için).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from deney.bolunme import VARSAYILAN_YOL, betik_korumasi
+from deney.degerlendirme import degerlendir
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 SUTUNLAR = ["alan", "dp", "yp", "yn", "precision", "recall", "f1"]
 
@@ -31,6 +36,7 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("tahmin")
     ayr.add_argument("gold")
     ayr.add_argument("--csv", help="Sonuç tablosunun yazılacağı CSV yolu")
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
 
     try:
@@ -38,6 +44,9 @@ def main(argv: list[str] | None = None) -> int:
     except (ValidationError, ValueError, OSError) as hata:
         print(f"geçersiz girdi: {hata}", file=sys.stderr)
         return 2
+    std = f"{gold.standart.belge_no}{gold.standart.revizyon}"
+    if (kod := betik_korumasi(std, args.bolunme, "degerlendir")) is not None:
+        return kod
 
     satirlar = degerlendir(tahmin, gold).tablo()
     genislik = max(len(s["alan"]) for s in satirlar)

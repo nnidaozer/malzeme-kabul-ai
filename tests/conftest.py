@@ -71,7 +71,7 @@ def pytest_collection_modifyitems(config, items):
 
 @pytest.fixture(scope="session")
 def dil_modeli_istemcisi(request):
-    from malzeme_kabul.yerel_model import YerelModelIstemcisi
+    from malzeme_kabul.cikarim.yerel_model import YerelModelIstemcisi
 
     return YerelModelIstemcisi(
         model=request.config.getoption("--dil-modeli"),
