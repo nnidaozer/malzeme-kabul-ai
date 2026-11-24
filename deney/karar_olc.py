@@ -38,6 +38,10 @@ def _yuzde(x: float | None) -> str:
     return "-" if x is None else f"%{100 * x:.1f}"
 
 
+def _aralik(a: tuple[float, float] | None) -> str:
+    return "-" if a is None else f"{_yuzde(a[0])} – {_yuzde(a[1])}"
+
+
 def _oran_tablosu(baslik: str, o: Oranlar, etiketler: tuple[str, ...]) -> list[str]:
     satirlar = [
         f"### {baslik} ({o.adet})",
@@ -45,6 +49,7 @@ def _oran_tablosu(baslik: str, o: Oranlar, etiketler: tuple[str, ...]) -> list[s
         "| Ölçüt | Değer |",
         "|---|---|",
         f"| Yanlış kabul oranı | {_yuzde(o.yanlis_kabul_orani)} |",
+        f"| Yanlış kabul oranı, %95 güven aralığı (Wilson) | {_aralik(o.yanlis_kabul_araligi)} |",
         f"| Yakalama oranı (red olması gerekenlerde red) | {_yuzde(o.yakalama_orani)} |",
         f"| Doğruluk | {_yuzde(o.dogruluk)} |",
         f"| Otomasyon oranı (insana gitmeyen) | {_yuzde(o.otomasyon_orani)} |",

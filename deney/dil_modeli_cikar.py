@@ -9,6 +9,9 @@ localhost'a bağlanır. Çıktılar (KLASOR altında):
 Kullanım:
   python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b
   python deney/dil_modeli_cikar.py BELGE.pdf --model yerel --arka-uc llamacpp --sayfalar 5-14
+
+Yalnız data/bolunme.yaml'daki geliştirme kümesi çalıştırılır; test kümesi
+kilitliyken (test_kumesi_acik: false) betik 2 koduyla çıkar.
 """
 
 from __future__ import annotations
@@ -28,6 +31,7 @@ from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
 from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
 from malzeme_kabul.cikarim.yerel_model import ARKA_UCLAR, YerelModelIstemcisi
 
+from deney.bolunme import VARSAYILAN_YOL, TestKumesiKilitli, bolunme_oku
 from deney.yalniz_dil_modeli import belgeden_cikar
 
 KOK = Path(__file__).resolve().parents[1]
@@ -62,12 +66,18 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("--baglam", type=int, default=8192, help="Bağlam penceresi (token)")
     ayr.add_argument("--dusunme-kapali", action="store_true", help="Qwen3 gibi modellerde düşünme kipini kapatır")
     ayr.add_argument("--cikti", default=str(KOK / "data" / "cikti" / "dil_modeli"))
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
 
     if args.belge_no and args.revizyon:
         belge_no, revizyon = args.belge_no, args.revizyon
     else:
         belge_no, revizyon = belge_no_ve_revizyon(args.pdf)
+    try:
+        bolunme_oku(args.bolunme).kullanima_izin_ver(f"{belge_no}{revizyon}")
+    except (TestKumesiKilitli, ValueError) as hata:
+        print(f"dil_modeli_cikar: {hata}", file=sys.stderr)
+        return 2
 
     istemci = YerelModelIstemcisi(
         model=args.model, arka_uc=args.arka_uc, adres=args.adres, baglam=args.baglam,

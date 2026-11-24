@@ -1,0 +1,21 @@
+# Standartların geliştirme / test kümesine bölünmesi (docs/mimari.md madde 7).
+#
+# Geliştirme kümesi: istemler, kurallar ve çıkarıcılar bu standartlara bakılarak
+# geliştirilir. Test kümesi: dil modeli çıkarıcısı bitene kadar kullanılmaz;
+# test_kumesi_acik false iken deney betikleri bu standartları reddeder
+# (deney/bolunme.py). Kilidi yalnız proje sahibi açar.
+#
+# Biçim bilerek basit tutuldu (yorum, "anahtar: true/false" ve "- öğe" listeleri);
+# deney/bolunme.py bu alt kümeyi okur.
+
+test_kumesi_acik: false
+
+gelistirme:
+  - MIL-PRF-23377G
+  - MIL-PRF-23377H
+  - MIL-PRF-23377J
+  - MIL-PRF-23377K
+
+test:
+  - MIL-PRF-81733D
+  - MIL-PRF-85285E

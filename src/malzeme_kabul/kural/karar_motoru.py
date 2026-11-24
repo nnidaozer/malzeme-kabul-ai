@@ -18,7 +18,13 @@ modeli kullanılmaz (CLAUDE.md, kural 1):
    `birimler.pint_ifadesi`). Çevrilemeyen birim insana bırakılır.
 6. Karşılaştırma: okunan değer aralığı sınırın tamamen içindeyse uygun,
    tamamen dışındaysa uygun değil, ikisi de değilse ("<8 saat" ile "en çok 5
-   saat") insan incelemeli. Yuvarlama yapılmaz.
+   saat") insan incelemeli. Yuvarlama yapılmaz. Yönü belirsiz şartlarda
+   ("en az" mı "tam" mı belli değil, `Sinir.yon == "belirsiz"`) karşılaştırma
+   yapılmaz; karar insan incelemelidir.
+7. Sonuç kaynağı: kabul dokümanında sonucu iç laboratuvardan gelen testler
+   (`sonuc_kaynagi == "ic_laboratuvar"`) CoC'de aranmaz. Bu sürümde iç
+   laboratuvar sonucu henüz girilemediği için bu testler insan incelemelidir
+   (parti bekletilir; docs/mimari.md madde 5).
 
 Emin olunmayan her durumda karar insana bırakılır; böylece belirsizlik yanlış
 kabule dönüşmez.
@@ -393,6 +399,8 @@ def _degerlendir(test: TestSarti, sonuc_metni: str, birim: str | None) -> tuple[
             return "uygun_degil", "sertifika şartı sağlamadığını belirtiyor", None
         return "insan_incelemeli", f"sonuç geçti/kaldı olarak yorumlanamadı: {sonuc_metni!r}", None
 
+    if sinir.yon_belirsiz:
+        return "insan_incelemeli", f"şartın yönü belirsiz ('en az' mı 'tam' mı belli değil): {sinir.orijinal_metin!r}", None
     if s.tur != "sayi":
         return "insan_incelemeli", f"sayısal şart için sayı okunamadı: {sonuc_metni!r}", None
     kaynak_birim = birim or s.birim_ek
@@ -452,7 +460,8 @@ def kontrol_et(dokuman: KabulDokumani, sertifika: Sertifika, ayar: KararAyarlari
     atif = atfi_coz(sertifika.standart_atfi)
     revizyon = _revizyon_kontrolu(dokuman, atif, ayar)
 
-    aranan = [t for t in dokuman.kabul_testleri if uygulanir_mi(t.uygulanabilirlik, atif.tip, atif.sinif) is not False]
+    uygulanan = [t for t in dokuman.kabul_testleri if uygulanir_mi(t.uygulanabilirlik, atif.tip, atif.sinif) is not False]
+    aranan = [t for t in uygulanan if t.sonuc_kaynagi == "coc"]
 
     eslesmeler: dict[str, list[int]] = {t.id: [] for t in aranan}
     eslesmeyen: list[str] = []
@@ -462,11 +471,15 @@ def kontrol_et(dokuman: KabulDokumani, sertifika: Sertifika, ayar: KararAyarlari
             eslesmeler[test_id].append(i)
         elif eslestir(satir.test_adi, dokuman.testler) is None:
             eslesmeyen.append(satir.test_adi)
-        # aranmayan bir teste (yeterlilik ya da başka tip) eşleşen satır yok sayılır
+        # aranmayan bir teste (yeterlilik, başka tip ya da iç laboratuvar) eşleşen satır yok sayılır
 
     satirlar: list[KararSatiri] = []
-    for test in aranan:
+    for test in uygulanan:
         ortak = {"test_id": test.id, "test_adi": test.test_adi, "madde": test.kaynak.etiket}
+        if test.sonuc_kaynagi == "ic_laboratuvar":
+            neden = "sonuç iç laboratuvardan gelir; CoC'de aranmadı, iç laboratuvar sonucu bekleniyor"
+            satirlar.append(KararSatiri(karar="insan_incelemeli", gerekce=neden, **ortak))
+            continue
         idx = eslesmeler[test.id]
         if not idx:
             neden = "sertifikada bu test yok"

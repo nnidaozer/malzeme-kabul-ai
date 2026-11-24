@@ -64,11 +64,16 @@ python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-
 
 ## Klasörler
 
-- `src/malzeme_kabul/`: üretim kodu
+- `src/malzeme_kabul/`: üretim kodu; katmanlar `sozlesme`, `belge`, `cikarim`,
+  `kural`, `revizyon`, `katalog`, `kayit`, `hat`, `arayuz` (bkz.
+  [docs/mimari.md](docs/mimari.md))
+- `deney/`: yalnız dil modeli deneyi ve ölçüm (F1, yanlış kabul); ürünün parçası değil
 - `tests/`: pytest testleri
-- `scripts/`: yardımcı betikler, hook'lar ve CI kontrolleri
+- `scripts/`: ürün betikleri, hook'lar ve CI kontrolleri
 - `docs/`: proje tanımı ve belgeler (dil modeli ortamı: [docs/dil_modeli_ortami.md](docs/dil_modeli_ortami.md))
 - `notebooks/`: Colab defteri (yalnız geliştirme ve ölçüm)
 - `data/raw/`: ham standart belgeleri
 - `data/gold_taslak/`: doğru cevap taslakları (gözden geçirilmeyi bekler)
 - `data/gold/`: elle etiketlenmiş doğru cevaplar (salt okunur)
+- `data/bolunme.yaml`: standartların geliştirme / test bölünmesi (test kümesi kilitli)
+- `data/calisma/`: yerel çalışma verisi; git'e girmez

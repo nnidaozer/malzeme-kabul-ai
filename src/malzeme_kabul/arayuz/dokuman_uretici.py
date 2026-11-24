@@ -15,7 +15,9 @@ TASLAK_NOTU = (
     "TASLAK: Bu doküman standarttan otomatik çıkarılmıştır. "
     "Kullanılmadan önce kalite mühendisi tarafından kontrol edilip onaylanmalıdır."
 )
-TEST_SUTUNLARI = ["Test", "Test metodu", "Sınır", "Uygulanabilirlik", "Madde"]
+TEST_SUTUNLARI = ["Test", "Test metodu", "Sınır", "Uygulanabilirlik", "Sonuç kaynağı", "Madde"]
+SONUC_KAYNAKLARI = {"coc": "CoC", "ic_laboratuvar": "İç laboratuvar"}
+YON_BELIRSIZ_NOTU = "yön belirsiz, insan incelemeli"
 TEST_BOLUMLERI = [
     ("kabul", "Kabul testleri"),
     ("omur_uzatma", "Ömür uzatma testleri"),
@@ -34,6 +36,10 @@ def sinir_metni(sinir: Sinir) -> str:
     if sinir.kriter_turu == "gecti_kaldi":
         return f"Geçti/kaldı: {sinir.orijinal_metin}"
     alt, ust = sinir.alt, sinir.ust
+    if sinir.yon_belirsiz:
+        deger = " / ".join(dict.fromkeys(_sayi(x) for x in (alt, ust) if x is not None))
+        deger = f"{deger} {sinir.birim}" if sinir.birim else deger
+        return f"{deger} ({YON_BELIRSIZ_NOTU})"
     if alt is not None and ust is not None:
         govde = f"= {_sayi(alt)}" if alt == ust else f"{_sayi(alt)} – {_sayi(ust)}"
     elif alt is not None:
@@ -57,6 +63,7 @@ def _test_satiri(t: TestSarti) -> list[str]:
         t.test_metodu or "—",
         sinir_metni(t.sinir),
         ", ".join(t.uygulanabilirlik) or "Tümü",
+        SONUC_KAYNAKLARI[t.sonuc_kaynagi],
         t.kaynak.etiket,
     ]
 
@@ -71,6 +78,18 @@ def _kosul_satiri(k: Kosul) -> list[str]:
 def bolumler(dok: KabulDokumani) -> list[Bolum]:
     """Dokümanın bölümlerini sırayla döner; boş bölümler atlanır."""
     sonuc: list[Bolum] = []
+    if dok.urun_tanimi:
+        satirlar = [
+            [tur, k.kod, k.aciklama or "—", k.kaynak.etiket]
+            for tur, kayitlar in (
+                ("Tip", dok.urun_tanimi.tipler),
+                ("Sınıf", dok.urun_tanimi.siniflar),
+                ("Kompozisyon", dok.urun_tanimi.kompozisyonlar),
+            )
+            for k in kayitlar
+        ]
+        if satirlar:
+            sonuc.append(Bolum("Ürün tanımı", ["Tür", "Kod", "Açıklama", "Madde"], satirlar))
     for tur, baslik in TEST_BOLUMLERI:
         testler = [t for t in dok.testler if tur in t.test_turleri]
         if testler:
