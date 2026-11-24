@@ -120,13 +120,23 @@ Bugün: sözleşme hazır, onu dolduran ürün içi dil modeli çıkarıcısı y
 - Alan bazında F1 ve belge başına süre önceki gibi ölçülür
   (`deney/degerlendirme.py`).
 - Standartlar `data/bolunme.yaml` ile **geliştirme** ve **test** kümesine
-  ayrılır. Test kümesi dil modeli çıkarıcısı bitene kadar kullanılmaz:
-  `test_kumesi_acik: false` iken `deney/dil_modeli_cikar.py` test kümesindeki
-  standardı reddeder (`deney/bolunme.py`). Kilidi yalnız proje sahibi açar.
-
-Bugünkü bölünme: geliştirme MIL-PRF-23377 G/H/J/K; test MIL-PRF-81733D ve
-MIL-PRF-85285E. Kural tabanlı çıkarıcı bu iki belgeye göre düzeltilmedi
-(docs/gorulmemis_belgeler_raporu.md), bu yüzden test kümesi olarak temiz.
+  ayrılır (`deney/bolunme.py`):
+  - **Geliştirme:** MIL-PRF-23377 (G, H, J, K), MIL-PRF-81733D ve
+    MIL-PRF-85285E. Bunlara zaten bakıldı; görülmemiş sayılmazlar.
+  - **Test:** yeni indirilen standartların (`yeni_standartlar`) sabit tohumla
+    seçilen rastgele yarısı (tekse yukarı yuvarlanır); kalan yarı geliştirmeye
+    gider. Seçim `python deney/bolunme.py --sec` ile yapılır ve dosyaya
+    yazılır; dosya okunurken seçimin tohumla uyuştuğu denetlenir.
+  - Yeni standartlar gelene ve seçim yapılana kadar test kümesi **bekliyor**
+    (`test_durumu: bekliyor`); bu sürede yeni standartların hiçbirine bakılmaz.
+  - Test kümesindeki standartlara kimse bakmaz: dil modeli çıkarıcısı
+    dondurulana kadar (`test_kumesi_acik: false`) çıkarıcı çalıştırılmaz,
+    taslak cevap hazırlanmaz. Kilit şu betiklerde zorlanır:
+    `scripts/kabul_dokumani_uret.py`, `scripts/revizyon_karsilastir.py`,
+    `deney/dil_modeli_cikar.py`, `deney/kanit_kontrol.py`,
+    `deney/taslak_karsilastir.py`, `deney/kontrol_listesi_uret.py`,
+    `deney/degerlendir.py`. Bölünmede hiç olmayan standart da reddedilir.
+    Kilidi yalnız proje sahibi açar.
 
 ## Şema eklemeleri
 

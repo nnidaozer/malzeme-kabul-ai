@@ -29,6 +29,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from malzeme_kabul.sozlesme.sema import KabulDokumani
+from deney.bolunme import VARSAYILAN_YOL, betik_korumasi
 from deney.taslak_karsilastirma import (
     VARSAYILAN_ORAN, VARSAYILAN_SEED, Karsilastirma, Satir, karsilastir,
 )
@@ -155,6 +156,7 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("--csv", help="Bütün satırların yazılacağı CSV yolu")
     ayr.add_argument("--oran", type=float, default=VARSAYILAN_ORAN, help="Kontrol örneği oranı (0-1)")
     ayr.add_argument("--seed", type=int, default=VARSAYILAN_SEED, help="Kontrol örneği için seed")
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
 
     for yol in (args.md, args.csv):
@@ -169,6 +171,9 @@ def main(argv: list[str] | None = None) -> int:
     except (ValidationError, ValueError, OSError) as hata:
         print(f"geçersiz girdi: {hata}", file=sys.stderr)
         return 2
+    for std in {f"{d.standart.belge_no}{d.standart.revizyon}" for d in (a, b)}:
+        if (kod := betik_korumasi(std, args.bolunme, "taslak_karsilastir")) is not None:
+            return kod
 
     k = karsilastir(a, b)
     print(

@@ -19,6 +19,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from deney.bolunme import VARSAYILAN_YOL, betik_korumasi
 from malzeme_kabul.arayuz.dokuman_uretici import _sayi
 from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Sinir
 
@@ -113,9 +114,13 @@ def main(argv: list[str] | None = None) -> int:
     ayr = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ayr.add_argument("gold_taslak")
     ayr.add_argument("--cikti")
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
     yol = Path(args.gold_taslak)
     dok = KabulDokumani.model_validate_json(yol.read_text(encoding="utf-8"))
+    std = f"{dok.standart.belge_no}{dok.standart.revizyon}"
+    if (kod := betik_korumasi(std, args.bolunme, "kontrol_listesi_uret")) is not None:
+        return kod
     cikti = Path(args.cikti) if args.cikti else yol.with_name(f"{yol.stem}_kontrol_listesi.md")
     cikti.write_text(kontrol_listesi(dok), encoding="utf-8")
     print(f"Kontrol listesi yazıldı: {cikti}")

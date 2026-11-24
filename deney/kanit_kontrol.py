@@ -28,6 +28,7 @@ from pydantic import ValidationError
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from deney.bolunme import VARSAYILAN_YOL, betik_korumasi
 from deney.kanit_kontrolu import KanitSonucu, kanit_kontrol
 from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
 from malzeme_kabul.sozlesme.sema import KabulDokumani
@@ -82,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("pdf", help="Standardın PDF'i")
     ayr.add_argument("--md", help="Markdown raporun yazılacağı yol")
     ayr.add_argument("--csv", help="Bütün değerlerin yazılacağı CSV yolu")
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
 
     for yol in (args.md, args.csv):
@@ -90,8 +92,15 @@ def main(argv: list[str] | None = None) -> int:
             return 2
     try:
         dokuman = KabulDokumani.model_validate_json(Path(args.cevap).read_text(encoding="utf-8"))
-        belge = pdf_oku(args.pdf)
     except (ValidationError, ValueError, OSError) as hata:
+        print(f"geçersiz girdi: {hata}", file=sys.stderr)
+        return 2
+    std = dokuman.standart
+    if (kod := betik_korumasi(f"{std.belge_no}{std.revizyon}", args.bolunme, "kanit_kontrol")) is not None:
+        return kod
+    try:
+        belge = pdf_oku(args.pdf)
+    except (ValueError, OSError) as hata:
         print(f"geçersiz girdi: {hata}", file=sys.stderr)
         return 2
 
