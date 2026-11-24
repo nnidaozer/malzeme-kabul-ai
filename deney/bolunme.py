@@ -4,14 +4,22 @@ Kurallar (docs/mimari.md madde 7):
 
 - Geliştirme kümesindeki standartlar serbestçe kullanılır.
 - Yeni indirilen standartlar (`yeni_standartlar`) sabit bir tohumla ikiye
-  bölünür: rastgele yarısı (tek sayıda yukarı yuvarlanır) test kümesine, kalanı
-  geliştirme kümesine gider. Bölme `python deney/bolunme.py --sec` ile yapılır
+  bölünür. Bölme birimi revizyon ailesidir (aynı numaralı standardın
+  revizyonları, ör. MIL-S-81733C ile MIL-PRF-81733D): ailelerin rastgele yarısı
+  (tek sayıda yukarı yuvarlanır) bütün revizyonlarıyla test kümesine, kalanı
+  geliştirme kümesine gider. Aynı aile iki kümede birden bulunamaz; böylece bir
+  revizyonun metni öbürü üzerinden sızmaz. Bölme `python deney/bolunme.py --sec` ile yapılır
   ve dosyaya yazılır; aynı tohum her zaman aynı seçimi verir ve okuma sırasında
   bu denetlenir.
 - Bölme yapılana kadar (`test_durumu: bekliyor`) yeni standartların hiçbiri
   kullanılamaz; seçimden sonra test kümesi, `test_kumesi_acik: true` yazana
   kadar kullanılamaz. Bölünmede hiç olmayan standart da reddedilir, böylece yeni
   bir belge sessizce geliştirme kümesine karışmaz.
+
+Standart dışı belgeler (ör. gerçek havacılık CoC'leri) klasör olarak kilitlenir:
+`kilitli_klasorler` altındaki adlarla eşleşen bir klasörün içindeki dosyalar test
+kümesindedir ve `test_kumesi_acik: true` yazana kadar açılmaz
+(`yol_kullanima_izin_ver`).
 
 Çıkarıcı ve taslak cevap betikleri bir standardı işlemeden önce
 `betik_korumasi` çağırır.
@@ -34,7 +42,8 @@ VARSAYILAN_YOL = Path(__file__).resolve().parents[1] / "data" / "bolunme.yaml"
 BELGE_ETIKETI = re.compile(r"^[A-Z]+(-[A-Z]+)?-\d+[A-Z]$")
 Kume = Literal["gelistirme", "test", "bekliyor"]
 TestDurumu = Literal["bekliyor", "secildi"]
-ANAHTARLAR = ("test_kumesi_acik", "test_durumu", "tohum", "gelistirme", "yeni_standartlar", "test")
+ANAHTARLAR = ("test_kumesi_acik", "test_durumu", "tohum", "gelistirme", "yeni_standartlar", "test", "kilitli_klasorler")
+KLASOR_ADI = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_.-]*$")
 
 
 class TestKumesiKilitli(PermissionError):
@@ -43,10 +52,22 @@ class TestKumesiKilitli(PermissionError):
     __test__ = False
 
 
+def aile(belge_etiketi: str) -> str:
+    """Revizyon ailesi: standart numarası. Ön ek (MIL-S, MIL-PRF) ve revizyon harfi yok sayılır."""
+    m = re.fullmatch(r".*-(\d+)[A-Z]", belge_etiketi)
+    if not m:
+        raise ValueError(f"belge etiketi 'MIL-PRF-23377K' biçiminde olmalı: {belge_etiketi!r}")
+    return m.group(1)
+
+
 def yariyi_sec(yeni: list[str], tohum: int) -> list[str]:
-    """Yeni standartların rastgele yarısını (tekse yukarı yuvarlanır) sıralı döner. Girdi sırası önemsizdir."""
-    aday = sorted(yeni)
-    return sorted(random.Random(tohum).sample(aday, (len(aday) + 1) // 2))
+    """Yeni standartların ailelerinin rastgele yarısını (tekse yukarı yuvarlanır) seçer.
+
+    Seçilen ailelerin bütün revizyonlarını sıralı döner. Girdi sırası önemsizdir.
+    """
+    aileler = sorted({aile(s) for s in yeni})
+    secilen = set(random.Random(tohum).sample(aileler, (len(aileler) + 1) // 2))
+    return sorted(s for s in yeni if aile(s) in secilen)
 
 
 @dataclass(frozen=True)
@@ -57,8 +78,23 @@ class Bolunme:
     test_durumu: TestDurumu = "bekliyor"
     tohum: int = 0
     test_kumesi_acik: bool = False
+    kilitli_klasorler: list[str] = field(default_factory=list)
 
     __test__ = False
+
+    def yol_kilitli_mi(self, yol: str | Path) -> bool:
+        """Yol kilitli bir klasörün içindeyse ve test kümesi kapalıysa True."""
+        if self.test_kumesi_acik:
+            return False
+        return any(parca in self.kilitli_klasorler for parca in Path(yol).parent.parts)
+
+    def yol_kullanima_izin_ver(self, yol: str | Path) -> None:
+        """Kilitli klasördeki belge kullanılmak istenirse hata verir."""
+        if self.yol_kilitli_mi(yol):
+            raise TestKumesiKilitli(
+                f"{yol} test kümesinde (kilitli klasör); dil modeli çıkarıcısı dondurulana kadar açılmaz "
+                "(data/bolunme.yaml, test_kumesi_acik: false)"
+            )
 
     def kume(self, belge_etiketi: str) -> Kume | None:
         if belge_etiketi in self.test:
@@ -148,7 +184,11 @@ def bolunme_oku(yol: str | Path = VARSAYILAN_YOL) -> Bolunme:
         test_durumu=_tur(veri, "test_durumu", str, "bekliyor"),
         tohum=_tur(veri, "tohum", int, 0),
         test_kumesi_acik=_tur(veri, "test_kumesi_acik", bool, False),
+        kilitli_klasorler=list(_tur(veri, "kilitli_klasorler", list, [])),
     )
+    hatali_klasor = [k for k in b.kilitli_klasorler if not KLASOR_ADI.match(k) or k in (".", "..")]
+    if hatali_klasor:
+        raise ValueError(f"kilitli_klasorler yalnız klasör adı içermeli (yol değil): {hatali_klasor}")
     if b.test_durumu not in ("bekliyor", "secildi"):
         raise ValueError(f"test_durumu 'bekliyor' ya da 'secildi' olmalı: {b.test_durumu!r}")
     hepsi = b.gelistirme + b.yeni_standartlar + b.test
@@ -165,6 +205,7 @@ def bolunme_oku(yol: str | Path = VARSAYILAN_YOL) -> Bolunme:
         cakisan = sorted(set(b.yeni_standartlar) & set(b.gelistirme))
         if cakisan:
             raise ValueError(f"bölünmeyi bekleyen standartlar geliştirme kümesinde olamaz: {cakisan}")
+        _aile_ortak_mi(b.yeni_standartlar, b.gelistirme, "bölünmeyi bekleyen")
         if b.test_kumesi_acik:
             raise ValueError("test kümesi seçilmeden kilit açılamaz")
     else:
@@ -174,7 +215,14 @@ def bolunme_oku(yol: str | Path = VARSAYILAN_YOL) -> Bolunme:
         kalan = set(b.yeni_standartlar) - set(b.test)
         if not kalan <= set(b.gelistirme) or set(b.test) & set(b.gelistirme):
             raise ValueError("seçilmeyen yeni standartlar geliştirme kümesinde, seçilenler yalnız test kümesinde olmalı")
+        _aile_ortak_mi(b.test, b.gelistirme, "test kümesindeki")
     return b
+
+
+def _aile_ortak_mi(liste: list[str], gelistirme: list[str], ad: str) -> None:
+    ortak = sorted({aile(s) for s in liste} & {aile(s) for s in gelistirme})
+    if ortak:
+        raise ValueError(f"{ad} standartlar geliştirme kümesindekilerle aynı ailede olamaz (revizyonlar birlikte bölünür): {ortak}")
 
 
 def bolunme_yaz(b: Bolunme, yol: str | Path) -> None:
@@ -186,7 +234,8 @@ def bolunme_yaz(b: Bolunme, yol: str | Path) -> None:
         "test_durumu": b.test_durumu,
         "tohum": str(b.tohum),
     }
-    listeler = {"gelistirme": b.gelistirme, "yeni_standartlar": b.yeni_standartlar, "test": b.test}
+    listeler = {"gelistirme": b.gelistirme, "yeni_standartlar": b.yeni_standartlar, "test": b.test,
+                "kilitli_klasorler": b.kilitli_klasorler}
     cikti: list[str] = []
     atla = False
     for satir in satirlar:

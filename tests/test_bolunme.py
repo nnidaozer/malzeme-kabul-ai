@@ -7,7 +7,7 @@ import json
 import pytest
 
 from conftest import KOK, betik_yukle
-from deney.bolunme import Bolunme, TestKumesiKilitli, bolunme_oku, bolunme_yaz, main, yariyi_sec
+from deney.bolunme import Bolunme, TestKumesiKilitli, aile, bolunme_oku, bolunme_yaz, main, yariyi_sec
 
 GELISTIRME = """# yorum
 test_kumesi_acik: false
@@ -48,6 +48,7 @@ def test_depodaki_bolunme_nidanin_kararina_uyar():
         assert b.test == []
     else:
         assert b.test == yariyi_sec(b.yeni_standartlar, b.tohum)
+        assert not {aile(s) for s in b.test} & {aile(s) for s in b.gelistirme}  # aynı aile iki kümede olmaz
 
 
 def test_depodaki_bolunme_yaml_ile_ayni_okunur():
@@ -69,6 +70,24 @@ def test_secim_tohuma_bagli_ve_sirasiz():
     assert len(yariyi_sec(YENI[:4], 7)) == 2
     farkli = {tuple(yariyi_sec(YENI, t)) for t in range(20)}
     assert len(farkli) > 1  # tohum seçimi gerçekten değiştirir
+
+
+def test_aile_revizyonu_ve_on_eki_yok_sayar():
+    assert aile("MIL-PRF-81733D") == aile("MIL-S-81733C") == "81733"
+    assert aile("MIL-A-46146B") == aile("MIL-DTL-46146C") == "46146"
+    assert aile("MIL-PRF-23377K") != aile("MIL-PRF-85285E")
+
+
+def test_secim_revizyonlari_birlikte_tasir():
+    yeni = ["MIL-PRF-1A", "MIL-PRF-1B", "MIL-PRF-2A", "MIL-PRF-2B", "MIL-S-3C", "MIL-PRF-3D", "MIL-PRF-4A"]
+    secimler = set()
+    for tohum in range(30):
+        secilen = yariyi_sec(yeni, tohum)
+        aileler = {aile(s) for s in secilen}
+        assert len(aileler) == 2  # 4 ailenin yarısı
+        assert secilen == sorted(s for s in yeni if aile(s) in aileler)  # ailenin bütün revizyonları birlikte
+        secimler.add(tuple(secilen))
+    assert len(secimler) > 1
 
 
 def test_bekliyorken_yeni_standartlara_bakilmaz(tmp_path):
@@ -132,11 +151,48 @@ def test_elle_degistirilmis_secim_reddedilir(tmp_path):
         ("test:\n  - MIL-PRF-1A\n", "boş olmalı"),
         ("gelistirme:\n  - MIL-PRF-1A\nyeni_standartlar:\n  - MIL-PRF-1A\n", "geliştirme kümesinde olamaz"),
         ("test_kumesi_acik: true\n", "seçilmeden kilit açılamaz"),
+        ("kilitli_klasorler:\n  - ../raw\n", "klasör adı"),
+        ("gelistirme:\n  - MIL-PRF-81733D\nyeni_standartlar:\n  - MIL-S-81733C\n", "aynı ailede"),
+        ("test_durumu: secildi\ngelistirme:\n  - MIL-PRF-1B\nyeni_standartlar:\n  - MIL-PRF-1A\n"
+         "test:\n  - MIL-PRF-1A\n", "aynı ailede"),
     ],
 )
 def test_hatali_dosya_reddedilir(tmp_path, metin, hata):
     with pytest.raises(ValueError, match=hata):
         bolunme_oku(yaz(tmp_path, metin))
+
+
+# --- Kilitli klasörler (ör. gerçek havacılık belgeleri) ---------------------------------
+
+
+KLASORLU = GELISTIRME + "\nkilitli_klasorler:\n  - gercek_coc_havacilik\n"
+
+
+def test_kilitli_klasordeki_belgeye_bakilmaz(tmp_path):
+    b = bolunme_oku(yaz(tmp_path, KLASORLU))
+    assert b.kilitli_klasorler == ["gercek_coc_havacilik"]
+    with pytest.raises(TestKumesiKilitli, match="test kümesinde"):
+        b.yol_kullanima_izin_ver(tmp_path / "data" / "raw" / "gercek_coc_havacilik" / "a_CoC.pdf")
+    assert b.yol_kilitli_mi("data/raw/gercek_coc_havacilik/alt/b.pdf")
+    assert not b.yol_kilitli_mi("data/raw/gercek_coa/a_coa.pdf")
+    assert not b.yol_kilitli_mi("data/raw/gercek_coc_havacilik_eski.pdf")  # yalnız klasör adı eşleşir
+    b.yol_kullanima_izin_ver("data/raw/gercek_coa/a_coa.pdf")  # hata vermez
+
+
+def test_kilitli_klasor_kilit_acilinca_kullanilir_ve_yazilinca_korunur(tmp_path):
+    yol = yaz(tmp_path, KLASORLU)
+    main(["--yol", str(yol), "--sec"])
+    b = bolunme_oku(yol)
+    assert b.kilitli_klasorler == ["gercek_coc_havacilik"]  # seçim yazılırken liste kaybolmaz
+    bolunme_yaz(Bolunme(**{**b.__dict__, "test_kumesi_acik": True}), yol)
+    acik = bolunme_oku(yol)
+    assert not acik.yol_kilitli_mi("data/raw/gercek_coc_havacilik/a.pdf")
+
+
+def test_depodaki_havacilik_belgeleri_kilitli():
+    b = bolunme_oku()
+    assert "gercek_coc_havacilik" in b.kilitli_klasorler
+    assert b.yol_kilitli_mi(KOK / "data" / "raw" / "gercek_coc_havacilik" / "x.pdf")
 
 
 # --- Betiklerin kilidi ----------------------------------------------------------------

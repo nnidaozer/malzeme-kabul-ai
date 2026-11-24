@@ -4,18 +4,26 @@
 # bakılarak geliştirilir. MIL-PRF-23377, 81733D ve 85285E'ye zaten bakıldı;
 # görülmemiş sayılmazlar.
 #
-# Test kümesi: yeni indirilen standartların (yeni_standartlar) rastgele yarısı,
-# `tohum` ile seçilir (python deney/bolunme.py --sec). Seçim yapılana kadar
+# MIL-S-81733C ve MIL-PRF-85285F de geliştirmededir: aileleri (81733, 85285)
+# D ve E revizyonlarıyla zaten görüldü (Nida'nın kararı, 24 Kasım 2026).
+#
+# Test kümesi: yeni indirilen standartların (yeni_standartlar) revizyon
+# ailelerinin rastgele yarısı, bütün revizyonlarıyla birlikte, `tohum` ile
+# seçilir (python deney/bolunme.py --sec). Seçim yapılana kadar
 # test_durumu "bekliyor"dur ve yeni standartların hiçbirine bakılmaz.
 # Test kümesindeki standartlarda çıkarıcı çalıştırılmaz, taslak cevap
 # hazırlanmaz; deney ve çıkarıcı betikleri bunları reddeder. Kilidi
 # (test_kumesi_acik) dil modeli çıkarıcısı dondurulunca yalnız proje sahibi açar.
 #
+# kilitli_klasorler: data/raw altında bu adlı klasörlerdeki belgeler (gerçek
+# havacılık CoC'si ve test raporu) doğrudan test kümesindedir ve aynı kilitle
+# açılmaz. Sistemin gerçek bir havacılık belgesindeki ilk sınavı olacaklar.
+#
 # Biçim bilerek basit tutuldu (yorum, "anahtar: değer" ve "- öğe" listeleri);
 # deney/bolunme.py bu alt kümeyi okur.
 
 test_kumesi_acik: false
-test_durumu: bekliyor
+test_durumu: secildi
 tohum: 20261209
 
 gelistirme:
@@ -25,7 +33,52 @@ gelistirme:
   - MIL-PRF-23377K
   - MIL-PRF-81733D
   - MIL-PRF-85285E
+  - MIL-S-81733C
+  - MIL-PRF-85285F
+  - MIL-DTL-85054C
+  - MIL-DTL-85054D
+  - MIL-PRF-16173E
+  - MIL-PRF-16173F
+  - MIL-PRF-27617F
+  - MIL-PRF-27617G
+  - MIL-PRF-32239B
+  - MIL-PRF-32239C
+  - MIL-PRF-32295A
+  - MIL-PRF-32295B
 
 yeni_standartlar:
+  - MIL-A-46146B
+  - MIL-DTL-46146C
+  - MIL-DTL-53022E
+  - MIL-DTL-53022F
+  - MIL-DTL-85054C
+  - MIL-DTL-85054D
+  - MIL-PRF-16173E
+  - MIL-PRF-16173F
+  - MIL-PRF-27617F
+  - MIL-PRF-27617G
+  - MIL-PRF-32239B
+  - MIL-PRF-32239C
+  - MIL-PRF-32295A
+  - MIL-PRF-32295B
+  - MIL-PRF-81309G
+  - MIL-PRF-81309H
+  - MIL-PRF-85570D
+  - MIL-PRF-85570E
+  - MIL-PRF-87937D
+  - MIL-PRF-87937E
 
 test:
+  - MIL-A-46146B
+  - MIL-DTL-46146C
+  - MIL-DTL-53022E
+  - MIL-DTL-53022F
+  - MIL-PRF-81309G
+  - MIL-PRF-81309H
+  - MIL-PRF-85570D
+  - MIL-PRF-85570E
+  - MIL-PRF-87937D
+  - MIL-PRF-87937E
+
+kilitli_klasorler:
+  - gercek_coc_havacilik

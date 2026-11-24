@@ -119,13 +119,25 @@ Bugün: sözleşme hazır, onu dolduran ürün içi dil modeli çıkarıcısı y
   düzeyidir. (`deney/karar_olcumu.py`, `deney/karar_olc.py`)
 - Alan bazında F1 ve belge başına süre önceki gibi ölçülür
   (`deney/degerlendirme.py`).
+- Gerçek CoA'lardan ölçüme yalnız **tam** olanlar girer: ürünün en az iki lotu
+  ve sertifikadan ayrı bir şartnamesi var. Eksik olanlar nedeniyle birlikte
+  `data/coa_kumesi.csv`'de ayrı listelenir (`deney/coa_kumesi.py`,
+  `olcum_sertifikalari`).
 - Standartlar `data/bolunme.yaml` ile **geliştirme** ve **test** kümesine
   ayrılır (`deney/bolunme.py`):
-  - **Geliştirme:** MIL-PRF-23377 (G, H, J, K), MIL-PRF-81733D ve
-    MIL-PRF-85285E. Bunlara zaten bakıldı; görülmemiş sayılmazlar.
-  - **Test:** yeni indirilen standartların (`yeni_standartlar`) sabit tohumla
-    seçilen rastgele yarısı (tekse yukarı yuvarlanır); kalan yarı geliştirmeye
-    gider. Seçim `python deney/bolunme.py --sec` ile yapılır ve dosyaya
+  - **Geliştirme:** MIL-PRF-23377 (G, H, J, K), MIL-PRF-81733 (C, D) ve
+    MIL-PRF-85285 (E, F). Bunlara (ya da ailelerine) zaten bakıldı;
+    görülmemiş sayılmazlar.
+  - **Test:** yeni indirilen standartların (`yeni_standartlar`) revizyon
+    ailelerinin sabit tohumla seçilen rastgele yarısı (tekse yukarı
+    yuvarlanır); bir ailenin bütün revizyonları aynı kümeye gider, kalan
+    aileler geliştirmeye. Aile, ön ek ve revizyon harfi atılmış standart
+    numarasıdır (MIL-S-81733C ile MIL-PRF-81733D aynı aile). 24 Kasım 2026
+    seçimi: 46146, 53022, 81309, 85570 ve 87937 aileleri test kümesinde.
+  - **Kilitli klasörler:** `kilitli_klasorler` altındaki klasörlerin belgeleri
+    (şimdilik `data/raw/gercek_coc_havacilik/`: gerçek havacılık CoC'si ve test
+    raporu) doğrudan test kümesindedir ve aynı kilitle açılmaz;
+    `scripts/pdf_tur_kontrol.py` bunları açmadan "kilitli" diye listeler. Seçim `python deney/bolunme.py --sec` ile yapılır ve dosyaya
     yazılır; dosya okunurken seçimin tohumla uyuştuğu denetlenir.
   - Yeni standartlar gelene ve seçim yapılana kadar test kümesi **bekliyor**
     (`test_durumu: bekliyor`); bu sürede yeni standartların hiçbirine bakılmaz.
@@ -168,6 +180,7 @@ data/
   raw/        standart PDF'leri
   sentetik/   sentetik sertifikalar ve doğru kararları
   bolunme.yaml  geliştirme / test bölünmesi
+  coa_kumesi.csv  gerçek CoA'ların tam / eksik listesi (deney/coa_kumesi.py)
   calisma/    yerel çalışma verisi (SQLite, kararlar, yüklenen belgeler); git'e girmez
   gold/       doğru cevaplar (yalnız proje sahibi yazar)
 ```
