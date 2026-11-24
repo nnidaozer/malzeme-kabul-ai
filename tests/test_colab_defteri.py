@@ -50,3 +50,31 @@ def test_kurulum_dogrulama_hucresi_var():
     assert '"pip", "install", "-q", "-e", "."' in kod
     assert "sys.path.insert(0, SRC)" in kod  # çalışan çekirdek yeni kurulumu görsün
     assert "import malzeme_kabul" in kod and "Kurulum doğrulandı" in kod
+
+
+def test_hucreler_istege_bagli_hucrelerin_importlarina_dayanmaz():
+    """Ollama hücresini atlayıp llama.cpp yolunu seçen biri de NameError almasın.
+
+    Her hücre kullandığı standart modülleri ya kendisi içe aktarır ya da her
+    oturumda çalıştırılan kurulum hücrelerinden (2a–2c) alır.
+    """
+    hucreler = [re.sub(r"^(\s*)!.*$", r"\1pass", k, flags=re.M) for k in _hucreler("code")]
+
+    def aktarilanlar(kaynak):
+        adlar = set()
+        for d in ast.walk(ast.parse(kaynak)):
+            if isinstance(d, ast.Import):
+                adlar |= {(a.asname or a.name).split(".")[0] for a in d.names}
+            elif isinstance(d, ast.ImportFrom):
+                adlar |= {a.asname or a.name for a in d.names}
+        return adlar
+
+    kurulum = set().union(*(aktarilanlar(k) for k in hucreler if k.lstrip().startswith("# 2")))
+    moduller = {"json", "time", "urllib", "subprocess", "os", "sys", "glob", "pd"}
+    eksik = {}
+    for i, kaynak in enumerate(hucreler):
+        kullanilan = {d.id for d in ast.walk(ast.parse(kaynak)) if isinstance(d, ast.Name) and d.id in moduller}
+        yok = kullanilan - aktarilanlar(kaynak) - kurulum
+        if yok:
+            eksik[i] = sorted(yok)
+    assert not eksik, f"başka hücrenin içe aktarmasına dayanan hücreler: {eksik}"
