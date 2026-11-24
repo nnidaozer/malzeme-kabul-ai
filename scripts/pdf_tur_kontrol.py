@@ -2,6 +2,8 @@
 """data/raw/ altındaki PDF'lerin metin tabanlı mı taranmış mı olduğunu listeler.
 
 Taranmış PDF'ler atılmaz; listede "ocr_gerekli=evet" diye işaretlenir.
+data/bolunme.yaml'daki kilitli klasörlerin (test kümesi) PDF'leri açılmaz;
+listeye yalnız adlarıyla "tur=kilitli" diye yazılır.
 
 Kullanım:
   python scripts/pdf_tur_kontrol.py                 # data/raw -> data/raw/pdf_turleri.csv
@@ -17,6 +19,10 @@ from pathlib import Path
 
 from malzeme_kabul.belge.pdf_turu import pdf_turunu_belirle
 
+# Test kümesi kilidi deney/bolunme.py'de; betik doğrudan çalışınca depo kökü yolda olsun.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from deney.bolunme import VARSAYILAN_YOL, bolunme_oku  # noqa: E402
+
 KOK = Path(__file__).resolve().parents[1]
 ALANLAR = ["dosya", "tur", "sayfa_sayisi", "taranmis_sayfalar", "ocr_katmanli_sayfalar", "ocr_gerekli"]
 
@@ -29,7 +35,9 @@ def main(argv: list[str] | None = None) -> int:
     ayr = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ayr.add_argument("klasor", nargs="?", default=str(KOK / "data" / "raw"))
     ayr.add_argument("--cikti", default=None, help="CSV çıktı yolu (varsayılan: KLASOR/pdf_turleri.csv)")
+    ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
     args = ayr.parse_args(argv)
+    bolunme = bolunme_oku(args.bolunme)
 
     klasor = Path(args.klasor)
     pdfler = sorted(p for p in klasor.rglob("*") if p.suffix.lower() == ".pdf")
@@ -40,6 +48,9 @@ def main(argv: list[str] | None = None) -> int:
     satirlar = []
     for pdf in pdfler:
         ad = pdf.relative_to(klasor).as_posix()
+        if bolunme.yol_kilitli_mi(pdf.relative_to(klasor)):
+            satirlar.append(dict.fromkeys(ALANLAR, "") | {"dosya": ad, "tur": "kilitli"})
+            continue
         try:
             s = pdf_turunu_belirle(pdf)
         except ValueError as hata:
@@ -63,6 +74,9 @@ def main(argv: list[str] | None = None) -> int:
 
     for s in satirlar:
         isaret = "  <-- OCR gerekli" if s["ocr_gerekli"] == "evet" else ""
+        if s["tur"] == "kilitli":
+            print(f"{s['dosya']}: kilitli (test kümesi, açılmadı)")
+            continue
         print(f"{s['dosya']}: {s['tur']} ({s['sayfa_sayisi']} sayfa){isaret}")
     print(f"Liste yazıldı: {cikti}")
     return 0

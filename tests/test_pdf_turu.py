@@ -127,6 +127,27 @@ def test_betik_bozuk_pdfi_atlamaz_hata_olarak_yazar(tmp_path, kontrol):
     assert satir["tur"] == "hata"
 
 
+def test_betik_kilitli_klasordeki_pdfleri_acmaz(tmp_path, kontrol, monkeypatch):
+    ham = tmp_path / "raw"
+    (ham / "gercek_coc_havacilik").mkdir(parents=True)
+    pdf_yaz(ham / "MIL-PRF-23377K.pdf", [{"metin": [UZUN, UZUN]}])
+    pdf_yaz(ham / "gercek_coc_havacilik" / "lot_CoC.pdf", [{"metin": [UZUN]}])
+    bolunme = tmp_path / "bolunme.yaml"
+    bolunme.write_text("kilitli_klasorler:\n  - gercek_coc_havacilik\n", encoding="utf-8")
+    acilan = []
+    gercek = kontrol.pdf_turunu_belirle
+    monkeypatch.setattr(kontrol, "pdf_turunu_belirle", lambda p: acilan.append(p.name) or gercek(p))
+    cikti = tmp_path / "liste.csv"
+
+    assert kontrol.main([str(ham), "--cikti", str(cikti), "--bolunme", str(bolunme)]) == 0
+
+    assert acilan == ["MIL-PRF-23377K.pdf"]  # kilitli belge hiç açılmadı
+    with cikti.open(encoding="utf-8") as f:
+        satirlar = {s["dosya"]: s for s in csv.DictReader(f)}
+    assert satirlar["gercek_coc_havacilik/lot_CoC.pdf"]["tur"] == "kilitli"
+    assert satirlar["gercek_coc_havacilik/lot_CoC.pdf"]["sayfa_sayisi"] == ""
+
+
 def test_betik_bos_klasorde_uyari_verir(tmp_path, kontrol, capsys):
     (tmp_path / "raw").mkdir()
     assert kontrol.main([str(tmp_path / "raw"), "--cikti", str(tmp_path / "l.csv")]) == 1
