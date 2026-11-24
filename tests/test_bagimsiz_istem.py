@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from malzeme_kabul.sema import KabulDokumani
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 KOK = Path(__file__).resolve().parents[1]
 ISTEM = KOK / "docs" / "bagimsiz_etiketleme_istemi.md"

@@ -15,7 +15,7 @@ import csv
 import sys
 from pathlib import Path
 
-from malzeme_kabul.pdf_turu import pdf_turunu_belirle
+from malzeme_kabul.belge.pdf_turu import pdf_turunu_belirle
 
 KOK = Path(__file__).resolve().parents[1]
 ALANLAR = ["dosya", "tur", "sayfa_sayisi", "taranmis_sayfalar", "ocr_katmanli_sayfalar", "ocr_gerekli"]

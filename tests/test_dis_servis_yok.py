@@ -8,7 +8,7 @@ kullanılmaz.
 - Genel HTTP/ağ kütüphaneleri (requests, httpx, urllib.request ...) yalnızca
   YEREL_MODEL_ISTISNALARI içindeki dosyalarda kullanılabilir. Bu dosyalardaki
   her http(s) adresi localhost'a gitmelidir. Tek istisna yerel model
-  istemcisidir (malzeme_kabul/yerel_model.py).
+  istemcisidir (malzeme_kabul/cikarim/yerel_model.py).
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ AG_KUTUPHANELERI = {
     "socket", "websocket", "websockets", "grpc", "pycurl", "ftplib", "smtplib",
 }
 # src/ altına göre yollar: yalnız localhost'a bağlanan yerel model istemcisi.
-YEREL_MODEL_ISTISNALARI: set[str] = {"malzeme_kabul/yerel_model.py"}
+YEREL_MODEL_ISTISNALARI: set[str] = {"malzeme_kabul/cikarim/yerel_model.py"}
 YEREL_ADRESLER = {"localhost", "127.0.0.1", "::1"}
 
 

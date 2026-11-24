@@ -9,7 +9,7 @@ import pytest
 from conftest import betik_yukle
 from pdf_uretici import pdf_yaz
 
-from malzeme_kabul.pdf_turu import (
+from malzeme_kabul.belge.pdf_turu import (
     KARMA,
     METIN,
     OCR_KATMANLI,

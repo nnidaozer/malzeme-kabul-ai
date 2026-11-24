@@ -8,7 +8,7 @@ Girdi: kabul dokümanı (JSON) ve sertifika klasörü (json/ ve dogru_kararlar.j
 kusursuz varsayılır ve yalnız karar motoru ölçülür.
 
 Kullanım:
-  python scripts/karar_olc.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json \
+  python deney/karar_olc.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json \
       data/sentetik/sertifikalar/MIL-PRF-23377K --cikti data/cikti/MIL-PRF-23377K_karar_olcumu
 """
 
@@ -18,13 +18,18 @@ import argparse
 import csv
 import json
 import re
+import sys
 import time
 from pathlib import Path
 
-from malzeme_kabul.karar_motoru import KararAyarlari, KontrolSonucu, eslestir, kontrol_et
-from malzeme_kabul.karar_olcumu import DogruKarar, Olcum, Oranlar, olc
-from malzeme_kabul.sema import KabulDokumani
-from malzeme_kabul.sertifika import Sertifika
+# `python deney/<betik>.py` ile doğrudan çalışınca depo kökü yolda olsun (deney paketi için).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from malzeme_kabul.kural.karar_motoru import KararAyarlari, KontrolSonucu, eslestir, kontrol_et
+from deney.karar_olcumu import DogruKarar, Olcum, Oranlar, olc
+from malzeme_kabul.sozlesme.sema import KabulDokumani
+from malzeme_kabul.sozlesme.sertifika import Sertifika
 
 KOK = Path(__file__).resolve().parents[1]
 
@@ -117,7 +122,7 @@ def rapor(
 
 
 def ad_varyant_kapsami(dokuman: KabulDokumani) -> tuple[int, int, list[str]]:
-    from malzeme_kabul.sertifika_uretici import AD_VARYANTLARI
+    from deney.sertifika_uretici import AD_VARYANTLARI
 
     eslesen, kacan = 0, []
     for test_id, adlar in AD_VARYANTLARI.items():

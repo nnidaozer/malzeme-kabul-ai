@@ -19,7 +19,7 @@ from collections.abc import Sequence
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .karar_motoru import BelgeKarari, Karar, KontrolSonucu
+from malzeme_kabul.kural.karar_motoru import BelgeKarari, Karar, KontrolSonucu
 
 BELGE_KARARLARI = ("kabul", "red", "inceleme")
 SATIR_KARARLARI = ("uygun", "uygun_degil", "insan_incelemeli")

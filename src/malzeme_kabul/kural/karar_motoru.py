@@ -33,9 +33,9 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
-from .birimler import birimi_coz, kayit
-from .sema import KabulDokumani, Sinir, TestSarti
-from .sertifika import Sertifika
+from malzeme_kabul.kural.birimler import birimi_coz, kayit
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Sinir, TestSarti
+from malzeme_kabul.sozlesme.sertifika import Sertifika
 
 Karar = Literal["uygun", "uygun_degil", "insan_incelemeli"]
 BelgeKarari = Literal["kabul", "red", "inceleme"]

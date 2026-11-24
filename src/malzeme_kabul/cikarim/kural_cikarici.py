@@ -22,8 +22,8 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .pdf_okuyucu import Belge, pdf_oku
-from .sema import (
+from malzeme_kabul.belge.pdf_okuyucu import Belge, pdf_oku
+from malzeme_kabul.sozlesme.sema import (
     KabulDokumani,
     Kaynak,
     Kosul,

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from malzeme_kabul.karar_motoru import KararSatiri, KontrolSonucu
-from malzeme_kabul.karar_olcumu import DogruKarar, olc
+from malzeme_kabul.kural.karar_motoru import KararSatiri, KontrolSonucu
+from deney.karar_olcumu import DogruKarar, olc
 
 
 def _tahmin(no, belge, satirlar=None):

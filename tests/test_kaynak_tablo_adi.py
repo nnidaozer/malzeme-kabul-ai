@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from malzeme_kabul.karar_motoru import eslestir
-from malzeme_kabul.kural_cikarici import cikar, test_adi_ayir as adi_ayir
-from malzeme_kabul.sema import TestSarti as Sart
+from malzeme_kabul.kural.karar_motoru import eslestir
+from malzeme_kabul.cikarim.kural_cikarici import cikar, test_adi_ayir as adi_ayir
+from malzeme_kabul.sozlesme.sema import TestSarti as Sart
 
 KOK = Path(__file__).resolve().parents[1]
 K_PDF = KOK / "data" / "raw" / "MIL-PRF-23377K.pdf"

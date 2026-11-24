@@ -201,7 +201,7 @@ oranı) değiştirilmiş cevaplara göre yapılırsa sonuçlar anlamsızlaşır;
 - CI (`.github/workflows/gold-koruma.yml`), `gold-guncelleme` etiketi olmayan
   PR'da `data/gold/` değişikliğini reddeder.
 - Betikler `data/gold/` altına çıktı yazmayı reddeder
-  (ör. `scripts/sertifika_uret.py`).
+  (ör. `deney/sertifika_uret.py`).
 
 **Yapılacak önlem.**
 - `data/gold/` için her dosyanın SHA-256 özetini tutan bir manifest; proje

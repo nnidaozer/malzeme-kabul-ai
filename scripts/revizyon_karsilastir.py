@@ -17,15 +17,14 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from malzeme_kabul.kural_cikarici import cikar
-from malzeme_kabul.revizyon_karsilastirici import (
+from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
+from malzeme_kabul.cikarim.kural_cikarici import cikar
+from malzeme_kabul.revizyon.revizyon_karsilastirici import (
     guncelleme_onerileri,
     markdown_raporu,
     revizyonlari_karsilastir,
 )
-from malzeme_kabul.sema import KabulDokumani
-
-from kabul_dokumani_uret import belge_no_ve_revizyon
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 KOK = Path(__file__).resolve().parents[1]
 

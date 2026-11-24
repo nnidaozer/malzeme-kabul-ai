@@ -2,7 +2,7 @@
 """Doğru cevap dosyasındaki her sayısal değerin PDF'in ilgili sayfasında geçtiğini kontrol eder.
 
 Kullanım:
-  python scripts/kanit_kontrol.py CEVAP.json STANDART.pdf [--md rapor.md] [--csv rapor.csv]
+  python deney/kanit_kontrol.py CEVAP.json STANDART.pdf [--md rapor.md] [--csv rapor.csv]
 
 CEVAP.json bir KabulDokumani'dır (ör. data/gold_taslak/MIL-PRF-23377K.json ya da
 data/gold_codex/MIL-PRF-23377K.json). Her değer, kaydın kaynak sayfasında (yoksa
@@ -24,9 +24,13 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from malzeme_kabul.kanit_kontrolu import KanitSonucu, kanit_kontrol
-from malzeme_kabul.pdf_okuyucu import pdf_oku
-from malzeme_kabul.sema import KabulDokumani
+# `python deney/<betik>.py` ile doğrudan çalışınca depo kökü yolda olsun (deney paketi için).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from deney.kanit_kontrolu import KanitSonucu, kanit_kontrol
+from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 SUTUNLAR = ["durum", "kayit", "alan", "deger", "madde", "sayfa", "madde_sayfada"]
 BOLUMLER = [

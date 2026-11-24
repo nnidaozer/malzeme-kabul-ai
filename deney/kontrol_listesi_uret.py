@@ -5,7 +5,7 @@ Her satır: boş kutu, ad, değer, birim, madde, PDF sayfası. Proje sahibi
 değerleri PDF'le karşılaştırıp kutuyu [x] yapar.
 
 Kullanım:
-  python scripts/kontrol_listesi_uret.py data/gold_taslak/MIL-PRF-23377K.json
+  python deney/kontrol_listesi_uret.py data/gold_taslak/MIL-PRF-23377K.json
   (çıktı: aynı klasörde <ad>_kontrol_listesi.md)
 """
 
@@ -15,8 +15,12 @@ import argparse
 import sys
 from pathlib import Path
 
-from malzeme_kabul.dokuman_uretici import _sayi
-from malzeme_kabul.sema import KabulDokumani, Kaynak, Sinir
+# `python deney/<betik>.py` ile doğrudan çalışınca depo kökü yolda olsun (deney paketi için).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from malzeme_kabul.arayuz.dokuman_uretici import _sayi
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Sinir
 
 SUTUNLAR = ["✓", "Ad", "Değer", "Birim", "Madde", "PDF sayfası"]
 TEST_SUTUNLARI = SUTUNLAR + ["Kriter türü", "Test türü"]

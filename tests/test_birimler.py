@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from malzeme_kabul.birimler import birim_gecerli_mi, birimi_coz, zaman_birimi_mi
+from malzeme_kabul.kural.birimler import birim_gecerli_mi, birimi_coz, zaman_birimi_mi
 
 
 @pytest.mark.parametrize("birim", ["°C", "degF", "°F", "g/L", "s", "mil", "hour", "%", "psi", "lb/gal", "µm"])
@@ -34,7 +34,7 @@ def test_zaman_birimi_mi(birim, beklenen):
 @pytest.mark.parametrize("birim", ["mil", "mils"])
 def test_mil_uzunluk_birimidir_thou(birim):
     # pint "mil" birimini açı sayar; kaplamada mil = inç/1000 = 25,4 µm
-    from malzeme_kabul.birimler import kayit
+    from malzeme_kabul.kural.birimler import kayit
 
     assert birimi_coz(birim).dimensionality == kayit().meter.dimensionality
     assert kayit().Quantity(1, birimi_coz(birim)).to("µm").magnitude == pytest.approx(25.4)
@@ -46,8 +46,8 @@ def test_milin_gectigi_bilesik_birimler_bozulmaz():
 
 
 def test_semada_mil_birimli_sinir_mikrometreye_cevrilir():
-    from malzeme_kabul.birimler import kayit
-    from malzeme_kabul.sema import Sinir
+    from malzeme_kabul.kural.birimler import kayit
+    from malzeme_kabul.sozlesme.sema import Sinir
 
     s = Sinir(kriter_turu="sayisal", alt=0.6, ust=0.9, birim="mil", orijinal_metin="0.6 to 0.9 mil")
     assert kayit().Quantity(s.ust, birimi_coz(s.birim)).to("µm").magnitude == pytest.approx(22.86)

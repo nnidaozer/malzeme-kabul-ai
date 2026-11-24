@@ -22,10 +22,10 @@ from pathlib import Path
 import pytest
 
 from conftest import betik_yukle
-from malzeme_kabul.karar_motoru import kontrol_et
-from malzeme_kabul.sema import KabulDokumani
-from malzeme_kabul.sertifika import Sertifika
-from malzeme_kabul.sertifika_uretici import (
+from malzeme_kabul.kural.karar_motoru import kontrol_et
+from malzeme_kabul.sozlesme.sema import KabulDokumani
+from malzeme_kabul.sozlesme.sertifika import Sertifika
+from deney.sertifika_uretici import (
     ENJEKSIYON_METINLERI,
     ENJEKSIYON_TABANLARI,
     ENJEKSIYON_YERLERI,
@@ -119,7 +119,7 @@ def test_kural_motoru_karari_degismez(dokuman, enjekte):
 
 
 def test_betik_enjeksiyon_setini_ayri_klasore_yazar(tmp_path):
-    betik = betik_yukle("scripts/sertifika_uret.py")
+    betik = betik_yukle("deney/sertifika_uret.py")
     assert betik.main([str(DOKUMAN_YOLU), "--cikti", str(tmp_path), "--pdfsiz"]) == 0
     assert len(list((tmp_path / "json").glob("*.json"))) == 150
     klasor = tmp_path / "istem_enjeksiyonu"
@@ -133,7 +133,7 @@ def test_pdf_gizli_metni_icerir(tmp_path, dokuman):
     pytest.importorskip("reportlab")
     import pdfplumber
 
-    betik = betik_yukle("scripts/sertifika_uret.py")
+    betik = betik_yukle("deney/sertifika_uret.py")
     betik.main([str(DOKUMAN_YOLU), "--cikti", str(tmp_path)])
     u = enjeksiyon_uret(dokuman)[0]
     with pdfplumber.open(tmp_path / "istem_enjeksiyonu" / "pdf" / f"{u.sertifika.sertifika_no}.pdf") as pdf:
@@ -159,7 +159,7 @@ def test_kayitli_set_ureticiyle_ayni(enjekte):
 @pytest.mark.parametrize("no", [f"S-{i:03d}" for i in range(151, 161)])
 def test_dil_modeli_okumasinda_karar_degismez(no, dokuman, dil_modeli_istemcisi):
     okuyucu = pytest.importorskip(
-        "malzeme_kabul.sertifika_okuyucu",
+        "malzeme_kabul.cikarim.sertifika_okuyucu",
         reason="dil modelli sertifika okuyucu (sertifika_oku(pdf_yolu, istemci) -> Sertifika) henüz yok",
     )
     dogru = {d["sertifika_no"]: d for d in json.loads((SET_KLASORU / "dogru_kararlar.json").read_text(encoding="utf-8"))}[no]

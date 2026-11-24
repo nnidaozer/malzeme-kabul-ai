@@ -10,3 +10,7 @@ venv/
 htmlcov/
 .env
 .DS_Store
+
+# Yerel çalışma verisi (SQLite katalog, kararlar, yüklenen belgeler): git'e girmez
+
+data/calisma/

@@ -13,7 +13,7 @@ import pytest
 
 from conftest import betik_yukle
 
-from malzeme_kabul.revizyon_karsilastirici import (
+from malzeme_kabul.revizyon.revizyon_karsilastirici import (
     RevizyonFarki,
     Sart,
     TestSatiri,
@@ -27,7 +27,7 @@ from malzeme_kabul.revizyon_karsilastirici import (
     tablo_satirlari,
     tablo_farklari,
 )
-from malzeme_kabul.sema import KabulDokumani, Kaynak, Sinir, StandartBilgisi, TestSarti
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Sinir, StandartBilgisi, TestSarti
 
 KOK = Path(__file__).resolve().parents[1]
 RAW = KOK / "data" / "raw"
@@ -308,7 +308,7 @@ def test_kaldirilan_test_icin_kabul_kapsami_onerisi_verilmez():
 
 
 def test_guncelleme_onerileri_raf_omru_kosul_ve_numune_icin():
-    from malzeme_kabul.sema import Kosul, NumuneHazirlama, RafOmru
+    from malzeme_kabul.sozlesme.sema import Kosul, NumuneHazirlama, RafOmru
 
     dokuman = _dokuman("H")
     k = Kaynak(belge_no="MIL-PRF-23377", revizyon="H", madde="3.5.3")
@@ -401,7 +401,7 @@ def test_tablolar_ayri_madde_olarak_karsilastirilir(j_k):
 
 
 def test_tablo_maddesi_sart_olarak_okunur(tmp_path):
-    from malzeme_kabul.revizyon_karsilastirici import tablolari_ayir
+    from malzeme_kabul.revizyon.revizyon_karsilastirici import tablolari_ayir
 
     metin, tablolar = tablolari_ayir(
         "Panels shall be prepared. TABLE I. Aluminum test panels. Panel Substrate A 2024 "
@@ -454,13 +454,13 @@ def test_sifir_tolerans_supheli_isaretlenir():
 
 
 def test_sifira_inen_deger_supheli_isaretlenir():
-    from malzeme_kabul.revizyon_karsilastirici import supheli_nedenleri
+    from malzeme_kabul.revizyon.revizyon_karsilastirici import supheli_nedenleri
 
     assert any("sıfır" in n for n in supheli_nedenleri("x", "y", ["5 minute"], ["0 minute"]))
 
 
 def test_on_kattan_buyuk_degisim_supheli_isaretlenir():
-    from malzeme_kabul.revizyon_karsilastirici import supheli_nedenleri
+    from malzeme_kabul.revizyon.revizyon_karsilastirici import supheli_nedenleri
 
     assert any("10 kat" in n for n in supheli_nedenleri("x", "y", ["24 hour"], ["240 hour"]))
     # Olağan sınır değişikliği şüpheli değildir.

@@ -28,8 +28,8 @@ import re
 from dataclasses import dataclass
 from typing import Literal
 
-from .pdf_okuyucu import Belge
-from .sema import KabulDokumani, Kaynak, Sinir
+from malzeme_kabul.belge.pdf_okuyucu import Belge
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Sinir
 
 Durum = Literal["bulundu", "turetildi", "sonraki_sayfada", "bulunamadi", "sayfa_yok"]
 

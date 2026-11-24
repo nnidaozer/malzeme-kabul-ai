@@ -46,7 +46,7 @@ adları değiştirirken iki tarafı birlikte düşün.
 
 ## İlk ölçüm (yalnız kural, bu taslağa göre)
 
-`python scripts/degerlendir.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json data/gold_taslak/MIL-PRF-23377K.json`
+`python deney/degerlendir.py data/cikti/MIL-PRF-23377K_kabul_dokumani.json data/gold_taslak/MIL-PRF-23377K.json`
 
 Genel (mikro): P = 0,959, R = 0,835, F1 = 0,892. Ayrıntı:
 `data/cikti/MIL-PRF-23377K_kural_degerlendirme.csv`. Kayıplar çoğunlukla

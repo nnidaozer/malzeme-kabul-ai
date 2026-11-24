@@ -12,7 +12,7 @@ import pytest
 
 from pdf_uretici import pdf_yaz
 
-from malzeme_kabul.kural_cikarici import (
+from malzeme_kabul.cikarim.kural_cikarici import (
     cikar,
     kabul_disi_testler,
     metni_normallestir,
@@ -21,7 +21,7 @@ from malzeme_kabul.kural_cikarici import (
     sure_cikar,
     uygulanabilirlik_cikar,
 )
-from malzeme_kabul.pdf_okuyucu import pdf_oku
+from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
 
 KOK = Path(__file__).resolve().parents[1]
 K_PDF = KOK / "data" / "raw" / "MIL-PRF-23377K.pdf"
@@ -196,7 +196,7 @@ def test_dosya_adindan_belge_no_ve_revizyon():
 def test_betik_json_markdown_ve_word_uretir(tmp_path):
     from conftest import betik_yukle
 
-    from malzeme_kabul.sema import KabulDokumani
+    from malzeme_kabul.sozlesme.sema import KabulDokumani
 
     betik = betik_yukle("scripts/kabul_dokumani_uret.py")
     assert betik.main([str(K_PDF), "--cikti", str(tmp_path)]) == 0

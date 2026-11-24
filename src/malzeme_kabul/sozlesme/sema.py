@@ -23,7 +23,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator, model_validator
 
-from .birimler import birimi_coz, zaman_birimi_mi
+from malzeme_kabul.kural.birimler import birimi_coz, zaman_birimi_mi
 
 # "3.5.1", "4.6.12.3", ek maddeleri "A.3.1" ya da "TABLE I", "TABLE IV".
 MADDE_KALIBI = re.compile(r"^(([A-Z]\.)?\d+(\.\d+)*|TABLE [IVXLC]+)$")

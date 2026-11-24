@@ -8,9 +8,9 @@ import pytest
 
 from conftest import betik_yukle
 
-from malzeme_kabul.degerlendirme import alanlari_duzlestir, degerlendir
-from malzeme_kabul.sema import KabulDokumani, Kaynak, Kosul, RafOmru, Sinir, StandartBilgisi
-from malzeme_kabul.sema import TestSarti as Sart
+from deney.degerlendirme import alanlari_duzlestir, degerlendir
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Kosul, RafOmru, Sinir, StandartBilgisi
+from malzeme_kabul.sozlesme.sema import TestSarti as Sart
 
 
 def kaynak(madde):
@@ -162,11 +162,11 @@ def test_tablo_satirlari_alan_adiyla_siralanir():
     assert adlar[:-1] == sorted(adlar[:-1])
 
 
-# --- scripts/degerlendir.py ------------------------------------------------------
+# --- deney/degerlendir.py ------------------------------------------------------
 
 
 def test_betik_json_dosyalarini_karsilastirir_ve_csv_yazar(tmp_path, capsys):
-    betik = betik_yukle("scripts/degerlendir.py")
+    betik = betik_yukle("deney/degerlendir.py")
     gold = dok([sart("viskozite"), sart("kap_omru")])
     tahmin = dok([sart("viskozite")])
     (tmp_path / "g.json").write_text(gold.model_dump_json(), encoding="utf-8")
@@ -182,7 +182,7 @@ def test_betik_json_dosyalarini_karsilastirir_ve_csv_yazar(tmp_path, capsys):
 
 
 def test_betik_gecersiz_json_icin_hata_kodu_doner(tmp_path, capsys):
-    betik = betik_yukle("scripts/degerlendir.py")
+    betik = betik_yukle("deney/degerlendir.py")
     (tmp_path / "g.json").write_text(json.dumps({"standart": {}}), encoding="utf-8")
     (tmp_path / "t.json").write_text("{}", encoding="utf-8")
     assert betik.main([str(tmp_path / "t.json"), str(tmp_path / "g.json")]) == 2
@@ -198,7 +198,7 @@ def test_dahil_bilgisi_sinir_yoksa_olculmez():
 
 
 def test_numune_baglantisi_olculur():
-    from malzeme_kabul.sema import NumuneHazirlama
+    from malzeme_kabul.sozlesme.sema import NumuneHazirlama
 
     s = sart("viskozite").model_copy(update={"numune_hazirlama_id": "panel_A"})
     d = KabulDokumani(

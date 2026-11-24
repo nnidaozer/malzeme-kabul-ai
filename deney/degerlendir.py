@@ -2,7 +2,7 @@
 """Çıkarıcı çıktısını gold ile karşılaştırıp alan bazında precision, recall ve F1 yazar.
 
 Kullanım:
-  python scripts/degerlendir.py TAHMIN.json GOLD.json [--csv sonuc.csv]
+  python deney/degerlendir.py TAHMIN.json GOLD.json [--csv sonuc.csv]
 
 İki dosya da KabulDokumani JSON'udur. Çıkış kodu: 0 başarılı, 2 geçersiz girdi.
 """
@@ -16,8 +16,12 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from malzeme_kabul.degerlendirme import degerlendir
-from malzeme_kabul.sema import KabulDokumani
+# `python deney/<betik>.py` ile doğrudan çalışınca depo kökü yolda olsun (deney paketi için).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from deney.degerlendirme import degerlendir
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 SUTUNLAR = ["alan", "dp", "yp", "yn", "precision", "recall", "f1"]
 

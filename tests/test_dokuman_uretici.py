@@ -5,8 +5,8 @@ from __future__ import annotations
 import pytest
 from docx import Document
 
-from malzeme_kabul.dokuman_uretici import markdown_uret, sinir_metni, word_uret
-from malzeme_kabul.sema import (
+from malzeme_kabul.arayuz.dokuman_uretici import markdown_uret, sinir_metni, word_uret
+from malzeme_kabul.sozlesme.sema import (
     KabulDokumani,
     Kaynak,
     Kosul,
@@ -15,7 +15,7 @@ from malzeme_kabul.sema import (
     Sinir,
     StandartBilgisi,
 )
-from malzeme_kabul.sema import TestSarti as Sart
+from malzeme_kabul.sozlesme.sema import TestSarti as Sart
 
 
 def kaynak(madde):

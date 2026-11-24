@@ -9,11 +9,11 @@ import pytest
 
 from conftest import betik_yukle
 
-from malzeme_kabul.sema import (
+from malzeme_kabul.sozlesme.sema import (
     KabulDokumani, Kaynak, Kosul, NumuneHazirlama, RafOmru, Sinir, StandartBilgisi,
 )
-from malzeme_kabul.sema import TestSarti as Sart
-from malzeme_kabul.taslak_karsilastirma import kaydi_eslestir, karsilastir
+from malzeme_kabul.sozlesme.sema import TestSarti as Sart
+from deney.taslak_karsilastirma import kaydi_eslestir, karsilastir
 
 
 def kaynak(madde):
@@ -208,7 +208,7 @@ def taslaklar(tmp_path):
 
 
 def test_betik_rapor_ve_csv_yazar(taslaklar, tmp_path, capsys):
-    betik = betik_yukle("scripts/taslak_karsilastir.py")
+    betik = betik_yukle("deney/taslak_karsilastir.py")
     md, cs = tmp_path / "out" / "rapor.md", tmp_path / "out" / "rapor.csv"
     assert betik.main([str(taslaklar[0]), str(taslaklar[1]), "--md", str(md), "--csv", str(cs), "--seed", "5"]) == 0
     assert "Uyuşma oranı" in capsys.readouterr().out
@@ -225,7 +225,7 @@ def test_betik_rapor_ve_csv_yazar(taslaklar, tmp_path, capsys):
 
 
 def test_betik_ayni_seed_ile_ayni_raporu_uretir(taslaklar, tmp_path):
-    betik = betik_yukle("scripts/taslak_karsilastir.py")
+    betik = betik_yukle("deney/taslak_karsilastir.py")
     r1, r2 = tmp_path / "r1.md", tmp_path / "r2.md"
     betik.main([str(taslaklar[0]), str(taslaklar[1]), "--md", str(r1)])
     betik.main([str(taslaklar[0]), str(taslaklar[1]), "--md", str(r2)])
@@ -233,14 +233,14 @@ def test_betik_ayni_seed_ile_ayni_raporu_uretir(taslaklar, tmp_path):
 
 
 def test_betik_gecersiz_girdide_2_doner(taslaklar, tmp_path):
-    betik = betik_yukle("scripts/taslak_karsilastir.py")
+    betik = betik_yukle("deney/taslak_karsilastir.py")
     bozuk = tmp_path / "bozuk.json"
     bozuk.write_text('{"standart": {}}', encoding="utf-8")
     assert betik.main([str(taslaklar[0]), str(bozuk)]) == 2
 
 
 def test_betik_data_gold_altina_yazmayi_reddeder(taslaklar, tmp_path):
-    betik = betik_yukle("scripts/taslak_karsilastir.py")
+    betik = betik_yukle("deney/taslak_karsilastir.py")
     hedef = tmp_path / "data" / "gold" / "rapor.md"
     assert betik.main([str(taslaklar[0]), str(taslaklar[1]), "--md", str(hedef)]) == 2
     assert not hedef.exists()

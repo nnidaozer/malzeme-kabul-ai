@@ -9,9 +9,9 @@ from pathlib import Path
 import pytest
 
 from conftest import betik_yukle
-from malzeme_kabul.sema import KabulDokumani
-from malzeme_kabul.sertifika import Sertifika
-from malzeme_kabul.sertifika_uretici import DAGILIM, uret, uygulanir
+from malzeme_kabul.sozlesme.sema import KabulDokumani
+from malzeme_kabul.sozlesme.sertifika import Sertifika
+from deney.sertifika_uretici import DAGILIM, uret, uygulanir
 
 KOK = Path(__file__).resolve().parents[1]
 DOKUMAN_YOLU = KOK / "data" / "cikti" / "MIL-PRF-23377K_kabul_dokumani.json"
@@ -122,7 +122,7 @@ def test_ad_farkinda_standart_ad_kullanilmaz(dokuman, uretilen):
 
 
 def test_betik_json_ve_dogru_kararlari_yazar(tmp_path):
-    betik = betik_yukle("scripts/sertifika_uret.py")
+    betik = betik_yukle("deney/sertifika_uret.py")
     assert betik.main([str(DOKUMAN_YOLU), "--cikti", str(tmp_path), "--pdfsiz"]) == 0
     jsonlar = sorted((tmp_path / "json").glob("*.json"))
     assert len(jsonlar) == 150
@@ -136,7 +136,7 @@ def test_betik_pdf_uretir(tmp_path):
     pytest.importorskip("reportlab")
     import pdfplumber
 
-    betik = betik_yukle("scripts/sertifika_uret.py")
+    betik = betik_yukle("deney/sertifika_uret.py")
     betik.main([str(DOKUMAN_YOLU), "--cikti", str(tmp_path)])
     with pdfplumber.open(tmp_path / "pdf" / "S-001.pdf") as pdf:
         metin = pdf.pages[0].extract_text()
@@ -144,6 +144,6 @@ def test_betik_pdf_uretir(tmp_path):
 
 
 def test_betik_gold_klasorune_yazmaz(tmp_path):
-    betik = betik_yukle("scripts/sertifika_uret.py")
+    betik = betik_yukle("deney/sertifika_uret.py")
     with pytest.raises(SystemExit):
         betik.main([str(DOKUMAN_YOLU), "--cikti", str(tmp_path / "data" / "gold" / "x"), "--pdfsiz"])

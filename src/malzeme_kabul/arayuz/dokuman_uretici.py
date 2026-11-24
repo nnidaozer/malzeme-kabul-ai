@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .sema import KabulDokumani, Kosul, Sinir, TestSarti
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kosul, Sinir, TestSarti
 
 TASLAK_NOTU = (
     "TASLAK: Bu doküman standarttan otomatik çıkarılmıştır. "

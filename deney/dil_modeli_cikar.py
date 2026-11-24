@@ -7,8 +7,8 @@ localhost'a bağlanır. Çıktılar (KLASOR altında):
   <BELGE>_dil_modeli_<model>_rapor.json  sayfa başına süre, hata, tekrar
 
 Kullanım:
-  python scripts/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b
-  python scripts/dil_modeli_cikar.py BELGE.pdf --model yerel --arka-uc llamacpp --sayfalar 5-14
+  python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b
+  python deney/dil_modeli_cikar.py BELGE.pdf --model yerel --arka-uc llamacpp --sayfalar 5-14
 """
 
 from __future__ import annotations
@@ -19,10 +19,16 @@ import re
 import sys
 from pathlib import Path
 
-from kabul_dokumani_uret import belge_no_ve_revizyon
+# `python deney/<betik>.py` ile doğrudan çalışınca depo kökü yolda olsun (deney paketi için).
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from malzeme_kabul.pdf_okuyucu import pdf_oku
-from malzeme_kabul.yerel_model import ARKA_UCLAR, YerelModelIstemcisi, belgeden_cikar
+from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
+
+from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
+from malzeme_kabul.cikarim.yerel_model import ARKA_UCLAR, YerelModelIstemcisi
+
+from deney.yalniz_dil_modeli import belgeden_cikar
 
 KOK = Path(__file__).resolve().parents[1]
 

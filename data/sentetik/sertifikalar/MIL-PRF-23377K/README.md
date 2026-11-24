@@ -1,6 +1,6 @@
 # MIL-PRF-23377K sentetik sertifikaları
 
-`scripts/sertifika_uret.py` ile `data/cikti/MIL-PRF-23377K_kabul_dokumani.json`
+`deney/sertifika_uret.py` ile `data/cikti/MIL-PRF-23377K_kabul_dokumani.json`
 içindeki kabul testlerinden üretildi (tohum 23377). Tedarikçiler kurgusaldır;
 belgeler gerçek değildir.
 

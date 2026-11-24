@@ -10,12 +10,12 @@ import pytest
 from conftest import betik_yukle
 from pdf_uretici import pdf_yaz
 
-from malzeme_kabul.kanit_kontrolu import kanit_kontrol, metindeki_sayilar
-from malzeme_kabul.pdf_okuyucu import pdf_oku
-from malzeme_kabul.sema import (
+from deney.kanit_kontrolu import kanit_kontrol, metindeki_sayilar
+from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
+from malzeme_kabul.sozlesme.sema import (
     KabulDokumani, Kaynak, Kosul, NumuneHazirlama, RafOmru, Sinir, StandartBilgisi,
 )
-from malzeme_kabul.sema import TestSarti as Sart
+from malzeme_kabul.sozlesme.sema import TestSarti as Sart
 
 
 def kaynak(madde, sayfa=None):
@@ -177,7 +177,7 @@ def gold(tmp_path):
 
 
 def test_betik_bulunamayanlari_listeler_ve_1_doner(gold, pdf, tmp_path, capsys):
-    betik = betik_yukle("scripts/kanit_kontrol.py")
+    betik = betik_yukle("deney/kanit_kontrol.py")
     md, cs = tmp_path / "out" / "kanit.md", tmp_path / "out" / "kanit.csv"
     assert betik.main([str(gold), str(pdf), "--md", str(md), "--csv", str(cs)]) == 1
     cikti = capsys.readouterr().out
@@ -191,19 +191,19 @@ def test_betik_bulunamayanlari_listeler_ve_1_doner(gold, pdf, tmp_path, capsys):
 
 
 def test_betik_hepsi_bulunursa_0_doner(tmp_path, pdf):
-    betik = betik_yukle("scripts/kanit_kontrol.py")
+    betik = betik_yukle("deney/kanit_kontrol.py")
     yol = tmp_path / "g.json"
     yol.write_text(dok([sart("viscosity", sayisal(20, 40, "second"))]).model_dump_json(), encoding="utf-8")
     assert betik.main([str(yol), str(pdf)]) == 0
 
 
 def test_betik_gecersiz_girdide_2_doner(gold, tmp_path):
-    betik = betik_yukle("scripts/kanit_kontrol.py")
+    betik = betik_yukle("deney/kanit_kontrol.py")
     assert betik.main([str(gold), str(tmp_path / "yok.pdf")]) == 2
 
 
 def test_betik_data_gold_altina_yazmaz(gold, pdf, tmp_path):
-    betik = betik_yukle("scripts/kanit_kontrol.py")
+    betik = betik_yukle("deney/kanit_kontrol.py")
     hedef = tmp_path / "data" / "gold" / "kanit.md"
     assert betik.main([str(gold), str(pdf), "--md", str(hedef)]) == 2
     assert not hedef.exists()

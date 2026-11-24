@@ -33,9 +33,9 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Literal
 
-from .kural_cikarici import kabul_disi_testler, metni_normallestir, paragraflara_bol
-from .pdf_okuyucu import Tablo, pdf_oku
-from .sema import KabulDokumani
+from malzeme_kabul.cikarim.kural_cikarici import kabul_disi_testler, metni_normallestir, paragraflara_bol
+from malzeme_kabul.belge.pdf_okuyucu import Tablo, pdf_oku
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 FarkTuru = Literal["eklendi", "kaldirildi", "degisti"]
 Onem = Literal["sayisal", "metin", "bicimsel"]

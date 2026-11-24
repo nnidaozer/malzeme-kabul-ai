@@ -26,8 +26,8 @@ from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from typing import Any, Literal
 
-from .degerlendirme import _normal_metin, alanlari_duzlestir, degerler_esit
-from .sema import KabulDokumani
+from deney.degerlendirme import _normal_metin, alanlari_duzlestir, degerler_esit
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 Durum = Literal["uyusan", "ayrisan", "yalniz_a", "yalniz_b"]
 Yontem = Literal["anahtar", "benzerlik"]

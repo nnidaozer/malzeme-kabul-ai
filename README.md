@@ -56,8 +56,8 @@ pip install -r requirements-dev.lock && pip install -e . --no-deps   # sabit sü
 pytest
 python scripts/pdf_tur_kontrol.py    # data/raw PDF'leri metin mi taranmış mı
 python scripts/kabul_dokumani_uret.py data/raw/MIL-PRF-23377K.pdf   # kural tabanlı kabul dokümanı taslağı
-python scripts/degerlendir.py TAHMIN.json GOLD.json                  # alan bazında P/R/F1
-python scripts/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-instruct-q4_K_M   # yerel dil modeliyle çıkarma
+python deney/degerlendir.py TAHMIN.json GOLD.json                  # alan bazında P/R/F1
+python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-instruct-q4_K_M   # yerel dil modeliyle çıkarma
 ```
 
 Üretilen taslaklar `data/cikti/` altına JSON, Markdown ve Word olarak yazılır.
