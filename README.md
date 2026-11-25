@@ -55,6 +55,8 @@ Kullanılan standartlar (kaynaklar: [data/raw/KAYNAKLAR.md](data/raw/KAYNAKLAR.m
 pip install -r requirements-dev.lock && pip install -e . --no-deps   # sabit sürümler (docs/bagimliliklar.md)
 pytest
 python scripts/pdf_tur_kontrol.py    # data/raw PDF'leri metin mi taranmış mı
+python deney/bolunme.py --turler     # kümeler: metin tabanlı / taranmış (OCR gerekli)
+python deney/coa_eslestirme.py       # gerçek CoA'ları şartnameyle eşleştir -> data/coa_eslesme/
 python scripts/kabul_dokumani_uret.py data/raw/MIL-PRF-23377K.pdf   # kural tabanlı kabul dokümanı taslağı
 python deney/degerlendir.py TAHMIN.json GOLD.json                  # alan bazında P/R/F1
 python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-instruct-q4_K_M   # yerel dil modeliyle çıkarma

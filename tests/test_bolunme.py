@@ -2,12 +2,26 @@
 
 from __future__ import annotations
 
+import csv
 import json
+from pathlib import Path
 
 import pytest
 
 from conftest import KOK, betik_yukle
-from deney.bolunme import Bolunme, TestKumesiKilitli, aile, bolunme_oku, bolunme_yaz, main, yariyi_sec
+from deney.bolunme import (
+    OCR_GEREKLI,
+    Bolunme,
+    OcrGerekli,
+    TestKumesiKilitli,
+    aile,
+    betik_korumasi,
+    bolunme_oku,
+    bolunme_yaz,
+    main,
+    turler_tablosu,
+    yariyi_sec,
+)
 
 GELISTIRME = """# yorum
 test_kumesi_acik: false
@@ -152,6 +166,9 @@ def test_elle_degistirilmis_secim_reddedilir(tmp_path):
         ("gelistirme:\n  - MIL-PRF-1A\nyeni_standartlar:\n  - MIL-PRF-1A\n", "geliştirme kümesinde olamaz"),
         ("test_kumesi_acik: true\n", "seçilmeden kilit açılamaz"),
         ("kilitli_klasorler:\n  - ../raw\n", "klasör adı"),
+        ("gelistirme:\n  - MIL-PRF-23377K\nocr_gerekli:\n  - MIL-A-46146B\n", "bir kümede olmalı"),
+        ("gelistirme:\n  - MIL-A-46146B\nocr_gerekli:\n  - MIL-A-46146B\n  - MIL-A-46146B\n", "tekrar"),
+        ("gelistirme:\n  - MIL-A-46146B\nocr_gerekli:\n  - 46146B\n", "biçiminde"),
         ("gelistirme:\n  - MIL-PRF-81733D\nyeni_standartlar:\n  - MIL-S-81733C\n", "aynı ailede"),
         ("test_durumu: secildi\ngelistirme:\n  - MIL-PRF-1B\nyeni_standartlar:\n  - MIL-PRF-1A\n"
          "test:\n  - MIL-PRF-1A\n", "aynı ailede"),
@@ -255,3 +272,69 @@ def test_taslak_ve_olcum_betikleri_reddeder(tmp_path, kilitli, capsys, betik_yol
     assert betik.main(argumanlar(_dokuman(tmp_path), tmp_path) + ["--bolunme", str(kilitli)]) == 2
     assert "bakılmaz" in capsys.readouterr().err
     assert not (tmp_path / "liste.md").exists()
+
+
+# --- Taranmış belgeler (OCR gerekli) ---------------------------------------------------
+
+
+TARANMISLI = GELISTIRME.replace("  - MIL-PRF-23377K", "  - MIL-PRF-23377K\n  - MIL-PRF-81733C") + (
+    "\nocr_gerekli:\n  - MIL-PRF-1A\n  - MIL-PRF-81733C\n"
+)
+
+
+def test_taranmis_belge_kumesinde_kalir_ve_ocr_gerekli_diye_reddedilir(tmp_path):
+    yol = yaz(tmp_path, TARANMISLI)
+    b = bolunme_oku(yol)
+    assert b.ocr_gerekli == ["MIL-PRF-1A", "MIL-PRF-81733C"]
+    assert b.kume("MIL-PRF-81733C") == "gelistirme"  # kümeden çıkarılmaz
+    with pytest.raises(OcrGerekli, match=OCR_GEREKLI):
+        b.kullanima_izin_ver("MIL-PRF-81733C")
+    assert b.kullanima_izin_ver("MIL-PRF-23377K") == "gelistirme"
+    assert betik_korumasi("MIL-PRF-81733C", yol, "deneme") == 2
+
+
+def test_taranmis_test_belgesi_secimden_sonra_test_kumesinde_kalir(tmp_path):
+    yol = yaz(tmp_path, TARANMISLI)
+    main(["--yol", str(yol), "--sec"])
+    b = bolunme_oku(yol)
+    assert b.ocr_gerekli == ["MIL-PRF-1A", "MIL-PRF-81733C"]  # yazılırken liste korunur
+    kume = "test" if "MIL-PRF-1A" in b.test else "gelistirme"
+    assert b.kume("MIL-PRF-1A") == kume
+    acik = Bolunme(**{**b.__dict__, "test_kumesi_acik": True})
+    with pytest.raises(OcrGerekli):  # kilit açılsa bile OCR eklenene kadar çıkarıcı çalışmaz
+        acik.kullanima_izin_ver("MIL-PRF-1A")
+
+
+def test_raporlama_taranmis_ve_metin_belgeleri_ayirir(tmp_path):
+    b = bolunme_oku(yaz(tmp_path, TARANMISLI))
+    assert b.belge_turu("MIL-PRF-81733C") == "taranmış" and b.belge_turu("MIL-PRF-23377K") == "metin"
+    assert b.turlere_ayir(["MIL-PRF-81733C", "MIL-PRF-23377K", "MIL-PRF-2B"]) == {
+        "metin": ["MIL-PRF-23377K", "MIL-PRF-2B"], "taranmış": ["MIL-PRF-81733C"],
+    }
+    tablo = turler_tablosu(b)
+    assert "| geliştirme | taranmış (OCR gerekli) | 1 | MIL-PRF-81733C |" in tablo
+    assert "| geliştirme | metin tabanlı | 1 | MIL-PRF-23377K |" in tablo
+
+
+def test_turler_secenegi_tabloyu_yazar(tmp_path, capsys):
+    assert main(["--yol", str(yaz(tmp_path, TARANMISLI)), "--turler"]) == 0
+    cikti = capsys.readouterr().out
+    assert "OCR gerekli (taranmış): MIL-PRF-1A, MIL-PRF-81733C" in cikti and "| Küme | Tür |" in cikti
+
+
+def _pdf_turleri_taranmis() -> set[str]:
+    with (KOK / "data" / "raw" / "pdf_turleri.csv").open(encoding="utf-8") as f:
+        return {Path(s["dosya"]).stem.split("_")[0] for s in csv.DictReader(f)
+                if "/" not in s["dosya"] and s["tur"] == "taranmış"}
+
+
+def test_depoda_mil_a_46146b_test_kumesinde_ve_ocr_gerekli():
+    b = bolunme_oku()
+    assert "MIL-A-46146B" in b.test and "MIL-A-46146B" in b.ocr_gerekli
+    assert b.belge_turu("MIL-A-46146B") == "taranmış"
+    with pytest.raises(TestKumesiKilitli):  # önce test kilidi
+        b.kullanima_izin_ver("MIL-A-46146B")
+
+
+def test_depodaki_ocr_listesi_pdf_turleriyle_ayni():
+    assert set(bolunme_oku().ocr_gerekli) == _pdf_turleri_taranmis()

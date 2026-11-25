@@ -123,6 +123,11 @@ Bugün: sözleşme hazır, onu dolduran ürün içi dil modeli çıkarıcısı y
   ve sertifikadan ayrı bir şartnamesi var. Eksik olanlar nedeniyle birlikte
   `data/coa_kumesi.csv`'de ayrı listelenir (`deney/coa_kumesi.py`,
   `olcum_sertifikalari`).
+- Gerçek CoA'ların her test satırı ürün şartnamesindeki karşılığıyla
+  `deney/coa_eslestirme.py` ile eşleştirilir (Thermo Fisher, Alfa Aesar,
+  Spectrum Chemical; beş CoA düzeni). Sonuç `data/coa_eslesme/` altındadır;
+  test, dosyanın betik çıktısıyla güncel olduğunu denetler. Sınırlar yalnız
+  %, ppm, ppb arasında kesin oranla çevrilerek karşılaştırılır; karar yoktur.
 - Standartlar `data/bolunme.yaml` ile **geliştirme** ve **test** kümesine
   ayrılır (`deney/bolunme.py`):
   - **Geliştirme:** MIL-PRF-23377 (G, H, J, K), MIL-PRF-81733 (C, D) ve
@@ -139,6 +144,12 @@ Bugün: sözleşme hazır, onu dolduran ürün içi dil modeli çıkarıcısı y
     raporu) doğrudan test kümesindedir ve aynı kilitle açılmaz;
     `scripts/pdf_tur_kontrol.py` bunları açmadan "kilitli" diye listeler. Seçim `python deney/bolunme.py --sec` ile yapılır ve dosyaya
     yazılır; dosya okunurken seçimin tohumla uyuştuğu denetlenir.
+  - **Taranmış belgeler:** bütün sayfaları taranmış standartlar (`ocr_gerekli`:
+    MIL-A-46146B, MIL-S-81733C) kümelerinden çıkarılmaz; OCR eklenene kadar
+    çıkarıcı ve ölçüm betikleri bunları "OCR gerekli" diye reddeder
+    (`OcrGerekli`). Sonuçlar raporlanırken taranmış ve metin tabanlı belgeler
+    ayrı gösterilir (`Bolunme.turlere_ayir`, `python deney/bolunme.py --turler`).
+    Liste `data/raw/pdf_turleri.csv`'deki "taranmış" belgelerle aynı tutulur.
   - Yeni standartlar gelene ve seçim yapılana kadar test kümesi **bekliyor**
     (`test_durumu: bekliyor`); bu sürede yeni standartların hiçbirine bakılmaz.
   - Test kümesindeki standartlara kimse bakmaz: dil modeli çıkarıcısı
@@ -181,6 +192,7 @@ data/
   sentetik/   sentetik sertifikalar ve doğru kararları
   bolunme.yaml  geliştirme / test bölünmesi
   coa_kumesi.csv  gerçek CoA'ların tam / eksik listesi (deney/coa_kumesi.py)
+  coa_eslesme/    CoA test satırlarının şartname karşılıkları (deney/coa_eslestirme.py)
   calisma/    yerel çalışma verisi (SQLite, kararlar, yüklenen belgeler); git'e girmez
   gold/       doğru cevaplar (yalnız proje sahibi yazar)
 ```
