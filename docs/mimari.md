@@ -128,6 +128,12 @@ karar alanı yoktur; şema bunu zorlar (`tests/test_okuma_sozlesmesi.py`).
 (`deney/yalniz_dil_modeli.py`, `deney/dil_modeli_cikar.py`).
 `tests/test_katmanlar.py` ürünün `deney/` paketini içe aktarmadığını denetler.
 
+**Kör nokta 6, sınır yönü hatası:** model sayıyı doğru okuyup yönü çevirebilir
+("≤ 1 ppm" → alt sınır). Bu yüzden modelin yönü, özgün metinden kuralla
+çıkarılan yönle ayrıca karşılaştırılır (`kural/yon_dogrulama.py`); çelişen
+yön "belirsiz" yapılır ve şart insan incelemesine gider. Örnekler ve kural:
+docs/sinir_yonu_hatasi.md.
+
 Bugün: sözleşme hazır, onu dolduran ürün içi dil modeli çıkarıcısı yok
 (sıradaki ikinci iş). Yalnız dil modeli deneyi çalışıyor.
 
