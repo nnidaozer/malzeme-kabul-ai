@@ -10,7 +10,8 @@ Durumlar:
 - `bulundu`: değer o sayfada rakamla, kesirle (ör. "1/8") ya da sözle (ör.
   "one") geçiyor.
 - `turetildi`: değer sayfada geçmiyor ama bir `X ± Y` toleransından
-  hesaplanıyor (X − Y ya da X + Y). Hesap doğru mu, elle bakılmalı.
+  hesaplanıyor (X − Y ya da X + Y). X ve Y kesir ya da karışık sayı olabilir
+  ("3-1/2 fluid ounces ± 1/8"); X ile ± arasında birim yazabilir. Hesap doğru mu, elle bakılmalı.
 - `sonraki_sayfada`: değer yalnızca bir sonraki sayfada geçiyor (madde sayfa
   sonunda devam ediyor olabilir ya da sayfa numarası yanlış).
 - `bulunamadi`: değer ne o sayfada ne sonrakinde geçiyor.
@@ -35,7 +36,13 @@ Durum = Literal["bulundu", "turetildi", "sonraki_sayfada", "bulunamadi", "sayfa_
 
 _SAYI = re.compile(r"(?<![\w.,])(\d{1,3}(?:,\d{3})+(?!\d)|\d+(?:\.\d+)?|\.\d+)")
 _EKSI = "-−–"
-_TOLERANS = re.compile(r"(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)\s*(?:±|\+/-|\+/−)\s*(\d+(?:\.\d+)?)")
+# Sayı: karışık sayı ("3-1/2"), kesir ("1/8"), binlik ya da ondalık.
+_SAYI_KALIBI = r"\d+-\d+/\d+|\d+/\d+|\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?"
+# X ± Y; X ile ± arasında derece işareti ve rakamsız birim sözcükleri olabilir
+# ("6 fluid ounces ± 1/8", "77° ± 6° F").
+_TOLERANS = re.compile(
+    rf"(?<![\w./])({_SAYI_KALIBI})\s*°?(?:\s*[A-Za-z%][A-Za-z%.]*){{0,3}}\s*(?:±|\+/-|\+/−)\s*({_SAYI_KALIBI})"
+)
 _SOZCUKLER = {
     "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
     "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
@@ -44,10 +51,16 @@ _SOZCUKLER = {
     "seventy": 70, "eighty": 80, "ninety": 90, "hundred": 100, "thousand": 1000,
 }
 _KESIR = re.compile(r"(?<![\w./])(\d+)/(\d+)(?![\w/])")
+_KARISIK = re.compile(r"(?<![\w./])(\d+)-(\d+)/(\d+)(?![\w/])")
 _SOZCUK = re.compile(r"\b(" + "|".join(_SOZCUKLER) + r")\b", re.IGNORECASE)
 
 
 def _sayi(metin: str) -> float:
+    """Rakamla yazılmış sayı; "3-1/2" ve "1/8" gibi kesirleri de çevirir."""
+    if "/" in metin:
+        tam, _, kesir = metin.rpartition("-")
+        pay, payda = kesir.split("/")
+        return (float(tam) if tam else 0.0) + int(pay) / int(payda)
     return float(metin.replace(",", ""))
 
 
@@ -62,9 +75,15 @@ def metindeki_sayilar(metin: str, turetilmis: bool = False) -> set[float]:
             sayilar.add(-deger)
     sayilar |= {float(_SOZCUKLER[m.group(1).casefold()]) for m in _SOZCUK.finditer(metin)}
     sayilar |= {int(m.group(1)) / int(m.group(2)) for m in _KESIR.finditer(metin) if int(m.group(2))}
+    sayilar |= {
+        int(m.group(1)) + int(m.group(2)) / int(m.group(3)) for m in _KARISIK.finditer(metin) if int(m.group(3))
+    }
     if turetilmis:
         for m in _TOLERANS.finditer(metin):
-            x, y = _sayi(m.group(1)), _sayi(m.group(2))
+            try:
+                x, y = _sayi(m.group(1)), _sayi(m.group(2))
+            except ZeroDivisionError:
+                continue
             sayilar |= {round(x - y, 9), round(x + y, 9)}
     return sayilar
 
