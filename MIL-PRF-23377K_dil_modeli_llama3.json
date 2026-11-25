@@ -1,0 +1,1965 @@
+{
+  "standart": {
+    "belge_no": "MIL-PRF-23377",
+    "revizyon": "K",
+    "baslik": null,
+    "tarih": null
+  },
+  "durum": "taslak",
+  "urun_tanimi": null,
+  "testler": [
+    {
+      "id": "primer-coatings",
+      "test_adi": "Primer Coatings",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 340.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "g/L",
+        "yon": "en_az",
+        "orijinal_metin": "have a maximum volatile organic compound (VOC) content of 340 grams per liter (g/L)(2.8 pounds per gallon [lb/gal]) as supplied by the manufacturer."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "1.1",
+        "sayfa": 1,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "toxicity",
+      "test_adi": "Toxicity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall have no adverse effect on the health of personnel when used for its intended purpose and with the precautions listed in 3.11, when evaluated in accordance with 4.5.12 (see 6.8)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.3",
+        "sayfa": 5,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "incidental_cadmium",
+      "test_adi": "Incidental Cadmium",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 1.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "ppm",
+        "yon": "en_az",
+        "orijinal_metin": "Incidental cadmium and cadmium compounds shall be not greater than one part per million (ppm)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4",
+        "sayfa": 5,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "lead",
+      "test_adi": "Lead",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 0.05,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "The non-volatile portion shall contain not more than 0.05 percent by weight of lead metal or lead compounds."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4",
+        "sayfa": 5,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "color",
+      "test_adi": "Color",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The color of the admixed type I primer coatings shall be the natural color of the corrosion inhibiting pigments used. Tinting to a different shade is permitted."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "odor",
+      "test_adi": "Odor",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The odor of the admixed coatings, wet or dry, shall be characteristic of the solvents used (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "viscosity",
+      "test_adi": "Viscosity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 40.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "second",
+        "yon": "en_az",
+        "orijinal_metin": "Immediately after mixing components A and B, the maximum viscosity of the unthinned, admixed primer coatings shall be 40 seconds through a #4 Ford cup (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "pot_life",
+      "test_adi": "Pot life",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 70.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "second",
+        "yon": "en_az",
+        "orijinal_metin": "After mixing and storage at room temperature in a closed container (see 4.5) for 4 hours, the maximum viscosity of the unthinned primer coatings (see 3.6.3) shall be 70 seconds through a #4 Ford cup (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.4",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "surface_appearance",
+      "test_adi": "Surface appearance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The admixed primer coatings, applied to a vertical surface, shall not sag, run, or streak. The dried film shall have a smooth, uniform surface free of grit, seeds, craters, blisters, and other irregularities (see 4.4.1). No orange peel (wavy appearance) shall be evident when viewed from six feet away."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "drying_time",
+      "test_adi": "Drying time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 5.0,
+        "ust": 8.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "yon": "aralik",
+        "orijinal_metin": "The admixed primer coatings shall be tack free within 5 hours and shall dry hard within 8 hours (see table II)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "lifting",
+      "test_adi": "Lifting",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "There shall be no evidence of lifting or any other film irregularity after topcoating the admixed primer coatings that have air dried for 5 hours (see 4.5.3)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "adhesion",
+      "test_adi": "Adhesion",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "There shall be no peeling or delamination between the primer and topcoat or at the primer and substrate interface. The coatings shall have a rating of no less than a 4A when examined in accordance with ASTM D3359 (see 4.5.4)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.4",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "flexibility",
+      "test_adi": "Flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 10.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "The primer coatings shall exhibit an elongation of not less than 10 percent when tested in accordance with 4.5.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.5",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "infrared_reflectance",
+      "test_adi": "Infrared reflectance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 10.0,
+        "alt_dahil": false,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_cok",
+        "orijinal_metin": "The total reflectance (specular and diffuse) of the type II primer coatings, relative to barium sulfate, shall be not greater than ten percent throughout the range of 700 to 2,600 nanometers (nm) (see 4.5.6)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.6",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "water_resistance",
+      "test_adi": "Water Resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The topcoated primer coatings shall withstand immersion in distilled water maintained at 49 ±3° C (120 ±5° F) for 4 days without exhibiting any evidence of wrinkling, blistering, or any other coating deficiency (see 4.5.7)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "corrosion_resistance_salt_spray",
+      "test_adi": "Corrosion Resistance (Salt Spray)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings, with and without a topcoat, shall not exhibit blistering, lifting of either coating, nor substrate pitting after exposure to a 5 percent salt spray for 2,000 hours. There shall be no white corrosion or pitting in the scribe (see 4.5.8.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "corrosion_resistance_filiform",
+      "test_adi": "Corrosion Resistance (Filiform)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The topcoated primer coatings shall not exhibit filiform corrosion extending beyond 6.35 millimeters (mm) (0.25 inch) from the scribe, and the majority of the filaments shall be less than 3.175 mm (0.125 inch) in length (see 4.5.8.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "solvent_resistance",
+      "test_adi": "Solvent Resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall withstand 50 passes (25 back and forth rubs) by a cloth rag soaked in methyl ethyl ketone (MEK). Rubbing through to bare substrate constitutes failure of the primer coatings to properly cure (see 4.5.9)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "fluid_resistance",
+      "test_adi": "Fluid Resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall withstand immersion for 24 hours in synthetic lubricating oil conforming to MIL-PRF-23699, and synthetic hydraulic fluid conforming to MIL-PRF-83282. Four hours after removal from the respective fluid, the coatings shall not exhibit any softening, blistering, loss of adhesion, nor any other coating deficiency. Discoloration of the coatings is acceptable and shall not be cause for rejection (see 4.5.10)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.4",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "working_properties_mixing_and_dilution",
+      "test_adi": "Working Properties (Mixing and Dilution)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The components of the primer coatings, including thinner if required (see 6.11), shall homogeneously blend when mixed by a paint shaker in the volume mixing ratio specified by the manufacturer. Within one hour of mixing, the admixed coatings shall not separate into visually distinct layers (see 4.5.11.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "working_properties_application",
+      "test_adi": "Working Properties (Application)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The admixed primer coatings shall be capable of being applied by conventional, airless, high volume/low pressure (HVLP) or electrostatic spray equipment. Application shall yield a uniform film with no runs or sags at a dry-film thickness of 15 to 23 microns (µm) (0.6 to 0.9 mil) (see 4.5.11.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "identification_of_material",
+      "test_adi": "Identification of Material",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Individual containers greater than one pint and cases of containers less than one pint shall be identified with the following information: MIL-PRF-23377K, “Primer Coatings: Epoxy, High-Solids” type I or II, class C1, C2, or N"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.10",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "date_of_manufacture",
+      "test_adi": "Date of manufacture (month/year)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Date of manufacture (month/year)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.10.1",
+        "sayfa": 9,
+        "alinti": "Component containers. Component A, component B, and component C (if applicable) containers shall have the following warning: “WARNING! FLAMMABLE.”"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "batch_number_net_contents",
+      "test_adi": "Batch number/net contents",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Batch number/net contents"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.10.1",
+        "sayfa": 9,
+        "alinti": "Component containers. Component A, component B, and component C (if applicable) containers shall have the following warning: “WARNING! FLAMMABLE.”"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "mixing_and_thinning_instructions",
+      "test_adi": "Mixing and thinning instructions",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Mixing and thinning instructions"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.11",
+        "sayfa": 9,
+        "alinti": "A printed precaution sheet with the following information shall be included with each kit: PRECAUTIONS a. The surface to be coated must be clean (free of oil, dust, etc.). b. Spray equipment must be adequately grounded. Clean equipment immediately after use with thinner conforming to MIL-T-81772, type II. c. Mix only the amount of primer coating to be used within 4 hours. d. Always add component B to component A – NEVER THE REVERSE. e. Never mix coating or individual component from one vendor with that of another vendor. f. Apply over pretreated metal. On fiberglass-reinforced plastic, a prior coating of wash primer in accordance with MIL-C-8514 will facilitate stripping without damage to the fiberglass. g. Allow admixed coating to stand undisturbed for 30 minutes prior to use."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "strippability",
+      "test_adi": "Strippability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 90.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "Strippability"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.12",
+        "sayfa": 9,
+        "alinti": "The primer shall be tested in accordance with Methods A and B of 4.5.13, and a minimum of 90 percent of the coating shall be stripped by one of the methods."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "classification_of_inspections",
+      "test_adi": "Classification of inspections",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Classification of inspections"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.1",
+        "sayfa": 9,
+        "alinti": "The inspection requirements specified herein are classified as follows: a. Qualification inspection (see 4.2). b. Conformance inspection (see 4.3)."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "qualification_inspection",
+      "test_adi": "Qualification inspection",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Qualification inspection"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.2",
+        "sayfa": 9,
+        "alinti": "Qualification inspection shall consist of all the inspections listed in this specification. The samples shall be legibly identified (see 6.3.1.1)."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "conformance_inspection",
+      "test_adi": "Conformance inspection",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Conformance inspection"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.3",
+        "sayfa": 9,
+        "alinti": "The conformance inspection shall be performed on each production batch and provided when requested by the contracting officer or the qualifying activity (see 6.2). Conformance inspection consists of all the tests specified in 4.5, with the exception of storage stability (see table II), accelerated storage stability (see 4.5.2), corrosion resistance (see 4.5.8), toxicity (see 4.5.12), and strippability (see 4.5.13). There shall be no failures (see 6.5)."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "visual_inspection",
+      "test_adi": "Visual Inspection",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "There shall be no defects (see 6.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.3.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "test_panels",
+      "test_adi": "Test Panels",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Test panels shall be constructed of aluminum alloy. Alloy composition and pretreatments of test panels shall be in accordance with table I."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.4",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "aluminum_test_panels",
+      "test_adi": "Aluminum Test Panels",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Panel Substrate Pretreatment"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "TABLE I",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application_of_primer_coatings",
+      "test_adi": "Application of Primer Coatings",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "When required by the test method, the primer coatings shall be prepared and applied as follows:"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.4.1",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "primer_air_drying",
+      "test_adi": "Primer Air Drying",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "If a topcoat is not used, the primer coatings shall be allowed to air dry for not less than 14 days, prior to testing."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.4.1",
+        "sayfa": 11,
+        "alinti": "If a topcoat is not used, the primer coatings shall be allowed to air dry for not less than 14 days, prior to testing."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "primer_topcoat",
+      "test_adi": "Primer Topcoat",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "If a topcoat is required, the primer coatings shall be air-dried for 5 hours and then coated with a polyurethane coating conforming to MIL-PRF-85285 in accordance with 4.4.2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.4.1",
+        "sayfa": 11,
+        "alinti": "If a topcoat is required, the primer coatings shall be air-dried for 5 hours and then coated with a polyurethane coating conforming to MIL-PRF-85285 in accordance with 4.4.2."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "polyurethane_coating_2",
+      "test_adi": "Polyurethane Coating 2",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "If the topcoat is applied in two coats, allow the first coat to air dry for 60 minutes prior to application of the second coat."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.4.2",
+        "sayfa": 11,
+        "alinti": "If the topcoat is applied in two coats, allow the first coat to air dry for 60 minutes prior to application of the second coat."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "polyurethane_coating_3",
+      "test_adi": "Polyurethane Coating 3",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "After application of the topcoat to the required thickness and prior to testing, allow the coating to air dry for not less than 14 days."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.4.2",
+        "sayfa": 11,
+        "alinti": "After application of the topcoat to the required thickness and prior to testing, allow the coating to air dry for not less than 14 days."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "condition_in_container",
+      "test_adi": "Condition in Container",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Condition in container"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.1",
+        "sayfa": 11,
+        "alinti": "Condition in container"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "storage_stability",
+      "test_adi": "Storage Stability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Storage stability"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.3",
+        "sayfa": 11,
+        "alinti": "Storage stability"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "accelerated_storage_stability",
+      "test_adi": "Accelerated Storage Stability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Accelerated storage stability"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.4",
+        "sayfa": 11,
+        "alinti": "Accelerated storage stability"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "color_type_i",
+      "test_adi": "Color Type I",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Color – Type I"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.1.1",
+        "sayfa": 11,
+        "alinti": "Color – Type I"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "color_type_ii",
+      "test_adi": "Color Type II",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Color – Type II"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.1.2",
+        "sayfa": 11,
+        "alinti": "Color – Type II"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "salt_spray_corrosion_resistance",
+      "test_adi": "Salt-spray corrosion resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "4.5.8.1"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "filiform_corrosion_resistance",
+      "test_adi": "Filiform corrosion resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "4.5.8.2"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.2",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "mixing_and_dilution",
+      "test_adi": "Mixing and dilution",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "4.5.11.1"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application",
+      "test_adi": "Application",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "4.5.11.2"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.2",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "corrosion_resistance",
+      "test_adi": "Corrosion resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The test panels shall then be examined for conformance to 3.8.2.1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.8",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "filiform",
+      "test_adi": "Filiform",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Filiform corrosion appears as threadlike filaments initiating from the exposed substrate and spreading underneath the coating film. (A description of filiform growth can be found in ASTM D2803.)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.8.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "working_properties",
+      "test_adi": "Working properties",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Thoroughly mix each component separately. Slowly pour component B into component A then add component C (if applicable), while constantly stirring, until the manufacturer's specified volume mixing ratio is achieved. If necessary, dilute the"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.11",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "packaging",
+      "test_adi": "Packaging",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "For acquisition purposes, the packaging requirements shall be as specified in the contract or order (see 6.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "5.1",
+        "sayfa": 16,
+        "alinti": "Packaging. For acquisition purposes, the packaging requirements shall be as specified in the contract or order (see 6.2)."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "intended_use",
+      "test_adi": "Intended use",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The materials covered by this specification are low VOC, corrosion-inhibitive, chemical resistant, and strippable primer coatings."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.1",
+        "sayfa": 16,
+        "alinti": "The materials covered by this specification are low VOC, corrosion-inhibitive, chemical resistant, and strippable primer coatings."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "compatibility",
+      "test_adi": "Compatibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "For some applications, and only when authorization for their use is given by the engineering authority for the system or item to which the primer coatings are to be applied, MIL-PRF-85582, Primer Coatings: Epoxy, Waterborne, may be substituted for MIL-PRF-23377."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.1.1",
+        "sayfa": 16,
+        "alinti": "For some applications, and only when authorization for their use is given by the engineering authority for the system or item to which the primer coatings are to be applied, MIL-PRF-85582, Primer Coatings: Epoxy, Waterborne, may be substituted for MIL-PRF-23377."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "acquisition_requirements",
+      "test_adi": "Acquisition requirements",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Acquisition documents should specify the following:"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.2",
+        "sayfa": 16,
+        "alinti": "Acquisition documents should specify the following:"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "qualification",
+      "test_adi": "Qualification",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "With respect to products requiring qualification, awards will be made only for products which are, at the time of award of contract, qualified for inclusion on the Qualified Products List QPL-23377 in the Qualified Products Database."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.3",
+        "sayfa": 17,
+        "alinti": "With respect to products requiring qualification, awards will be made only for products which are, at the time of award of contract, qualified for inclusion on the Qualified Products List QPL-23377 in the Qualified Products Database."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "qualification_inspection_sample_identification",
+      "test_adi": "Qualification inspection sample identification",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Qualification test samples."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.3.1.1",
+        "sayfa": 17,
+        "alinti": "Qualification test samples."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "retention_of_qualification",
+      "test_adi": "Retention of qualification",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "To retain qualification approval of products listed on the Qualified Products List (QPL) in the Qualified Products Database (QPD), the manufacturer will be required to verify by certification to the qualifying activity that its product(s) comply with the requirements of this specification."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.4",
+        "sayfa": 17,
+        "alinti": "To retain qualification approval of products listed on the Qualified Products List (QPL) in the Qualified Products Database (QPD), the manufacturer will be required to verify by certification to the qualifying activity that its product(s) comply with the requirements of this specification."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "retention_of_qualification_for_formulation_modifications",
+      "test_adi": "Retention of qualification for formulation modifications",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Manufacturers must request formulation modifications in writing."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.4.1",
+        "sayfa": 17,
+        "alinti": "Manufacturers must request formulation modifications in writing."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "conformance_rejection",
+      "test_adi": "Conformance Rejection and Retest",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Failure in any conformance inspection will result in the rejection of the batch from which it was obtained and constitutes justification for removal from the qualified products list."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.5",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "lot_batch_formation",
+      "test_adi": "Lot and Batch Formation",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "A lot consists of all of the primer coatings manufactured at one time from one batch, forming part of one contract or order and submitted for acceptance."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.6",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "impact_tester_source",
+      "test_adi": "Impact Tester Source",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "An instrument for conducting the flexibility (see 4.5.5) is the Gardco GE Universal Impact Tester, Model #172, available from the Paul N. Gardner Company, 316 NE First Street, PO Box 10688, Pompano Beach, FL 33061-6688. There may be other instruments equivalent to this unit."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.7",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "toxicity_evaluation",
+      "test_adi": "Toxicity Evaluation",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "A flowchart for the HHA process can be found as enclosure (1) of BUMEDINST 6270.8. The HHA is a review of the product based on information submitted by the manufacturer, to assess health hazards associated with the handling, application, use and removal of the product. Sufficient data to permit a HHA of the product should be provided by the manufacturer/distributor to the NAVENVIRHLTHCEN. To obtain current technical information requirements specified by the NAVENVIRHLTHCEN or any questions concerning toxicity, information required to conduct a HHA, and requests for a HHA should be addressed to the Commanding Officer, Navy and Marine Corps Public Health Center, ATTN: Hazardous Materials Department, Industrial Hygiene Directorate, 620 John Paul Jones Circle, Suite 1100, Portsmouth, VA 20378-2103. Upon receipt of the HHA, a copy should be provided to Commander, Naval Sea Systems Command, ATTN: SEA 05M1, 1333 Isaac Hull Ave., SE, Stop 5133 Washington Navy Yard, DC 20376-5133."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.8",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "material_safety_data_sheet",
+      "test_adi": "Material Safety Data Sheet (MSDS)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "An MSDS must be prepared and submitted in accordance with FED-STD-313. The MSDS must also meet the requirements of 29 CFR 1910.1200. The 29 CFR 1910.1200 requires that the MSDS for each hazardous chemical used in an operation must be readily available to personnel using the material. Questions pertinent to the effect(s) of these coatings on the health of personnel using them should be referred by the procuring activity to the appropriate medical service, who will act as its adviser. Contracting officers will identify the activities requiring copies of the MSDS."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.9",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "safely_handling_mek_solvent",
+      "test_adi": "Safely Handling MEK Solvent",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "To minimize exposure to MEK solvent, it is recommended that personnel conducting the solvent resistance (cure) test (see 4.5.9) wear, as a minimum, either butyl rubber or Teflon gloves and a National Institute of Occupational Safety and Health (NIOSH) approved half-face respirator equipped with organic vapor cartridges and goggles or a full-face respirator equipped with organic vapor cartridges."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.10",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "subject_term_listing",
+      "test_adi": "Subject term listing",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Barium chromate Hydrochloric acid (HCl) Chemical resistance Low infrared reflectance Corrosion inhibitive Methyl ethyl ketone (MEK) Flammable Strontium chromate"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.13",
+        "sayfa": 19,
+        "alinti": "Barium chromate Hydrochloric acid (HCl) Chemical resistance Low infrared reflectance Corrosion inhibitive Methyl ethyl ketone (MEK) Flammable Strontium chromate"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "changes_from_previous_issue",
+      "test_adi": "Changes from previous issue",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Marginal notations are not used in this revision to identify changes with respect to the previous issue due to the extent of the changes."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.14",
+        "sayfa": 19,
+        "alinti": "Marginal notations are not used in this revision to identify changes with respect to the previous issue due to the extent of the changes."
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    }
+  ],
+  "raf_omurleri": [],
+  "kosullar": [],
+  "numune_hazirlama": []
+}

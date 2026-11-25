@@ -1,0 +1,497 @@
+{
+  "standart": {
+    "belge_no": "MIL-PRF-23377",
+    "revizyon": "K",
+    "baslik": null,
+    "tarih": null
+  },
+  "durum": "taslak",
+  "urun_tanimi": null,
+  "testler": [
+    {
+      "id": "condition_in_container",
+      "test_adi": "Condition in container",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": false,
+        "ust_dahil": false,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Components A, B, and C (if applicable) shall be free of grit, seeds, lumps, abnormal thickening or livering, and shall not show pigment flotation nor excessive settling. They shall mix to a smooth, homogeneous, and pourable condition. In addition, the containers shall exhibit no deformation"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.2",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "water_resistance",
+      "test_adi": "Water resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The topcoated primer coatings shall withstand immersion in distilled water maintained at 49 ±3° C (120 ±5° F) for 4 days without exhibiting any evidence of wrinkling, blistering, or any other coating deficiency (see 4.5.7)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "salt_spray",
+      "test_adi": "Salt spray",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings, with and without a topcoat, shall not exhibit blistering, lifting of either coating, nor substrate pitting after exposure to a 5 percent salt spray for 2,000 hours. There shall be no white corrosion or pitting in the scribe (see 4.5.8.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "filiform",
+      "test_adi": "Filiform",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The topcoated primer coatings shall not exhibit filiform corrosion extending beyond 6.35 millimeters (mm) (0.25 inch) from the scribe, and the majority of the filaments shall be less than 3.175 mm (0.125 inch) in length (see 4.5.8.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "solvent_resistance",
+      "test_adi": "Solvent resistance (cure)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall withstand 50 passes (25 back and forth rubs) by a cloth rag soaked in methyl ethyl ketone (MEK). Rubbing through to bare substrate constitutes failure of the primer coatings to properly cure (see 4.5.9)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "fluid_resistance",
+      "test_adi": "Fluid resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall withstand immersion for 24 hours in synthetic lubricating oil conforming to MIL-PRF-23699, and synthetic hydraulic fluid conforming to MIL-PRF-83282. Four hours after removal from the respective fluid, the coatings shall not exhibit any softening, blistering, loss of adhesion, nor any other coating deficiency. Discoloration of the coatings is acceptable and shall not be cause for rejection (see 4.5.10)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.4",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "mixing_and_dilution",
+      "test_adi": "Mixing and dilution",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The components of the primer coatings, including thinner if required (see 6.11), shall homogeneously blend when mixed by a paint shaker in the volume mixing ratio specified by the manufacturer. Within one hour of mixing, the admixed coatings shall not separate into visually distinct layers (see 4.5.11.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "application",
+      "test_adi": "Application",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The admixed primer coatings shall be capable of being applied by conventional, airless, high volume/low pressure (HVLP) or electrostatic spray equipment. Application shall yield a uniform film with no runs or sags at a dry-film thickness of 15 to 23 microns (µm) (0.6 to 0.9 mil) (see 4.5.11.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "identification_of_material",
+      "test_adi": "Identification of material",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Individual containers greater than one pint and cases of containers less than one pint shall be identified with the following information: MIL-PRF-23377K, “Primer Coatings: Epoxy, High-Solids” type I or II, class C1, C2, or N Component identification (as applicable): Component A - base component or Component B - curing agent or Component C - thinning component Manufacturer’s name and product number"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.10",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "lead_cadmium_content",
+      "test_adi": "Lead and cadmium content",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 0.001,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "ppm",
+        "yon": null,
+        "orijinal_metin": "≤ 1 ppm"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4",
+        "sayfa": 11,
+        "alinti": "Lead and cadmium content 3.4 --- ASTM D3335"
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "adhesion",
+      "test_adi": "Adhesion",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The masking tape shall have an average adhesion of at least 60-ounces/inch width (3M Company #250 or equivalent as approved by the qualifying activity)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.4",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "flexibility",
+      "test_adi": "Flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "record the percent elongation corresponding to the largest spherical impression at which no cracking occurs."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.5",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "infrared_reflectance",
+      "test_adi": "Infrared reflectance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Examine for conformance to 3.7.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.6",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "corrosion_resistance_salt_spray",
+      "test_adi": "Salt spray",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The test panels shall then be examined for conformance to 3.8.2.1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.1",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "A"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "strippability_method_a",
+      "test_adi": "Strippability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The result shall be the average of the two panels tested. The result shall conform to 3.12."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.12",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "strippability_method_b",
+      "test_adi": "Strippability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The result shall be the average of the two panels tested. The result shall conform to 3.12."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.12",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null
+    }
+  ],
+  "raf_omurleri": [],
+  "kosullar": [],
+  "numune_hazirlama": []
+}
