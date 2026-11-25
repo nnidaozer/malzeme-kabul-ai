@@ -83,8 +83,18 @@ doküman sürümü, PDF sayfası, model ve istem sürümüyle yalnız eklenir. H
 kayıt kendi alanlarının ve bir önceki kaydın SHA-256 özetini taşır (hash
 zinciri); tetikleyiciler UPDATE/DELETE'i reddeder. Zinciri doğrulama:
 `python scripts/denetim_dogrula.py [--son-ozet HEX]` (bozuksa çıkış kodu 1).
-Karar, onay ve düzeltme `hat/katalog_karari` içinden kaydedilir
-(`malzeme_koduyla_kontrol(defter=...)`, `dokuman_onayla`, `karari_duzelt`).
+Kayıtları şu fonksiyonlar yazar:
+- `hat/katalog_karari`: `malzeme_koduyla_kontrol(defter=...)` (karar),
+  `dokuman_onayla` (onay), `karari_duzelt` (düzeltme)
+- `arayuz/ekran_verisi`: `taslak_duzelt` (düzeltme), `taslak_onayla` (onay)
+- `hat/revizyon_etkisi`: `mp_incelemesini_kapat` (onay)
+- `scripts/katalog_kur.py --ornek`: örnek onaylar
+
+Durum değişikliği ile kayıt bugün ayrı işlemlerde yazılır; kayıt adımı
+başarısız olursa durum değişmiş kalır. Tetikleyiciler yalnız uygulamanın
+kendi UPDATE/DELETE'ine karşı korur. Dosyaya yazabilen biri `REPLACE`,
+`DROP TRIGGER` ya da doğrudan düzenlemeyle onları aşabilir. Ayrıntı
+docs/arayuz_sozlesmesi.md "Bilinen açıklar" bölümündedir.
 Veritabanını baştan yazabilen biri zinciri yeniden hesaplayabilir; buna karşı
 son özet dışarıda saklanmalıdır (`--son-ozet`).
 
@@ -261,8 +271,8 @@ src/malzeme_kabul/
   revizyon/   revizyon farkları ve güncelleme önerileri
   katalog/    SQLite katalog, doküman sürümleri, onaylı tedarikçiler, partiler
   kayit/      zincirli denetim kaydı (karar, onay, düzeltme)
-  hat/        (iskelet) belge → çıkarım → kural → kayıt akışı
-  arayuz/     kabul dokümanı çıktısı (Markdown/Word); ileride Streamlit
+  hat/        belge → okuma → kanıt → kural → karar → kayıt hattı (kural / hibrit), katalogla karar, revizyon etkisi, raf ömrü raporu
+  arayuz/     Streamlit ekranları (uygulama.py), ekran verisi, kimlik, kabul dokümanı çıktısı (Markdown/Word); sözleşme: docs/arayuz_sozlesmesi.md
 deney/        yalnız dil modeli deneyi, ölçüm (F1, FAR), sentetik sertifika, gold taslak araçları
 scripts/      ürün betikleri (kabul dokümanı üret, revizyon karşılaştır, PDF türü), hook'lar, CI
 data/
