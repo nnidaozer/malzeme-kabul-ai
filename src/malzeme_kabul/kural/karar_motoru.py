@@ -30,9 +30,20 @@ modeli kullanılmaz (CLAUDE.md, kural 1):
    uygulanabilirliği ona göre seçilir; sertifikadaki atıf yalnız çelişki
    denetimi için okunur (çelişirse `tip_sinif` satırı insan incelemelidir).
    Katalog yoksa eski davranış: tip/sınıf sertifikadaki atıftan okunur.
+   Kabul dokümanı tip/sınıf listesi tanımlıyorsa katalogdaki kod tanımlı ve
+   listede olmalıdır; değilse insan incelemeli (atfa düşülmez).
 9. Parti kuralı (`parti_karari`): bir satır uygun değilse parti uygun değil
-   (red), uygun değil yoksa ve bir satır insan incelemeliyse parti bekletilir
-   (inceleme), hepsi uygunsa kabul.
+   (red); kabul yalnız liste boş değilse ve her karar "uygun"sa; geri kalan
+   her durum (insan incelemeli, boş liste, tanınmayan değer) inceleme.
+   Uygulanan kabul testi yoksa belge kabul edilmez.
+10. Geçti/kaldı sonucu beyaz listeyle okunur: açık kaldı sözcükleri ("Fail",
+   "Non-conforming", "Uygun değil") kaldı; normalleştirilmiş metin bilinen bir
+   olumlu ifadeye ("Pass", "Conforms", "Complies", "OK", "Uygun", "Geçti",
+   "Kabul", "Satisfactory", "Conforms to specification", "Meets requirement(s)"...) birebir
+   eşitse geçti; geri kalan her metin ("Not passed", "Pass*", "OK per report")
+   belirsizdir ve insana gider. Bilinçli seçim: gerçek CoA'larda görülen
+   "Conforms to structure" ve "Conforms to reference" da listede değildir; neye
+   uyduğu belgeden doğrulanmalıdır, bu yüzden insana gider.
 
 Emin olunmayan her durumda karar insana bırakılır; böylece belirsizlik yanlış
 kabule dönüşmez.
@@ -53,6 +64,8 @@ from malzeme_kabul.sozlesme.sertifika import Sertifika
 
 Karar = Literal["uygun", "uygun_degil", "insan_incelemeli"]
 BelgeKarari = Literal["kabul", "red", "inceleme"]
+# Politika ayarları yalnız kısıtlayıcı olabilir: belge sorunu hiçbir zaman "uygun" sayılmaz (K8).
+KisitlayiciKarar = Literal["uygun_degil", "insan_incelemeli"]
 
 
 class KararAyarlari(BaseModel):
@@ -60,8 +73,8 @@ class KararAyarlari(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    eksik_test: Karar = "insan_incelemeli"
-    yanlis_revizyon: Karar = "insan_incelemeli"
+    eksik_test: KisitlayiciKarar = "insan_incelemeli"
+    yanlis_revizyon: KisitlayiciKarar = "insan_incelemeli"
 
 
 class KararSatiri(BaseModel):
@@ -201,11 +214,26 @@ _SAYI = re.compile(
 _DERECE_HARFI = re.compile(r"^[A-B]$")  # ASTM D3359 yapışma derecesi: 4A, 5B
 _KALDI = ("does not conform", "not conform", "non conform", "nonconform", "uygun degil", "fail", "failed", "fails",
           "kaldi", "reject", "rejected", "reddedildi")
-_GECTI = ("pass", "passed", "conforms", "conform", "complies", "comply", "satisfactory", "meets", "uygun", "gecti", "ok", "kabul")
+# Beyaz liste (K1): sonuç yalnız bu ifadelerden birine birebir eşitse geçti sayılır.
+# Karşılaştırma `_ifade` ile normalleştirilmiş metinde yapılır (büyük/küçük harf, boşluk,
+# Türkçe harfler); noktalama korunur, "Pass*" ya da "OK per report" listede değildir.
+_GECTI = frozenset({
+    "pass", "passed", "passes", "passes test",
+    "conforms", "conforms to specification",
+    "complies", "ok", "uygun", "gecti", "kabul", "meets requirements",
+    "satisfactory", "meets requirement",
+})
 
 
 _ALGILANMADI = re.compile(r"^(nd|n d|not detected|none detected|tespit edilmedi|saptanmadi|bulunmadi)\b")
 _ALGILAMA_SINIRI = re.compile(r"(<=|≤|<)\s*[+-]?\d+(?:[.,]\d+)?\s*(?:[A-Za-zµμ°%/][A-Za-z0-9µμ°%/.]*)?")
+
+
+def _ifade(metin: str) -> str:
+    """Beyaz liste karşılaştırması için: küçük harf, aksansız, tek boşluk; noktalama korunur."""
+    metin = metin.translate(_TR).casefold()
+    metin = "".join(c for c in unicodedata.normalize("NFKD", metin) if not unicodedata.combining(c))
+    return " ".join(metin.split())
 
 
 def sonucu_ayristir(metin: str) -> Sonuc:
@@ -231,10 +259,9 @@ def sonucu_ayristir(metin: str) -> Sonuc:
             return Sonuc("sayi", sayi, None, op != ">", True, ek)
         return Sonuc("sayi", sayi, sayi, True, True, ek)
     normal = _normal(ham)
-    kelimeler = normal.split()
     if any(re.search(rf"\b{k}", normal) for k in _KALDI):
         return Sonuc("kaldi")
-    if kelimeler and any(re.search(rf"\b{k}\b", normal) for k in _GECTI):
+    if _ifade(ham) in _GECTI:
         return Sonuc("gecti")
     return Sonuc("belirsiz")
 
@@ -440,12 +467,15 @@ def _degerlendir(test: TestSarti, sonuc_metni: str, birim: str | None) -> tuple[
 
 
 def parti_karari(kararlar: list[Karar]) -> BelgeKarari:
-    """Parti kuralı: bir uygun değil → red; yoksa bir insan incelemeli → inceleme; hepsi uygun → kabul."""
+    """Parti kuralı: bir uygun değil → red; yoksa kabul yalnız liste boş değilse ve hepsi "uygun"sa.
+
+    Boş liste, insan incelemeli ya da tanınmayan bir değer inceleme verir (K6).
+    """
     if "uygun_degil" in kararlar:
         return "red"
-    if "insan_incelemeli" in kararlar:
-        return "inceleme"
-    return "kabul"
+    if kararlar and all(k == "uygun" for k in kararlar):
+        return "kabul"
+    return "inceleme"
 
 
 def _revizyon_kontrolu(dokuman: KabulDokumani, atif: Atif, ayar: KararAyarlari) -> KararSatiri:
@@ -466,20 +496,114 @@ def _revizyon_kontrolu(dokuman: KabulDokumani, atif: Atif, ayar: KararAyarlari) 
     return satir("uygun", f"atıf {beklenen}")
 
 
+_KOD_ONEKI = re.compile(r"^(?:TYPE|CLASS)(?=\s|$)")
+
+
 def _kod(deger: str | None) -> str | None:
-    """Katalogdaki tip/sınıf kodunu uygulanabilirlikle aynı biçime getirir ('1' -> 'I', 'n' -> 'N')."""
-    if deger is None or not deger.strip():
+    """Katalogdaki tip/sınıf kodunu uygulanabilirlikle aynı biçime getirir.
+
+    "Type"/"Class" öneki ve boşluklar atılır, büyük harfe çevrilir, 1/2 Roma
+    rakamına çevrilir: '1' -> 'I', 'n' -> 'N', 'Class N' -> 'N', 'C 2' -> 'C2',
+    'TYPE 2' -> 'II'. Boş değer None'dır.
+    """
+    if deger is None:
         return None
-    deger = deger.strip().upper()
+    deger = _KOD_ONEKI.sub("", deger.strip().upper())
+    deger = "".join(deger.split())
+    if not deger:
+        return None
     return _ROMEN.get(deger, deger)
 
 
 kod_normallestir = _kod
 
 
-def _tip_sinif_kontrolu(atif: Atif, tip: str | None, sinif: str | None) -> KararSatiri:
+def _liste_kodu(kod: str) -> str | None:
+    """Ürün tanımındaki kodu ('Type I', 'Class 1', 'N') katalog koduyla aynı biçime getirir."""
+    return _kod(kod)
+
+
+# Ürün tanımı olmayan dokümanlar için standardın bilinen tip/sınıf kodları (belge no -> boyut -> kodlar).
+# Katalogdaki kod ne burada ne de dokümanın uygulanabilirlik kodlarında varsa insana gider (K7).
+BILINEN_KODLAR: dict[str, dict[str, frozenset[str]]] = {
+    "MIL-PRF-23377": {"type": frozenset({"I", "II"}), "class": frozenset({"C1", "C2", "N"})},
+}
+
+
+def _uygulanabilirlik_kodlari(dokuman: KabulDokumani, kategori: str) -> set[str]:
+    """Dokümanın şartlarında `kategori` ('type'/'class') için geçen uygulanabilirlik kodları."""
+    kodlar = set()
+    for t in dokuman.testler:
+        for u in t.uygulanabilirlik:
+            if (m := _UYG.match(u)) and m.group(1).lower() == kategori and (k := _kod(m.group(2))):
+                kodlar.add(k)
+    return kodlar
+
+
+def _boyuta_bagli_testler(dokuman: KabulDokumani, kategori: str) -> list[str]:
+    """Uygulanabilirliği tipe ('type') ya da sınıfa ('class') bağlı kabul testlerinin kimlikleri."""
+    return [
+        t.id for t in dokuman.kabul_testleri
+        if any((m := _UYG.match(u)) and m.group(1).lower() == kategori for u in t.uygulanabilirlik)
+    ]
+
+
+def _tip_sinif_kontrolu(
+    atif: Atif, tip: str | None, sinif: str | None, dokuman: KabulDokumani | None = None
+) -> KararSatiri:
+    """Katalogdaki tip/sınıfı dokümanın ürün tanımına ve sertifika atfına karşı denetler.
+
+    Doküman bir tip (sınıf) listesi tanımlıyorsa katalogdaki tip (sınıf) tanımlı
+    olmalı ve listede bulunmalıdır; değilse insan incelemeli (K5, K7). Liste boşsa
+    ya da ürün tanımı yoksa: katalogdaki tip (sınıf) tanımsızken bir kabul
+    testinin uygulanabilirliği tipe (sınıfa) bağlıysa insan incelemeli;
+    tanımlıysa kod, dokümanın uygulanabilirlik kodlarında ya da standardın
+    bilinen kodlarında (`BILINEN_KODLAR`) olmalıdır. Standardın bilinen kodu
+    yoksa yalnız boyuta bağlı kabul testi varken dokümanın kodlarına bakılır. Sertifika atfı yalnız çelişki
+    denetimi içindir; katalogdaki eksik değerin yerine konmaz.
+    """
+
     def satir(karar: Karar, gerekce: str) -> KararSatiri:
         return KararSatiri(test_id="tip_sinif", test_adi="Tip ve sınıf (katalog)", karar=karar, gerekce=gerekce)
+
+    if dokuman is not None:
+        urun = dokuman.urun_tanimi
+        sorunlar: list[str] = []
+        boyutlar = (
+            ("tip", "type", tip, urun.tipler if urun else []),
+            ("sınıf", "class", sinif, urun.siniflar if urun else []),
+        )
+        for ad, kategori, deger, liste in boyutlar:
+            if liste:
+                if deger is None:
+                    sorunlar.append(f"katalogda tip/sınıf tanımsız ({ad} yok); standart {ad} listesi tanımlıyor")
+                elif deger not in [_liste_kodu(k.kod) for k in liste]:
+                    sorunlar.append(
+                        f"katalogdaki {ad} {deger!r} kabul dokümanının listesinde yok "
+                        f"({', '.join(k.kod for k in liste)})"
+                    )
+            elif deger is None:
+                if bagli := _boyuta_bagli_testler(dokuman, kategori):
+                    sorunlar.append(
+                        f"katalogda tip/sınıf tanımsız ({ad} yok); kabul testi {ad}a bağlı: {', '.join(bagli)}"
+                    )
+            else:
+                bilinen = BILINEN_KODLAR.get(dokuman.standart.belge_no, {}).get(kategori)
+                dokumandaki = _uygulanabilirlik_kodlari(dokuman, kategori)
+                if bilinen is not None:
+                    gecerli = bilinen | dokumandaki
+                    if deger not in gecerli:
+                        sorunlar.append(
+                            f"katalogdaki {ad} {deger!r} standardın bilinen kodlarında yok "
+                            f"({', '.join(sorted(gecerli))})"
+                        )
+                elif _boyuta_bagli_testler(dokuman, kategori) and deger not in dokumandaki:
+                    sorunlar.append(
+                        f"katalogdaki {ad} {deger!r} kabul dokümanının uygulanabilirlik kodlarında yok "
+                        f"({', '.join(sorted(dokumandaki))})"
+                    )
+        if sorunlar:
+            return satir("insan_incelemeli", "; ".join(sorunlar))
 
     celiski = [
         f"{ad} katalogda {beklenen}, sertifikada {okunan}"
@@ -511,19 +635,25 @@ def kontrol_et(
     ayar: KararAyarlari | None = None,
     tip: str | None = None,
     sinif: str | None = None,
+    katalogdan: bool | None = None,
 ) -> KontrolSonucu:
     """Sertifikayı kabul dokümanının kabul testleriyle karşılaştırır.
 
     `tip` ve `sinif` katalogdan verilirse uygulanabilirlik onlara göre seçilir
     (docs/mimari.md madde 2); verilmezse sertifikadaki atıftan okunur.
+    `katalogdan=True` tip/sınıfın katalogdan geldiğini bildirir: ikisi de None
+    olsa bile sertifika atfına düşülmez (K5). Verilmezse tip ya da sınıftan
+    biri verilmişse katalogdan sayılır.
     """
     ayar = ayar or KararAyarlari()
     atif = atfi_coz(sertifika.standart_atfi)
     revizyon = _revizyon_kontrolu(dokuman, atif, ayar)
     tip_sinif = None
-    if tip is not None or sinif is not None:
+    if katalogdan is None:
+        katalogdan = tip is not None or sinif is not None
+    if katalogdan:
         tip, sinif = _kod(tip), _kod(sinif)
-        tip_sinif = _tip_sinif_kontrolu(atif, tip, sinif)
+        tip_sinif = _tip_sinif_kontrolu(atif, tip, sinif, dokuman)
         atif = Atif(atif.belge_no, atif.revizyon, tip, sinif)
 
     uygulanan = uygulanan_testler(dokuman, atif.tip, atif.sinif)
@@ -571,6 +701,12 @@ def kontrol_et(
                 **ortak,
             )
         )
+
+    if not uygulanan:
+        satirlar.append(KararSatiri(
+            test_id="kabul_testleri", test_adi="Uygulanan kabul testleri", karar="insan_incelemeli",
+            gerekce="uygulanan kabul testi yok; sertifika hiçbir şarta karşı denetlenmedi",
+        ))
 
     return KontrolSonucu(
         sertifika_no=sertifika.sertifika_no,

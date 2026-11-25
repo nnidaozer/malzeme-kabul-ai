@@ -18,7 +18,11 @@ Kurallar:
   bağlıdır. Karar için o standart + revizyonun **en son onaylı** sürümü
   kullanılır (`gecerli_dokuman`).
 - Parti yalnız o malzeme için onaylı bir tedarikçiden kaydedilebilir.
-- Parti durumu: `serbest`, `karantina`, `bekliyor`.
+- Parti durumu: `serbest`, `karantina`, `bekliyor`; yeni parti `bekliyor`
+  başlar. `durum_kaynagi` durumu en son kimin verdiğini tutar: boş (hiç karar
+  verilmedi), `makine`, `insan` ya da `bilinmiyor` (sütundan önceki
+  veritabanlarındaki partiler). Hangi geçişe izin verildiğine bu modül değil,
+  karar hattı (`hat.katalog_karari`) bakar.
 
 Bu modül karar vermez; yalnız saklar ve getirir.
 """
@@ -37,6 +41,8 @@ from malzeme_kabul.sozlesme.sema import KabulDokumani
 
 PartiDurumu = Literal["serbest", "karantina", "bekliyor"]
 PARTI_DURUMLARI: tuple[str, ...] = ("serbest", "karantina", "bekliyor")
+DurumKaynagi = Literal["makine", "insan"]
+DURUM_KAYNAKLARI: tuple[str, ...] = ("makine", "insan")
 
 SEMA = """
 PRAGMA foreign_keys = ON;
@@ -106,6 +112,7 @@ CREATE TABLE IF NOT EXISTS partiler (
                        CHECK (durum IN ('serbest', 'karantina', 'bekliyor')),
     kap_turu           TEXT,
     mp_inceleme        TEXT,
+    durum_kaynagi      TEXT CHECK (durum_kaynagi IS NULL OR durum_kaynagi IN ('makine', 'insan', 'bilinmiyor')),
     PRIMARY KEY (malzeme_kodu, lot_no)
 );
 
@@ -126,7 +133,15 @@ EK_SUTUNLAR: list[tuple[str, str, str]] = [
     ("partiler", "kap_turu", "TEXT"),
     ("partiler", "mp_inceleme", "TEXT"),
     ("malzemeler", "mp_inceleme", "TEXT"),
+    ("partiler", "durum_kaynagi", "TEXT CHECK (durum_kaynagi IS NULL OR durum_kaynagi IN ('makine', 'insan', 'bilinmiyor'))"),
 ]
+
+# Sütun eski bir veritabanına eklendiğinde mevcut satırlar için çalışan güvenli doldurma.
+# Mevcut partilere daha önce kimin karar verdiği bilinmez; "hiç karar verilmedi" (NULL)
+# sayılırsa makine onları serbest bırakabilirdi, bu yüzden "bilinmiyor" yazılır.
+GOC_DOLDURMA: dict[tuple[str, str], str] = {
+    ("partiler", "durum_kaynagi"): "UPDATE partiler SET durum_kaynagi = 'bilinmiyor' WHERE durum_kaynagi IS NULL",
+}
 
 
 class KatalogHatasi(ValueError):
@@ -189,6 +204,12 @@ class Parti:
     durum: str
     kap_turu: str | None = None
     mp_inceleme: str | None = None  # doluysa "M&P incelemesi bekliyor" ve nedeni
+    durum_kaynagi: str | None = None  # None: hiç karar verilmedi; "makine" | "insan" | "bilinmiyor"
+
+    @property
+    def karar_verildi(self) -> bool:
+        """Partiye daha önce (makine ya da insan) karar verildi mi? Bilinmiyorsa verildi sayılır."""
+        return self.durum_kaynagi is not None
 
 
 def icerik_ozeti(icerik: str) -> str:
@@ -218,16 +239,37 @@ class Katalog:
         self.yol = str(yol)
         self.baglanti = sqlite3.connect(self.yol, check_same_thread=False)
         self.baglanti.row_factory = sqlite3.Row
-        self.baglanti.executescript(SEMA)
-        self._sutunlari_tamamla()
+        try:
+            self.baglanti.executescript(SEMA)
+            self._sutunlari_tamamla()
+        except Exception:
+            self.baglanti.close()
+            raise
 
     def _sutunlari_tamamla(self) -> None:
-        """Eski bir veritabanında eksik sütunları ekler (veri kaybı olmadan)."""
+        """Eski bir veritabanında eksik sütunları ekler (veri kaybı olmadan).
+
+        Her sütun ekleme ve onun doldurması tek bir açık işlemdir (BEGIN ... COMMIT):
+        doldurma düşerse ROLLBACK ile sütun da geri alınır, hata yukarı iletilir ve
+        sonraki açılış göçü yeniden dener. Böylece eski satırlar hiçbir zaman
+        doldurulmamış (ör. "hiç karar verilmedi") görünmez.
+        """
+        b = self.baglanti
+        if b.in_transaction:
+            b.commit()
         for tablo, sutun, tanim in EK_SUTUNLAR:
-            var = {s["name"] for s in self.baglanti.execute(f"PRAGMA table_info({tablo})")}
-            if sutun not in var:
-                self.baglanti.execute(f"ALTER TABLE {tablo} ADD COLUMN {sutun} {tanim}")
-        self.baglanti.commit()
+            var = {s["name"] for s in b.execute(f"PRAGMA table_info({tablo})")}
+            if sutun in var:
+                continue
+            b.execute("BEGIN")
+            try:
+                b.execute(f"ALTER TABLE {tablo} ADD COLUMN {sutun} {tanim}")
+                if (doldurma := GOC_DOLDURMA.get((tablo, sutun))) is not None:
+                    b.execute(doldurma)
+                b.execute("COMMIT")
+            except Exception:
+                b.execute("ROLLBACK")
+                raise
 
     def kapat(self) -> None:
         self.baglanti.close()
@@ -478,6 +520,7 @@ class Katalog:
         return Parti(
             s["lot_no"], s["malzeme_kodu"], s["tedarikci"], s["siparis_revizyonu"],
             date.fromisoformat(s["uretim_tarihi"]), s["durum"], s["kap_turu"], s["mp_inceleme"],
+            s["durum_kaynagi"],
         )
 
     def parti(self, malzeme_kodu: str, lot_no: str) -> Parti:
@@ -497,13 +540,22 @@ class Katalog:
             )
         return [self._parti_satirindan(s) for s in satirlar]
 
-    def parti_durumu_ata(self, malzeme_kodu: str, lot_no: str, durum: PartiDurumu) -> Parti:
+    def parti_durumu_ata(
+        self, malzeme_kodu: str, lot_no: str, durum: PartiDurumu, *, kaynak: DurumKaynagi
+    ) -> Parti:
+        """Parti durumunu yazar ve durumu kimin verdiğini (`kaynak`, zorunlu) saklar.
+
+        Geçiş kuralını denetlemez; makine kararları `hat.katalog_karari` üzerinden gelir.
+        """
         if durum not in PARTI_DURUMLARI:
             raise KatalogHatasi(f"geçersiz parti durumu: {durum!r} ({', '.join(PARTI_DURUMLARI)})")
+        if kaynak not in DURUM_KAYNAKLARI:
+            raise KatalogHatasi(f"geçersiz durum kaynağı: {kaynak!r} ({', '.join(DURUM_KAYNAKLARI)})")
         self.parti(malzeme_kodu, lot_no)
         with self.islem() as b:
             b.execute(
-                "UPDATE partiler SET durum = ? WHERE malzeme_kodu = ? AND lot_no = ?", (durum, malzeme_kodu, lot_no)
+                "UPDATE partiler SET durum = ?, durum_kaynagi = ? WHERE malzeme_kodu = ? AND lot_no = ?",
+                (durum, kaynak, malzeme_kodu, lot_no),
             )
         return self.parti(malzeme_kodu, lot_no)
 
@@ -513,6 +565,8 @@ __all__ = [
     "Katalog",
     "KatalogHatasi",
     "Malzeme",
+    "DURUM_KAYNAKLARI",
+    "DurumKaynagi",
     "PARTI_DURUMLARI",
     "Parti",
     "Taslak",
