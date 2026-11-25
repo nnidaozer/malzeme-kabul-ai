@@ -10,12 +10,23 @@ Kararı kural katmanı verir; bu modül yalnız bağlar. Katalogdan gelen iki ek
 denetim de kesin kuraldır ve emin olunmayanı insana bırakır:
 
 - `tedarikci`: sertifikadaki tedarikçi o malzeme için onaylı listede yoksa
-  insan incelemeli (ad yazımı farklı olabilir; reddetmek yerine insana).
+  ya da sertifikada tedarikçi yoksa insan incelemeli (ad yazımı farklı
+  olabilir; reddetmek yerine insana).
 - `siparis_revizyonu`: partinin siparişteki revizyonu malzemenin kabul
   dokümanı revizyonundan farklıysa insan incelemeli.
+- `parti_no` (lot verilmişse): sertifikadaki parti numarası yoksa ya da lotla
+  tutmuyorsa insan incelemeli.
+- `parti_tedarikcisi` (lot verilmişse): sertifikadaki tedarikçi partinin
+  katalogdaki tedarikçisi değilse (başka bir onaylı firma olsa bile) insan
+  incelemeli.
 
 Parti kararı katalog durumuna şöyle yansır: kabul → serbest, red → karantina,
-inceleme → bekliyor.
+inceleme → bekliyor. Makine partiyi yalnız daha kısıtlayıcı bir duruma
+geçirebilir (serbest < bekliyor < karantina). Tek istisna hiç karar verilmemiş
+yeni partidir. Karantinadaki ya da daha önce karar verilmiş (makine ya da
+insan) bekleyen partiyi makine serbest bırakmaz; durum korunur ve
+`parti_durumu` ek denetimi insan incelemeli olur, gerekçesinde partinin neden
+o durumda kaldığı yazar. Serbest bırakmak `karari_duzelt` ile insanın işidir.
 
 Denetim kaydı (`kayit.denetim_kaydi`) verilirse her karar, onay ve düzeltme
 zincire yazılır: kullanıcı, zaman, doküman sürümü, PDF sayfası, model ve
@@ -26,7 +37,13 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict
 
-from malzeme_kabul.katalog.veritabani import DokumanSurumu, Katalog, KatalogHatasi, PartiDurumu
+from malzeme_kabul.katalog.veritabani import (
+    DokumanSurumu,
+    Katalog,
+    KatalogHatasi,
+    Parti,
+    PartiDurumu,
+)
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi, Kayit
 from malzeme_kabul.kural.karar_motoru import (
     BelgeKarari,
@@ -64,17 +81,78 @@ def _ad(metin: str) -> str:
     return " ".join(metin.split()).casefold()
 
 
-def _tedarikci_denetimi(katalog: Katalog, malzeme_kodu: str, sertifika: Sertifika) -> KararSatiri | None:
-    if not sertifika.tedarikci:
-        return None
+def _tedarikci_denetimi(katalog: Katalog, malzeme_kodu: str, sertifika: Sertifika) -> KararSatiri:
     onayli = katalog.onayli_tedarikciler(malzeme_kodu)
     ortak = {"test_id": "tedarikci", "test_adi": "Onaylı tedarikçi"}
+    if not (sertifika.tedarikci and sertifika.tedarikci.strip()):
+        return KararSatiri(karar="insan_incelemeli", gerekce="sertifikada tedarikçi yok", **ortak)
     if _ad(sertifika.tedarikci) in {_ad(t) for t in onayli}:
         return KararSatiri(karar="uygun", gerekce=f"{sertifika.tedarikci} onaylı listede", **ortak)
     return KararSatiri(
         karar="insan_incelemeli",
         gerekce=f"sertifikadaki tedarikçi {sertifika.tedarikci!r} onaylı listede yok ({', '.join(onayli) or '-'})",
         **ortak,
+    )
+
+
+def _parti_denetimleri(parti: Parti, sertifika: Sertifika) -> list[KararSatiri]:
+    """Sertifikanın bu partiye ait olduğunu denetler: parti numarası ve partinin tedarikçisi (K3)."""
+    satirlar = []
+    ortak = {"test_id": "parti_no", "test_adi": "Parti numarası"}
+    if not (sertifika.parti_no and sertifika.parti_no.strip()):
+        satirlar.append(KararSatiri(karar="insan_incelemeli", gerekce=f"sertifikada parti numarası yok (lot {parti.lot_no})", **ortak))
+    elif _ad(sertifika.parti_no) != _ad(parti.lot_no):
+        satirlar.append(KararSatiri(
+            karar="insan_incelemeli",
+            gerekce=f"sertifikadaki parti numarası {sertifika.parti_no!r}, lot {parti.lot_no!r}",
+            **ortak,
+        ))
+    else:
+        satirlar.append(KararSatiri(karar="uygun", gerekce=f"parti numarası {parti.lot_no}", **ortak))
+
+    ortak = {"test_id": "parti_tedarikcisi", "test_adi": "Partinin tedarikçisi"}
+    if not (sertifika.tedarikci and sertifika.tedarikci.strip()):
+        satirlar.append(KararSatiri(karar="insan_incelemeli", gerekce="sertifikada tedarikçi yok", **ortak))
+    elif _ad(sertifika.tedarikci) != _ad(parti.tedarikci):
+        satirlar.append(KararSatiri(
+            karar="insan_incelemeli",
+            gerekce=f"sertifikadaki tedarikçi {sertifika.tedarikci!r}, partinin tedarikçisi {parti.tedarikci!r}",
+            **ortak,
+        ))
+    else:
+        satirlar.append(KararSatiri(karar="uygun", gerekce=f"partinin tedarikçisi {parti.tedarikci}", **ortak))
+    return satirlar
+
+
+# Kısıtlayıcılık sırası: makine yalnız aynı ya da daha yüksek sıraya geçirebilir.
+_KISITLAMA: dict[str, int] = {"serbest": 0, "bekliyor": 1, "karantina": 2}
+_KAYNAK_METNI = {
+    None: "kayıt sırasında verildi",
+    "insan": "insan kararıyla",
+    "makine": "önceki makine kararıyla",
+    "bilinmiyor": "kaynağı bilinmiyor",
+}
+
+
+def _makine_gecebilir_mi(parti: Parti, istenen: PartiDurumu) -> bool:
+    """Makine kararı partiyi `istenen` duruma geçirebilir mi?
+
+    Daha kısıtlayıcı ya da aynı duruma her zaman; daha serbest duruma yalnız hiç
+    karar verilmemiş, bekleyen yeni parti için (ilk karar).
+    """
+    if _KISITLAMA[istenen] >= _KISITLAMA[parti.durum]:
+        return True
+    return parti.durum == "bekliyor" and not parti.karar_verildi
+
+
+def _parti_durumu_satiri(parti: Parti, istenen: PartiDurumu) -> KararSatiri:
+    return KararSatiri(
+        test_id="parti_durumu", test_adi="Parti durumu", karar="insan_incelemeli",
+        gerekce=(
+            f"parti katalogda {parti.durum} ({_KAYNAK_METNI.get(parti.durum_kaynagi, parti.durum_kaynagi)}); "
+            f"makine kararı {istenen} olurdu ama makine partiyi {parti.durum} durumundan çıkaramaz, "
+            "serbest bırakmayı M&P yapar"
+        ),
     )
 
 
@@ -114,12 +192,12 @@ def malzeme_koduyla_kontrol(
         raise KatalogHatasi("denetim kaydı için kullanıcı gerekli")
     malzeme = katalog.malzeme(malzeme_kodu)
     surum = katalog.gecerli_dokuman(malzeme_kodu)
-    kontrol = kontrol_et(surum.dokuman, sertifika, ayar, tip=malzeme.tip, sinif=malzeme.sinif)
+    kontrol = kontrol_et(surum.dokuman, sertifika, ayar, tip=malzeme.tip, sinif=malzeme.sinif, katalogdan=True)
 
     ek: list[KararSatiri] = list(ek_denetimler or [])
     if incelemeye_alinacak:
         karsi = (
-            kontrol_et(surum.dokuman, karsi_okuma, ayar, tip=malzeme.tip, sinif=malzeme.sinif)
+            kontrol_et(surum.dokuman, karsi_okuma, ayar, tip=malzeme.tip, sinif=malzeme.sinif, katalogdan=True)
             if karsi_okuma is not None else None
         )
         kontrol, eksik = _incelemeye_al(kontrol, incelemeye_alinacak, karsi)
@@ -128,8 +206,7 @@ def malzeme_koduyla_kontrol(
             KararSatiri(test_id=t, test_adi=adlar.get(t, t), karar="insan_incelemeli", gerekce=g)
             for t, g in eksik.items()
         )
-    if (t := _tedarikci_denetimi(katalog, malzeme_kodu, sertifika)) is not None:
-        ek.append(t)
+    ek.append(_tedarikci_denetimi(katalog, malzeme_kodu, sertifika))
     parti = None
     if lot_no is not None:
         parti = katalog.parti(malzeme_kodu, lot_no)
@@ -142,11 +219,18 @@ def malzeme_koduyla_kontrol(
             ))
         else:
             ek.append(KararSatiri(karar="uygun", gerekce=f"sipariş revizyonu {parti.siparis_revizyonu}", **ortak))
+        ek.extend(_parti_denetimleri(parti, sertifika))
 
     karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
     durum = PARTI_DURUMU[karar]
-    if parti is not None and durumu_yaz:
-        katalog.parti_durumu_ata(malzeme_kodu, parti.lot_no, durum)
+    if parti is not None:
+        if _makine_gecebilir_mi(parti, durum):
+            if durumu_yaz:
+                katalog.parti_durumu_ata(malzeme_kodu, parti.lot_no, durum, kaynak="makine")
+        else:
+            ek.append(_parti_durumu_satiri(parti, durum))
+            karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
+            durum = parti.durum
     sonuc = KatalogKarari(
         malzeme_kodu=malzeme_kodu,
         lot_no=lot_no,
@@ -192,7 +276,7 @@ def karari_duzelt(
     if not neden or not neden.strip():
         raise KatalogHatasi("düzeltme için gerekçe gerekli")
     onceki = katalog.parti(malzeme_kodu, lot_no).durum
-    katalog.parti_durumu_ata(malzeme_kodu, lot_no, yeni_durum)
+    katalog.parti_durumu_ata(malzeme_kodu, lot_no, yeni_durum, kaynak="insan")
     surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
     return defter.ekle(
         "duzeltme", kullanici, {"onceki_durum": onceki, "yeni_durum": yeni_durum, "neden": neden},

@@ -33,6 +33,8 @@ from tests.test_hibrit_hat import SET, SahteModel, sertifika_json
 DOKUMAN_23377K = KOK / "data/cikti/MIL-PRF-23377K_kabul_dokumani.json"
 ONAYLI_TEDARIKCILER = ("Kurgu Coatings Inc. (kurgusal)", "Ornek Aerospace Finishes Ltd. (kurgusal)")
 FARKLI_OKUDU = "kural ve model farklı okudu"
+S028_LOT = "A94009"  # S-028 sertifikasındaki parti numarası
+S028_TEDARIKCI = "Kurgu Coatings Inc. (kurgusal)"  # S-028 sertifikasındaki tedarikçi
 
 
 # --- yardımcılar -------------------------------------------------------------------------
@@ -367,6 +369,9 @@ def katalog():
     ornek_yukle(k, KOK / "data/ornek/katalog.json", KOK)
     for t in ONAYLI_TEDARIKCILER:
         k.tedarikci_onayla("AST-001", t)
+    # S-028'in kendi partisi: sertifikadaki parti no ve tedarikçi bu partiyle tutar (K3 denetimleri).
+    # data/ornek/katalog.json'daki A-2512-01 "Örnek Tedarikçi A"nındır, S-028 için kullanılmaz.
+    k.parti_ekle(S028_LOT, "AST-001", S028_TEDARIKCI, "K", "2025-12-10")
     yield k
     k.kapat()
 
@@ -401,8 +406,10 @@ def hibrit(katalog, no, bozucu=None, **k):
 
 
 def test_kural_ve_model_ayni_okursa_okuma_uyumu_uygun(katalog):
-    karar, okuma_ = hibrit(katalog, "S-028", lot_no="A-2512-01")
+    karar, okuma_ = hibrit(katalog, "S-028", lot_no=S028_LOT)
     assert okuma_.kanitsiz == [] and okuma_.anlasmazliklar == []
+    assert ek_denetim(karar, "parti_no")[0].karar == "uygun"
+    assert ek_denetim(karar, "parti_tedarikcisi")[0].karar == "uygun"
     assert karar.hat["anlasmazlik_sayisi"] == 0 and karar.hat["anlasmazliklar"] == []
     uyum = ek_denetim(karar, "okuma_uyumu")
     assert len(uyum) == 1 and uyum[0].karar == "uygun" and uyum[0].test_adi == "Kural ve model okuma uyumu"
@@ -412,12 +419,12 @@ def test_kural_ve_model_ayni_okursa_okuma_uyumu_uygun(katalog):
 def test_model_farkli_ama_kanitli_deger_okursa_satir_insana_gider(katalog):
     from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
 
-    # Önce kural modu: S-028 bu lotta serbest bırakılır.
-    kural, _ = sertifika_hatti(katalog, "AST-001", SET / "pdf/S-028.pdf", mod="kural", lot_no="A-2512-01")
+    # Önce kural modu: S-028 kendi partisinde (hiç karar verilmemiş) serbest bırakılır.
+    kural, _ = sertifika_hatti(katalog, "AST-001", SET / "pdf/S-028.pdf", mod="kural", lot_no=S028_LOT)
     assert (kural.parti_karari, kural.parti_durumu) == ("kabul", "serbest")
 
     # Model VOC için aynı satırdaki şart hücresini (340) okur: belgede geçer, kanıtlıdır, sınırın içindedir.
-    karar, okuma_ = hibrit(katalog, "S-028", hucre_degistir("VOC solvent content", "340"), lot_no="A-2512-01")
+    karar, okuma_ = hibrit(katalog, "S-028", hucre_degistir("VOC solvent content", "340"), lot_no=S028_LOT)
     assert okuma_.kanitsiz == []
     assert [(a.test_id, a.alan, a.kural, a.model) for a in okuma_.anlasmazliklar] == [
         ("voc_solvent_content", "deger", "258", "340")]
@@ -428,7 +435,7 @@ def test_model_farkli_ama_kanitli_deger_okursa_satir_insana_gider(katalog):
     uyum = ek_denetim(karar, "okuma_uyumu")
     assert len(uyum) == 1 and uyum[0].karar == "insan_incelemeli" and "1" in uyum[0].gerekce
     assert (karar.parti_karari, karar.parti_durumu) == ("inceleme", "bekliyor")
-    assert katalog.parti("AST-001", "A-2512-01").durum == "bekliyor"
+    assert katalog.parti("AST-001", S028_LOT).durum == "bekliyor"
 
 
 def test_kural_red_model_kabul_derse_sessizce_ne_red_ne_kabul(katalog):
@@ -617,11 +624,15 @@ def model_sertifikasi(pdf: Path, atif: str | None = None, **hucreler) -> Sertifi
 def test_hatta_tip_sinifa_gore_eslenen_satir_anlasmazliginda_insana_gider(katalog, tmp_path):
     from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
 
-    # Kural "Conforms*" (dipnotlu) okur, model "Conforms"; satır adı yalnız "Color" (AST-001 Type I).
-    pdf = sertifika_pdf_yaz(tmp_path / "renk.pdf", s028_satirlari(Color=["Color", "Visual", "See spec", "Conforms*", None]), ATIF_K)
+    # Kural sonuç hücresindeki "Conforms"u okur, model aynı satırdaki metot hücresinden "Pass"
+    # (kanıtlı); iki okuma da tek başına uygun olurdu, farkı insan görmeli. Satır adı yalnız
+    # "Color" (AST-001 Type I). Düz sonuç kullanılır: dipnotlu "Conforms*" kural okumasında
+    # tek başına belirsizdir (K1 beyaz listesi), anlaşmazlığın etkisini gizlerdi.
+    renk_satiri = ["Color", "Visual Pass/Fail", "See spec", "Conforms", None]
+    pdf = sertifika_pdf_yaz(tmp_path / "renk.pdf", s028_satirlari(Color=renk_satiri), ATIF_K)
     kural, _ = sertifika_hatti(katalog, "AST-001", pdf, mod="kural")
     assert satir(kural, "color_type_i").karar == "uygun" and kural.parti_karari == "kabul"
-    model = SahteModel(model_sertifikasi(pdf, Color=("Conforms", None)))
+    model = SahteModel(model_sertifikasi(pdf, Color=("Pass", None)))
     karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model)
     assert okuma_.kanitsiz == []
     assert [(a.test_id, a.alan) for a in okuma_.anlasmazliklar] == [("color_type_i", "deger")]

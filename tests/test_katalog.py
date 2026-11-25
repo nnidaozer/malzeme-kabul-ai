@@ -124,7 +124,7 @@ def test_parti_onaysiz_tedarikciden_kaydedilemez(katalog):
 @pytest.mark.parametrize("durum", ["serbest", "karantina", "bekliyor"])
 def test_parti_durumlari(katalog, durum):
     katalog.parti_ekle("L1", "AST-001", "Ted A", "K", date(2026, 1, 15))
-    assert katalog.parti_durumu_ata("AST-001", "L1", durum).durum == durum
+    assert katalog.parti_durumu_ata("AST-001", "L1", durum, kaynak="insan").durum == durum
 
 
 def test_gecersiz_parti_durumu(katalog):
@@ -132,7 +132,7 @@ def test_gecersiz_parti_durumu(katalog):
         katalog.parti_ekle("L1", "AST-001", "Ted A", "K", "2026-01-15", durum="kabul")
     katalog.parti_ekle("L1", "AST-001", "Ted A", "K", "2026-01-15")
     with pytest.raises(KatalogHatasi, match="geçersiz parti durumu"):
-        katalog.parti_durumu_ata("AST-001", "L1", "red")
+        katalog.parti_durumu_ata("AST-001", "L1", "red", kaynak="insan")
 
 
 def test_veritabani_da_gecersiz_durumu_reddeder(katalog):

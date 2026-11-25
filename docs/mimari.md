@@ -156,6 +156,38 @@ göre katalogdan (en son onaylı sürüm) gelir, tip/sınıf katalogdan alınır
 revizyonu denetlenir; parti kararı parti durumuna yazılır: kabul → serbest,
 red → karantina, inceleme → bekliyor. Komut satırı: `scripts/karar_ver.py`.
 
+Karar güvenliği (K1-K8): kabul yalnız boş olmayan ve tamamı "uygun" karar
+listesiyle verilir; uygulanan kabul testi yoksa belge incelemeye gider.
+Geçti/kaldı sonucu beyaz listeyle okunur: metin bilinen bir olumlu ifadeye
+birebir eşitse geçti, açık kaldı sözcüğüyse kaldı, geri kalan her şey ("Not
+passed", "Pass*", "Conforms to reference") insana gider (liste
+`kural/karar_motoru._GECTI`). Tip/sınıf katalogdan gelir ve sertifika atfına
+hiçbir zaman düşülmez. `tip_sinif` şu durumlarda insan incelemelidir:
+kabul dokümanının ürün tanımı bir tip (sınıf) listesi veriyorsa katalogdaki
+tip (sınıf) tanımsızsa ya da listede yoksa; liste yoksa ya da boşsa,
+katalogdaki tip (sınıf) tanımsızken en az bir kabul testinin
+uygulanabilirliği tipe (sınıfa) bağlıysa. Bağlı kabul testi yoksa (yalnız
+yeterlilik testi bağlı olsa bile) o boyutun tanımsız olması karar
+engellemez. Katalog kodu "Type"/"Class" öneki ve boşluklar atılarak okunur
+("Class N" → N, "C 2" → C2, "TYPE 2" → II). Ürün tanımı yokken tanımlı kod,
+dokümanın uygulanabilirlik kodlarında ya da standardın bilinen kodlarında
+(`karar_motoru.BILINEN_KODLAR`; MIL-PRF-23377: Type I/II, Class C1/C2/N)
+yoksa `tip_sinif` insan incelemelidir; bilinen kodu kayıtlı olmayan
+standartta yalnız o boyuta bağlı kabul testi varken dokümanın kodlarına
+bakılır. Sertifikada
+tedarikçi yoksa `tedarikci` insan incelemelidir. Lot verilince `parti_no`
+(sertifikadaki parti no = lot) ve `parti_tedarikcisi` (sertifikadaki tedarikçi
+= partinin tedarikçisi) de denetlenir. Makine parti durumunu yalnız daha
+kısıtlayıcı yöne değiştirir (serbest < bekliyor < karantina); tek istisna hiç
+karar verilmemiş yeni partidir (`partiler.durum_kaynagi` boş). Karantinadaki ya
+da karar verilmiş bekleyen partiyi makine serbest bırakmaz; `parti_durumu` ek
+denetimi nedenini yazar, serbest bırakma `karari_duzelt` ile yapılır. Eski
+veritabanlarında sütun eklenirken mevcut partiler `bilinmiyor` (karar
+verilmiş) sayılır. Bu göç (sütun ekleme + doldurma) tek bir işlemdir; düşerse
+sütun da geri alınır ve sonraki açılış yeniden dener. `durum_kaynagi` CHECK
+kısıtıyla yalnız boş, `makine`, `insan` ya da `bilinmiyor` olabilir;
+`parti_durumu_ata` kaynağı zorunlu ister.
+
 ## 6. Dil modelinin sınırı
 
 Dil modeli **yalnızca** şunları döndürür (`sozlesme/okuma.py`, `HamOkuma`):
