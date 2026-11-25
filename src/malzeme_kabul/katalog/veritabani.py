@@ -1,0 +1,407 @@
+"""SQLite malzeme kataloğu (docs/mimari.md madde 2 ve 3).
+
+Bağlar:
+
+```
+malzeme kodu ──► standart + revizyon + tip/sınıf ──► onaylı kabul dokümanı sürümü
+      ├──────► onaylı tedarikçiler
+      └──────► partiler (lot, tedarikçi, sipariş revizyonu, üretim tarihi, durum)
+```
+
+Kurallar:
+
+- Onaylı kabul dokümanı sürümleri **değiştirilemez**. Bir standart + revizyon
+  için sürümler 1'den başlayıp artar (v1, v2, ...). Düzeltme yeni sürümdür.
+  Değiştirilemezlik veritabanında tetikleyicilerle (trigger) zorlanır:
+  UPDATE ve DELETE reddedilir. Her sürüm içeriğinin SHA-256 özetini taşır.
+- Bir malzeme kodu tek bir standart + revizyon + tip/sınıf kombinasyonuna
+  bağlıdır. Karar için o standart + revizyonun **en son onaylı** sürümü
+  kullanılır (`gecerli_dokuman`).
+- Parti yalnız o malzeme için onaylı bir tedarikçiden kaydedilebilir.
+- Parti durumu: `serbest`, `karantina`, `bekliyor`.
+
+Bu modül karar vermez; yalnız saklar ve getirir.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import sqlite3
+from contextlib import contextmanager
+from dataclasses import dataclass
+from datetime import date, datetime, timezone
+from pathlib import Path
+from typing import Iterator, Literal
+
+from malzeme_kabul.sozlesme.sema import KabulDokumani
+
+PartiDurumu = Literal["serbest", "karantina", "bekliyor"]
+PARTI_DURUMLARI: tuple[str, ...] = ("serbest", "karantina", "bekliyor")
+
+SEMA = """
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS standartlar (
+    belge_no   TEXT NOT NULL,
+    revizyon   TEXT NOT NULL,
+    baslik     TEXT,
+    tarih      TEXT,
+    eklenme    TEXT NOT NULL,
+    PRIMARY KEY (belge_no, revizyon)
+);
+
+CREATE TABLE IF NOT EXISTS malzemeler (
+    kod        TEXT PRIMARY KEY,
+    belge_no   TEXT NOT NULL,
+    revizyon   TEXT NOT NULL,
+    tip        TEXT,
+    sinif      TEXT,
+    aciklama   TEXT,
+    FOREIGN KEY (belge_no, revizyon) REFERENCES standartlar (belge_no, revizyon)
+);
+
+CREATE TABLE IF NOT EXISTS dokuman_surumleri (
+    belge_no     TEXT NOT NULL,
+    revizyon     TEXT NOT NULL,
+    surum        INTEGER NOT NULL CHECK (surum >= 1),
+    icerik       TEXT NOT NULL,
+    ozet         TEXT NOT NULL,
+    onaylayan    TEXT NOT NULL,
+    onay_zamani  TEXT NOT NULL,
+    not_         TEXT,
+    PRIMARY KEY (belge_no, revizyon, surum),
+    FOREIGN KEY (belge_no, revizyon) REFERENCES standartlar (belge_no, revizyon)
+);
+
+CREATE TRIGGER IF NOT EXISTS dokuman_surumu_degistirilemez
+BEFORE UPDATE ON dokuman_surumleri
+BEGIN
+    SELECT RAISE(ABORT, 'onaylı kabul dokümanı sürümü değiştirilemez; yeni sürüm ekleyin');
+END;
+
+CREATE TRIGGER IF NOT EXISTS dokuman_surumu_silinemez
+BEFORE DELETE ON dokuman_surumleri
+BEGIN
+    SELECT RAISE(ABORT, 'onaylı kabul dokümanı sürümü silinemez');
+END;
+
+CREATE TABLE IF NOT EXISTS tedarikciler (
+    ad         TEXT PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS onayli_tedarikciler (
+    malzeme_kodu  TEXT NOT NULL REFERENCES malzemeler (kod),
+    tedarikci     TEXT NOT NULL REFERENCES tedarikciler (ad),
+    PRIMARY KEY (malzeme_kodu, tedarikci)
+);
+
+CREATE TABLE IF NOT EXISTS partiler (
+    lot_no             TEXT NOT NULL,
+    malzeme_kodu       TEXT NOT NULL REFERENCES malzemeler (kod),
+    tedarikci          TEXT NOT NULL REFERENCES tedarikciler (ad),
+    siparis_revizyonu  TEXT NOT NULL,
+    uretim_tarihi      TEXT NOT NULL,
+    durum              TEXT NOT NULL DEFAULT 'bekliyor'
+                       CHECK (durum IN ('serbest', 'karantina', 'bekliyor')),
+    PRIMARY KEY (malzeme_kodu, lot_no)
+);
+"""
+
+
+class KatalogHatasi(ValueError):
+    """Katalog kuralına aykırı işlem (onaysız tedarikçi, bilinmeyen kod...)."""
+
+
+@dataclass(frozen=True)
+class Malzeme:
+    kod: str
+    belge_no: str
+    revizyon: str
+    tip: str | None
+    sinif: str | None
+    aciklama: str | None
+
+    @property
+    def standart_etiketi(self) -> str:
+        return f"{self.belge_no}{self.revizyon}"
+
+
+@dataclass(frozen=True)
+class DokumanSurumu:
+    belge_no: str
+    revizyon: str
+    surum: int
+    dokuman: KabulDokumani
+    ozet: str
+    onaylayan: str
+    onay_zamani: str
+    not_: str | None
+
+    @property
+    def etiket(self) -> str:
+        return f"{self.belge_no}{self.revizyon} v{self.surum}"
+
+
+@dataclass(frozen=True)
+class Parti:
+    lot_no: str
+    malzeme_kodu: str
+    tedarikci: str
+    siparis_revizyonu: str
+    uretim_tarihi: date
+    durum: str
+
+
+def icerik_ozeti(icerik: str) -> str:
+    """Kabul dokümanı JSON metninin SHA-256 özeti."""
+    return hashlib.sha256(icerik.encode("utf-8")).hexdigest()
+
+
+def _simdi() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _tarih(deger: date | str) -> date:
+    if isinstance(deger, date):
+        return deger
+    try:
+        return date.fromisoformat(deger)
+    except ValueError as hata:
+        raise KatalogHatasi(f"tarih YYYY-AA-GG biçiminde olmalı: {deger!r}") from hata
+
+
+class Katalog:
+    """SQLite katalog. `Katalog(":memory:")` testler için bellekte çalışır."""
+
+    def __init__(self, yol: str | Path = ":memory:"):
+        if str(yol) != ":memory:":
+            Path(yol).parent.mkdir(parents=True, exist_ok=True)
+        self.yol = str(yol)
+        self.baglanti = sqlite3.connect(self.yol, check_same_thread=False)
+        self.baglanti.row_factory = sqlite3.Row
+        self.baglanti.executescript(SEMA)
+
+    def kapat(self) -> None:
+        self.baglanti.close()
+
+    def __enter__(self) -> Katalog:
+        return self
+
+    def __exit__(self, *_exc) -> None:
+        self.kapat()
+
+    @contextmanager
+    def islem(self) -> Iterator[sqlite3.Connection]:
+        """Tek bir işlem (transaction): hata olursa hepsi geri alınır."""
+        try:
+            yield self.baglanti
+            self.baglanti.commit()
+        except Exception:
+            self.baglanti.rollback()
+            raise
+
+    # --- standart ---------------------------------------------------------
+
+    def standart_ekle(self, belge_no: str, revizyon: str, baslik: str | None = None, tarih: str | None = None) -> None:
+        with self.islem() as b:
+            b.execute(
+                "INSERT OR IGNORE INTO standartlar (belge_no, revizyon, baslik, tarih, eklenme) VALUES (?, ?, ?, ?, ?)",
+                (belge_no, revizyon, baslik, tarih, _simdi()),
+            )
+
+    def standartlar(self) -> list[tuple[str, str, str | None]]:
+        satirlar = self.baglanti.execute("SELECT belge_no, revizyon, baslik FROM standartlar ORDER BY belge_no, revizyon")
+        return [(s["belge_no"], s["revizyon"], s["baslik"]) for s in satirlar]
+
+    def standart_var_mi(self, belge_no: str, revizyon: str) -> bool:
+        s = self.baglanti.execute(
+            "SELECT 1 FROM standartlar WHERE belge_no = ? AND revizyon = ?", (belge_no, revizyon)
+        ).fetchone()
+        return s is not None
+
+    # --- malzeme ----------------------------------------------------------
+
+    def malzeme_ekle(
+        self,
+        kod: str,
+        belge_no: str,
+        revizyon: str,
+        tip: str | None = None,
+        sinif: str | None = None,
+        aciklama: str | None = None,
+    ) -> Malzeme:
+        if not kod.strip():
+            raise KatalogHatasi("malzeme kodu boş olamaz")
+        if not self.standart_var_mi(belge_no, revizyon):
+            raise KatalogHatasi(f"önce standart eklenmeli: {belge_no}{revizyon}")
+        try:
+            with self.islem() as b:
+                b.execute(
+                    "INSERT INTO malzemeler (kod, belge_no, revizyon, tip, sinif, aciklama) VALUES (?, ?, ?, ?, ?, ?)",
+                    (kod, belge_no, revizyon, tip, sinif, aciklama),
+                )
+        except sqlite3.IntegrityError as hata:
+            raise KatalogHatasi(f"malzeme kodu zaten var: {kod}") from hata
+        return self.malzeme(kod)
+
+    def malzeme(self, kod: str) -> Malzeme:
+        s = self.baglanti.execute("SELECT * FROM malzemeler WHERE kod = ?", (kod,)).fetchone()
+        if s is None:
+            raise KatalogHatasi(f"bilinmeyen malzeme kodu: {kod}")
+        return Malzeme(s["kod"], s["belge_no"], s["revizyon"], s["tip"], s["sinif"], s["aciklama"])
+
+    def malzemeler(self) -> list[Malzeme]:
+        return [self.malzeme(s["kod"]) for s in self.baglanti.execute("SELECT kod FROM malzemeler ORDER BY kod")]
+
+    # --- kabul dokümanı sürümleri ----------------------------------------
+
+    def dokuman_onayla(self, dokuman: KabulDokumani, onaylayan: str, not_: str | None = None) -> DokumanSurumu:
+        """Dokümanı yeni ve değiştirilemez bir sürüm olarak kaydeder (v1, v2...)."""
+        if not onaylayan.strip():
+            raise KatalogHatasi("onaylayan kullanıcı boş olamaz")
+        std = dokuman.standart
+        self.standart_ekle(std.belge_no, std.revizyon, std.baslik, std.tarih)
+        onayli = dokuman.model_copy(update={"durum": "onaylandi"})
+        icerik = onayli.model_dump_json()
+        with self.islem() as b:
+            onceki = b.execute(
+                "SELECT COALESCE(MAX(surum), 0) FROM dokuman_surumleri WHERE belge_no = ? AND revizyon = ?",
+                (std.belge_no, std.revizyon),
+            ).fetchone()[0]
+            b.execute(
+                "INSERT INTO dokuman_surumleri (belge_no, revizyon, surum, icerik, ozet, onaylayan, onay_zamani, not_)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (std.belge_no, std.revizyon, onceki + 1, icerik, icerik_ozeti(icerik), onaylayan, _simdi(), not_),
+            )
+        return self.dokuman_surumu(std.belge_no, std.revizyon, onceki + 1)
+
+    def _surum_satirindan(self, s: sqlite3.Row) -> DokumanSurumu:
+        if icerik_ozeti(s["icerik"]) != s["ozet"]:
+            raise KatalogHatasi(f"{s['belge_no']}{s['revizyon']} v{s['surum']}: içerik özeti tutmuyor (kurcalanmış)")
+        return DokumanSurumu(
+            s["belge_no"], s["revizyon"], s["surum"], KabulDokumani.model_validate_json(s["icerik"]),
+            s["ozet"], s["onaylayan"], s["onay_zamani"], s["not_"],
+        )
+
+    def dokuman_surumu(self, belge_no: str, revizyon: str, surum: int) -> DokumanSurumu:
+        s = self.baglanti.execute(
+            "SELECT * FROM dokuman_surumleri WHERE belge_no = ? AND revizyon = ? AND surum = ?",
+            (belge_no, revizyon, surum),
+        ).fetchone()
+        if s is None:
+            raise KatalogHatasi(f"onaylı sürüm yok: {belge_no}{revizyon} v{surum}")
+        return self._surum_satirindan(s)
+
+    def dokuman_surumleri(self, belge_no: str, revizyon: str) -> list[DokumanSurumu]:
+        satirlar = self.baglanti.execute(
+            "SELECT * FROM dokuman_surumleri WHERE belge_no = ? AND revizyon = ? ORDER BY surum",
+            (belge_no, revizyon),
+        )
+        return [self._surum_satirindan(s) for s in satirlar]
+
+    def gecerli_dokuman(self, malzeme_kodu: str) -> DokumanSurumu:
+        """Malzeme kodunun standart + revizyonu için en son onaylı sürüm."""
+        m = self.malzeme(malzeme_kodu)
+        surumler = self.dokuman_surumleri(m.belge_no, m.revizyon)
+        if not surumler:
+            raise KatalogHatasi(f"{malzeme_kodu}: {m.standart_etiketi} için onaylı kabul dokümanı yok")
+        return surumler[-1]
+
+    # --- tedarikçiler -----------------------------------------------------
+
+    def tedarikci_ekle(self, ad: str) -> None:
+        if not ad.strip():
+            raise KatalogHatasi("tedarikçi adı boş olamaz")
+        with self.islem() as b:
+            b.execute("INSERT OR IGNORE INTO tedarikciler (ad) VALUES (?)", (ad,))
+
+    def tedarikci_onayla(self, malzeme_kodu: str, tedarikci: str) -> None:
+        self.malzeme(malzeme_kodu)
+        self.tedarikci_ekle(tedarikci)
+        with self.islem() as b:
+            b.execute(
+                "INSERT OR IGNORE INTO onayli_tedarikciler (malzeme_kodu, tedarikci) VALUES (?, ?)",
+                (malzeme_kodu, tedarikci),
+            )
+
+    def onayli_tedarikciler(self, malzeme_kodu: str) -> list[str]:
+        satirlar = self.baglanti.execute(
+            "SELECT tedarikci FROM onayli_tedarikciler WHERE malzeme_kodu = ? ORDER BY tedarikci", (malzeme_kodu,)
+        )
+        return [s["tedarikci"] for s in satirlar]
+
+    # --- partiler ---------------------------------------------------------
+
+    def parti_ekle(
+        self,
+        lot_no: str,
+        malzeme_kodu: str,
+        tedarikci: str,
+        siparis_revizyonu: str,
+        uretim_tarihi: date | str,
+        durum: PartiDurumu = "bekliyor",
+    ) -> Parti:
+        self.malzeme(malzeme_kodu)
+        if durum not in PARTI_DURUMLARI:
+            raise KatalogHatasi(f"geçersiz parti durumu: {durum!r} ({', '.join(PARTI_DURUMLARI)})")
+        if tedarikci not in self.onayli_tedarikciler(malzeme_kodu):
+            raise KatalogHatasi(f"{tedarikci} {malzeme_kodu} için onaylı tedarikçi değil")
+        if not siparis_revizyonu.strip():
+            raise KatalogHatasi("sipariş revizyonu boş olamaz")
+        uretim = _tarih(uretim_tarihi)
+        try:
+            with self.islem() as b:
+                b.execute(
+                    "INSERT INTO partiler (lot_no, malzeme_kodu, tedarikci, siparis_revizyonu, uretim_tarihi, durum)"
+                    " VALUES (?, ?, ?, ?, ?, ?)",
+                    (lot_no, malzeme_kodu, tedarikci, siparis_revizyonu, uretim.isoformat(), durum),
+                )
+        except sqlite3.IntegrityError as hata:
+            raise KatalogHatasi(f"parti zaten var: {malzeme_kodu} / {lot_no}") from hata
+        return self.parti(malzeme_kodu, lot_no)
+
+    @staticmethod
+    def _parti_satirindan(s: sqlite3.Row) -> Parti:
+        return Parti(
+            s["lot_no"], s["malzeme_kodu"], s["tedarikci"], s["siparis_revizyonu"],
+            date.fromisoformat(s["uretim_tarihi"]), s["durum"],
+        )
+
+    def parti(self, malzeme_kodu: str, lot_no: str) -> Parti:
+        s = self.baglanti.execute(
+            "SELECT * FROM partiler WHERE malzeme_kodu = ? AND lot_no = ?", (malzeme_kodu, lot_no)
+        ).fetchone()
+        if s is None:
+            raise KatalogHatasi(f"bilinmeyen parti: {malzeme_kodu} / {lot_no}")
+        return self._parti_satirindan(s)
+
+    def partiler(self, malzeme_kodu: str | None = None) -> list[Parti]:
+        if malzeme_kodu is None:
+            satirlar = self.baglanti.execute("SELECT * FROM partiler ORDER BY malzeme_kodu, lot_no")
+        else:
+            satirlar = self.baglanti.execute(
+                "SELECT * FROM partiler WHERE malzeme_kodu = ? ORDER BY lot_no", (malzeme_kodu,)
+            )
+        return [self._parti_satirindan(s) for s in satirlar]
+
+    def parti_durumu_ata(self, malzeme_kodu: str, lot_no: str, durum: PartiDurumu) -> Parti:
+        if durum not in PARTI_DURUMLARI:
+            raise KatalogHatasi(f"geçersiz parti durumu: {durum!r} ({', '.join(PARTI_DURUMLARI)})")
+        self.parti(malzeme_kodu, lot_no)
+        with self.islem() as b:
+            b.execute(
+                "UPDATE partiler SET durum = ? WHERE malzeme_kodu = ? AND lot_no = ?", (durum, malzeme_kodu, lot_no)
+            )
+        return self.parti(malzeme_kodu, lot_no)
+
+
+__all__ = [
+    "DokumanSurumu",
+    "Katalog",
+    "KatalogHatasi",
+    "Malzeme",
+    "PARTI_DURUMLARI",
+    "Parti",
+    "PartiDurumu",
+    "icerik_ozeti",
+]
