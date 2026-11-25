@@ -1,28 +1,62 @@
-# MIL-PRF-85285E çıkarma notları
+# MIL-PRF-85285E doğru cevap taslağı: kontrol notları
 
-PDF’in 24 sayfası sayfa görüntüleri üzerinden okundu. Kaynak sayfaları PDF sırasını kullanır. Tablo kayıtlarında dikey çizgiler, aynı satırdaki hücreleri gösterir.
+`MIL-PRF-85285E.json` standart metninden elle hazırlanmış **taslak** doğru
+cevaptır; çıkarıcı çıktısından kopyalanmadı (çıkarıcı bu belgeden yalnız metal
+kap raf ömrünü çıkarabildi). Kontrol için `MIL-PRF-85285E_kontrol_listesi.md`
+dosyasını kullan. Onaydan sonra `data/gold/` altına kendin taşıyacaksın.
 
-## Ürün tanımları
+Şema: raf ömrü `raf_omurleri` listesi (metal kap 1 yıl, plastik kap 6 ay).
 
-- 1.2.1 ve 1.2.2. Kaplama tipleri ve H/W sınıfları. VOC sınırları 3.4.1’den çıkarıldı.
-- 1.3 ve 1.3.1. PIN ve kit boyutu belirteçleri.
-- 3.4. Kitin A, B ve isteğe bağlı C bileşenlerinin formülasyon açıklaması. Karışım oranına, sağlanan hacme ve yasaklı metallere ilişkin zorunluluklar çıkarıldı.
+## Belgenin yapısı (23377K'dan farkları)
 
-## Kapsam dışı bıraktıklarım
+- Poliüretan son kat boya. Tip I–IV (uçak, yer ekipmanı, düşük VOC, uzun
+  hava dayanımı), sınıf H (yüksek katı) ve W (su bazlı). Bazı sınırlar renk
+  türüne (parlak, yarı parlak, kamuflaj) ya da renk numarasına göre değişiyor.
+- TABLE IV'te sütun sırası farklı: önce şart maddesi, sonra test adı, test
+  maddesi ve iki ayrı metot sütunu (EPA, ASTM).
+- Kabul kapsamı 4.4.1'de "except ..." ile veriliyor.
 
-- 2, 3.1, 4.1–4.4.1.1, 5 ve 6. Atıf listeleri, yeterlilik listesi yetkilendirmesi, muayene ve örnekleme planı, sözleşmeye bırakılan ambalajlama ve Notes. 4.4.1 ve TABLE IV test türlerinin belirlenmesinde kullanıldı.
-- 4.2, 4.5–4.6.15 ve TABLE V. Laboratuvar maruziyeti ve cihaz ayarları, kullanım veya depolama koşulu olarak alınmadı. Testlerde kullanılan panel hazırlığı ve sınırın yorumlanmasını sağlayan ifadeler ilgili kayıtlara işlendi.
-- TABLE I. Tip III / Class W / 36375 satırında VOHAP sınırı N/A.
-- 3.9.2. İnceltmede geçerli VOC sınırları 3.4.1’deki değerleri tekrar eder.
-- 3.10.3(a), (b), (e) ve (g). Temizleme, topraklama, yüzey hazırlama ve dikkatli açma adımları bağımsız sayısal sınır veya açık yasak niteliğinde ele alınmadı. (g)’deki berraklık şartı kullanım koşuluna işlendi.
+## Kontrol etmeni istediğim kararlar
 
-## Etiketleme kararları
-
-- 3.4.1–3.4.2 / 4.4.1 / TABLE IV. Parti muayenesi istisnasında “composition (3.4)” yazıyor. VOC ve VOHAP ayrı satırlarda 3.4.1 ve 3.4.2 olarak listelendiğinden bu ikisi için parti kabul etiketi de verildi.
-- 3.5.2. Bir yıl metal, altı ay plastik kap için raf ömrü olarak alındı. Sıcaklık koşulu raf ömrü kayıtlarına işlendi. Açık bir başlangıç tarihi ve raf ömrü uzatma muayenesi verilmedi.
-- 3.5.3 / TABLE IV / 4.6.2. TABLE IV, hızlandırılmış kararlılık satırında “component B only” diyor. Şart metni kaplama bileşenlerini, yöntem ise her bileşenden kap alınmasını belirtiyor. Kriter kapsamı 3.5.3’ten alındı ve tablo satırı adı aynen saklandı.
-- 3.7.4. Yansıma sınırı 8 olarak yazılmış ve maddede birim açıkça verilmemiştir. 3.7.7’deki 4A derecesi 4 alt sınırıyla kodlandı; A sınıflandırması özgün metinde korundu.
-- 3.8.1 / TABLE V. Yağ için şart maddesinde MIL-PRF-23699, yöntem tablosunda MIL-L-23699 yazıyor. Kayıt adı ve özgün metin şart maddesini izliyor.
-- 3.8.2. Tip IV kamuflaj parlaklık değişimi 60° ve 85° ölçümleri için ayrı kaydedildi. Gloss Units ve ΔE birimsiz ölçekler olarak işlendi.
-- 3.9.1–3.9.2. Bu maddeler TABLE IV’te yer almadığından çalışma özellikleri için yeterlilik etiketi kullanıldı. 3.10–3.10.3’teki etiket ve föy şartlarına, 4.4.1.1’deki işaretleme muayenesini kapsadığı varsayılarak parti kabul etiketi de verildi.
-- 3.9.4 / 4.6.14. İki yöntem de uygulanır. %90 sınırının yöntemlerden en az birinde karşılanması tek kabul ölçütü olarak kodlandı.
+1. **Renk türüne/tipe göre değişen sınırlar ayrı kayıt.** `uygulanabilirlik`
+   alanına tip, sınıf ve renk türünü yazdım ("Gloss", "Semi-gloss",
+   "Camouflage", "Color 34095" gibi). Örnek: VOC 3 kayıt, VOHAP 7 kayıt,
+   parlaklık 4 kayıt (85° kamuflaj ayrı), hava dayanımı 8 kayıt.
+2. **"composition (3.4)" kabul dışı.** 4.4.1 kabul dışı listesinde
+   "composition (3.4)" var. Bunu yalnız 3.4 satırları (kurşun/kadmiyum,
+   krom) olarak okudum; **VOC (3.4.1) ve VOHAP (3.4.2) kabul testi** kaldı.
+   3.4'ün alt maddelerini de kapsıyor dersen bu 10 kayıt yalnız yeterlilik
+   olur. Bu karar sertifika üreticisini ve karar motorunu etkiliyor.
+3. **Kadmiyum ve altı değerli krom** "içermeyecek" diye yazılmış, sayı yok →
+   metinsel. Kurşun ≤ %0,05 ayrı sayısal kayıt (`lead_and_cadmium_content_lead`).
+4. **Viskozite ve kap ömrü (TABLE II):** üç kayıt: başlangıç ≤ 30 s, 4 saat
+   ≤ 60 s, 5 saat jelleşme yok (metinsel).
+5. **Kuruma süresi:** dokunma kuruluğu ≤ 6 saat ve sert kuruma ≤ 12 saat, iki
+   kayıt. Panel bağlantısı yok (tabloda dipnot yok).
+6. **"Less than" sınırları dahil değil:** renk farkı ΔE < 1 (3.7.3), hava
+   dayanımındaki ΔE < 1,0 ve parlaklık değişimi < 20 / < 3 kayıtlarında
+   `ust_dahil = false`. Isı dayanımı ΔE ≤ 1,0 (3.8.4 "less than or equal")
+   dahil.
+7. **Birimsiz değerler:** Hegman inceliği, parlaklık (G.U.), kontrast oranı,
+   ΔE, ASTM D3359 derecesi (4A → 4). Kızılötesi yansıma (3.7.4) "not greater
+   than 8" diyor, birim yazmıyor; birimsiz bıraktım (23377K'da %'ydi, bakmanı
+   istiyorum).
+8. **İnceltik (fineness of grind)** parlak ≥ 7, kamuflaj ≥ 5. Yarı parlak
+   renkler için değer verilmemiş; kayıt yok.
+9. **Hızlandırılmış depolama:** TABLE IV "(component B only)" diyor, 3.5.3
+   ise "coating components" diyor. Tablodaki adı aldım, kabul + yeterlilik.
+10. **TABLE IV'te olmayan şartlar:** 3.9.1 karıştırma ve 3.9.2 uygulama test
+    olarak yazılmadı. 3.9.2'deki uygulama sıcaklığı (15,6–32,2 °C), bağıl nem
+    (%20–80) ve kuru film kalınlığı (1,7–2,3 mil) kullanım koşulu olarak
+    yazıldı. 4.4.1.1 dolu kap görsel muayenesi yalnız kabul testi.
+11. **Bekleme (indüksiyon) süresi ≥ 30 dakika** 4.5.2.2'den (test paneli
+    hazırlığı) alındı; önlem listesinde (3.10.3) yok. Kap ömrü ≤ 4 saat
+    3.10.3 c'den.
+12. **Numune hazırlığı:** iki panel: `panel_standart` (4.5–4.5.2: 2024-T3,
+    MIL-DTL-5541 dönüşüm kaplama, astar + son kat, 14 gün kür) ve
+    `panel_esneklik` (4.6.7: 2024-O, MIL-A-8625 type I anodize, astarsız).
+    "4.5 through 4.5.2" diyen testler `panel_standart`'a, esneklik testleri
+    `panel_esneklik`'e bağlandı.
+13. **Sayfa numaraları:** değer bir tablodaysa tablonun sayfası (VOHAP s. 7);
+    hava dayanımının Type IV kısmı s. 9'dan s. 10'a taşıyor, (b)–(d) kayıtları
+    s. 10.
