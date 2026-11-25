@@ -9,9 +9,18 @@
 # konteynerinde çalıştırılır ve ağı AÇIK bulmalıdır (denetimin gerçekten çıkışı
 # yakalayabildiğini gösterir; internetsiz makinede bu adım çalıştırılmaz).
 #
+# Docker'da varsayılan parola yoktur (docker-compose.yml secrets). Ortamda
+# MALZEME_KABUL_MP_PAROLASI / MALZEME_KABUL_GK_PAROLASI yoksa bu betik deneme için
+# rastgele parola üretir; parolalar hiçbir çıktıya yazılmaz.
+#
 # Kullanım: sh scripts/ag_testi.sh
 set -eu
 cd "$(dirname "$0")/.."
+
+rastgele_parola() { python3 -c 'import secrets; print(secrets.token_hex(16))'; }
+MALZEME_KABUL_MP_PAROLASI="${MALZEME_KABUL_MP_PAROLASI:-$(rastgele_parola)}"
+MALZEME_KABUL_GK_PAROLASI="${MALZEME_KABUL_GK_PAROLASI:-$(rastgele_parola)}"
+export MALZEME_KABUL_MP_PAROLASI MALZEME_KABUL_GK_PAROLASI
 
 if [ "${AG_TESTI_INSA:-1}" = "1" ]; then
   docker compose up -d --build

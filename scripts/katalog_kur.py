@@ -5,11 +5,16 @@ Kullanım:
   python scripts/katalog_kur.py                       # data/calisma/katalog.sqlite
   python scripts/katalog_kur.py --ornek               # + data/ornek/katalog.json
   python scripts/katalog_kur.py --db yol.sqlite --ornek
+
+--ornek-kullanicilar yalnız yerel deneme içindir; MALZEME_KABUL_DOCKER=1 iken
+(Dockerfile) reddedilir.
 """
 
 from __future__ import annotations
 
 import argparse
+import os
+import sys
 from pathlib import Path
 
 from malzeme_kabul.arayuz.kimlik import KimlikHatasi, kullanici_ekle
@@ -32,6 +37,12 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("--ornek-kullanicilar", action="store_true",
                      help="deneme kullanıcıları: mp / mp-ornek-parola (M&P), gk / gk-ornek-parola (giriş kalite)")
     args = ayr.parse_args(argv)
+    if args.ornek_kullanicilar and os.environ.get("MALZEME_KABUL_DOCKER") == "1":
+        # Docker'da varsayılan parola yoktur; hesaplar scripts/ilk_kurulum.py ile ortamdan açılır.
+        print("HATA: --ornek-kullanicilar Docker'da kullanılamaz (MALZEME_KABUL_DOCKER=1); "
+              "hesaplar MALZEME_KABUL_MP_PAROLASI / MALZEME_KABUL_GK_PAROLASI ile scripts/ilk_kurulum.py "
+              "tarafından açılır.", file=sys.stderr)
+        return 2
 
     with Katalog(args.db) as katalog:
         if args.ornek:

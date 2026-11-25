@@ -66,11 +66,55 @@ python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-
 
 ### Ağsız Docker
 
+Varsayılan parola yoktur. İlk açılışta M&P ve giriş kalite hesaplarının
+parolaları (en az 12 karakter, kullanıcı adıyla aynı olamaz) host'ta ortam
+değişkeni olarak verilir; compose bunları Docker secrets olarak konteynere
+dosya şeklinde aktarır. Parola yoksa compose başlamaz; boş ya da zayıfsa
+`scripts/ilk_kurulum.py` hata verir ve Streamlit başlamaz. Kullanıcı adları
+`MALZEME_KABUL_MP_KULLANICI` / `MALZEME_KABUL_GK_KULLANICI` (varsayılan `mp` /
+`gk`). Hesaplar `veri` biriminde kurulduktan sonra parolalar kullanılmaz ve
+değiştirilmez; ancak compose her `up`'ta secrets değişkenlerini yine ister.
+
+Gereken sürüm: secrets'ın ortam değişkeninden okunması (`secrets.<ad>.environment`)
+**Docker Compose v2.6.0** ve üstünü ister (`docker compose version`). Daha eski
+sürümler bu alanı tanımaz.
+
+Her açılışta mevcut hesaplar da denetlenir: bir hesap bilinen bir deneme
+parolasıyla kurulmuşsa (bu düzeltmeden önce `--ornek-kullanicilar` ile açılmış
+eski bir `veri` birimi), uygulama hesabın adını söyleyip başlamaz. Docker
+imajında `katalog_kur.py --ornek-kullanicilar` de reddedilir
+(`MALZEME_KABUL_DOCKER=1`).
+
 ```bash
+read -rs MALZEME_KABUL_MP_PAROLASI; read -rs MALZEME_KABUL_GK_PAROLASI
+export MALZEME_KABUL_MP_PAROLASI MALZEME_KABUL_GK_PAROLASI
 docker compose up -d --build          # ekran: http://127.0.0.1:8501 (uygulama dış ağa çıkamaz)
 docker compose --profile model up -d  # yerel model (Ollama) ile, model dosyaları önceden konmuş olmalı
-scripts/ag_testi.sh                   # ağın kapalı olduğunu gösterir (0 = kapalı)
+scripts/ag_testi.sh                   # ağın kapalı olduğunu gösterir (0 = kapalı); parola yoksa rastgele üretir
 ```
+
+#### Parola değiştirme
+
+Ortam değişkenine yeni bir parola yazmak **mevcut bir hesabın parolasını
+değiştirmez**: ilk kurulum yalnız hiç hesap yokken çalışır. Parola değiştirmek
+için hesap silinip yeniden açılır (uygulama durdurulmuşken; deneme parolası
+yüzünden yeniden başlayıp duruyorsa da bu yol çalışır):
+
+```bash
+docker compose stop uygulama
+# 1. hesabı sil (örnekte "mp")
+docker compose run --rm --entrypoint python uygulama -c \
+  "import sqlite3; b = sqlite3.connect('/veri/katalog.sqlite'); b.execute(\"DELETE FROM kullanicilar WHERE ad = 'mp'\"); b.commit()"
+# 2. aynı adla yeniden aç; parola sorulur (ekrana ve geçmişe yazılmaz)
+docker compose run --rm -it --entrypoint python uygulama \
+  /uygulama/scripts/kullanici_ekle.py --ad mp --rol mp --db /veri/katalog.sqlite
+docker compose up -d
+```
+
+Bütün hesaplar silinirse bir sonraki `up`'ta ilk kurulum, hesapları yeniden
+`MALZEME_KABUL_MP_PAROLASI` / `MALZEME_KABUL_GK_PAROLASI` ile açar. Veriye
+ihtiyaç yoksa `docker compose down -v` birimi (katalog ve denetim kaydı dahil)
+tamamen siler.
 
 ## Klasörler
 

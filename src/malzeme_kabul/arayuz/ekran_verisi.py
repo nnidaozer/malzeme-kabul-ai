@@ -18,6 +18,7 @@ madde 7). Kilidi yalnız proje sahibi açar.
 from __future__ import annotations
 
 import json
+import os
 import re
 from datetime import date
 from pathlib import Path
@@ -36,8 +37,11 @@ from malzeme_kabul.revizyon.revizyon_karsilastirici import (
 from malzeme_kabul.sozlesme.sema import KabulDokumani, Sinir
 from malzeme_kabul.sozlesme.sertifika import Sertifika
 
-KOK = Path(__file__).resolve().parents[3]
+# Veri kökü (data/bolunme.yaml, data/cikti): imajda paket site-packages'a kurulu
+# olduğundan MALZEME_KABUL_KOK ile verilir (Dockerfile: /uygulama); yoksa depo kökü.
+KOK = Path(os.environ["MALZEME_KABUL_KOK"]) if os.environ.get("MALZEME_KABUL_KOK") else Path(__file__).resolve().parents[3]
 BOLUNME = KOK / "data" / "bolunme.yaml"
+HAZIR_RAPORLAR = KOK / "data" / "cikti"
 
 
 # --- test kümesi kilidi ------------------------------------------------------------
@@ -183,7 +187,7 @@ def revizyon_raporu(eski_pdf: str | Path, yeni_pdf: str | Path, dokuman: KabulDo
     return markdown_raporu(fark, oneriler), fark.ozet()
 
 
-def hazir_revizyon_raporlari(klasor: Path = KOK / "data" / "cikti") -> dict[str, Path]:
+def hazir_revizyon_raporlari(klasor: Path = HAZIR_RAPORLAR) -> dict[str, Path]:
     """Önceden üretilmiş revizyon farkı raporları (ad → .md yolu)."""
     return {p.stem.replace("_revizyon_farklari", ""): p for p in sorted(klasor.glob("*_revizyon_farklari.md"))}
 
