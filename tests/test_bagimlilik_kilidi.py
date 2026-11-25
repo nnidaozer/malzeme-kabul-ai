@@ -17,6 +17,7 @@ from packaging.utils import canonicalize_name
 KOK = Path(__file__).resolve().parents[1]
 CALISMA = KOK / "requirements.lock"
 GELISTIRME = KOK / "requirements-dev.lock"
+ARAYUZ = KOK / "requirements-arayuz.lock"
 TEST_AKISI = KOK / ".github" / "workflows" / "test.yml"
 SATIR = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9.+!-]+$")
 
@@ -41,7 +42,7 @@ def pyproject_bagimliliklari() -> tuple[list[Requirement], list[Requirement]]:
     return calisma, gelistirme
 
 
-@pytest.mark.parametrize("yol", [CALISMA, GELISTIRME], ids=lambda p: p.name)
+@pytest.mark.parametrize("yol", [CALISMA, GELISTIRME, ARAYUZ], ids=lambda p: p.name)
 def test_kilit_satirlari_tam_surumle_sabit(yol):
     assert kilit_oku(yol)
 
@@ -80,3 +81,18 @@ def test_ci_pip_audit_ile_tarar():
     assert re.search(r"pip install pip-audit==\d", akis), "pip-audit sürümü sabitlenmeli"
     assert re.search(r"pip-audit .*-r requirements-dev\.lock", akis)
     assert "--strict" in akis
+
+
+def test_arayuz_kilidi_gelistirme_kilidini_aynen_icerir_ve_streamlit_sabit():
+    gelistirme, arayuz = kilit_oku(GELISTIRME), kilit_oku(ARAYUZ)
+    assert {ad: arayuz.get(ad) for ad in gelistirme} == gelistirme
+    proje = tomllib.loads((KOK / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    for r in (Requirement(x) for x in proje["optional-dependencies"]["arayuz"]):
+        ad = canonicalize_name(r.name)
+        assert ad in arayuz and r.specifier.contains(arayuz[ad], prereleases=True)
+
+
+def test_ci_arayuz_kilidini_kurar_ve_tarar():
+    akis = TEST_AKISI.read_text(encoding="utf-8")
+    assert "pip install -r requirements-arayuz.lock" in akis
+    assert re.search(r"pip-audit .*-r requirements-arayuz\.lock", akis)

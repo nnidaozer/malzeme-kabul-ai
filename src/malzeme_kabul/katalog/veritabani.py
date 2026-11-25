@@ -108,6 +108,17 @@ CREATE TABLE IF NOT EXISTS partiler (
     mp_inceleme        TEXT,
     PRIMARY KEY (malzeme_kodu, lot_no)
 );
+
+CREATE TABLE IF NOT EXISTS taslaklar (
+    id          INTEGER PRIMARY KEY,
+    belge_no    TEXT NOT NULL,
+    revizyon    TEXT NOT NULL,
+    icerik      TEXT NOT NULL,
+    olusturan   TEXT NOT NULL,
+    guncelleme  TEXT NOT NULL,
+    durum       TEXT NOT NULL DEFAULT 'taslak' CHECK (durum IN ('taslak', 'onaylandi')),
+    surum       INTEGER
+);
 """
 
 # Eski veritabanlarına sonradan eklenen sütunlar: (tablo, sütun, tanım).
@@ -151,6 +162,21 @@ class DokumanSurumu:
     @property
     def etiket(self) -> str:
         return f"{self.belge_no}{self.revizyon} v{self.surum}"
+
+
+@dataclass(frozen=True)
+class Taslak:
+    id: int
+    dokuman: KabulDokumani
+    olusturan: str
+    guncelleme: str
+    durum: str
+    surum: int | None
+
+    @property
+    def etiket(self) -> str:
+        std = self.dokuman.standart
+        return f"taslak {self.id}: {std.belge_no}{std.revizyon}" + (f" (v{self.surum} olarak onaylandı)" if self.surum else "")
 
 
 @dataclass(frozen=True)
@@ -349,6 +375,50 @@ class Katalog:
             b.execute("UPDATE malzemeler SET revizyon = ? WHERE kod = ?", (revizyon, malzeme_kodu))
         return self.malzeme(malzeme_kodu)
 
+    # --- taslaklar (M&P düzeltir, onaylayınca sürüm olur) -----------------
+
+    def taslak_kaydet(self, dokuman: KabulDokumani, kullanici: str) -> Taslak:
+        std = dokuman.standart
+        with self.islem() as b:
+            imlec = b.execute(
+                "INSERT INTO taslaklar (belge_no, revizyon, icerik, olusturan, guncelleme) VALUES (?, ?, ?, ?, ?)",
+                (std.belge_no, std.revizyon, dokuman.model_copy(update={"durum": "taslak"}).model_dump_json(), kullanici, _simdi()),
+            )
+        return self.taslak(imlec.lastrowid)
+
+    def taslak(self, taslak_id: int) -> Taslak:
+        s = self.baglanti.execute("SELECT * FROM taslaklar WHERE id = ?", (taslak_id,)).fetchone()
+        if s is None:
+            raise KatalogHatasi(f"bilinmeyen taslak: {taslak_id}")
+        return Taslak(s["id"], KabulDokumani.model_validate_json(s["icerik"]), s["olusturan"], s["guncelleme"], s["durum"], s["surum"])
+
+    def taslaklar(self, yalniz_acik: bool = False) -> list[Taslak]:
+        nerede = " WHERE durum = 'taslak'" if yalniz_acik else ""
+        return [self.taslak(s["id"]) for s in self.baglanti.execute(f"SELECT id FROM taslaklar{nerede} ORDER BY id")]
+
+    def taslak_guncelle(self, taslak_id: int, dokuman: KabulDokumani) -> Taslak:
+        t = self.taslak(taslak_id)
+        if t.durum != "taslak":
+            raise KatalogHatasi(f"taslak {taslak_id} onaylanmış; düzeltme yeni taslakla yapılır")
+        if (dokuman.standart.belge_no, dokuman.standart.revizyon) != (t.dokuman.standart.belge_no, t.dokuman.standart.revizyon):
+            raise KatalogHatasi("taslağın standardı ya da revizyonu değiştirilemez")
+        with self.islem() as b:
+            b.execute(
+                "UPDATE taslaklar SET icerik = ?, guncelleme = ? WHERE id = ?",
+                (dokuman.model_copy(update={"durum": "taslak"}).model_dump_json(), _simdi(), taslak_id),
+            )
+        return self.taslak(taslak_id)
+
+    def taslagi_onayla(self, taslak_id: int, onaylayan: str, not_: str | None = None) -> DokumanSurumu:
+        """Taslağı yeni onaylı sürüm yapar; taslak kapanır."""
+        t = self.taslak(taslak_id)
+        if t.durum != "taslak":
+            raise KatalogHatasi(f"taslak {taslak_id} zaten onaylanmış (v{t.surum})")
+        surum = self.dokuman_onayla(t.dokuman, onaylayan, not_)
+        with self.islem() as b:
+            b.execute("UPDATE taslaklar SET durum = 'onaylandi', surum = ? WHERE id = ?", (surum.surum, taslak_id))
+        return surum
+
     # --- tedarikçiler -----------------------------------------------------
 
     def tedarikci_ekle(self, ad: str) -> None:
@@ -445,6 +515,7 @@ __all__ = [
     "Malzeme",
     "PARTI_DURUMLARI",
     "Parti",
+    "Taslak",
     "PartiDurumu",
     "icerik_ozeti",
 ]
