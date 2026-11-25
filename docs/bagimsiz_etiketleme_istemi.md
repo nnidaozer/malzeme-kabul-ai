@@ -54,7 +54,17 @@ kapsamla çalışsın diye buraya aynen kondu.
    zorunlu değildir.
 7. **Muayene ve örnekleme kuralları test değildir** (parti kabulü, örnekleme
    planı, "there shall be no failures"). Test panelleri `numune_hazirlama`
-   altına, doğru cevaptaki bir testte kullanılıyorsa girer.
+   altına, doğru cevaptaki bir testte kullanılıyorsa girer. Etiketleme ve
+   ambalaj *şartları* bu kurala girmez; bkz. 9.
+8. **Bölme düzeyi: ayrı geçilip kalınabiliyorsa ayrı kriter.** Bir test
+   tablosunun her satırı, her test sıvısı, her sınıfın ayrı sınırı ayrı
+   kayıttır. Tek bir kriterin birden fazla koşulu varsa (sıcaklık, süre,
+   numune) kaydı bölme: koşulları `test_kosulu` alanına yaz, numuneyi
+   `numune_hazirlama_id` ile bağla. Ayırt edici soru: tedarikçi bunlardan
+   birini geçip ötekinde kalabilir mi? Evet ise ayrı kayıt.
+9. **Etiketleme ve ambalaj şartları `muayene` türündedir.** Kap, ambalaj, kit
+   içeriği, etiket, uyarı ve işaretleme şartları girer; `test_turleri:
+   ["muayene"]` (başka türle birleşmez) ve `sonuc_kaynagi: "ic_muayene"` yaz.
 
 Bir şeyin kapsama girip girmediğinden emin değilsen JSON'a yazma; `_NOTLAR.md`
 dosyasında "Kapsam dışı bıraktıklarım" başlığı altına madde numarasıyla yaz.
@@ -192,7 +202,9 @@ Sayı ve birim kuralları:
 | `metot_kaynagi` | Kaynak, isteğe bağlı | Testin nasıl yapılacağını anlatan madde (genellikle 4.x). |
 | `sinir` | Sinir | Kabul kriteri. |
 | `kaynak` | Kaynak | Şartın yazdığı madde (genellikle 3.x ya da bir tablo). |
-| `test_turleri` | liste, en az bir öğe | `"kabul"`, `"omur_uzatma"`, `"yeterlilik"` öğelerinden. |
+| `test_turleri` | liste, en az bir öğe | `"kabul"`, `"omur_uzatma"`, `"yeterlilik"`, `"muayene"` öğelerinden. `"muayene"` tek başına kullanılır (Kapsam 9). |
+| `sonuc_kaynagi` | metin, isteğe bağlı | Yalnız `muayene` şartlarında `"ic_muayene"` yaz; diğer kayıtlarda bu alanı yazma. |
+| `test_kosulu` | metin, isteğe bağlı | Aynı kriterin uygulandığı koşul (sıcaklık, süre, ortam), ör. `"24 hours at 120 °F"`. Koşul yoksa `null` (Kapsam 8). |
 | `uygulanabilirlik` | metin listesi | Şart yalnızca bazı tip/sınıflar için geçerliyse, ör. `["Type I", "Class C"]`. Hepsi için geçerliyse `[]`. |
 | `numune_hazirlama_id` | metin, isteğe bağlı | Test bir panel/kupon üzerinde yapılıyorsa `numune_hazirlama` kaydının `id`'si. |
 
@@ -211,7 +223,8 @@ Test kuralları:
   yeterlilik ve kabul/conformance muayenesi tabloları ve maddeleri) göre
   belirle. Her partide yapılan test `kabul`; yalnız ürün yeterliliğinde
   yapılan `yeterlilik`; raf ömrü uzatmak için tekrarlanan `omur_uzatma`. Bir
-  test birden fazla türde olabilir.
+  test birden fazla türde olabilir. Etiketleme ve ambalaj şartları yalnız
+  `muayene` olur.
 - "Kapsam" bölümüne giren bütün test şartlarını çıkar; yalnız kabul
   testlerini değil.
 

@@ -16,12 +16,13 @@ TASLAK_NOTU = (
     "Kullanılmadan önce kalite mühendisi tarafından kontrol edilip onaylanmalıdır."
 )
 TEST_SUTUNLARI = ["Test", "Test metodu", "Sınır", "Uygulanabilirlik", "Sonuç kaynağı", "Madde"]
-SONUC_KAYNAKLARI = {"coc": "CoC", "ic_laboratuvar": "İç laboratuvar"}
+SONUC_KAYNAKLARI = {"coc": "CoC", "ic_laboratuvar": "İç laboratuvar", "ic_muayene": "İç muayene"}
 YON_BELIRSIZ_NOTU = "yön belirsiz, insan incelemeli"
 TEST_BOLUMLERI = [
     ("kabul", "Kabul testleri"),
     ("omur_uzatma", "Ömür uzatma testleri"),
     ("yeterlilik", "Yeterlilik testleri"),
+    ("muayene", "İç muayene şartları"),
 ]
 
 
