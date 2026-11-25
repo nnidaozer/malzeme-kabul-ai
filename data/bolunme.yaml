@@ -82,3 +82,14 @@ test:
 
 kilitli_klasorler:
   - gercek_coc_havacilik
+
+# ocr_gerekli: bütün sayfaları taranmış (resim) standartlar. Kümelerinden
+# çıkarılmazlar; OCR eklenene kadar çıkarıcı ve ölçüm betikleri bunları
+# "OCR gerekli" diye reddeder ve raporlarda taranmış belgeler metin tabanlı
+# belgelerden ayrı gösterilir (python deney/bolunme.py --turler). Liste
+# data/raw/pdf_turleri.csv'deki "taranmış" belgelerle aynı tutulur. Kısmen
+# taranmış (karma) ya da hazır OCR katmanlı belgeler (MIL-PRF-23377G,
+# MIL-PRF-27617F, MIL-PRF-81733D) metin tabanlı sayılır.
+ocr_gerekli:
+  - MIL-A-46146B
+  - MIL-S-81733C

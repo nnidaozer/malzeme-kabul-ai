@@ -21,6 +21,13 @@ Standart dışı belgeler (ör. gerçek havacılık CoC'leri) klasör olarak kil
 kümesindedir ve `test_kumesi_acik: true` yazana kadar açılmaz
 (`yol_kullanima_izin_ver`).
 
+Taranmış belgeler (`ocr_gerekli`): bütün sayfaları resim olan standartlar
+kümelerinden çıkarılmaz, "OCR gerekli" diye işaretlenir. OCR eklenene kadar
+çıkarıcı ve ölçüm betikleri bunları reddeder (`OcrGerekli`); sonuçlar
+raporlanırken taranmış ve metin tabanlı belgeler ayrı gösterilir
+(`turlere_ayir`). Liste `scripts/pdf_tur_kontrol.py` çıktısındaki (data/raw/pdf_turleri.csv)
+"taranmış" belgelerle aynı olmalıdır; test bunu denetler.
+
 Çıkarıcı ve taslak cevap betikleri bir standardı işlemeden önce
 `betik_korumasi` çağırır.
 
@@ -42,7 +49,13 @@ VARSAYILAN_YOL = Path(__file__).resolve().parents[1] / "data" / "bolunme.yaml"
 BELGE_ETIKETI = re.compile(r"^[A-Z]+(-[A-Z]+)?-\d+[A-Z]$")
 Kume = Literal["gelistirme", "test", "bekliyor"]
 TestDurumu = Literal["bekliyor", "secildi"]
-ANAHTARLAR = ("test_kumesi_acik", "test_durumu", "tohum", "gelistirme", "yeni_standartlar", "test", "kilitli_klasorler")
+ANAHTARLAR = (
+    "test_kumesi_acik", "test_durumu", "tohum", "gelistirme", "yeni_standartlar", "test", "kilitli_klasorler",
+    "ocr_gerekli",
+)
+METIN = "metin"
+TARANMIS = "taranmış"
+OCR_GEREKLI = "OCR gerekli"
 KLASOR_ADI = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_.-]*$")
 
 
@@ -50,6 +63,10 @@ class TestKumesiKilitli(PermissionError):
     """Test kümesindeki (ya da bölünmeyi bekleyen) bir standart kullanılmak istendi."""
 
     __test__ = False
+
+
+class OcrGerekli(ValueError):
+    """Standart taranmış bir PDF; OCR eklenene kadar çıkarıcı çalıştırılmaz."""
 
 
 def aile(belge_etiketi: str) -> str:
@@ -79,8 +96,24 @@ class Bolunme:
     tohum: int = 0
     test_kumesi_acik: bool = False
     kilitli_klasorler: list[str] = field(default_factory=list)
+    ocr_gerekli: list[str] = field(default_factory=list)
 
     __test__ = False
+
+    def belge_turu(self, belge_etiketi: str) -> str:
+        """"taranmış" (OCR gerekli) ya da "metin"."""
+        return TARANMIS if belge_etiketi in self.ocr_gerekli else METIN
+
+    def turlere_ayir(self, belge_etiketleri) -> dict[str, list[str]]:
+        """Raporlama için belgeleri metin tabanlı ve taranmış diye ayırır; sıra korunur.
+
+        Taranmış belgeler sonuç tablolarına karışmaz; ayrı bir grupta
+        "OCR gerekli" diye gösterilir.
+        """
+        gruplar: dict[str, list[str]] = {METIN: [], TARANMIS: []}
+        for etiket in belge_etiketleri:
+            gruplar[self.belge_turu(etiket)].append(etiket)
+        return gruplar
 
     def yol_kilitli_mi(self, yol: str | Path) -> bool:
         """Yol kilitli bir klasörün içindeyse ve test kümesi kapalıysa True."""
@@ -118,6 +151,11 @@ class Bolunme:
             raise TestKumesiKilitli(
                 f"{belge_etiketi} test kümesinde; dil modeli çıkarıcısı dondurulana kadar çıkarıcı çalıştırılmaz, "
                 "taslak cevap hazırlanmaz (data/bolunme.yaml, test_kumesi_acik: false)"
+            )
+        if belge_etiketi in self.ocr_gerekli:
+            raise OcrGerekli(
+                f"{belge_etiketi} taranmış bir PDF ({OCR_GEREKLI}); OCR eklenene kadar çıkarıcı çalıştırılmaz "
+                "(data/bolunme.yaml, ocr_gerekli)"
             )
         return kume
 
@@ -185,6 +223,7 @@ def bolunme_oku(yol: str | Path = VARSAYILAN_YOL) -> Bolunme:
         tohum=_tur(veri, "tohum", int, 0),
         test_kumesi_acik=_tur(veri, "test_kumesi_acik", bool, False),
         kilitli_klasorler=list(_tur(veri, "kilitli_klasorler", list, [])),
+        ocr_gerekli=list(_tur(veri, "ocr_gerekli", list, [])),
     )
     hatali_klasor = [k for k in b.kilitli_klasorler if not KLASOR_ADI.match(k) or k in (".", "..")]
     if hatali_klasor:
@@ -192,10 +231,14 @@ def bolunme_oku(yol: str | Path = VARSAYILAN_YOL) -> Bolunme:
     if b.test_durumu not in ("bekliyor", "secildi"):
         raise ValueError(f"test_durumu 'bekliyor' ya da 'secildi' olmalı: {b.test_durumu!r}")
     hepsi = b.gelistirme + b.yeni_standartlar + b.test
-    hatali = [x for x in hepsi if not BELGE_ETIKETI.match(x)]
+    hatali = [x for x in hepsi + b.ocr_gerekli if not BELGE_ETIKETI.match(x)]
     if hatali:
         raise ValueError(f"belge etiketi 'MIL-PRF-23377K' biçiminde olmalı: {hatali}")
-    for ad, liste in (("gelistirme", b.gelistirme), ("yeni_standartlar", b.yeni_standartlar), ("test", b.test)):
+    bolunmede_yok = sorted(set(b.ocr_gerekli) - set(hepsi))
+    if bolunmede_yok:
+        raise ValueError(f"ocr_gerekli içindekiler bir kümede olmalı (taranmış belge kümeden çıkarılmaz): {bolunmede_yok}")
+    for ad, liste in (("gelistirme", b.gelistirme), ("yeni_standartlar", b.yeni_standartlar), ("test", b.test),
+                      ("ocr_gerekli", b.ocr_gerekli)):
         tekrar = sorted({x for x in liste if liste.count(x) > 1})
         if tekrar:
             raise ValueError(f"{ad} içinde tekrar edenler: {tekrar}")
@@ -235,7 +278,7 @@ def bolunme_yaz(b: Bolunme, yol: str | Path) -> None:
         "tohum": str(b.tohum),
     }
     listeler = {"gelistirme": b.gelistirme, "yeni_standartlar": b.yeni_standartlar, "test": b.test,
-                "kilitli_klasorler": b.kilitli_klasorler}
+                "kilitli_klasorler": b.kilitli_klasorler, "ocr_gerekli": b.ocr_gerekli}
     cikti: list[str] = []
     atla = False
     for satir in satirlar:
@@ -259,7 +302,7 @@ def betik_korumasi(belge_etiketi: str, yol: str | Path = VARSAYILAN_YOL, betik: 
     """Betikler için: standart kullanılamıyorsa nedenini stderr'e yazar ve 2 döner; kullanılabiliyorsa None."""
     try:
         bolunme_oku(yol).kullanima_izin_ver(belge_etiketi)
-    except (TestKumesiKilitli, ValueError) as hata:
+    except (TestKumesiKilitli, ValueError) as hata:  # OcrGerekli de ValueError'dır
         print(f"{betik or 'bolunme'}: {hata}", file=sys.stderr)
         return 2
     return None
@@ -269,6 +312,7 @@ def main(argv: list[str] | None = None) -> int:
     ayr = argparse.ArgumentParser(description="Geliştirme / test bölünmesini denetler ya da test kümesini seçer.")
     ayr.add_argument("--yol", default=str(VARSAYILAN_YOL))
     ayr.add_argument("--sec", action="store_true", help="Bekleyen yeni standartları tohumla böl ve dosyaya yaz")
+    ayr.add_argument("--turler", action="store_true", help="Kümeleri metin tabanlı / taranmış diye ayrı listele")
     args = ayr.parse_args(argv)
     b = bolunme_oku(args.yol)
     if args.sec:
@@ -278,7 +322,21 @@ def main(argv: list[str] | None = None) -> int:
     print(f"geliştirme: {len(b.gelistirme)}, test: {len(b.test)} ({b.test_durumu}), "
           f"bekleyen yeni: {len(b.yeni_standartlar) if b.test_durumu == 'bekliyor' else 0}, "
           f"test kilidi: {'açık' if b.test_kumesi_acik else 'kapalı'}")
+    if b.ocr_gerekli:
+        print(f"{OCR_GEREKLI} (taranmış): {', '.join(b.ocr_gerekli)}")
+    if args.turler:
+        print(turler_tablosu(b))
     return 0
+
+
+def turler_tablosu(b: Bolunme) -> str:
+    """Her küme için metin tabanlı ve taranmış belgeleri ayrı satırlarda gösteren Markdown tablosu."""
+    satirlar = ["| Küme | Tür | Sayı | Belgeler |", "|---|---|---|---|"]
+    for kume, liste in (("geliştirme", b.gelistirme), ("test", b.test)):
+        for tur, belgeler in b.turlere_ayir(liste).items():
+            ad = f"{tur} ({OCR_GEREKLI})" if tur == TARANMIS else "metin tabanlı"
+            satirlar.append(f"| {kume} | {ad} | {len(belgeler)} | {', '.join(belgeler) or '-'} |")
+    return "\n".join(satirlar)
 
 
 if __name__ == "__main__":
