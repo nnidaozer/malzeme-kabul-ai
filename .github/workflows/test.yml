@@ -36,6 +36,17 @@ jobs:
       - name: Testleri çalıştır (streamlit ile)
         run: pytest
 
+  ag-testi:
+    # Docker imajını kurar, docker compose ile kaldırır ve uygulamanın ağsız çalıştığını gösterir.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ağsız Docker testi
+        env:
+          AG_TESTI_KAPAT: "1"
+          AG_TESTI_KONTROL: "1"
+        run: sh scripts/ag_testi.sh
+
   pip-audit:
     runs-on: ubuntu-latest
     steps:
