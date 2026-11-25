@@ -139,3 +139,19 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   (`pdf_sayfasi`), dil modeli hattından gelir.
 - Örnek veri yüklenirken üç doküman sürümü için `ornek-veri` kullanıcısıyla
   onay kaydı yazılır.
+
+## Gece işi 4: raf ömrü
+
+- **Son kullanma = üretim tarihi + raf ömrü,** yıl ve ay takvimle (31 Ocak + 1
+  ay = 28 Şubat). Kabul dokümanında "teslim tarihinden itibaren" gibi başka bir
+  başlangıç yazsa da üretim tarihi kullanılır ve not düşülür; partide teslim
+  tarihi tutulmuyor.
+- **Kap türü bilinmiyorsa en kısa raf ömrü alınır** (23377K: metal 1 yıl,
+  plastik 6 ay → 6 ay). Güvenli taraf; partiye `kap_turu` girilirse doğru kayıt
+  seçilir. Partiler tablosuna `kap_turu` sütunu eklendi; eski veritabanına
+  açılışta kendiliğinden eklenir.
+- **Uyarı eşiği 30 gün dahil** (kalan ≤ 30 gün → yaklaşıyor).
+- **Ömür uzatma testleri yalnız uyarılı partiler için listelenir.** Bugünkü
+  kabul dokümanlarında `omur_uzatma` türünde test yok (kural çıkarıcı bu türü
+  henüz işaretlemiyor), bu yüzden liste boş ve "tanımlı değil" yazıyor.
+  M&P taslağı düzeltirken bu testleri işaretleyince liste dolar.

@@ -103,9 +103,15 @@ CREATE TABLE IF NOT EXISTS partiler (
     uretim_tarihi      TEXT NOT NULL,
     durum              TEXT NOT NULL DEFAULT 'bekliyor'
                        CHECK (durum IN ('serbest', 'karantina', 'bekliyor')),
+    kap_turu           TEXT,
     PRIMARY KEY (malzeme_kodu, lot_no)
 );
 """
+
+# Eski veritabanlarına sonradan eklenen sütunlar: (tablo, sütun, tanım).
+EK_SUTUNLAR: list[tuple[str, str, str]] = [
+    ("partiler", "kap_turu", "TEXT"),
+]
 
 
 class KatalogHatasi(ValueError):
@@ -150,6 +156,7 @@ class Parti:
     siparis_revizyonu: str
     uretim_tarihi: date
     durum: str
+    kap_turu: str | None = None
 
 
 def icerik_ozeti(icerik: str) -> str:
@@ -180,6 +187,15 @@ class Katalog:
         self.baglanti = sqlite3.connect(self.yol, check_same_thread=False)
         self.baglanti.row_factory = sqlite3.Row
         self.baglanti.executescript(SEMA)
+        self._sutunlari_tamamla()
+
+    def _sutunlari_tamamla(self) -> None:
+        """Eski bir veritabanında eksik sütunları ekler (veri kaybı olmadan)."""
+        for tablo, sutun, tanim in EK_SUTUNLAR:
+            var = {s["name"] for s in self.baglanti.execute(f"PRAGMA table_info({tablo})")}
+            if sutun not in var:
+                self.baglanti.execute(f"ALTER TABLE {tablo} ADD COLUMN {sutun} {tanim}")
+        self.baglanti.commit()
 
     def kapat(self) -> None:
         self.baglanti.close()
@@ -340,6 +356,7 @@ class Katalog:
         siparis_revizyonu: str,
         uretim_tarihi: date | str,
         durum: PartiDurumu = "bekliyor",
+        kap_turu: str | None = None,
     ) -> Parti:
         self.malzeme(malzeme_kodu)
         if durum not in PARTI_DURUMLARI:
@@ -352,9 +369,9 @@ class Katalog:
         try:
             with self.islem() as b:
                 b.execute(
-                    "INSERT INTO partiler (lot_no, malzeme_kodu, tedarikci, siparis_revizyonu, uretim_tarihi, durum)"
-                    " VALUES (?, ?, ?, ?, ?, ?)",
-                    (lot_no, malzeme_kodu, tedarikci, siparis_revizyonu, uretim.isoformat(), durum),
+                    "INSERT INTO partiler (lot_no, malzeme_kodu, tedarikci, siparis_revizyonu, uretim_tarihi, durum, kap_turu)"
+                    " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (lot_no, malzeme_kodu, tedarikci, siparis_revizyonu, uretim.isoformat(), durum, kap_turu),
                 )
         except sqlite3.IntegrityError as hata:
             raise KatalogHatasi(f"parti zaten var: {malzeme_kodu} / {lot_no}") from hata
@@ -364,7 +381,7 @@ class Katalog:
     def _parti_satirindan(s: sqlite3.Row) -> Parti:
         return Parti(
             s["lot_no"], s["malzeme_kodu"], s["tedarikci"], s["siparis_revizyonu"],
-            date.fromisoformat(s["uretim_tarihi"]), s["durum"],
+            date.fromisoformat(s["uretim_tarihi"]), s["durum"], s["kap_turu"],
         )
 
     def parti(self, malzeme_kodu: str, lot_no: str) -> Parti:

@@ -473,6 +473,9 @@ def _kod(deger: str | None) -> str | None:
     return _ROMEN.get(deger, deger)
 
 
+kod_normallestir = _kod
+
+
 def _tip_sinif_kontrolu(atif: Atif, tip: str | None, sinif: str | None) -> KararSatiri:
     def satir(karar: Karar, gerekce: str) -> KararSatiri:
         return KararSatiri(test_id="tip_sinif", test_adi="Tip ve sınıf (katalog)", karar=karar, gerekce=gerekce)
@@ -576,6 +579,7 @@ __all__ = [
     "Sonuc",
     "atfi_coz",
     "birimi_cevir",
+    "kod_normallestir",
     "kontrol_et",
     "parti_karari",
     "sonucu_ayristir",
