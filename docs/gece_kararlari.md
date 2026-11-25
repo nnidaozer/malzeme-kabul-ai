@@ -170,3 +170,27 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   kayıt türleri istekte "karar, onay, düzeltme" olarak sayılmıştı.
 - Revizyon yükleme olayı denetim zincirine değil `revizyon_olaylari`
   tablosuna yazılır (zincir türlerini genişletmemek için).
+
+## Gece işi 6: hibrit hat
+
+- **Hibrit hat sertifika tarafında kuruldu.** Standart tarafında `HamOkuma`
+  üreten ürün içi çıkarıcı henüz yok (mimari "sıradaki işler" 2); onun için
+  yalnız doğrulama adımı (kanıt + sınır yönü kuralı) hazır ve test edildi.
+  Okumaları kabul dokümanına çevirmek ayrı bir iş.
+- **Sınır yönü kuralı (Colab işi, `kural/yon_dogrulama.py`) birleşmişti;** hat
+  `okuma_yonu_dogrula`'yı kullanıyor.
+- **Kanıt doğrulayıcı ürüne yeniden yazıldı** (`kural/kanit_dogrulama.py`),
+  çünkü `deney/kanit_kontrolu.py` ürün tarafından içe aktarılamaz ve başka bir
+  iş yapıyor (gold taslaktaki sayıları PDF'te arıyor). Ürün tarafındaki
+  doğrulayıcı modelin okuduğu hücre metnini aynen (yalnız boşluk/harf büyüklüğü
+  serbest) söylediği sayfada ve aynı satırda arar.
+- **Sayfa numarasını model değil hat yazar** (modele hangi sayfa gönderildiyse).
+- **Model yanıt vermezse kural okumasına düşülür,** karar durdurulmaz. Kayıtta
+  `yedek` nedeniyle görünür. Alternatif (hepsini insana göndermek) model
+  sunucusu kapalıyken bütün partileri bekletirdi.
+- **Kural tabanlı sertifika okuyucu eklendi** (yalnız-kural modu için gerekli):
+  tablo başlıklarını İngilizce/Türkçe adlarla eşler; 150 sentetik sertifikada
+  JSON ile birebir aynı okuyor. Gerçek CoC'lerde denenmedi.
+- `tests/test_istem_enjeksiyonu.py`'deki dil modeli testinin beklediği
+  `cikarim.sertifika_okuyucu.sertifika_oku(pdf, istemci)` arayüzü artık var; o
+  test `--dil-modeli` ile yerel modelle çalıştırılabilir (CI'da atlanır).

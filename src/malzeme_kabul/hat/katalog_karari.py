@@ -56,6 +56,7 @@ class KatalogKarari(BaseModel):
     ek_denetimler: list[KararSatiri]
     parti_karari: BelgeKarari
     parti_durumu: PartiDurumu
+    hat: dict | None = None  # okuma modu, model, istem sürümü, kanıtsız okumalar
 
 
 def _ad(metin: str) -> str:
@@ -88,6 +89,8 @@ def malzeme_koduyla_kontrol(
     model: str | None = None,
     istem_surumu: str | None = None,
     pdf_sayfasi: str | int | None = None,
+    ek_denetimler: list[KararSatiri] | None = None,
+    hat_bilgisi: dict | None = None,
 ) -> KatalogKarari:
     """Sertifikayı malzeme kodunun onaylı kabul dokümanıyla karşılaştırır.
 
@@ -102,7 +105,7 @@ def malzeme_koduyla_kontrol(
     surum = katalog.gecerli_dokuman(malzeme_kodu)
     kontrol = kontrol_et(surum.dokuman, sertifika, ayar, tip=malzeme.tip, sinif=malzeme.sinif)
 
-    ek: list[KararSatiri] = []
+    ek: list[KararSatiri] = list(ek_denetimler or [])
     if (t := _tedarikci_denetimi(katalog, malzeme_kodu, sertifika)) is not None:
         ek.append(t)
     parti = None
@@ -131,6 +134,7 @@ def malzeme_koduyla_kontrol(
         ek_denetimler=ek,
         parti_karari=karar,
         parti_durumu=durum,
+        hat=hat_bilgisi,
     )
     if defter is not None:
         defter.ekle(
