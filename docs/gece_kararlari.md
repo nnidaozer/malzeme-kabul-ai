@@ -80,3 +80,16 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
 - **Malzeme kodları, tedarikçiler ve lotlar uydurmadır** (`AST-001`,
   `Örnek Tedarikçi A` ...). Sınıflar: AST-001 Type I Class N, AST-002 Type I
   Class C2, SZD-001 (81733D) Type I Class 1, PUB-001 (85285E) Type I Class H.
+
+## Gece işi 2: karar motoru katalogdan
+
+- **Tip/sınıf katalogdan alınır; sertifikadaki atıf yalnız çelişki için okunur.**
+  Çelişirse (`tip_sinif` satırı) insan incelemeli; red değil, çünkü yanlış
+  malzeme mi geldi yoksa sertifika mı yanlış yazıldı, insan karar verir.
+- **Parti kararı katalogdaki durumlara şöyle eşlendi:** kabul → `serbest`,
+  red → `karantina`, inceleme → `bekliyor`. Katalogda "red" diye ayrı durum
+  istenmediği için reddedilen parti karantinada tutulur.
+- **İki ek denetim:** sertifikadaki tedarikçi onaylı listede yoksa ve partinin
+  sipariş revizyonu kabul dokümanının revizyonundan farklıysa insan
+  incelemeli. Tedarikçi adı büyük/küçük harf ve boşluk farkını yok sayar;
+  başka yazım farkları insana gider.
