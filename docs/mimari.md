@@ -152,8 +152,26 @@ karar alanı yoktur; şema bunu zorlar (`tests/test_okuma_sozlesmesi.py`).
 yön "belirsiz" yapılır ve şart insan incelemesine gider. Örnekler ve kural:
 docs/sinir_yonu_hatasi.md.
 
-Bugün: sözleşme hazır, onu dolduran ürün içi dil modeli çıkarıcısı yok
-(sıradaki ikinci iş). Yalnız dil modeli deneyi çalışıyor.
+Bugün: sözleşme hazır. Standart tarafında `HamOkuma` üreten ürün içi dil
+modeli çıkarıcısı hâlâ yok; okumaları doğrulayan adım hazır
+(`hat/hibrit_hat.standart_okumalarini_dogrula`: kanıtsız okuma reddedilir,
+yönü metinle çelişen okuma `belirsiz` yapılır). Yalnız dil modeli deneyi
+çalışıyor.
+
+**Hibrit hat** (`hat/hibrit_hat.py`, sertifika tarafı): mod anahtarı `kural`
+ya da `hibrit` (parametre ya da `MALZEME_KABUL_MODU`, varsayılan `kural`).
+
+- `kural`: `cikarim/sertifika_okuyucu.kural_ile_oku` PDF tablosunu başlık
+  adlarıyla okur (150 sentetik sertifikanın hepsinde JSON ile aynı).
+- `hibrit`: her sayfa yerel modele (yalnız localhost) gider; model hücreleri
+  aynen döner (`sozlesme/okuma.SertifikaOkumaYaniti`, karar ve sayı alanı
+  yok). Her satır `kural/kanit_dogrulama.satir_kaniti` ile belgenin metin
+  katmanında, aynı satırda aranır; kanıtsız satırlar karara girmez ve `kanit`
+  denetimi insan incelemeli olur. Model yanıt vermezse ya da şemaya uymazsa
+  kural okumasına düşülür ve kayda yazılır.
+- Karar her iki modda `hat/katalog_karari` ile verilir; kayıtta mod, model ve
+  istem sürümü (`sertifika-okuma-v1`) bulunur. Komut satırı:
+  `scripts/sertifika_kontrol.py`. Testler sahte modelle çalışır.
 
 ## 7. Ölçüm
 

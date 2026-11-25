@@ -64,3 +64,27 @@ class OkumaYaniti(_Model):
     """Modelin bir sayfa için döndüğü yanıt."""
 
     okumalar: list[HamOkuma] = Field(default_factory=list)
+
+
+# --- Sertifika okuması ------------------------------------------------------------
+
+
+class SertifikaSatirOkumasi(_Model):
+    """Sertifika tablosunun bir satırı, hücrelerde yazdığı gibi; nerede okunduğuyla."""
+
+    sayfa: int = Field(ge=1)
+    test_adi: str = Field(min_length=1)
+    sonuc_hucresi: str = Field(min_length=1, description="Sonuç hücresi aynen, ör. '0.4', '<1', 'Conforms'.")
+    birim_hucresi: str | None = Field(default=None, description="Birim hücresi aynen; yoksa boş.")
+    metot_hucresi: str | None = None
+
+
+class SertifikaOkumaYaniti(_Model):
+    """Modelin bir sertifika sayfası için döndüğü yanıt. Karar ya da sayı alanı yoktur."""
+
+    standart_atfi: str | None = Field(default=None, description="Belgede yazan atıf, ör. 'MIL-PRF-23377K Type I Class N'.")
+    sertifika_no: str | None = None
+    tedarikci: str | None = None
+    parti_no: str | None = None
+    uretim_tarihi: str | None = Field(default=None, description="Belgede yazdığı gibi.")
+    satirlar: list[SertifikaSatirOkumasi] = Field(default_factory=list)
