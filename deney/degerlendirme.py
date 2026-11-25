@@ -13,6 +13,14 @@ Her alan için:
 - yanlış negatif (yn): gold'da var ama tahminde yok ya da değer farklı.
 Yanlış değer hem yp hem yn sayılır. Boş (None) alanlar hesaba girmez.
 
+F1 iki biçimde raporlanır: genel (bütün alanların mikro ortalaması) ve bölüm
+bazında. Bölüm, kaydın şart maddesidir (`kaynak.madde`, ör. "3.3.2.8" ya da
+"TABLE I"); gold'da olan kayıt gold'daki maddeye, yalnız tahminde olan kayıt
+tahmindeki maddeye yazılır. Bölüm ortalaması her bölümün precision, recall ve
+F1 değerlerinin aritmetik ortalamasıdır; böylece satır satır tutulan büyük bir
+tablo (ör. MIL-PRF-81733D soyulma mukavemeti, 126 kayıt) ölçümü domine etmez
+(etiketleme kılavuzu K10).
+
 Metinler büyük/küçük harf ve boşluk farkı gözetmeden, sayılar küçük bir
 toleransla karşılaştırılır. Birimler pint ile çözülüp karşılaştırılır ("s" ile
 "second" aynıdır) ama değerler çevrilmez. Sınırın orijinal metni ölçülmez;
@@ -104,6 +112,24 @@ def alanlari_duzlestir(dokuman: KabulDokumani) -> dict[Anahtar, Any]:
     return alanlar
 
 
+def _tur(alan: str) -> str:
+    return alan.split(".", 1)[0]
+
+
+def kayit_bolumleri(dokuman: KabulDokumani) -> dict[tuple[str, str], str]:
+    """{(kayıt türü, kayıt): şart maddesi}; kayıt adları `alanlari_duzlestir` ile aynı."""
+    bolum: dict[tuple[str, str], str] = {}
+    for t in dokuman.testler:
+        bolum[("test", t.id)] = t.kaynak.madde
+    for r in dokuman.raf_omurleri:
+        bolum[("raf_omru", _normal_metin(r.kap_turu) if r.kap_turu else "genel")] = r.kaynak.madde
+    for k in dokuman.kosullar:
+        bolum[("kosul", f"{k.kategori}:{_normal_metin(k.ad)}")] = k.kaynak.madde
+    for n in dokuman.numune_hazirlama:
+        bolum[("numune", n.id)] = n.kaynak.madde
+    return bolum
+
+
 def degerler_esit(a: Any, b: Any) -> bool:
     """İki alan değerini karşılaştırır (metin: normalize, sayı: toleranslı)."""
     if isinstance(a, _Birim) and isinstance(b, _Birim):
@@ -145,6 +171,29 @@ class AlanSkoru:
 @dataclass
 class Degerlendirme:
     alanlar: dict[str, AlanSkoru] = field(default_factory=dict)
+    bolumler: dict[str, AlanSkoru] = field(default_factory=dict)
+
+    @property
+    def bolum_ortalamasi(self) -> dict[str, float]:
+        """Bölümlerin precision, recall ve F1 değerlerinin aritmetik (makro) ortalaması."""
+        if not self.bolumler:
+            return {"precision": 0.0, "recall": 0.0, "f1": 0.0}
+        n = len(self.bolumler)
+        return {
+            ad: sum(getattr(b, ad) for b in self.bolumler.values()) / n
+            for ad in ("precision", "recall", "f1")
+        }
+
+    def bolum_tablosu(self) -> list[dict[str, Any]]:
+        """Bölüm başına dp/yp/yn ve P/R/F1, madde sırasıyla."""
+        def sira(madde: str) -> list[Any]:
+            return [(0, int(p)) if p.isdigit() else (1, p) for p in madde.replace(" ", ".").split(".")]
+
+        return [
+            {"bolum": ad, "dp": b.dp, "yp": b.yp, "yn": b.yn, "precision": round(b.precision, 4),
+             "recall": round(b.recall, 4), "f1": round(b.f1, 4)}
+            for ad, b in sorted(self.bolumler.items(), key=lambda x: sira(x[0]))
+        ]
 
     @property
     def genel(self) -> AlanSkoru:
@@ -164,21 +213,30 @@ class Degerlendirme:
 
         satirlar = [satir(ad, self.alanlar[ad]) for ad in sorted(self.alanlar)]
         satirlar.append(satir("GENEL (mikro)", self.genel))
+        ort = self.bolum_ortalamasi
+        satirlar.append({
+            "alan": "GENEL (bölüm ortalaması)", "dp": "", "yp": "", "yn": "",
+            **{ad: round(d, 4) for ad, d in ort.items()},
+        })
         return satirlar
 
 
 def degerlendir(tahmin: KabulDokumani, gold: KabulDokumani) -> Degerlendirme:
     """Tahmini gold ile karşılaştırıp alan bazında dp/yp/yn sayar."""
     t, g = alanlari_duzlestir(tahmin), alanlari_duzlestir(gold)
+    gold_bolum, tahmin_bolum = kayit_bolumleri(gold), kayit_bolumleri(tahmin)
     sonuc = Degerlendirme()
     for anahtar in t.keys() | g.keys():
-        skor = sonuc.alanlar.setdefault(anahtar[0], AlanSkoru())
+        kayit = (_tur(anahtar[0]), anahtar[1])
+        bolum = gold_bolum.get(kayit) or tahmin_bolum.get(kayit) or "?"
+        skorlar = (sonuc.alanlar.setdefault(anahtar[0], AlanSkoru()), sonuc.bolumler.setdefault(bolum, AlanSkoru()))
         tahminde, goldda = anahtar in t, anahtar in g
-        if tahminde and goldda and degerler_esit(t[anahtar], g[anahtar]):
-            skor.dp += 1
-            continue
-        if tahminde:
-            skor.yp += 1
-        if goldda:
-            skor.yn += 1
+        for skor in skorlar:
+            if tahminde and goldda and degerler_esit(t[anahtar], g[anahtar]):
+                skor.dp += 1
+                continue
+            if tahminde:
+                skor.yp += 1
+            if goldda:
+                skor.yn += 1
     return sonuc

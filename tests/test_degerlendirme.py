@@ -158,8 +158,8 @@ def test_tablo_satirlari_alan_adiyla_siralanir():
     gold = dok([sart("viskozite")])
     satirlar = degerlendir(gold, gold).tablo()
     adlar = [s["alan"] for s in satirlar]
-    assert adlar[-1] == "GENEL (mikro)"
-    assert adlar[:-1] == sorted(adlar[:-1])
+    assert adlar[-2:] == ["GENEL (mikro)", "GENEL (bölüm ortalaması)"]
+    assert adlar[:-2] == sorted(adlar[:-2])
 
 
 # --- deney/degerlendir.py ------------------------------------------------------

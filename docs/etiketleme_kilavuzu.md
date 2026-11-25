@@ -5,7 +5,9 @@ kişi aynı kapsamla çalışsın diye yazıldı. Bağımsız etiketleme istemi
 (`docs/bagimsiz_etiketleme_istemi.md`) bu kuralları modele aynen verir.
 
 Durum: K1 ve K2'yi Nida belirledi. K3–K7'yi Claude önerdi, Nida 24 Kasım
-2026'da onayladı.
+2026'da onayladı. K8–K10 Nida'nın 25 Kasım 2026 kararlarıdır (81733D ve
+85285E'de Codex ile Claude taslakları arasındaki 239/55 ve 91/60 farkı
+üzerine).
 
 ## Kurallar
 
@@ -52,7 +54,35 @@ zorunlu değildir; oradaki öneri ve açıklamalar doğru cevaba girmez.
 **K7. Muayene ve örnekleme kuralları test değildir.** Parti kabulü, örnekleme
 planı ya da "there shall be no failures" gibi muayene sonucu kuralları test
 kaydı olmaz. Test panelleri (`numune_hazirlama`) ise doğru cevaptaki bir testte
-kullanılıyorsa girer.
+kullanılıyorsa girer. (Etiketleme ve ambalaj *şartları* bu kurala girmez;
+bkz. K9.)
+
+**K8. Bölme düzeyi: ayrı geçilip kalınabiliyorsa ayrı kriter.**
+- Bir şart ayrı ayrı geçilip kalınabilen kriterler içeriyorsa her biri ayrı
+  kayıttır (ör. bir test tablosunun her satırı, iki farklı test sıvısı, Sınıf 1
+  ve Sınıf 2'nin ayrı sınırları, sınır değer ile kohezif kopma oranı).
+- Tek bir kriterin birden fazla koşulu varsa (sıcaklık, süre, numune) kayıt
+  bölünmez. Koşullar testin `test_kosulu` alanına yazılır (ör. "7 gün JP-4
+  içinde, 140 °F"); numune `numune_hazirlama_id` ile bağlanır.
+- Ayırt edici soru: tedarikçi bu iki şeyden birini geçip ötekinde kalabilir
+  mi? Evet ise iki kayıt, hayır ise bir kayıt ve koşul alanı.
+
+**K9. Etiketleme ve ambalaj şartları `muayene` türündedir.** Kap, ambalaj,
+kit içeriği, etiket, uyarı ve işaretleme şartları (ör. "containers shall be
+labeled", "kit shall contain", "date of manufacture shall be marked") doğru
+cevaba girer, ama:
+- `test_turleri: ["muayene"]` olur; başka türle (kabul, yeterlilik) birleşmez.
+- `sonuc_kaynagi: "ic_muayene"` olur (boş bırakılırsa şema bunu kendisi koyar).
+  Giriş kalite bunları kendisi muayene eder.
+- CoC'de aranmaz ve yanlış kabul oranı (FAR) ölçümüne girmez; alan bazında
+  F1'e diğer şartlar gibi girer.
+
+**K10. Test tabloları satır satır tutulur; F1 bölüm bazında da raporlanır.**
+Bir test tablosunun her satırı ayrı geçilip kalınabilen bir kriterse (K3, K8)
+ayrı kayıttır (ör. MIL-PRF-81733D 3.3.2.8 soyulma mukavemeti: 7 adherend × 6
+ortam × 3 ölçüt = 126 kayıt). Tek bir tablo ölçümü domine etmesin diye F1 hem
+genel (mikro) hem bölüm bazında (her şart maddesinin F1'inin ortalaması)
+raporlanır: `python deney/degerlendir.py TAHMIN GOLD --bolumler`.
 
 ## Uygulama örneği
 
