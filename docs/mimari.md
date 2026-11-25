@@ -98,7 +98,14 @@ işaretlenir.
 Bugün: `revizyon/revizyon_karsilastirici.py` farkları buluyor ve şüpheli
 değişiklikleri işaretliyor (`supheli_nedenleri`); test tablosu satırlarını
 test adıyla eşliyor, metin şartlarını madde numarası ve başlıkla. Ad +
-metotla hizalama ve parti işaretleme katalogla birlikte gelecek.
+metotla hizalama henüz yok. Parti işaretleme `hat/revizyon_etkisi.py`:
+`yeni_revizyon_yukle` yeni revizyonu kataloğa ekler, aynı standardın daha eski
+revizyonuna bağlı malzeme kodlarını ve partilerini `mp_inceleme` sütunuyla
+"M&P incelemesi bekliyor" işaretler (parti durumu değişmez) ve olayı
+`revizyon_olaylari` tablosuna yazar. M&P `mp_incelemesini_kapat` ile
+`gerek_yok` ya da `yeni_revizyona_gec` (yeni revizyonun onaylı dokümanı
+gerekir) der; kapatma denetim kaydına `onay` olarak yazılır. Komut satırı:
+`scripts/revizyon_yukle.py`.
 
 ## 5. Sonuç kaynağı ve parti kuralı
 

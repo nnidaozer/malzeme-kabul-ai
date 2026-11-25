@@ -155,3 +155,18 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   kabul dokümanlarında `omur_uzatma` türünde test yok (kural çıkarıcı bu türü
   henüz işaretlemiyor), bu yüzden liste boş ve "tanımlı değil" yazıyor.
   M&P taslağı düzeltirken bu testleri işaretleyince liste dolar.
+
+## Gece işi 5: revizyon etkisi
+
+- **"M&P incelemesi bekliyor" parti durumu değil, ayrı bir işaret**
+  (`mp_inceleme` sütunu, malzemede ve partide). Mimari "işaretlenir,
+  kilitlenmez" diyor; durum (serbest / karantina / bekliyor) olduğu gibi kalır.
+- **Etkilenen = aynı standardın daha eski revizyon harfine bağlı malzemeler**
+  ve onların bütün partileri. Daha yeni ya da aynı harfe bağlı olanlar
+  etkilenmez.
+- **Kapatma iki seçenekli:** `gerek_yok` (malzeme eski revizyonda kalır) ya da
+  `yeni_revizyona_gec` (yalnız yeni revizyonun onaylı kabul dokümanı varsa).
+  Denetim kaydında `onay` türüyle durur; ayrı bir kayıt türü açmadım, çünkü
+  kayıt türleri istekte "karar, onay, düzeltme" olarak sayılmıştı.
+- Revizyon yükleme olayı denetim zincirine değil `revizyon_olaylari`
+  tablosuna yazılır (zincir türlerini genişletmemek için).

@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS malzemeler (
     tip        TEXT,
     sinif      TEXT,
     aciklama   TEXT,
+    mp_inceleme TEXT,
     FOREIGN KEY (belge_no, revizyon) REFERENCES standartlar (belge_no, revizyon)
 );
 
@@ -104,6 +105,7 @@ CREATE TABLE IF NOT EXISTS partiler (
     durum              TEXT NOT NULL DEFAULT 'bekliyor'
                        CHECK (durum IN ('serbest', 'karantina', 'bekliyor')),
     kap_turu           TEXT,
+    mp_inceleme        TEXT,
     PRIMARY KEY (malzeme_kodu, lot_no)
 );
 """
@@ -111,6 +113,8 @@ CREATE TABLE IF NOT EXISTS partiler (
 # Eski veritabanlarına sonradan eklenen sütunlar: (tablo, sütun, tanım).
 EK_SUTUNLAR: list[tuple[str, str, str]] = [
     ("partiler", "kap_turu", "TEXT"),
+    ("partiler", "mp_inceleme", "TEXT"),
+    ("malzemeler", "mp_inceleme", "TEXT"),
 ]
 
 
@@ -126,6 +130,7 @@ class Malzeme:
     tip: str | None
     sinif: str | None
     aciklama: str | None
+    mp_inceleme: str | None = None  # doluysa "M&P incelemesi bekliyor" ve nedeni
 
     @property
     def standart_etiketi(self) -> str:
@@ -157,6 +162,7 @@ class Parti:
     uretim_tarihi: date
     durum: str
     kap_turu: str | None = None
+    mp_inceleme: str | None = None  # doluysa "M&P incelemesi bekliyor" ve nedeni
 
 
 def icerik_ozeti(icerik: str) -> str:
@@ -264,7 +270,7 @@ class Katalog:
         s = self.baglanti.execute("SELECT * FROM malzemeler WHERE kod = ?", (kod,)).fetchone()
         if s is None:
             raise KatalogHatasi(f"bilinmeyen malzeme kodu: {kod}")
-        return Malzeme(s["kod"], s["belge_no"], s["revizyon"], s["tip"], s["sinif"], s["aciklama"])
+        return Malzeme(s["kod"], s["belge_no"], s["revizyon"], s["tip"], s["sinif"], s["aciklama"], s["mp_inceleme"])
 
     def malzemeler(self) -> list[Malzeme]:
         return [self.malzeme(s["kod"]) for s in self.baglanti.execute("SELECT kod FROM malzemeler ORDER BY kod")]
@@ -322,6 +328,26 @@ class Katalog:
         if not surumler:
             raise KatalogHatasi(f"{malzeme_kodu}: {m.standart_etiketi} için onaylı kabul dokümanı yok")
         return surumler[-1]
+
+    def mp_inceleme_ata(self, malzeme_kodu: str, neden: str | None, partiler_de: bool = True) -> None:
+        """Malzemeyi (ve partilerini) "M&P incelemesi bekliyor" olarak işaretler; `neden` None ise kaldırır.
+
+        Kilitlemez: parti durumu (serbest / karantina / bekliyor) değişmez.
+        """
+        self.malzeme(malzeme_kodu)
+        with self.islem() as b:
+            b.execute("UPDATE malzemeler SET mp_inceleme = ? WHERE kod = ?", (neden, malzeme_kodu))
+            if partiler_de:
+                b.execute("UPDATE partiler SET mp_inceleme = ? WHERE malzeme_kodu = ?", (neden, malzeme_kodu))
+
+    def malzeme_revizyonu_ata(self, malzeme_kodu: str, revizyon: str) -> Malzeme:
+        """Malzeme kodunu aynı standardın başka revizyonuna bağlar (M&P kararıyla)."""
+        m = self.malzeme(malzeme_kodu)
+        if not self.dokuman_surumleri(m.belge_no, revizyon):
+            raise KatalogHatasi(f"{m.belge_no}{revizyon} için onaylı kabul dokümanı yok; önce onaylanmalı")
+        with self.islem() as b:
+            b.execute("UPDATE malzemeler SET revizyon = ? WHERE kod = ?", (revizyon, malzeme_kodu))
+        return self.malzeme(malzeme_kodu)
 
     # --- tedarikçiler -----------------------------------------------------
 
@@ -381,7 +407,7 @@ class Katalog:
     def _parti_satirindan(s: sqlite3.Row) -> Parti:
         return Parti(
             s["lot_no"], s["malzeme_kodu"], s["tedarikci"], s["siparis_revizyonu"],
-            date.fromisoformat(s["uretim_tarihi"]), s["durum"], s["kap_turu"],
+            date.fromisoformat(s["uretim_tarihi"]), s["durum"], s["kap_turu"], s["mp_inceleme"],
         )
 
     def parti(self, malzeme_kodu: str, lot_no: str) -> Parti:
