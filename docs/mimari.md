@@ -190,6 +190,30 @@ ya da `hibrit` (parametre ya da `MALZEME_KABUL_MODU`, varsayılan `kural`).
   istem sürümü (`sertifika-okuma-v1`) bulunur. Komut satırı:
   `scripts/sertifika_kontrol.py`. Testler sahte modelle çalışır.
 
+**Standart tarafı hibrit (deney):** ürün içi standart çıkarıcısı gelene kadar
+standart için hibrit yalnız deney olarak tanımlıdır (`deney/hibrit_standart.py`,
+üç modu yan yana çalıştıran betik `deney/uc_mod.py`):
+
+- Kural öncelikli: kural çıktısının bütün kayıtları aynen kalır.
+- Model tamamlar: kuralla eşleşmeyen dil modeli testi, özgün metni söylediği
+  sayfada (`kanit_dogrulama.metin_sayfada_mi`) bulunursa eklenir; kanıtsız
+  test atılır ve rapora yazılır.
+- Sınırı kural hesaplar: eklenen testin sınırı modelden alınmaz,
+  `kural_cikarici.sinir_cikar` ile özgün metinden yeniden çıkarılır.
+- Anlaşmazlıkta yön belirsiz: kuralla eşleşen, aynı maddedeki ve kanıtlı
+  dil modeli testinin sınırı kuralınkiyle karşılaştırılır. Tek hata tek
+  kayıt: kriter türü farklıysa yalnız `kriter_turu`, değilse yön farklıysa
+  yalnız `yon`, değilse farklı olan her `alt`, `ust`, `birim` (pint ile)
+  için bir kayıt. Madde numarası farklı çift eşleşmemiş sayılır (model testi
+  kanıt yoluna gider). Anlaşmazlıklı kural testinin sayısal sınırı
+  `yon="belirsiz"` yapılır (sayılar korunur) ve karar insan incelemesine
+  gider. Sayısal olmayan sınır işaretlenemez, `isaretlenemeyen` listesine
+  yazılır. Güven skorunun girdisi için birincil sayı anlaşmazlıklı test
+  sayısıdır.
+- Dil modelinin ara kaydı (`<ETIKET>_ara/sayfa_NNN.json`) model, arka uç,
+  düşünme, bağlam, sistem istemi ve şemadan türetilen parmak iziyle yazılır;
+  iz değişirse kayıt kullanılmaz. İstek hatası alan sayfa kayda girmez.
+
 ## 7. Ölçüm
 
 - **Yanlış kabul oranı (FAR)** hem parametre (test satırı) hem parti (belge)
