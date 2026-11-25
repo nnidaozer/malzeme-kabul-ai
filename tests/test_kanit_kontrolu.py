@@ -37,6 +37,30 @@ def dok(testler=(), raf=(), kosullar=(), numune=()):
     )
 
 
+def test_kesirli_tolerans_uclari_turetilir():
+    sayilar = metindeki_sayilar("1/2 pint 6 fluid ounces ± 1/8 fluid ounce", turetilmis=True)
+    assert {5.875, 6.125} <= sayilar
+    assert 5.875 not in metindeki_sayilar("1/2 pint 6 fluid ounces ± 1/8 fluid ounce")
+
+
+def test_karisik_sayi_okunur_ve_toleransi_turetilir():
+    assert 2.5 in metindeki_sayilar("sectional-type 2-1/2-ounce containers")
+    sayilar = metindeki_sayilar("6 ounces 3-1/2 fluid ounces ± 1/8 fluid ounce", turetilmis=True)
+    assert {3.375, 3.625} <= sayilar
+
+
+def test_birim_ve_derece_isareti_araya_girse_de_tolerans_turetilir():
+    sayilar = metindeki_sayilar("stored for 9 months at 77° ± 6° F (25° ± 3° C)", turetilmis=True)
+    assert {71.0, 83.0, 22.0, 28.0} <= sayilar
+
+
+def test_tolerans_baska_bir_sayinin_ustunden_atlamaz():
+    # "1 pint 12 fluid ounces ± 1/4": tolerans 12'ye aittir, 1'e değil.
+    sayilar = metindeki_sayilar("1 pint 12 fluid ounces ± 1/4 fluid ounce", turetilmis=True)
+    assert {11.75, 12.25} <= sayilar
+    assert 0.75 not in sayilar and 1.25 not in sayilar
+
+
 @pytest.fixture
 def pdf(tmp_path) -> Path:
     return pdf_yaz(tmp_path / "standart.pdf", [
