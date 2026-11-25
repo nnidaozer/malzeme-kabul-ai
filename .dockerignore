@@ -1,0 +1,16 @@
+.git
+**/__pycache__
+*.egg-info
+.pytest_cache
+data/gold
+data/gold_codex
+data/gold_taslak
+data/raw
+data/sentetik
+data/calisma
+deney
+notebooks
+tests
+*.json
+!data/ornek/*.json
+!data/cikti/*.json

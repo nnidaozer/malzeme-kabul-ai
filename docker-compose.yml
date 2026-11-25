@@ -1,0 +1,50 @@
+# Ağsız çalışma: uygulama yalnız dışa kapalı "ic" ağındadır (internal: true);
+# dış ağa ve internete çıkışı yoktur. Tarayıcıdan erişim için "kapi" servisi
+# host'a yalnız 127.0.0.1:8501'den açılır ve bağlantıyı yalnız uygulamaya aktarır.
+#
+#   docker compose up -d --build        # http://127.0.0.1:8501
+#   sh scripts/ag_testi.sh               # ağın kapalı olduğunu gösterir
+#
+# Yerel dil modeli (hibrit mod) için: modeli önceden indirilmiş bir Ollama
+# konteyneri uygulamanın ağ ad alanını paylaşır ("model" profili), böylece model
+# uygulamaya "localhost:11434" olarak görünür ve onun da dışa çıkışı yoktur.
+#   docker compose --profile model up -d
+
+services:
+  uygulama:
+    build: .
+    image: malzeme-kabul:yerel
+    networks: [ic]
+    environment:
+      MALZEME_KABUL_MODU: ${MALZEME_KABUL_MODU:-kural}
+      MALZEME_KABUL_MODELI: ${MALZEME_KABUL_MODELI:-}
+      MALZEME_KABUL_ORNEK_KULLANICILAR: ${MALZEME_KABUL_ORNEK_KULLANICILAR:-1}
+    volumes:
+      - veri:/veri
+    restart: unless-stopped
+
+  kapi:
+    image: malzeme-kabul:yerel
+    depends_on: [uygulama]
+    entrypoint: ["python", "/uygulama/docker/yerel_kapi.py"]
+    networks: [ic, disari]
+    ports:
+      - "127.0.0.1:8501:8501"
+    restart: unless-stopped
+
+  model:
+    profiles: [model]
+    image: ollama/ollama:0.12.3
+    network_mode: "service:uygulama"
+    volumes:
+      - modeller:/root/.ollama
+    restart: unless-stopped
+
+networks:
+  ic:
+    internal: true
+  disari: {}
+
+volumes:
+  veri: {}
+  modeller: {}

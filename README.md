@@ -64,6 +64,14 @@ python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-
 
 Üretilen taslaklar `data/cikti/` altına JSON, Markdown ve Word olarak yazılır.
 
+### Ağsız Docker
+
+```bash
+docker compose up -d --build          # ekran: http://127.0.0.1:8501 (uygulama dış ağa çıkamaz)
+docker compose --profile model up -d  # yerel model (Ollama) ile, model dosyaları önceden konmuş olmalı
+scripts/ag_testi.sh                   # ağın kapalı olduğunu gösterir (0 = kapalı)
+```
+
 ## Klasörler
 
 - `src/malzeme_kabul/`: üretim kodu; katmanlar `sozlesme`, `belge`, `cikarim`,

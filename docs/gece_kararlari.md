@@ -221,3 +221,27 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   (git'e girmez).
 - Streamlit'in `AppTest` aracı dosya yüklemeyi desteklemediği için CoC yükleme
   akışı ekran testinde değil, aynı işi yapan fonksiyonlarla test edildi.
+
+## Gece işi 8: ağsız Docker
+
+- **Uygulama yalnız iç ağda** (`internal: true`, dışarı yolu yok). Docker, iç
+  ağdaki bir kapsayıcının portunu ana makineye yayınlamadığı için arada küçük
+  bir TCP iletici (`docker/yerel_kapi.py`, "kapı") var: iç ağ ile ana makine
+  arasında yalnız `127.0.0.1:8501` → `uygulama:8501` taşır. Uygulamanın
+  kendisi hiçbir dış adrese ulaşamaz.
+- **Yerel model (Ollama) isteğe bağlı profil** (`--profile model`) ve
+  uygulamanın ağ ad alanını paylaşır; model uygulamaya `localhost` olarak
+  görünür, onun da dışarı yolu yoktur. Model dosyaları birime önceden
+  konmalıdır (ağ kapalı olduğu için indirilemez).
+- **Deneme kullanıcıları compose'da açık** (`MALZEME_KABUL_ORNEK_KULLANICILAR=1`)
+  ki ilk açılışta giriş yapılabilsin; gerçek kullanımda kapatılıp
+  `scripts/kullanici_ekle.py` kullanılmalı.
+- **İmaja girmeyenler** (`.dockerignore`): `data/gold*`, `data/raw`,
+  `data/sentetik`, `data/calisma`, `deney/`, `notebooks/`, `tests/`.
+- **Ağ testi** (`scripts/ag_testi.sh`): uygulama kapsayıcısında DNS, TCP ve
+  HTTPS denemeleri başarısız olmalı, varsayılan yol olmamalı, ekran
+  `127.0.0.1:8501`'den açılmalı. Pozitif kontrol (aynı denemenin kapıdan
+  başarılı olması, yani testin gerçekten ağı ölçtüğü) yalnız CI'da açık;
+  bu ortamın doğrudan internet çıkışı yok. CI'a `ag-testi` işi eklendi.
+- Yerelde Docker Hub hız sınırına takıldığım için taban imajı aynalı kaynaktan
+  çektim; Dockerfile değişmedi, standart `python:3.11-slim` kullanılıyor.
