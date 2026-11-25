@@ -20,8 +20,25 @@ Sistem iki rolle çalışır:
 Ayrıca bir **depo ekranı** partilerin raf ömrünü ve durumunu (kabul, red,
 bekletiliyor, M&P incelemesi bekliyor) gösterir.
 
-Bugün: ekran yok. Kabul dokümanı Markdown/Word olarak üretiliyor
-(`arayuz/dokuman_uretici.py`). Streamlit ekranları sıradaki dördüncü iş.
+Bugün: Streamlit ekranları `arayuz/uygulama.py` (iş kuralı
+`arayuz/ekran_verisi.py`'de, Streamlit'siz test edilir). Giriş
+`arayuz/kimlik.py`: kullanıcılar katalog veritabanında, parola PBKDF2 özetiyle;
+iki rol:
+
+- `mp`: standart yükle (kural çıkarıcıyla taslak; yalnız bölünmede geliştirme
+  kümesindeki standartlar), taslağı tabloda düzelt ve onayla (her düzeltme ve
+  onay denetim kaydına), revizyon farkı (hazır raporlar ya da iki PDF) ve yeni
+  revizyonu yükleyip M&P incelemelerini kapatma, depo.
+- `giris_kalite`: malzeme kodu ve lot seç (yeni lot ekle), CoC yükle (PDF:
+  kural ya da hibrit mod; JSON: ham hücreler), karar ve madde referansları,
+  parti kararı, gerekçeli düzeltme; depo.
+
+Depo ekranı partileri, durumlarını, M&P işaretini ve raf ömrü uyarılarını
+gösterir. Çalıştırma: `streamlit run src/malzeme_kabul/arayuz/uygulama.py`
+(deneme verisi ve kullanıcıları: `python scripts/katalog_kur.py --ornek
+--ornek-kullanicilar`; gerçek hesap: `scripts/kullanici_ekle.py`). Streamlit
+`requirements-arayuz.lock` ile kurulur. Kabul dokümanı ayrıca Markdown/Word
+olarak üretilebilir (`arayuz/dokuman_uretici.py`).
 
 ## 2. Malzeme kataloğu
 

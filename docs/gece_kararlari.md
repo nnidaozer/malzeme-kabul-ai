@@ -194,3 +194,30 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
 - `tests/test_istem_enjeksiyonu.py`'deki dil modeli testinin beklediği
   `cikarim.sertifika_okuyucu.sertifika_oku(pdf, istemci)` arayüzü artık var; o
   test `--dil-modeli` ile yerel modelle çalıştırılabilir (CI'da atlanır).
+
+## Gece işi 7: Streamlit ekranları
+
+- **Streamlit ayrı bir kilitte** (`requirements-arayuz.lock` = geliştirme kilidi
+  + streamlit 1.67.0 ve bağımlılıkları, pip-audit temiz). Ana `test` işi
+  değişmedi; CI'a ekran testlerini de çalıştıran `arayuz` işi eklendi.
+  pyproject'te isteğe bağlı `arayuz` grubu.
+- **Rol yetkileri:** M&P → standart, taslak, revizyon, depo; giriş kalite →
+  CoC kontrolü, depo. Depo ekranı iki role de açık (ikisinin de görmesi
+  gerekiyor, "iki rol" istendiği için üçüncü bir depo rolü açmadım).
+- **Parolalar PBKDF2-SHA256 özetiyle** katalog veritabanında. Deneme
+  kullanıcıları yalnız `--ornek-kullanicilar` ile açılır (`mp` /
+  `mp-ornek-parola`, `gk` / `gk-ornek-parola`); gerçek kullanım için
+  `scripts/kullanici_ekle.py`.
+- **Ekrandan standart yükleme test kümesi kilidine uyar:** yalnız
+  `data/bolunme.yaml` geliştirme listesindeki standartlardan taslak çıkarılır;
+  test kümesi ve bölünmede olmayanlar reddedilir. Ürün `deney/`'i içe
+  aktaramadığı için listeyi arayüz kendisi okuyor.
+- **Taslak düzeltme tablo üzerinden:** test türleri (kabul / ömür uzatma /
+  yeterlilik), sınır (alt, üst, birim, özgün metin), madde, sayfa, sonuç
+  kaynağı düzeltilir. Test eklemek/silmek ve koşul/raf ömrü düzeltmek ekranda
+  yok (ileride). Taslaklar ayrı `taslaklar` tablosunda, değişebilir; onaylanınca
+  değiştirilemez sürüm olur ve taslak kapanır.
+- **Yüklenen dosyalar `data/calisma/yuklenen/`** altına güvenli adla yazılır
+  (git'e girmez).
+- Streamlit'in `AppTest` aracı dosya yüklemeyi desteklemediği için CoC yükleme
+  akışı ekran testinde değil, aynı işi yapan fonksiyonlarla test edildi.
