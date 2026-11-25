@@ -23,3 +23,32 @@ Her karar sabah onaylanmak üzere; yanlışsa geri alınır.
 7. **044227 Sodium nitrite'in ICP ızgarası şartnamenin "Total Metal Impurities" kalemine bağlandı**
    (`eslesme=toplam`). Şartname elementleri tek tek sınırlamıyor; kontrol listesinde tek soru olarak duruyor.
 8. **014103'te "On 18 mesh" ile şartnamenin "+16 screen" kalemi eşlenmedi**: elek farklı, aynı ölçüm değil.
+
+
+## Colab çıktıları ve sınır yönü kuralı
+
+1. **Colab çıktılarının yeri.** 6 dosya `deney/sonuclar/colab/` altına `git mv` ile
+   taşındı (içerik aynı). Klasöre README ve geçici değerlendirme raporu
+   (`degerlendirme.md`) da kondu; ürün bu klasörü okumaz. Ayrı PR (#46).
+2. **"6. kör nokta" adı.** Depoda numaralı bir kör nokta listesi bulunamadı. Bunu
+   mimarideki dil modeli sınırının (docs/mimari.md madde 6) kör noktası olarak
+   okudum: madde 6'ya kısa bir paragraf, ayrıntılar ve örnekler için
+   `docs/sinir_yonu_hatasi.md` eklendi. Listen başka bir yerdeyse numarayı oraya taşı.
+3. **Plan onayı (CLAUDE.md kural 5).** Gece soru sorulmaması istendiği için plan
+   ayrıca onaya sunulmadı; aşağıdaki tasarım buraya yazılıp uygulandı. Test önce
+   yazıldı (kural 3); alt ajan zinciri yerine aynı sırayla (test → kod) elle çalışıldı.
+4. **Çelişkide ne olur?** Red değil, insan incelemesi: sınır `yon="belirsiz"` yapılır,
+   sayılar korunur. Gerekçe: kural da metni yanlış okuyabilir; en kötü durumda yanlış
+   alarm üretsin, yanlış kabul ya da yanlış red üretmesin.
+5. **Metin yön söylemiyorsa ya da karışıksa** (iki yön, ya da aralık ile tek yön
+   birlikte) kural karar vermez, model yönü kalır. Bunları da insana göndermek
+   şartların büyük kısmını incelemeye düşürürdü; amaç açık çelişkiyi yakalamak.
+6. **Koşul aralıkları.** nm, °C ve °F ile yazılan aralıklar test koşulu sayıldı (kural
+   çıkarıcısı da °C aralıklarını atlıyor). Kalınlık aralıkları (mil, µm) sayılmadı,
+   çünkü numune şartında asıl sınır onlar olabilir; bunlar "karışık" kuralına düşüyor.
+7. **Nereye bağlandı?** `deney/yalniz_dil_modeli.belgeden_cikar` (çelişkiler
+   `_rapor.json` içinde `yon_celiskileri`) ve ürün sözleşmesi için
+   `okuma_yonu_dogrula(HamOkuma)`. Ürün içi dil modeli hattı henüz yok; hibrit hat işi
+   bu fonksiyonu çağırmalı.
+8. **Yanlış alarm denetimi** `data/gold_taslak` ve `data/gold_codex` ile yapıldı (yalnız
+   okundu, ikisi de onaysız): 476 testte 0 çelişki.

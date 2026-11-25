@@ -28,6 +28,7 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 from malzeme_kabul.belge.pdf_okuyucu import Belge
 from malzeme_kabul.cikarim.kural_cikarici import metni_normallestir
 from malzeme_kabul.cikarim.yerel_model import Mesaj, SohbetIstemcisi
+from malzeme_kabul.kural.yon_dogrulama import yonu_guvenli_yap
 from malzeme_kabul.sozlesme.sema import KabulDokumani, StandartBilgisi, TestSarti
 
 
@@ -127,6 +128,7 @@ class SayfaSonucu:
 class CikarimRaporu:
     sayfalar: list[SayfaSonucu] = field(default_factory=list)
     tekrar_edenler: list[str] = field(default_factory=list)
+    yon_celiskileri: list[dict[str, Any]] = field(default_factory=list)
     toplam_sure_s: float = 0.0
     test_sayisi: int = 0
 
@@ -148,7 +150,8 @@ def belgeden_cikar(
     no, revizyon ve sayfa alanları koddan yazılır (madde modelden gelir). Numune hazırlama
     bilgisi bu adımda çıkarılmadığı için testlerin numune bağlantısı boşaltılır.
     Bir sayfadaki bağlantı ya da zaman aşımı hatası rapora yazılır, kalan
-    sayfalar okunmaya devam eder.
+    sayfalar okunmaya devam eder. Her sınırın yönü özgün metinden kuralla
+    denetlenir; çelişenler `yon="belirsiz"` yapılır ve `yon_celiskileri`ne yazılır.
     """
     sema = cikarim_semasi()
     rapor = CikarimRaporu()
@@ -175,7 +178,15 @@ def belgeden_cikar(
                 continue
             # Belge no, revizyon ve sayfa kodca bilinir; modelin yazdığı değil bunlar tutulur.
             kaynak = t.kaynak.model_copy(update={"belge_no": belge_no, "revizyon": revizyon, "sayfa": sayfa.no})
-            testler[t.id] = t.model_copy(update={"numune_hazirlama_id": None, "kaynak": kaynak})
+            # Sınır yönü modelden bağımsız olarak özgün metinden denetlenir (kör nokta 6);
+            # çelişen yön "belirsiz" yapılır, karar motoru bunu insan incelemesine gönderir.
+            sinir, denetim = yonu_guvenli_yap(t.sinir)
+            if denetim.durum == "celiski":
+                rapor.yon_celiskileri.append({
+                    "id": t.id, "sayfa": sayfa.no, "metin_yonu": denetim.metin_yonu,
+                    "model_yonu": denetim.model_yonu, "orijinal_metin": t.sinir.orijinal_metin,
+                })
+            testler[t.id] = t.model_copy(update={"numune_hazirlama_id": None, "kaynak": kaynak, "sinir": sinir})
         rapor.sayfalar.append(SayfaSonucu(sayfa.no, round(sure, 3), len(bulunan), hatalar))
 
     rapor.toplam_sure_s = round(time.perf_counter() - baslangic, 3)
