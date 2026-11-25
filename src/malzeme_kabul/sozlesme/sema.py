@@ -34,10 +34,13 @@ from malzeme_kabul.kural.birimler import birimi_coz, zaman_birimi_mi
 # "3.5.1", "4.6.12.3", ek maddeleri "A.3.1" ya da "TABLE I", "TABLE IV".
 MADDE_KALIBI = re.compile(r"^(([A-Z]\.)?\d+(\.\d+)*|TABLE [IVXLC]+)$")
 
-TestTuru = Literal["kabul", "omur_uzatma", "yeterlilik"]
+TestTuru = Literal["kabul", "omur_uzatma", "yeterlilik", "muayene"]
 """kabul: her partide yapılan kabul (conformance) testi.
 omur_uzatma: raf ömrü dolan malzemenin ömrünü uzatmak için tekrarlanan test.
-yeterlilik: yalnızca ürün yeterliliğinde (qualification) yapılan test."""
+yeterlilik: yalnızca ürün yeterliliğinde (qualification) yapılan test.
+muayene: etiketleme, ambalaj, işaretleme gibi giriş kalitenin kendisinin
+muayene ettiği şart (etiketleme kılavuzu K9). Başka türle birleşmez; sonucu
+iç muayeneden gelir, CoC'de aranmaz ve yanlış kabul ölçümüne girmez."""
 
 KriterTuru = Literal["sayisal", "gecti_kaldi", "metinsel"]
 """sayisal: alt ve/veya üst sınırı olan ölçüm.
@@ -51,9 +54,11 @@ tam: alt == üst. belirsiz: standart metninden "en az" mı "tam" mı olduğu
 anlaşılmıyor (ör. MIL-PRF-23377K 3.11); karar motoru bu şartlara karar vermez,
 insan incelemesine gönderir."""
 
-SonucKaynagi = Literal["coc", "ic_laboratuvar"]
+SonucKaynagi = Literal["coc", "ic_laboratuvar", "ic_muayene"]
 """Test sonucunun nereden geldiği. coc: tedarikçinin CoC / test raporu
-(varsayılan); ic_laboratuvar: sonuç iç laboratuvarda ölçülür ve ekrandan girilir."""
+(varsayılan); ic_laboratuvar: sonuç iç laboratuvarda ölçülür ve ekrandan girilir;
+ic_muayene: giriş kalite kabı, etiketi, ambalajı kendisi muayene eder
+(yalnız `muayene` türündeki şartlar)."""
 
 UYGULANABILIRLIK_ACIKLAMASI = (
     "Şartın geçerli olduğu tip/sınıf/kompozisyon kodları, ör. ['Class N'] "
@@ -197,6 +202,26 @@ class TestSarti(_Model):
         default="coc", description="Sonuç CoC'den mi gelir, iç laboratuvarda mı ölçülür. Varsayılan CoC."
     )
     numune_hazirlama_id: str | None = None
+    test_kosulu: str | None = Field(
+        default=None,
+        description=(
+            "Aynı kriterin uygulandığı koşul (sıcaklık, süre, ortam), ör. '7 gün JP-4 içinde, 140 °F'. "
+            "Koşullar kaydı bölmez (etiketleme kılavuzu K8); numune `numune_hazirlama_id` ile verilir."
+        ),
+    )
+
+    @model_validator(mode="after")
+    def _muayene_kaynagi(self) -> TestSarti:
+        if "muayene" in self.test_turleri:
+            if len(self.test_turleri) > 1:
+                raise ValueError("muayene şartı başka bir test türüyle birleşmez (etiketleme kılavuzu K9)")
+            if self.sonuc_kaynagi == "coc":
+                self.sonuc_kaynagi = "ic_muayene"  # varsayılan: muayene şartının sonucu iç muayeneden gelir
+            elif self.sonuc_kaynagi != "ic_muayene":
+                raise ValueError("muayene şartının sonuç kaynağı ic_muayene olmalı")
+        elif self.sonuc_kaynagi == "ic_muayene":
+            raise ValueError("ic_muayene yalnız muayene türündeki şartlarda kullanılır")
+        return self
 
     @model_validator(mode="after")
     def _tablo_adi_farkli(self) -> TestSarti:
@@ -215,6 +240,10 @@ class TestSarti(_Model):
     @property
     def omur_uzatma_testi(self) -> bool:
         return "omur_uzatma" in self.test_turleri
+
+    @property
+    def muayene_sarti(self) -> bool:
+        return "muayene" in self.test_turleri
 
 
 class RafOmru(_Model):

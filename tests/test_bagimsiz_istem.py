@@ -82,6 +82,7 @@ def test_istem_goruntu_okuma_cikti_klasoru_ve_taslak_yasagini_soyler():
 def test_istem_etiketleme_kilavuzunun_kurallarini_icerir():
     model_metni = _istem().split("\n---\n", 1)[1]
     assert "## Kapsam: neyi çıkaracaksın" in model_metni
-    for ifade in ("Ürün tanımları girmez", "Bir kayıt, bir kriter", "\"Notes\" bölümü", "Muayene ve örnekleme"):
+    for ifade in ("Ürün tanımları girmez", "Bir kayıt, bir kriter", "\"Notes\" bölümü", "Muayene ve örnekleme",
+                  "Bölme düzeyi", "`muayene` türündedir", "`test_kosulu`", "\"ic_muayene\""):
         assert ifade in model_metni
     assert (KOK / "docs" / "etiketleme_kilavuzu.md").is_file()

@@ -23,3 +23,38 @@ Her karar sabah onaylanmak üzere; yanlışsa geri alınır.
 7. **044227 Sodium nitrite'in ICP ızgarası şartnamenin "Total Metal Impurities" kalemine bağlandı**
    (`eslesme=toplam`). Şartname elementleri tek tek sınırlamıyor; kontrol listesinde tek soru olarak duruyor.
 8. **014103'te "On 18 mesh" ile şartnamenin "+16 screen" kalemi eşlenmedi**: elek farklı, aynı ölçüm değil.
+
+## 81733D / 85285E etiketleme kararlarının uygulanması
+
+Nida'nın 25 Kasım kararları (soyulma tablosu satır satır, etiketleme/ambalaj "muayene", bölme düzeyi)
+etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8–9 olarak yazıldı.
+
+1. **`muayene` tek başına bir test türü.** Kabul ya da yeterlilikle birleşemez; şema birleşimi reddeder.
+   Böylece `kabul_testleri` muayene şartlarını kendiliğinden dışarıda bırakıyor: CoC'de aranmıyor,
+   sentetik sertifikaya ve doğru karara girmiyor, yani FAR ölçümüne girmiyor. Karar motorunda kod
+   değişikliği gerekmedi. Parti düzeyinde iç muayenenin karara nasıl bağlanacağı (ör. muayene
+   girilmeden parti "bekliyor") parti kuralı işine bırakıldı.
+2. **"İç muayene" yeni bir sonuç kaynağı (`ic_muayene`).** `muayene` şartında sonuç kaynağı boş
+   bırakılırsa şema `ic_muayene` koyuyor; `ic_laboratuvar` verilirse ya da `ic_muayene` başka bir türde
+   kullanılırsa hata veriyor.
+3. **"Koşul alanı" = yeni `TestSarti.test_kosulu` (serbest metin).** Mevcut `kosullar` listesi depolama
+   ve kullanım koşulları içindir; testin uygulandığı sıcaklık/süre/ortam için ayrı bir alan açtım.
+   Serbest metin olduğu için alan bazında F1'e girmiyor (`orijinal_metin` gibi); ölçmek istersen sonra
+   yapılandırılmış alanlara bölünebilir.
+4. **Bölüm = kaydın şart maddesi (`kaynak.madde`).** Bölüm ortalaması her maddenin P/R/F1'inin
+   aritmetik ortalaması. Gold'daki kayıt gold'un maddesine, yalnız tahminde olan kayıt tahminin
+   maddesine yazılıyor. Bir tablo hem "TABLE I" hem "3.3.1.3" diye kaynaklanabildiği için iki taslak
+   aynı şartı farklı bölümlere koyabilir; doğru cevapta hangisinin kullanılacağı kılavuzda zaten
+   "şartın yazdığı madde (3.x ya da tablo)" diye tanımlı.
+5. **`deney/degerlendir.py` tablosunun sonuna "GENEL (bölüm ortalaması)" satırı eklendi**
+   (dp/yp/yn sütunları boş). `--bolumler` bölüm tablosunu da yazıyor. Mevcut bir test son satırın
+   "GENEL (mikro)" olduğunu denetliyordu; son iki satırı denetleyecek biçimde güncellendi.
+6. **Dil modeli çıkarıcısının istemi (`deney/yalniz_dil_modeli.py`) bu işte değiştirilmedi.** Şemadan
+   türeyen JSON şeması `muayene` ve `test_kosulu`'nu kendiliğinden içeriyor; istem metnine kural
+   eklemek istem sürümünü değiştirir ve Colab ölçümünü etkiler. Colab işine bırakıldı.
+7. **Taslaklar yeni kurallara göre yeniden etiketlenmedi.** Claude taslakları (`data/gold_taslak/`)
+   ve Codex dosyaları (`data/gold_codex/`) olduğu gibi kaldı; Codex'i güncel istemle yeniden
+   çalıştırmak ve Claude taslağını K8–K10'a göre düzeltmek ayrı iş. Karşılaştırma mevcut dosyalarla
+   yeniden çalıştırıldı.
+8. **Kanıt kontrolünde tolerans kalıbı X ile ± arasında en çok üç rakamsız sözcüğe izin veriyor**
+   ("6 fluid ounces ± 1/8"). Daha uzun aralar yanlış eşleşme riski taşıdığı için alınmadı.
