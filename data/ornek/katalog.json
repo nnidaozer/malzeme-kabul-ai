@@ -1,0 +1,30 @@
+{
+  "_aciklama": "Katalog için örnek veri (scripts/katalog_kur.py --ornek). Malzeme kodları, tedarikçiler ve lotlar uydurmadır; kabul dokümanları sistemin kendi çıkardığı taslaklardır (data/cikti), M&P onayı değildir.",
+  "onaylayan": "ornek-veri",
+  "onay_notu": "Örnek veri: sistemin taslağı, M&P mühendisi onayı değildir.",
+  "dokumanlar": [
+    "data/cikti/MIL-PRF-23377K_kabul_dokumani.json",
+    "data/cikti/MIL-PRF-81733D_kabul_dokumani.json",
+    "data/cikti/MIL-PRF-85285E_kabul_dokumani.json"
+  ],
+  "malzemeler": [
+    {"kod": "AST-001", "belge_no": "MIL-PRF-23377", "revizyon": "K", "tip": "I", "sinif": "N", "aciklama": "Epoksi astar, krom içermeyen"},
+    {"kod": "AST-002", "belge_no": "MIL-PRF-23377", "revizyon": "K", "tip": "I", "sinif": "C2", "aciklama": "Epoksi astar, kromatlı"},
+    {"kod": "SZD-001", "belge_no": "MIL-PRF-81733", "revizyon": "D", "tip": "I", "sinif": "1", "aciklama": "Korozyon önleyici sızdırmazlık macunu"},
+    {"kod": "PUB-001", "belge_no": "MIL-PRF-85285", "revizyon": "E", "tip": "I", "sinif": "H", "aciklama": "Poliüretan son kat boya"}
+  ],
+  "onayli_tedarikciler": [
+    {"malzeme_kodu": "AST-001", "tedarikci": "Örnek Tedarikçi A"},
+    {"malzeme_kodu": "AST-001", "tedarikci": "Örnek Tedarikçi B"},
+    {"malzeme_kodu": "AST-002", "tedarikci": "Örnek Tedarikçi A"},
+    {"malzeme_kodu": "SZD-001", "tedarikci": "Örnek Tedarikçi C"},
+    {"malzeme_kodu": "PUB-001", "tedarikci": "Örnek Tedarikçi B"}
+  ],
+  "partiler": [
+    {"lot_no": "A-2512-01", "malzeme_kodu": "AST-001", "tedarikci": "Örnek Tedarikçi A", "siparis_revizyonu": "K", "uretim_tarihi": "2025-12-10", "durum": "serbest"},
+    {"lot_no": "B-2606-07", "malzeme_kodu": "AST-001", "tedarikci": "Örnek Tedarikçi B", "siparis_revizyonu": "K", "uretim_tarihi": "2026-06-01", "durum": "bekliyor"},
+    {"lot_no": "A-2510-03", "malzeme_kodu": "AST-002", "tedarikci": "Örnek Tedarikçi A", "siparis_revizyonu": "K", "uretim_tarihi": "2025-10-01", "durum": "karantina"},
+    {"lot_no": "C-2609-11", "malzeme_kodu": "SZD-001", "tedarikci": "Örnek Tedarikçi C", "siparis_revizyonu": "D", "uretim_tarihi": "2026-09-15", "durum": "serbest"},
+    {"lot_no": "B-2603-02", "malzeme_kodu": "PUB-001", "tedarikci": "Örnek Tedarikçi B", "siparis_revizyonu": "E", "uretim_tarihi": "2026-03-20", "durum": "serbest"}
+  ]
+}
