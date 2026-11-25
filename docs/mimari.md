@@ -37,8 +37,15 @@ Her malzeme kodu tek bir tip/sınıf kombinasyonuna bağlıdır (ör.
 uygulanacağı bu kombinasyondan ve şartların `uygulanabilirlik` alanından
 çıkar; tip/sınıf sertifikadan tahmin edilmez.
 
-Bugün: `katalog/` iskelet. Karar motoru tip/sınıfı hâlâ sertifikadaki atıftan
-okuyor (`kural/karar_motoru.atfi_coz`); katalog gelince oradan alınacak.
+Bugün: `katalog/veritabani.py` SQLite kataloğu kuruyor: standartlar,
+malzeme kodları (tip/sınıf), değiştirilemez kabul dokümanı sürümleri
+(tetikleyicilerle UPDATE/DELETE reddedilir, her sürüm SHA-256 özeti taşır),
+onaylı tedarikçiler ve partiler (lot, tedarikçi, sipariş revizyonu, üretim
+tarihi, durum: serbest / karantina / bekliyor). Parti yalnız onaylı
+tedarikçiden kaydedilir. Karar için malzemenin standart + revizyonunun en son
+onaylı sürümü kullanılır. Kurulum ve örnek veri:
+`python scripts/katalog_kur.py --ornek` (data/ornek/katalog.json,
+varsayılan veritabanı data/calisma/katalog.sqlite).
 
 ## 3. Kabul dokümanı sürümleri ve karar kaydı
 
@@ -181,7 +188,7 @@ src/malzeme_kabul/
   cikarim/    kural tabanlı çıkarıcı, yerel dil modeli istemcisi (yalnız localhost)
   kural/      birimler, karar motoru (kabul/red yalnız burada)
   revizyon/   revizyon farkları ve güncelleme önerileri
-  katalog/    (iskelet) SQLite katalog, doküman sürümleri, onaylı tedarikçiler
+  katalog/    SQLite katalog, doküman sürümleri, onaylı tedarikçiler, partiler
   kayit/      (iskelet) karar kaydı
   hat/        (iskelet) belge → çıkarım → kural → kayıt akışı
   arayuz/     kabul dokümanı çıktısı (Markdown/Word); ileride Streamlit
@@ -190,6 +197,7 @@ scripts/      ürün betikleri (kabul dokümanı üret, revizyon karşılaştır
 data/
   raw/        standart PDF'leri
   sentetik/   sentetik sertifikalar ve doğru kararları
+  ornek/      katalog örnek verisi (uydurma malzeme kodu, tedarikçi, lot)
   bolunme.yaml  geliştirme / test bölünmesi
   coa_kumesi.csv  gerçek CoA'ların tam / eksik listesi (deney/coa_kumesi.py)
   coa_eslesme/    CoA test satırlarının şartname karşılıkları (deney/coa_eslestirme.py)
