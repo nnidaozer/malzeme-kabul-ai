@@ -1,0 +1,142 @@
+{
+  "model": "qwen3:8b",
+  "arka_uc": "ollama",
+  "belge": "MIL-PRF-23377K",
+  "sayfalar": [
+    {
+      "sayfa": 1,
+      "sure_s": 2.89,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 2,
+      "sure_s": 2.822,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 3,
+      "sure_s": 11.097,
+      "test_sayisi": 1,
+      "hatalar": []
+    },
+    {
+      "sayfa": 4,
+      "sure_s": 2.865,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 5,
+      "sure_s": 20.807,
+      "test_sayisi": 1,
+      "hatalar": []
+    },
+    {
+      "sayfa": 6,
+      "sure_s": 102.49,
+      "test_sayisi": 9,
+      "hatalar": [
+        "test 6 (fineness_of_grind): sinir.birim: Value error, pint bu birimi tanımıyor: 'Hegman scale'"
+      ]
+    },
+    {
+      "sayfa": 7,
+      "sure_s": 103.448,
+      "test_sayisi": 10,
+      "hatalar": []
+    },
+    {
+      "sayfa": 8,
+      "sure_s": 77.18,
+      "test_sayisi": 7,
+      "hatalar": []
+    },
+    {
+      "sayfa": 9,
+      "sure_s": 13.712,
+      "test_sayisi": 1,
+      "hatalar": []
+    },
+    {
+      "sayfa": 10,
+      "sure_s": 35.486,
+      "test_sayisi": 3,
+      "hatalar": []
+    },
+    {
+      "sayfa": 11,
+      "sure_s": 74.542,
+      "test_sayisi": 10,
+      "hatalar": []
+    },
+    {
+      "sayfa": 12,
+      "sure_s": 111.105,
+      "test_sayisi": 17,
+      "hatalar": []
+    },
+    {
+      "sayfa": 13,
+      "sure_s": 44.7,
+      "test_sayisi": 5,
+      "hatalar": []
+    },
+    {
+      "sayfa": 14,
+      "sure_s": 36.734,
+      "test_sayisi": 4,
+      "hatalar": []
+    },
+    {
+      "sayfa": 15,
+      "sure_s": 11.48,
+      "test_sayisi": 1,
+      "hatalar": []
+    },
+    {
+      "sayfa": 16,
+      "sure_s": 3.276,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 17,
+      "sure_s": 3.184,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 18,
+      "sure_s": 3.259,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 19,
+      "sure_s": 14.495,
+      "test_sayisi": 1,
+      "hatalar": []
+    }
+  ],
+  "tekrar_edenler": [
+    "pigment",
+    "pigment",
+    "condition_in_container",
+    "storage_stability",
+    "accelerated_storage_stability",
+    "viscosity",
+    "strippability",
+    "lifting",
+    "adhesion",
+    "flexibility",
+    "water_resistance",
+    "corrosion_resistance_salt_spray",
+    "corrosion_resistance_filiform",
+    "fluid_resistance",
+    "strippability"
+  ],
+  "toplam_sure_s": 675.686,
+  "test_sayisi": 55
+}

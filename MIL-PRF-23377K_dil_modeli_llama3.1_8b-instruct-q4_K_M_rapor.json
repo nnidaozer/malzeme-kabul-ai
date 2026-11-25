@@ -1,0 +1,191 @@
+{
+  "model": "llama3.1:8b-instruct-q4_K_M",
+  "arka_uc": "ollama",
+  "belge": "MIL-PRF-23377K",
+  "sayfalar": [
+    {
+      "sayfa": 1,
+      "sure_s": 11.4,
+      "test_sayisi": 1,
+      "hatalar": []
+    },
+    {
+      "sayfa": 2,
+      "sure_s": 32.034,
+      "test_sayisi": 0,
+      "hatalar": [
+        "test 0 (kit_size): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 1 (kit_size_designator): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 2 (kit_size_designator_2): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 3,
+      "sure_s": 11.339,
+      "test_sayisi": 0,
+      "hatalar": [
+        "test 0 (viscosity): sinir: Value error, yön 'en_az' alt/üst sınırla uyuşmuyor (alt=100.0, üst=100.0); emin değilsen 'belirsiz' yaz"
+      ]
+    },
+    {
+      "sayfa": 4,
+      "sure_s": 103.232,
+      "test_sayisi": 0,
+      "hatalar": [
+        "test 0 (filiform_corrosion_resistance): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 1 (lead_cadmium_cobalt): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 2 (adhesion_by_tape_test): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 3 (chromium): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 4 (standard_environment): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 5 (volatile_organic_compound): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 6 (solvent_resistance): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 7 (drying_and_curing): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 8 (impact_flexibility): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 9 (sampling_procedures): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 5,
+      "sure_s": 31.307,
+      "test_sayisi": 3,
+      "hatalar": []
+    },
+    {
+      "sayfa": 6,
+      "sure_s": 77.12,
+      "test_sayisi": 0,
+      "hatalar": [
+        "test 0 (pigment): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 1 (voc_content): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 2 (thinner_compatibility): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 3 (fineness_of_grind): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 4 (condition_in_container): sinir: Value error, 'gecti_kaldi' kriteri yön almaz",
+        "test 5 (storage_stability): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 6 (accelerated_storage_stability): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 7,
+      "sure_s": 105.452,
+      "test_sayisi": 10,
+      "hatalar": []
+    },
+    {
+      "sayfa": 8,
+      "sure_s": 96.723,
+      "test_sayisi": 8,
+      "hatalar": []
+    },
+    {
+      "sayfa": 9,
+      "sure_s": 95.844,
+      "test_sayisi": 7,
+      "hatalar": [
+        "test 2 (voc_content): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 10,
+      "sure_s": 46.673,
+      "test_sayisi": 4,
+      "hatalar": [
+        "test 0 (primer_coating): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 11,
+      "sure_s": 154.378,
+      "test_sayisi": 10,
+      "hatalar": [
+        "test 2 (polyurethane_coating): sinir: Value error, 'gecti_kaldi' kriteri sayı ya da birim almaz",
+        "test 5 (lead_and_cadmium_content): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 6 (chromium_content): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 7 (voc_solvent_content): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 8 (fineness_of_grind): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 12,
+      "sure_s": 166.014,
+      "test_sayisi": 14,
+      "hatalar": [
+        "test 0 (viscosity): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 1 (pot_life): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 5 (adhesion): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 6 (flexibility): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 11 (solvent_resistance): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 13,
+      "sure_s": 52.232,
+      "test_sayisi": 5,
+      "hatalar": []
+    },
+    {
+      "sayfa": 14,
+      "sure_s": 50.942,
+      "test_sayisi": 5,
+      "hatalar": []
+    },
+    {
+      "sayfa": 15,
+      "sure_s": 203.58,
+      "test_sayisi": 0,
+      "hatalar": [
+        "JSON çözülemedi: Expecting property name enclosed in double quotes (konum 10166)"
+      ]
+    },
+    {
+      "sayfa": 16,
+      "sure_s": 48.109,
+      "test_sayisi": 4,
+      "hatalar": []
+    },
+    {
+      "sayfa": 17,
+      "sure_s": 57.382,
+      "test_sayisi": 5,
+      "hatalar": []
+    },
+    {
+      "sayfa": 18,
+      "sure_s": 80.076,
+      "test_sayisi": 6,
+      "hatalar": []
+    },
+    {
+      "sayfa": 19,
+      "sure_s": 63.777,
+      "test_sayisi": 2,
+      "hatalar": [
+        "test 0 (thinning): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 1 (shelf_life): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 2 (plastic_container_touchup_kits): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    }
+  ],
+  "tekrar_edenler": [
+    "odor",
+    "surface_appearance",
+    "drying_time",
+    "lifting",
+    "infrared_reflectance",
+    "water_resistance",
+    "fluid_resistance",
+    "toxicity",
+    "strippability",
+    "condition_in_container",
+    "accelerated_storage_stability",
+    "lifting",
+    "adhesion",
+    "flexibility",
+    "infrared_reflectance",
+    "water_resistance",
+    "solvent_resistance",
+    "fluid_resistance",
+    "storage_stability"
+  ],
+  "toplam_sure_s": 1487.717,
+  "test_sayisi": 65
+}

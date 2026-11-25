@@ -1,0 +1,153 @@
+{
+  "model": "qwen2.5:7b-instruct-q4_K_M",
+  "arka_uc": "ollama",
+  "belge": "MIL-PRF-23377K",
+  "sayfalar": [
+    {
+      "sayfa": 1,
+      "sure_s": 0.348,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 2,
+      "sure_s": 0.423,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 3,
+      "sure_s": 0.379,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 4,
+      "sure_s": 0.39,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 5,
+      "sure_s": 0.484,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 6,
+      "sure_s": 43.13,
+      "test_sayisi": 1,
+      "hatalar": [
+        "test 0 (fineness_of_grind): sinir.birim: Value error, pint bu birimi tanımıyor: 'Hegman scale'",
+        "test 2 (storage_stability): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 3 (accelerated_storage_stability): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 4 (ambient_temperature): kaynak.madde: Value error, madde numarası '3.5.1' ya da 'TABLE I' biçiminde olmalı: '4.5 and 6.3.1'"
+      ]
+    },
+    {
+      "sayfa": 7,
+      "sure_s": 8.884,
+      "test_sayisi": 0,
+      "hatalar": [
+        "test 0 (viscosity): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=40.0, üst=None); emin değilsen 'belirsiz' yaz"
+      ]
+    },
+    {
+      "sayfa": 8,
+      "sure_s": 64.216,
+      "test_sayisi": 8,
+      "hatalar": []
+    },
+    {
+      "sayfa": 9,
+      "sure_s": 0.469,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 10,
+      "sure_s": 0.445,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 11,
+      "sure_s": 8.956,
+      "test_sayisi": 1,
+      "hatalar": []
+    },
+    {
+      "sayfa": 12,
+      "sure_s": 138.603,
+      "test_sayisi": 0,
+      "hatalar": [
+        "test 0 (viskozite): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 1 (pot_life): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 2 (surface_appearance): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 3 (drying_time): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 4 (lifting): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 5 (adhesion): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 6 (flexibility): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 7 (infrared_reflectance): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 8 (water_resistance): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 9 (salt_spray_corrosion_resistance): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 10 (filiform_corrosion_resistance): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 11 (solvent_resistance): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 12 (fluid_resistance): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 13 (mixing_and_dilution): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 14 (application): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 15 (toxicity): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 16 (strippability): sinir: Value error, 'metinsel' kriteri yön almaz",
+        "test 17 (4_5_1): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+        "test 18 (4_5_2): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+      ]
+    },
+    {
+      "sayfa": 13,
+      "sure_s": 23.11,
+      "test_sayisi": 4,
+      "hatalar": []
+    },
+    {
+      "sayfa": 14,
+      "sure_s": 7.205,
+      "test_sayisi": 1,
+      "hatalar": []
+    },
+    {
+      "sayfa": 15,
+      "sure_s": 11.458,
+      "test_sayisi": 2,
+      "hatalar": []
+    },
+    {
+      "sayfa": 16,
+      "sure_s": 0.45,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 17,
+      "sure_s": 0.479,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 18,
+      "sure_s": 0.442,
+      "test_sayisi": 0,
+      "hatalar": []
+    },
+    {
+      "sayfa": 19,
+      "sure_s": 0.476,
+      "test_sayisi": 0,
+      "hatalar": []
+    }
+  ],
+  "tekrar_edenler": [
+    "water_resistance"
+  ],
+  "toplam_sure_s": 310.443,
+  "test_sayisi": 16
+}
