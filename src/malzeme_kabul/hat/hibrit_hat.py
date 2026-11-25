@@ -10,6 +10,15 @@
   satırlar karara girmez; `kanit` denetimi insan incelemeli olur. Kabul/red
   kararını her iki modda da kural motoru verir.
 
+Okuma anlaşmazlığı: hibritte model başarılıysa sertifika kural okuyucuyla da
+okunur ve iki okuma (standart atfı ve modelin kanıtlı satırları)
+`kural.okuma_karsilastirma` ile test bazında karşılaştırılır. Karara modelin
+okuması girer; anlaşmazlıkta hiçbir okuma sessizce karara girmez: değer,
+birim, satır ya da atıf farkı olan şart insan incelemeli olur ("kural ve
+model farklı okudu: ..."; iki okuma da sınır dışındaysa uygun değil kalır),
+`okuma_uyumu` ek denetimi insan incelemeli olur ve anlaşmazlıklar `hat.anlasmazliklar` olarak karar kaydına
+yazılır (ileride güven skoru girdisi).
+
 Dil modeli yanıt vermezse ya da şemaya uymayan yanıt dönerse hat kural
 okumasına düşer ve bunu karar kaydına yazar (`hat.yedek`); karar yine
 kurallarla verilir.
@@ -17,7 +26,9 @@ kurallarla verilir.
 Standart tarafı: `standart_okumalarini_dogrula` dil modelinin standarttan
 okuduğu `HamOkuma`'ları kanıt doğrulayıcı ve sınır yönü kuralından
 (`kural.yon_dogrulama`) geçirir: kanıtsız okumalar reddedilir, yönü metinle
-çelişen okumalar `belirsiz` yapılır (insan incelemesi).
+çelişen okumalar `belirsiz` yapılır (insan incelemesi). Kural dokümanı
+verilirse modelin sınır ve yön okuması onunla karşılaştırılır; anlaşmayan
+okumanın yönü de `belirsiz` yapılır.
 
 Mod `MALZEME_KABUL_MODU` ortam değişkeniyle de seçilebilir (varsayılan
 `kural`); model adı `MALZEME_KABUL_MODELI`, arka uç `MALZEME_KABUL_ARKA_UCU`,
@@ -39,9 +50,17 @@ from malzeme_kabul.katalog.veritabani import Katalog
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 from malzeme_kabul.kural.kanit_dogrulama import metin_sayfada_mi, okuma_kaniti, satir_kaniti
 from malzeme_kabul.kural.karar_motoru import KararAyarlari, KararSatiri
+from malzeme_kabul.kural.okuma_karsilastirma import (
+    Anlasmazlik,
+    sertifika_okumalarini_karsilastir,
+    standart_okumalarini_karsilastir,
+)
 from malzeme_kabul.kural.yon_dogrulama import okuma_yonu_dogrula
 from malzeme_kabul.sozlesme.okuma import HamOkuma
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 from malzeme_kabul.sozlesme.sertifika import Sertifika
+
+FARKLI_OKUDU = "kural ve model farklı okudu"
 
 Mod = Literal["kural", "hibrit"]
 MODLAR: tuple[str, ...] = ("kural", "hibrit")
@@ -82,6 +101,8 @@ class SertifikaOkumasi:
     sayfalar: list[int] = field(default_factory=list)
     kanitsiz: list[str] = field(default_factory=list)  # "test adı: neden"
     yedek: str | None = None  # dil modeli başarısız olup kurala düşüldüyse nedeni
+    anlasmazliklar: list[Anlasmazlik] = field(default_factory=list)  # kural ve model okuması farkları
+    kural_sertifikasi: Sertifika | None = None  # hibritte karşılaştırılan kural okuması; yoksa karşılaştırılmadı
 
     def kanit_denetimi(self) -> KararSatiri | None:
         ortak = {"test_id": "kanit", "test_adi": "Okuma kanıtı (dil modeli)"}
@@ -93,17 +114,57 @@ class SertifikaOkumasi:
             return KararSatiri(karar="insan_incelemeli", gerekce="belgede bulunamayan okumalar: " + "; ".join(self.kanitsiz), **ortak)
         return KararSatiri(karar="uygun", gerekce="okunan bütün hücreler belgede bulundu", **ortak)
 
+    def okuma_uyumu_denetimi(self) -> KararSatiri | None:
+        """Hibritte (yedeğe düşülmediyse) kural ve model okumasının uyumu; aksi halde None."""
+        if self.mod != "hibrit" or self.yedek:
+            return None
+        ortak = {"test_id": "okuma_uyumu", "test_adi": "Kural ve model okuma uyumu"}
+        if self.kural_sertifikasi is None:
+            return KararSatiri(karar="insan_incelemeli",
+                               gerekce="karşılaştırma yapılamadı: kabul dokümanı verilmedi", **ortak)
+        if self.anlasmazliklar:
+            testler = sorted({a.test_id for a in self.anlasmazliklar})
+            return KararSatiri(
+                karar="insan_incelemeli",
+                gerekce=f"{FARKLI_OKUDU}: {len(self.anlasmazliklar)} anlaşmazlık ({', '.join(testler)})",
+                **ortak,
+            )
+        return KararSatiri(karar="uygun", gerekce="kural ve model aynı okudu", **ortak)
+
+    def incelemeye_alinacak(self) -> dict[str, str]:
+        """Anlaşmazlığı olan test_id → gerekçe ("kural ve model farklı okudu: ...")."""
+        nedenler: dict[str, list[str]] = {}
+        for a in self.anlasmazliklar:
+            nedenler.setdefault(a.test_id, []).append(a.aciklama)
+        return {t: f"{FARKLI_OKUDU}: " + "; ".join(n) for t, n in nedenler.items()}
+
     def hat_bilgisi(self) -> dict:
         return {"mod": self.mod, "model": self.model, "istem_surumu": self.istem_surumu,
-                "kanitsiz": self.kanitsiz, "yedek": self.yedek}
+                "kanitsiz": self.kanitsiz, "yedek": self.yedek,
+                "anlasmazliklar": [a.model_dump() for a in self.anlasmazliklar],
+                "anlasmazlik_sayisi": len(self.anlasmazliklar)}
 
 
 def _model_adi(istemci: SohbetIstemcisi) -> str:
     return getattr(istemci, "model", None) or type(istemci).__name__
 
 
-def sertifikayi_oku(belge: Belge, mod: Mod, istemci: SohbetIstemcisi | None = None) -> SertifikaOkumasi:
-    """Sertifikayı seçilen modda okur; hibritte her satırı kanıtla doğrular."""
+def sertifikayi_oku(
+    belge: Belge,
+    mod: Mod,
+    istemci: SohbetIstemcisi | None = None,
+    dokuman: KabulDokumani | None = None,
+    tip: str | None = None,
+    sinif: str | None = None,
+) -> SertifikaOkumasi:
+    """Sertifikayı seçilen modda okur; hibritte her satırı kanıtla doğrular.
+
+    Hibritte model başarılı ve `dokuman` (kabul dokümanı) verilmişse sertifika
+    kural okuyucuyla da okunur; modelin kanıtlı satırlarıyla farkları
+    `anlasmazliklar` alanına yazılır (`tip`/`sinif`: katalogdaki malzemenin).
+    Doküman verilmezse karşılaştırma yapılmaz ve `okuma_uyumu` insan
+    incelemeli olur.
+    """
     if mod == "kural":
         return SertifikaOkumasi(kural_ile_oku(belge), "kural", sayfalar=[s.no for s in belge.sayfalar])
     if istemci is None:
@@ -128,7 +189,12 @@ def sertifikayi_oku(belge: Belge, mod: Mod, istemci: SohbetIstemcisi | None = No
         kanitsiz.append(f"standart atfı: {atif!r} belgede yok")
         okuma = okuma.model_copy(update={"standart_atfi": None})
     sertifika = okumadan_sertifika(okuma, belge.dosya.stem, kabul)
-    return SertifikaOkumasi(sertifika, "hibrit", model, ISTEM_SURUMU, sorted({s.sayfa for s in kabul}), kanitsiz)
+    kural_sertifikasi, anlasmazliklar = None, []
+    if dokuman is not None:
+        kural_sertifikasi = kural_ile_oku(belge)
+        anlasmazliklar = sertifika_okumalarini_karsilastir(dokuman, kural_sertifikasi, sertifika, tip, sinif)
+    return SertifikaOkumasi(sertifika, "hibrit", model, ISTEM_SURUMU, sorted({s.sayfa for s in kabul}), kanitsiz,
+                            anlasmazliklar=anlasmazliklar, kural_sertifikasi=kural_sertifikasi)
 
 
 def sertifika_hatti(
@@ -147,14 +213,17 @@ def sertifika_hatti(
     if secilen == "hibrit" and istemci is None:
         istemci = ortamdan_istemci()
     belge = pdf_oku(pdf_yolu)
-    okuma = sertifikayi_oku(belge, secilen, istemci)
-    ek = [d] if (d := okuma.kanit_denetimi()) is not None else []
+    dokuman = katalog.gecerli_dokuman(malzeme_kodu).dokuman
+    malzeme = katalog.malzeme(malzeme_kodu)
+    okuma = sertifikayi_oku(belge, secilen, istemci, dokuman, malzeme.tip, malzeme.sinif)
+    ek = [d for d in (okuma.kanit_denetimi(), okuma.okuma_uyumu_denetimi()) if d is not None]
     karar = malzeme_koduyla_kontrol(
         katalog, malzeme_kodu, okuma.sertifika, lot_no=lot_no, ayar=ayar, defter=defter, kullanici=kullanici,
         model=okuma.model if okuma.mod == "hibrit" and not okuma.yedek else None,
         istem_surumu=okuma.istem_surumu if okuma.mod == "hibrit" and not okuma.yedek else None,
         pdf_sayfasi=",".join(map(str, okuma.sayfalar)) or None,
         ek_denetimler=ek, hat_bilgisi=okuma.hat_bilgisi(),
+        incelemeye_alinacak=okuma.incelemeye_alinacak() or None, karsi_okuma=okuma.kural_sertifikasi,
     )
     return karar, okuma
 
@@ -167,10 +236,18 @@ class StandartOkumaDenetimi:
     kabul: list[HamOkuma] = field(default_factory=list)  # kanıtlı (yönü gerekirse 'belirsiz' yapılmış)
     reddedilen: list[tuple[HamOkuma, str]] = field(default_factory=list)  # kanıtsız
     yonu_belirsizlesen: list[tuple[HamOkuma, str]] = field(default_factory=list)
+    anlasmazliklar: list[Anlasmazlik] = field(default_factory=list)  # kural dokümanıyla farklar
 
 
-def standart_okumalarini_dogrula(okumalar: list[HamOkuma], belge: Belge) -> StandartOkumaDenetimi:
-    """Standarttan okunan ham metinleri kanıt ve sınır yönü kuralından geçirir."""
+def standart_okumalarini_dogrula(
+    okumalar: list[HamOkuma], belge: Belge, kural_dokumani: KabulDokumani | None = None
+) -> StandartOkumaDenetimi:
+    """Standarttan okunan ham metinleri kanıt ve sınır yönü kuralından geçirir.
+
+    `kural_dokumani` (kural çıkarıcının dokümanı) verilirse kanıtlı her sınır
+    okuması onunla karşılaştırılır; sınırı ya da yönü farklı olan okumanın
+    yönü `belirsiz` yapılır (insan incelemesi) ve fark `anlasmazliklar`'a yazılır.
+    """
     metinler = {s.no: s.metin for s in belge.sayfalar}
     sonuc = StandartOkumaDenetimi()
     for o in okumalar:
@@ -178,15 +255,22 @@ def standart_okumalarini_dogrula(okumalar: list[HamOkuma], belge: Belge) -> Stan
         if not k.kanitli:
             sonuc.reddedilen.append((o, k.neden))
             continue
+        farklar = standart_okumalarini_karsilastir([o], kural_dokumani) if kural_dokumani is not None else []
         y = okuma_yonu_dogrula(o)
         if y.durum == "celiski":
             o = o.model_copy(update={"sinir_yonu": "belirsiz"})
             sonuc.yonu_belirsizlesen.append((o, y.aciklama))
+        elif farklar:
+            o = o.model_copy(update={"sinir_yonu": "belirsiz"})
+            sonuc.yonu_belirsizlesen.append((o, f"{FARKLI_OKUDU}: " + "; ".join(a.aciklama for a in farklar)))
+        sonuc.anlasmazliklar.extend(farklar)
         sonuc.kabul.append(o)
+    sonuc.anlasmazliklar.sort(key=lambda a: (a.test_id, a.alan))
     return sonuc
 
 
 __all__ = [
+    "FARKLI_OKUDU",
     "HatHatasi",
     "MODLAR",
     "Mod",

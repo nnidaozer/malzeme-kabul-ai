@@ -37,6 +37,7 @@ from malzeme_kabul.kural.karar_motoru import (
     kontrol_et,
     parti_karari,
 )
+from malzeme_kabul.kural.okuma_karsilastirma import anlasmazlik_karari
 from malzeme_kabul.sozlesme.sema import KabulDokumani
 from malzeme_kabul.sozlesme.sertifika import Sertifika
 
@@ -91,6 +92,8 @@ def malzeme_koduyla_kontrol(
     pdf_sayfasi: str | int | None = None,
     ek_denetimler: list[KararSatiri] | None = None,
     hat_bilgisi: dict | None = None,
+    incelemeye_alinacak: dict[str, str] | None = None,
+    karsi_okuma: Sertifika | None = None,
 ) -> KatalogKarari:
     """Sertifikayı malzeme kodunun onaylı kabul dokümanıyla karşılaştırır.
 
@@ -98,6 +101,14 @@ def malzeme_koduyla_kontrol(
     karara göre güncellenir. `defter` verilirse karar denetim kaydına yazılır
     (`kullanici` zorunlu); `model` ve `istem_surumu` dil modeli kullanıldıysa,
     `pdf_sayfasi` sertifikanın okunduğu sayfa(lar).
+
+    `incelemeye_alinacak` ({test_id: gerekçe}) verilirse o testlerin kontrol
+    satırı (standart atfı için `revizyon` satırı) insan incelemeli olur;
+    gerekçe mevcut gerekçenin sonuna eklenir. `karsi_okuma` (hibritte kural
+    okuması) da verilmişse o okuma da kural motoruyla değerlendirilir ve iki
+    okuma da uygun değilse satır uygun değil kalır
+    (`okuma_karsilastirma.anlasmazlik_karari`). Kontrol satırlarında olmayan
+    test için insan incelemeli bir ek denetim satırı eklenir.
     """
     if defter is not None and not (kullanici and kullanici.strip()):
         raise KatalogHatasi("denetim kaydı için kullanıcı gerekli")
@@ -106,6 +117,17 @@ def malzeme_koduyla_kontrol(
     kontrol = kontrol_et(surum.dokuman, sertifika, ayar, tip=malzeme.tip, sinif=malzeme.sinif)
 
     ek: list[KararSatiri] = list(ek_denetimler or [])
+    if incelemeye_alinacak:
+        karsi = (
+            kontrol_et(surum.dokuman, karsi_okuma, ayar, tip=malzeme.tip, sinif=malzeme.sinif)
+            if karsi_okuma is not None else None
+        )
+        kontrol, eksik = _incelemeye_al(kontrol, incelemeye_alinacak, karsi)
+        adlar = {t.id: t.test_adi for t in surum.dokuman.testler}
+        ek.extend(
+            KararSatiri(test_id=t, test_adi=adlar.get(t, t), karar="insan_incelemeli", gerekce=g)
+            for t, g in eksik.items()
+        )
     if (t := _tedarikci_denetimi(katalog, malzeme_kodu, sertifika)) is not None:
         ek.append(t)
     parti = None
@@ -176,6 +198,30 @@ def karari_duzelt(
         "duzeltme", kullanici, {"onceki_durum": onceki, "yeni_durum": yeni_durum, "neden": neden},
         malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum,
     )
+
+
+def _incelemeye_al(
+    kontrol: KontrolSonucu, nedenler: dict[str, str], karsi: KontrolSonucu | None = None
+) -> tuple[KontrolSonucu, dict[str, str]]:
+    """Anlaşmazlığı olan satırların kararını yeniden verir; kontrolde bulunmayanları ayrıca döner.
+
+    `karsi` öteki okumanın kontrolüdür; verilmezse karar insan incelemelidir.
+    """
+    karsi_kararlar: dict[str, Karar] = {}
+    if karsi is not None:
+        karsi_kararlar = {s.test_id: s.karar for s in [karsi.revizyon, *karsi.satirlar]}
+
+    def guncelle(s: KararSatiri) -> KararSatiri:
+        if s.test_id not in nedenler:
+            return s
+        karar = anlasmazlik_karari(s.karar, karsi_kararlar.get(s.test_id))
+        return s.model_copy(update={"karar": karar, "gerekce": f"{s.gerekce}; {nedenler[s.test_id]}"})
+
+    yeni = kontrol.model_copy(update={"revizyon": guncelle(kontrol.revizyon),
+                                      "satirlar": [guncelle(s) for s in kontrol.satirlar]})
+    yeni = yeni.model_copy(update={"belge_karari": parti_karari(_satir_kararlari(yeni))})
+    bulunan = {kontrol.revizyon.test_id} | {s.test_id for s in kontrol.satirlar}
+    return yeni, {t: g for t, g in nedenler.items() if t not in bulunan}
 
 
 def _satir_kararlari(kontrol: KontrolSonucu) -> list[Karar]:

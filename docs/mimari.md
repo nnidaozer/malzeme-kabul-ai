@@ -196,6 +196,22 @@ ya da `hibrit` (parametre ya da `MALZEME_KABUL_MODU`, varsayılan `kural`).
   katmanında, aynı satırda aranır; kanıtsız satırlar karara girmez ve `kanit`
   denetimi insan incelemeli olur. Model yanıt vermezse ya da şemaya uymazsa
   kural okumasına düşülür ve kayda yazılır.
+- Okuma anlaşmazlığı: hibritte model başarılıysa sertifika `kural_ile_oku` ile
+  de okunur ve `kural/okuma_karsilastirma.sertifika_okumalarini_karsilastir`
+  iki okumayı karşılaştırır: standart atfı (belge no, revizyon, tip, sınıf)
+  ve test satırları (değer, birim, satır). Satırlar `kontrol_et` ile aynı
+  kümeye eşlenir (`karar_motoru.aranan_testler`, katalogdaki tip/sınıf).
+  Karşılaştırma tamamen kuralla yapılır; birimler pint ile aynı birime
+  çözülüyorsa eşittir, değer çevrilmez. Karara modelin okuması girer;
+  anlaşmazlıkta hiçbir okuma sessizce karara girmez: şart (atıfta `revizyon`
+  satırı) insan incelemeli olur ("kural ve model farklı okudu: ..."); iki
+  okuma da kural motoruna göre sınır dışındaysa uygun değil kalır.
+  `okuma_uyumu` ek denetimi insan incelemeli olur (kabul dokümanı verilmeden
+  okunduysa da: "karşılaştırma yapılamadı"), anlaşmazlıklar
+  `hat.anlasmazliklar` / `hat.anlasmazlik_sayisi` olarak karar kaydına
+  yazılır (ileride güven skoru girdisi). Standart tarafında
+  `standart_okumalarini_dogrula(..., kural_dokumani=...)` modelin sınır ve
+  yönünü kural dokümanıyla karşılaştırır; farklı okuma `belirsiz` olur.
 - Karar her iki modda `hat/katalog_karari` ile verilir; kayıtta mod, model ve
   istem sürümü (`sertifika-okuma-v1`) bulunur. Komut satırı:
   `scripts/sertifika_kontrol.py`. Testler sahte modelle çalışır.
