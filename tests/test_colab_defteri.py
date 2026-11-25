@@ -31,7 +31,7 @@ def test_defter_colabin_yalniz_gelistirme_icin_oldugunu_soyler():
 
 def test_defter_yerel_istemciyi_kullanir_ve_golde_yazmaz():
     kod = "\n".join(_hucreler("code"))
-    assert "YerelModelIstemcisi" in kod and "deney/dil_modeli_cikar.py" in kod
+    assert "YerelModelIstemcisi" in kod and "deney/uc_mod.py" in kod
     assert "127.0.0.1" in kod
     assert "data/gold/" not in kod  # yalnız data/gold_taslak okunur
 
@@ -78,3 +78,17 @@ def test_hucreler_istege_bagli_hucrelerin_importlarina_dayanmaz():
         if yok:
             eksik[i] = sorted(yok)
     assert not eksik, f"başka hücrenin içe aktarmasına dayanan hücreler: {eksik}"
+
+
+def test_defter_uc_modu_tek_modelle_uc_belgede_calistirir():
+    kod = "\n".join(_hucreler("code"))
+    assert "deney/dil_modeli_cikar.py" not in kod  # eski çok-adaylı döngü yerine uc_mod.py
+    assert '"qwen3:8b"' in kod
+    assert "--dusunme-kapali" in kod
+    for belge in ("MIL-PRF-23377K.pdf", "MIL-PRF-81733D.pdf", "MIL-PRF-85285E.pdf"):
+        assert f"data/raw/{belge}" in kod
+
+
+def test_defter_markdownunda_tahmini_sure_yazar():
+    metin = "\n".join(_hucreler("markdown"))
+    assert "Tahmini süre" in metin

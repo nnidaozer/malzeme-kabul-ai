@@ -38,9 +38,22 @@ belleğine sığmaz, 7,7 GB RAM'de de işletim sistemi ve PDF okuma ile birlikte
 - `deney/dil_modeli_cikar.py`: PDF'i sayfa sayfa modele okutur, kabul
   dokümanı JSON'u ve sayfa başına süre/hata raporu yazar
   (`data/cikti/dil_modeli/`).
-- `notebooks/colab_dil_modeli.ipynb`: Colab defteri. Ollama kurar, adayı
-  indirir, tek sayfayla dener, bütün belgeyi çıkarır, adayları sırayla
-  karşılaştırır. İsteğe bağlı bölümde aynı işi llama.cpp ile yapar.
+- `deney/hibrit_standart.py`: standart tarafı hibrit (deney). Kural
+  öncelikli; model yalnız kuralın bulmadığı, özgün metni sayfasında geçen
+  testleri tamamlar; eklenen testin sınırını kural hesaplar; kanıtsız test
+  atılır; kural ile model aynı test için farklı sınır, birim ya da yön
+  bulursa anlaşmazlık yazılır ve kural testinin yönü `belirsiz` yapılır
+  (insan incelemeli). Ayrıntı: docs/mimari.md madde 6.
+- `deney/uc_mod.py`: bir PDF'i üç modda (kural, yalnız dil modeli, hibrit)
+  çıkarır; süreleri, anlaşmazlık sayısını, insan incelemeli sınır sayısını
+  ve (gold verilirse) hizalı alan F1'lerini yazar. Dil modeli her sayfanın
+  sonucunu `<ETIKET>_ara/` altına ara kayıt olarak yazar; çalışma koparsa
+  aynı komut kaldığı yerden devam eder.
+- `notebooks/colab_dil_modeli.ipynb`: Colab defteri. Ollama kurar,
+  `qwen3:8b`'yi (düşünme kapalı) indirir, tek sayfayla dener, üç standartta
+  (MIL-PRF-23377K, MIL-PRF-81733D, MIL-PRF-85285E) `deney/uc_mod.py`'yi
+  çalıştırır ve belge × mod özet tablosunu gösterir. İsteğe bağlı bölümde
+  aynı işi llama.cpp ile yapar.
 
 Dil modeli yalnız okur (CLAUDE.md, kural 1): değeri ve birimi sayfada yazdığı
 gibi aktarır. Birim dönüşümü ve sınır karşılaştırması Python'dadır.
