@@ -1,5 +1,5 @@
-"""Kayıt (iskelet): her kararın izi.
+"""Kayıt: zincirli (hash) denetim kaydı.
 
-Her karar doküman sürümünü, PDF sayfasını, model ve istem sürümünü ve
-kullanıcıyı kaydeder. Henüz kod yok; tasarım docs/mimari.md madde 3.
+- `denetim_kaydi`: her karar, onay ve düzeltme; kullanıcı, zaman, doküman
+  sürümü, PDF sayfası, model ve istem sürümü. Tasarım docs/mimari.md madde 3.
 """

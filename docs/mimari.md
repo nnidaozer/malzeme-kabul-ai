@@ -60,9 +60,16 @@ Her karar şunları kaydeder:
 - model ve istem sürümü (dil modeli kullanıldıysa),
 - kararı alan kullanıcı ve zaman.
 
-Bugün: `KabulDokumani.durum` (taslak / onaylandi) var; sürüm numarası ve
-karar kaydı yok. `katalog/` ve `kayit/` iskelet; katalog ve onay akışı
-sıradaki üçüncü iş.
+Bugün: sürümler katalogda (`katalog/veritabani.py`). Denetim kaydı
+`kayit/denetim_kaydi.py`: her karar, onay ve düzeltme kullanıcı, zaman,
+doküman sürümü, PDF sayfası, model ve istem sürümüyle yalnız eklenir. Her
+kayıt kendi alanlarının ve bir önceki kaydın SHA-256 özetini taşır (hash
+zinciri); tetikleyiciler UPDATE/DELETE'i reddeder. Zinciri doğrulama:
+`python scripts/denetim_dogrula.py [--son-ozet HEX]` (bozuksa çıkış kodu 1).
+Karar, onay ve düzeltme `hat/katalog_karari` içinden kaydedilir
+(`malzeme_koduyla_kontrol(defter=...)`, `dokuman_onayla`, `karari_duzelt`).
+Veritabanını baştan yazabilen biri zinciri yeniden hesaplayabilir; buna karşı
+son özet dışarıda saklanmalıdır (`--son-ozet`).
 
 ## 4. Revizyon
 
@@ -194,7 +201,7 @@ src/malzeme_kabul/
   kural/      birimler, karar motoru (kabul/red yalnız burada)
   revizyon/   revizyon farkları ve güncelleme önerileri
   katalog/    SQLite katalog, doküman sürümleri, onaylı tedarikçiler, partiler
-  kayit/      (iskelet) karar kaydı
+  kayit/      zincirli denetim kaydı (karar, onay, düzeltme)
   hat/        (iskelet) belge → çıkarım → kural → kayıt akışı
   arayuz/     kabul dokümanı çıktısı (Markdown/Word); ileride Streamlit
 deney/        yalnız dil modeli deneyi, ölçüm (F1, FAR), sentetik sertifika, gold taslak araçları

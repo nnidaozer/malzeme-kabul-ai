@@ -14,6 +14,7 @@ from pathlib import Path
 
 from malzeme_kabul.katalog.ornek_veri import ornek_yukle
 from malzeme_kabul.katalog.veritabani import Katalog
+from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 
 KOK = Path(__file__).resolve().parents[1]
 VARSAYILAN_DB = KOK / "data" / "calisma" / "katalog.sqlite"
@@ -30,6 +31,10 @@ def main(argv: list[str] | None = None) -> int:
     with Katalog(args.db) as katalog:
         if args.ornek:
             ozet = ornek_yukle(katalog, args.ornek_dosyasi, KOK)
+            defter = DenetimKaydi(katalog.baglanti)
+            for etiket in ozet.dokuman_surumleri:
+                defter.ekle("onay", "ornek-veri", {"dokuman_surumu": etiket, "not": "örnek veri, M&P onayı değil"},
+                            dokuman_surumu=etiket)
             print(f"yeni doküman sürümleri: {', '.join(ozet.dokuman_surumleri) or '-'}")
             print(f"yeni malzemeler: {', '.join(ozet.malzemeler) or '-'}")
             print(f"yeni partiler: {', '.join(ozet.partiler) or '-'}")

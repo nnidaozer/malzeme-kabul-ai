@@ -93,3 +93,20 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   sipariş revizyonu kabul dokümanının revizyonundan farklıysa insan
   incelemeli. Tedarikçi adı büyük/küçük harf ve boşluk farkını yok sayar;
   başka yazım farkları insana gider.
+
+## Gece işi 3: denetim kaydı
+
+- **Denetim kaydı katalogla aynı SQLite dosyasında** (`denetim_kaydi` tablosu).
+  Ayrı dosya da olabilirdi; tek dosya kurulumu ve Docker'ı basitleştirir.
+- **Zincir: her kaydın özeti = SHA-256(kendi alanları + önceki özet),**
+  anahtarları sıralı JSON üzerinden. Ek olarak tetikleyiciler UPDATE/DELETE'i
+  reddeder. Zinciri baştan yeniden yazan birine karşı son özet dışarıda
+  saklanmalı; doğrulama komutu `--son-ozet` alır.
+- **"Düzeltme" iki şey için kullanılır:** insanın parti kararını değiştirmesi
+  (`karari_duzelt`, gerekçe zorunlu) ve M&P'nin taslağı düzeltip onaylaması
+  (ekranda, iş 7). Onay ayrı tür (`onay`).
+- **PDF sayfası:** karar kaydında her satırın standarttaki sayfası içerikte
+  (`KararSatiri.sayfa`); sertifikanın okunduğu sayfa ayrı alanda
+  (`pdf_sayfasi`), dil modeli hattından gelir.
+- Örnek veri yüklenirken üç doküman sürümü için `ornek-veri` kullanıcısıyla
+  onay kaydı yazılır.

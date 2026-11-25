@@ -16,13 +16,18 @@ denetim de kesin kuraldır ve emin olunmayanı insana bırakır:
 
 Parti kararı katalog durumuna şöyle yansır: kabul → serbest, red → karantina,
 inceleme → bekliyor.
+
+Denetim kaydı (`kayit.denetim_kaydi`) verilirse her karar, onay ve düzeltme
+zincire yazılır: kullanıcı, zaman, doküman sürümü, PDF sayfası, model ve
+istem sürümü.
 """
 
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict
 
-from malzeme_kabul.katalog.veritabani import Katalog, PartiDurumu
+from malzeme_kabul.katalog.veritabani import DokumanSurumu, Katalog, KatalogHatasi, PartiDurumu
+from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi, Kayit
 from malzeme_kabul.kural.karar_motoru import (
     BelgeKarari,
     Karar,
@@ -32,6 +37,7 @@ from malzeme_kabul.kural.karar_motoru import (
     kontrol_et,
     parti_karari,
 )
+from malzeme_kabul.sozlesme.sema import KabulDokumani
 from malzeme_kabul.sozlesme.sertifika import Sertifika
 
 PARTI_DURUMU: dict[str, PartiDurumu] = {"kabul": "serbest", "red": "karantina", "inceleme": "bekliyor"}
@@ -77,12 +83,21 @@ def malzeme_koduyla_kontrol(
     lot_no: str | None = None,
     ayar: KararAyarlari | None = None,
     durumu_yaz: bool = True,
+    defter: DenetimKaydi | None = None,
+    kullanici: str | None = None,
+    model: str | None = None,
+    istem_surumu: str | None = None,
+    pdf_sayfasi: str | int | None = None,
 ) -> KatalogKarari:
     """Sertifikayı malzeme kodunun onaylı kabul dokümanıyla karşılaştırır.
 
     `lot_no` verilir ve parti katalogda varsa, `durumu_yaz` ise parti durumu
-    karara göre güncellenir.
+    karara göre güncellenir. `defter` verilirse karar denetim kaydına yazılır
+    (`kullanici` zorunlu); `model` ve `istem_surumu` dil modeli kullanıldıysa,
+    `pdf_sayfasi` sertifikanın okunduğu sayfa(lar).
     """
+    if defter is not None and not (kullanici and kullanici.strip()):
+        raise KatalogHatasi("denetim kaydı için kullanıcı gerekli")
     malzeme = katalog.malzeme(malzeme_kodu)
     surum = katalog.gecerli_dokuman(malzeme_kodu)
     kontrol = kontrol_et(surum.dokuman, sertifika, ayar, tip=malzeme.tip, sinif=malzeme.sinif)
@@ -107,7 +122,7 @@ def malzeme_koduyla_kontrol(
     durum = PARTI_DURUMU[karar]
     if parti is not None and durumu_yaz:
         katalog.parti_durumu_ata(malzeme_kodu, parti.lot_no, durum)
-    return KatalogKarari(
+    sonuc = KatalogKarari(
         malzeme_kodu=malzeme_kodu,
         lot_no=lot_no,
         dokuman_surumu=surum.etiket,
@@ -116,6 +131,46 @@ def malzeme_koduyla_kontrol(
         ek_denetimler=ek,
         parti_karari=karar,
         parti_durumu=durum,
+    )
+    if defter is not None:
+        defter.ekle(
+            "karar", kullanici, sonuc.model_dump(mode="json"),
+            malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum.etiket,
+            pdf_sayfasi=pdf_sayfasi, model=model, istem_surumu=istem_surumu,
+        )
+    return sonuc
+
+
+def dokuman_onayla(
+    katalog: Katalog, defter: DenetimKaydi, dokuman: KabulDokumani, kullanici: str, not_: str | None = None
+) -> DokumanSurumu:
+    """Kabul dokümanını yeni onaylı sürüm olarak kaydeder ve onayı denetim kaydına yazar."""
+    surum = katalog.dokuman_onayla(dokuman, kullanici, not_)
+    defter.ekle(
+        "onay", kullanici, {"dokuman_surumu": surum.etiket, "ozet": surum.ozet, "not": not_},
+        dokuman_surumu=surum.etiket,
+    )
+    return surum
+
+
+def karari_duzelt(
+    katalog: Katalog,
+    defter: DenetimKaydi,
+    kullanici: str,
+    malzeme_kodu: str,
+    lot_no: str,
+    yeni_durum: PartiDurumu,
+    neden: str,
+) -> Kayit:
+    """İnsanın parti kararını düzeltmesi: parti durumu değişir, eski ve yeni durum gerekçesiyle kaydedilir."""
+    if not neden or not neden.strip():
+        raise KatalogHatasi("düzeltme için gerekçe gerekli")
+    onceki = katalog.parti(malzeme_kodu, lot_no).durum
+    katalog.parti_durumu_ata(malzeme_kodu, lot_no, yeni_durum)
+    surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
+    return defter.ekle(
+        "duzeltme", kullanici, {"onceki_durum": onceki, "yeni_durum": yeni_durum, "neden": neden},
+        malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum,
     )
 
 
@@ -126,4 +181,4 @@ def _satir_kararlari(kontrol: KontrolSonucu) -> list[Karar]:
     return kararlar
 
 
-__all__ = ["KatalogKarari", "PARTI_DURUMU", "malzeme_koduyla_kontrol"]
+__all__ = ["KatalogKarari", "PARTI_DURUMU", "dokuman_onayla", "karari_duzelt", "malzeme_koduyla_kontrol"]
