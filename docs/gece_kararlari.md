@@ -52,3 +52,25 @@ Her karar sabah onaylanmak üzere; yanlışsa geri alınır.
    bu fonksiyonu çağırmalı.
 8. **Yanlış alarm denetimi** `data/gold_taslak` ve `data/gold_codex` ile yapıldı (yalnız
    okundu, ikisi de onaysız): 476 testte 0 çelişki.
+
+## Gece işi 1: katalog veritabanı
+
+- **Örnek kabul dokümanları `data/cikti/` taslaklarından yüklendi, `data/gold_taslak/`
+  kullanılmadı.** Gold taslakları doğru cevap adayıdır; ürünün verisine
+  karışırsa ölçüm kirlenir. Sonuç: 81733D ve 85285E çıktılarında kural
+  çıkarıcının bulduğu test yok (0 test), yalnız 23377K'da 27 test var. Ekran
+  ve karar gösterimi 23377K ile anlamlı.
+- **Örnek dokümanlar v1 olarak "onaylı" kaydedildi, onaylayan `ornek-veri`.**
+  Giriş kalite yalnız onaylı sürümle karar verebildiği için örnek akışın
+  çalışması buna bağlı. Not alanında "M&P onayı değildir" yazar.
+- **Onaylı sürümler ayrı tabloda, değiştirilemez.** Taslaklar bu tabloya girmez;
+  düzeltme yeni sürümdür. SQLite tetikleyicileri UPDATE ve DELETE'i reddeder,
+  içerik okunurken SHA-256 özetiyle denetlenir.
+- **Malzeme kodu belirli bir sürüme değil, standart + revizyona bağlı;** karar
+  en son onaylı sürümle verilir. Böylece M&P yeni sürüm onaylayınca malzeme
+  kaydı değişmeden yeni sürüm geçerli olur.
+- **Parti yalnız o malzeme için onaylı tedarikçiden kaydedilebilir;** onaysız
+  tedarikçi hata verir (sessizce karantinaya almak yerine).
+- **Malzeme kodları, tedarikçiler ve lotlar uydurmadır** (`AST-001`,
+  `Örnek Tedarikçi A` ...). Sınıflar: AST-001 Type I Class N, AST-002 Type I
+  Class C2, SZD-001 (81733D) Type I Class 1, PUB-001 (85285E) Type I Class H.

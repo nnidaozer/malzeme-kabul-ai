@@ -1,5 +1,7 @@
-"""Katalog (iskelet): malzeme kodu ↔ standart + revizyon + tip/sınıf ↔ onaylı kabul dokümanı sürümü ↔ onaylı tedarikçiler.
+"""Katalog: malzeme kodu ↔ standart + revizyon + tip/sınıf ↔ onaylı kabul dokümanı sürümü ↔ onaylı tedarikçiler ↔ partiler.
 
-SQLite üzerinde tutulacak; kabul dokümanı sürümleri değiştirilemez (v1, v2...).
-Henüz kod yok; tasarım docs/mimari.md madde 2 ve 3.
+- `veritabani`: SQLite katalog; kabul dokümanı sürümleri değiştirilemez (v1, v2...).
+- `ornek_veri`: data/ornek/katalog.json örnek verisini yükler.
+
+Tasarım docs/mimari.md madde 2 ve 3.
 """
