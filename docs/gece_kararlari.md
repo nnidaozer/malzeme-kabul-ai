@@ -233,9 +233,45 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   uygulamanın ağ ad alanını paylaşır; model uygulamaya `localhost` olarak
   görünür, onun da dışarı yolu yoktur. Model dosyaları birime önceden
   konmalıdır (ağ kapalı olduğu için indirilemez).
-- **Deneme kullanıcıları compose'da açık** (`MALZEME_KABUL_ORNEK_KULLANICILAR=1`)
+- ~~**Deneme kullanıcıları compose'da açık** (`MALZEME_KABUL_ORNEK_KULLANICILAR=1`)
   ki ilk açılışta giriş yapılabilsin; gerçek kullanımda kapatılıp
-  `scripts/kullanici_ekle.py` kullanılmalı.
+  `scripts/kullanici_ekle.py` kullanılmalı.~~ Sabah düzeltmesiyle kaldırıldı
+  (aşağıda).
+  - **Sabah düzeltmesi:** Nida'nın isteğiyle Docker'da varsayılan parola
+    kaldırıldı. Docker yolunda deneme kullanıcıları hiç açılmaz
+    (`MALZEME_KABUL_ORNEK_KULLANICILAR` compose'dan ve `docker/baslat.sh`'ten
+    çıktı). İlk açılışta `docker/baslat.sh`, Streamlit'ten önce
+    `scripts/ilk_kurulum.py`'yi çalıştırır: veritabanında kullanıcı yoksa
+    `MALZEME_KABUL_MP_PAROLASI` / `MALZEME_KABUL_GK_PAROLASI` (ya da
+    `*_PAROLASI_DOSYASI`) ile M&P ve giriş kalite hesaplarını açar
+    (`arayuz.kimlik.ortamdan_kullanicilar`). Parola eksik, 12 karakterden
+    kısa, kullanıcı adıyla aynı ya da bilinen deneme parolasıysa hiçbir hesap
+    açılmaz ve Streamlit başlamaz; parolalar hiçbir çıktıya yazılmaz.
+    `docker-compose.yml` parolaları Docker secrets ile verir (kaynak: host'taki
+    aynı adlı ortam değişkenleri; ayarlı değilse compose başlamaz). Testin
+    öngördüğü `${...:?...}` biçimi `tests/test_docker.py`'deki "düz metin
+    varsayılan yok" denetimine takıldığı için secrets seçildi; bunun yan
+    yararı parolanın konteyner ortamında ve `docker inspect`'te görünmemesi.
+    `scripts/ag_testi.sh` ve CI'daki `ag-testi` işi parolaları her koşuda
+    rastgele üretir. Ayrıca imajda veri kökü (`data/bolunme.yaml`,
+    `data/cikti`) bulunamıyordu (paket site-packages'a kurulu); artık
+    `MALZEME_KABUL_KOK` (Dockerfile: `/uygulama`) ile verilir. Dikkat: bu
+    düzeltmeden önce oluşturulmuş bir `veri` biriminde deneme kullanıcıları
+    duruyorsa ilk kurulum onlara dokunmaz; birim silinmeli
+    (`docker compose down -v`) ya da hesaplar elle değiştirilmeli.
+  - **Gözden geçirme sonrası (2. tur):** Eski birimdeki deneme hesapları
+    artık sessizce kalmıyor. `ortamdan_kullanicilar` her çağrıda, erken
+    dönmeden önce, mevcut hesapları `DENEME_PAROLALARI`'na karşı denetler;
+    eşleşen varsa hesabın adını (parolayı değil) söyleyen `KimlikHatasi`
+    verir, hiçbir hesabı değiştirmez ya da açmaz. Böylece `ilk_kurulum.py`
+    sıfırdan farklı döner ve Streamlit her açılışta başlamaz, ta ki hesap
+    silinip yeniden açılana kadar (README, "Parola değiştirme"). Yalnız
+    boşluktan oluşan parolalar (dosyadan okunanlar dahil) da reddedilir.
+    İmajda `MALZEME_KABUL_DOCKER=1` ayarlı; bu varken `katalog_kur.py
+    --ornek-kullanicilar` sıfırdan farklı kodla çıkar (`--ornek` tek başına
+    çalışır). README'ye Compose v2.6.0 alt sınırı (secrets'ın ortam
+    değişkeninden okunması) ve parola değiştirme yolu eklendi; ikisi de
+    gerçek Docker'da denendi.
 - **İmaja girmeyenler** (`.dockerignore`): `data/gold*`, `data/raw`,
   `data/sentetik`, `data/calisma`, `deney/`, `notebooks/`, `tests/`.
 - **Ağ testi** (`scripts/ag_testi.sh`): uygulama kapsayıcısında DNS, TCP ve

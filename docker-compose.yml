@@ -2,6 +2,8 @@
 # dış ağa ve internete çıkışı yoktur. Tarayıcıdan erişim için "kapi" servisi
 # host'a yalnız 127.0.0.1:8501'den açılır ve bağlantıyı yalnız uygulamaya aktarır.
 #
+# İlk açılışta parolalar zorunludur (varsayılan parola yok):
+#   export MALZEME_KABUL_MP_PAROLASI=... MALZEME_KABUL_GK_PAROLASI=...
 #   docker compose up -d --build        # http://127.0.0.1:8501
 #   sh scripts/ag_testi.sh               # ağın kapalı olduğunu gösterir
 #
@@ -18,7 +20,17 @@ services:
     environment:
       MALZEME_KABUL_MODU: ${MALZEME_KABUL_MODU:-kural}
       MALZEME_KABUL_MODELI: ${MALZEME_KABUL_MODELI:-}
-      MALZEME_KABUL_ORNEK_KULLANICILAR: ${MALZEME_KABUL_ORNEK_KULLANICILAR:-1}
+      # Varsayılan parola yok: parolalar Docker secrets ile /run/secrets altına
+      # dosya olarak gelir (ortamda ve `docker inspect` çıktısında görünmez).
+      # Kaynakları host'taki MALZEME_KABUL_MP_PAROLASI / MALZEME_KABUL_GK_PAROLASI
+      # değişkenleridir (aşağıdaki secrets:); ayarlı değilse compose başlamaz,
+      # boş ya da zayıfsa (en az 12 karakter) scripts/ilk_kurulum.py hata verir ve
+      # Streamlit başlamaz. Kullanıcılar kurulduktan sonra parolalar kullanılmaz.
+      MALZEME_KABUL_MP_KULLANICI: ${MALZEME_KABUL_MP_KULLANICI:-mp}
+      MALZEME_KABUL_MP_PAROLASI_DOSYASI: /run/secrets/mp_parolasi
+      MALZEME_KABUL_GK_KULLANICI: ${MALZEME_KABUL_GK_KULLANICI:-gk}
+      MALZEME_KABUL_GK_PAROLASI_DOSYASI: /run/secrets/gk_parolasi
+    secrets: [mp_parolasi, gk_parolasi]
     volumes:
       - veri:/veri
     restart: unless-stopped
@@ -44,6 +56,12 @@ networks:
   ic:
     internal: true
   disari: {}
+
+secrets:
+  mp_parolasi:
+    environment: MALZEME_KABUL_MP_PAROLASI
+  gk_parolasi:
+    environment: MALZEME_KABUL_GK_PAROLASI
 
 volumes:
   veri: {}

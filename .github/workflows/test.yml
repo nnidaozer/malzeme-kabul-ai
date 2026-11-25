@@ -45,7 +45,15 @@ jobs:
         env:
           AG_TESTI_KAPAT: "1"
           AG_TESTI_KONTROL: "1"
-        run: sh scripts/ag_testi.sh
+        # Varsayılan parola yok: compose parolaları secrets olarak ister. Her koşuda
+        # rastgele üretilir, maskelenir ve loga yazılmaz.
+        run: |
+          MALZEME_KABUL_MP_PAROLASI="$(openssl rand -hex 16)"
+          MALZEME_KABUL_GK_PAROLASI="$(openssl rand -hex 16)"
+          echo "::add-mask::$MALZEME_KABUL_MP_PAROLASI"
+          echo "::add-mask::$MALZEME_KABUL_GK_PAROLASI"
+          export MALZEME_KABUL_MP_PAROLASI MALZEME_KABUL_GK_PAROLASI
+          sh scripts/ag_testi.sh
 
   pip-audit:
     runs-on: ubuntu-latest

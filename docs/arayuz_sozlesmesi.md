@@ -226,10 +226,10 @@ denetler.
 - `kullanici` (`str`, zorunlu): taslağı oluşturan kullanıcının adı.
 - `bolunme_yolu` (`Path`, isteğe bağlı, varsayılan `data/bolunme.yaml`):
   test kümesi kilidi için bölünme dosyası. Varsayılan yol
-  `ekran_verisi.KOK` üzerinden kurulur (`Path(__file__).parents[3]`).
-  Docker riski: paket editable olmadan kurulursa bu yol site-packages'ın
-  üstünü gösterir. Dosya bulunamaz ve `standart_yukle` "bölünme dosyası
-  yok" der (bkz. "Bilinen açıklar" madde 18).
+  `ekran_verisi.KOK` üzerinden kurulur: `MALZEME_KABUL_KOK` ayarlıysa o
+  klasör (Docker: `/uygulama`), değilse depo kökü
+  (`Path(__file__).parents[3]`). Dosya bulunamazsa `standart_yukle`
+  "bölünme dosyası yok" der (bkz. "Bilinen açıklar" madde 18).
 - `belge_no` (`str | None`, isteğe bağlı, varsayılan `None`) ve `revizyon`
   (`str | None`, isteğe bağlı, varsayılan `None`): ikisi birlikte verilirse
   dosya adı yerine bunlar kullanılır. Arayüz bunları vermez.
@@ -401,8 +401,8 @@ denetim kaydı PR'ında düzeltilecek.
 
 - `klasor` (`Path`, isteğe bağlı, varsayılan `data/cikti`): önceden
   üretilmiş raporların klasörü. Varsayılan yol `ekran_verisi.KOK`
-  üzerinden kurulur. Docker'da aynı yol riski vardır: liste boş gelebilir
-  (bkz. "Bilinen açıklar" madde 18).
+  üzerinden kurulur (`ekran_verisi.HAZIR_RAPORLAR`; bkz.
+  `MALZEME_KABUL_KOK`).
 
 **Çıktı**: `dict[str, Path]`: rapor adı → `*_revizyon_farklari.md` yolu.
 Rapor adı, dosya adından `_revizyon_farklari` atılarak elde edilir. Ada göre
@@ -971,12 +971,18 @@ Bu liste kodda okunan değişkenlerden çıkarıldı.
 | `MALZEME_KABUL_MODELI` | `hat/hibrit_hat.ortamdan_istemci` | yok | Hibrit modda yerel model adı. Tanımsızsa hibrit mod `HatHatasi` verir. |
 | `MALZEME_KABUL_ARKA_UCU` | `hat/hibrit_hat.ortamdan_istemci` | `ollama` | `ollama` ya da `llamacpp` |
 | `MALZEME_KABUL_MODEL_ADRESI` | `hat/hibrit_hat.ortamdan_istemci` | arka ucun localhost adresi | Yalnız localhost kabul edilir; başka bir adres `ValueError` verir. |
-| `MALZEME_KABUL_ORNEK_KULLANICILAR` | `docker/baslat.sh` | betikte `0`, `docker-compose.yml`'de `1` | `1` ise ilk açılışta deneme kullanıcıları kurulur |
+| `MALZEME_KABUL_KOK` | `arayuz/ekran_verisi` (modül yüklenirken), `docker/baslat.sh` | depo kökü; betikte `/uygulama` (Docker: `Dockerfile` ile `/uygulama`) | Veri kökü: `data/bolunme.yaml` ve `data/cikti` buradan bulunur; `baslat.sh` betik yollarını buradan çözer |
+| `MALZEME_KABUL_MP_PAROLASI`, `MALZEME_KABUL_GK_PAROLASI` | `arayuz/kimlik.ortamdan_kullanicilar` (`scripts/ilk_kurulum.py`) | **yok** (zorunlu; varsayılan parola yoktur) | Veritabanında hiç kullanıcı yokken açılacak M&P ve giriş kalite hesaplarının parolaları. En az 12 karakter, yalnız boşluktan oluşamaz, kullanıcı adıyla aynı olamaz (harf duyarsız), bilinen deneme parolaları reddedilir. Docker'da konteynere doğrudan verilmez: `docker-compose.yml` bunları host'tan okuyup secrets olarak aktarır; host'ta ayarlı değilse compose başlamaz. |
+| `MALZEME_KABUL_MP_PAROLASI_DOSYASI`, `MALZEME_KABUL_GK_PAROLASI_DOSYASI` | `arayuz/kimlik.ortamdan_kullanicilar` | yok (Docker: `/run/secrets/mp_parolasi`, `/run/secrets/gk_parolasi`) | Parolayı dosyadan okur (sondaki satır sonu atılır). Aynı rol için doğrudan değişkenle birlikte verilemez. |
+| `MALZEME_KABUL_DOCKER` | `scripts/katalog_kur.py` | yok (Docker: `Dockerfile` ile `1`) | `1` ise `--ornek-kullanicilar` reddedilir (sıfırdan farklı çıkış); `--ornek` çalışır |
+| `MALZEME_KABUL_MP_KULLANICI`, `MALZEME_KABUL_GK_KULLANICI` | `arayuz/kimlik.ortamdan_kullanicilar` | `mp`, `gk` | İlk kurulumda açılan hesapların adları; ikisi aynı olamaz |
 | `MALZEME_KABUL_PAROLA` | `scripts/kullanici_ekle.py` | yok (parola sorulur) | Eklenecek kullanıcının parolası |
 | `KAPI_PORTU`, `KAPI_HEDEFI`, `KAPI_HEDEF_PORTU` | `docker/yerel_kapi.py` (yalnız Docker) | `8501`, `uygulama`, `8501` | Ana makineden uygulamaya TCP iletici ("kapı") |
 | `STREAMLIT_*` | Streamlit (yalnız Docker'da `Dockerfile` ile ayarlanır) | `Dockerfile`'a bakın | Başsız çalışma, kullanım istatistiği kapalı, adres `0.0.0.0`, port `8501` |
 
-Arayüzün kendisi parolayla ilgili hiçbir ortam değişkeni okumaz. `KAPI_*`
+Arayüzün kendisi (`uygulama.py`) parolayla ilgili hiçbir ortam değişkeni
+okumaz; parola değişkenlerini yalnız Streamlit'ten önce çalışan ilk kurulum
+okur. `KAPI_*`
 ve `STREAMLIT_*` yalnız Docker'a özgüdür; ürün kodu (`src/`) bunları okumaz.
 
 ## Kullanıcı oluşturma
@@ -994,11 +1000,30 @@ ve `STREAMLIT_*` yalnız Docker'a özgüdür; ürün kodu (`src/`) bunları okum
   varsa atlanır. Örnek doküman sürümleri `ornek-veri` kullanıcısıyla
   onaylanır ve denetim kaydına `"örnek veri, M&P onayı değil"` notuyla
   yazılır.
+  Bu deneme yolu yalnız yerel geliştirme içindir. Docker imajında
+  `MALZEME_KABUL_DOCKER=1` ayarlıdır ve `--ornek-kullanicilar` sıfırdan
+  farklı kodla reddedilir.
 - Docker'da `docker/baslat.sh`, katalog dosyası yoksa `katalog_kur.py
-  --ornek` çalıştırır. `MALZEME_KABUL_ORNEK_KULLANICILAR=1` ise
-  `--ornek-kullanicilar` da eklenir; `docker-compose.yml`'de bu değer
-  varsayılan olarak `1`'dir. Yani Docker bugün bilinen deneme parolalarıyla
-  açılır (bkz. "Bilinen açıklar").
+  --ornek` çalıştırır (deneme kullanıcısı açmaz), ardından Streamlit'ten
+  önce `scripts/ilk_kurulum.py --db "$MALZEME_KABUL_DB"` çalıştırır. Bu
+  betik `malzeme_kabul.arayuz.kimlik.ortamdan_kullanicilar(ortam,
+  baglanti)` çağırır:
+  - Her çağrıda önce mevcut hesaplar `kimlik.DENEME_PAROLALARI`'na karşı
+    denetlenir (erken dönüşten önce). Bir hesap deneme parolasıyla
+    kurulmuşsa hesabın adını söyleyen (parolayı söylemeyen) `KimlikHatasi`
+    verilir; hiçbir hesap değiştirilmez, silinmez ya da açılmaz. Bu yüzden
+    eski bir deneme birimiyle Streamlit her açılışta başlamaz.
+  - Veritabanında hiç kullanıcı yoksa M&P (`mp` rolü) ve giriş kalite
+    (`giris_kalite` rolü) hesaplarını yukarıdaki parola değişkenleriyle
+    açar ve oluşan `list[Kullanici]`'yı döner. Ya ikisi ya hiçbiri açılır.
+  - Parola eksik, boş, yalnız boşluk (dosyadan okunan dahil), dosyası okunamaz, 12 karakterden kısa, kullanıcı
+    adıyla aynı ya da bilinen deneme parolası ise `KimlikHatasi` verir.
+    Mesaj ilgili değişkenin adını söyler, parolayı asla içermez. Betik
+    sıfırdan farklı kodla çıkar ve `set -e` yüzünden Streamlit başlamaz.
+  - Kullanıcı zaten varsa (ve hiçbiri deneme parolalı değilse) ortam
+    değişkeni gerekmez, hiçbir hesap değişmez ve `[]` döner (yeniden
+    başlatma). Ortamdaki parolayı değiştirmek mevcut hesabı değiştirmez;
+    parola değiştirme yolu README'de ("Parola değiştirme").
 
 ## Bilinen açıklar ve bekleyen işler
 
@@ -1076,9 +1101,12 @@ gelince ilgili bölümler de güncellenecek.
     ekranında sürüm yalnız "onaylayan ornek-veri" olarak görünür
     (`uygulama.py`, `gecerli_dokuman` başlığı); demo olduğu açıkça
     işaretlenmez.
-11. **Docker varsayılan parolası.** Compose deneme kullanıcılarını bilinen
-    parolalarla açıyor. Parola ilk çalıştırmada belirlenecek ya da ortam
-    değişkeninden okunacak; parola yoksa uygulama başlamayacak.
+11. **Docker varsayılan parolası (düzeltildi).** Compose artık deneme
+    kullanıcısı açmıyor. Parolalar ortam değişkeninden (Docker'da secrets
+    dosyası) okunuyor; parola yoksa ya da zayıfsa uygulama başlamıyor (bkz.
+    "Kullanıcı oluşturma"). Önceden kurulmuş birimlerdeki deneme hesapları
+    kendiliğinden kaldırılmaz ama artık her açılışta yakalanır ve uygulama
+    başlamaz; hesap README'deki yolla silinip yeniden açılmalıdır.
 12. **Revizyon ekranı kilidi.** `revizyon_raporu` test kümesi kilidine
     bakmıyor.
 13. **Raf ömrü seçimi.** Tek genel kayıt ve tek aday durumları "bilinmiyorsa
@@ -1094,17 +1122,14 @@ gelince ilgili bölümler de güncellenecek.
     tutarlı olduğunu gösterir; dışarıda saklanan bir özetle
     karşılaştırılmaz (bkz. `zinciri_dogrula`).
 
-18. **Docker'da veri yolları (koddan çıkarım).** `Dockerfile` paketi
-    editable olmadan kurar (`pip install --no-deps .`). Bu yüzden
-    `ekran_verisi.KOK = Path(__file__).resolve().parents[3]` site-packages
-    altını gösterir, `/uygulama`'yı göstermez. İki sonucu var:
-    - `BOLUNME` (`data/bolunme.yaml`) bulunamaz ve `standart_yukle` her
-      standardı "bölünme dosyası yok" diye reddeder.
-    - `hazir_revizyon_raporlari` (`data/cikti`) boş döner.
-
-    `uygulama.py`'nin kendi `KOK`'u doğrudur, çünkü bu dosya
-    `/uygulama/src` altından çalıştırılır. Bu madde koddan çıkarılmıştır;
-    Docker PR'ında doğrulanıp düzeltilecek.
+18. **Docker'da veri yolları (düzeltildi).** `Dockerfile` paketi editable
+    olmadan kurar (`pip install --no-deps .`); bu yüzden
+    `Path(__file__).parents[3]` site-packages altını gösteriyordu ve
+    `BOLUNME` ile `data/cikti` bulunamıyordu. Artık `ekran_verisi.KOK` önce
+    `MALZEME_KABUL_KOK`'a bakar; `Dockerfile` bunu `/uygulama` yapar.
+    `BOLUNME` ve `HAZIR_RAPORLAR` KOK'tan türer. İmajda doğrulandı:
+    `standart_izinli_mi("MIL-PRF-23377K")` "geliştirme kümesinde" döner ve
+    hazır revizyon raporları listelenir.
 
 ## Sözleşmenin korunması
 

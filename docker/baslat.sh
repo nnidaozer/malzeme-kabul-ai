@@ -1,12 +1,14 @@
 #!/bin/sh
-# Konteyner girişi: katalog yoksa örnek veriyle kurar, sonra Streamlit'i başlatır.
-# MALZEME_KABUL_ORNEK_KULLANICILAR=1 ise deneme kullanıcıları (mp, gk) da açılır.
+# Konteyner girişi: katalog yoksa örnek veriyle kurar, ilk kullanıcıları ortamdan
+# açar (scripts/ilk_kurulum.py), sonra Streamlit'i başlatır.
+#
+# Varsayılan parola yoktur. Veritabanında kullanıcı yoksa MALZEME_KABUL_MP_PAROLASI
+# ve MALZEME_KABUL_GK_PAROLASI (ya da *_PAROLASI_DOSYASI) zorunludur; eksik ya da
+# zayıfsa ilk kurulum hata verir ve Streamlit başlamaz (set -e).
 set -eu
+KOK="${MALZEME_KABUL_KOK:-/uygulama}"
 if [ ! -f "$MALZEME_KABUL_DB" ]; then
-  if [ "${MALZEME_KABUL_ORNEK_KULLANICILAR:-0}" = "1" ]; then
-    python /uygulama/scripts/katalog_kur.py --db "$MALZEME_KABUL_DB" --ornek --ornek-kullanicilar
-  else
-    python /uygulama/scripts/katalog_kur.py --db "$MALZEME_KABUL_DB" --ornek
-  fi
+  python "$KOK/scripts/katalog_kur.py" --db "$MALZEME_KABUL_DB" --ornek
 fi
-exec streamlit run /uygulama/src/malzeme_kabul/arayuz/uygulama.py
+python "$KOK/scripts/ilk_kurulum.py" --db "$MALZEME_KABUL_DB"
+exec streamlit run "$KOK/src/malzeme_kabul/arayuz/uygulama.py"
