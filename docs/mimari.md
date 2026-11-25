@@ -71,6 +71,17 @@ Karar, onay ve düzeltme `hat/katalog_karari` içinden kaydedilir
 Veritabanını baştan yazabilen biri zinciri yeniden hesaplayabilir; buna karşı
 son özet dışarıda saklanmalıdır (`--son-ozet`).
 
+## 3a. Raf ömrü
+
+Partinin son kullanma tarihi = üretim tarihi + onaylı kabul dokümanındaki raf
+ömrü (`kural/raf_omru.py`). Yıl ve ay takvimle eklenir, gün/hafta gün olarak.
+Kap türüne göre birden çok kayıt varsa partinin kap türü (`partiler.kap_turu`)
+seçilir; bilinmiyorsa en kısa raf ömrü alınır. 30 gün (ayarlanabilir) kala
+`yaklasiyor`, geçmişse `doldu` uyarısı verilir ve uyarılı partiler için o
+tip/sınıfa uygulanan ömür uzatma testleri (`test_turleri` içinde
+`omur_uzatma`) listelenir. Rapor: `hat/raf_omru_raporu.raf_raporu`, komut
+satırı `scripts/raf_omru.py`.
+
 ## 4. Revizyon
 
 Depodaki partiler için **siparişte yazan revizyon** geçerlidir. Standardın
