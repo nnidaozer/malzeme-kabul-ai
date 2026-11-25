@@ -26,6 +26,14 @@ modeli kullanılmaz (CLAUDE.md, kural 1):
    laboratuvar sonucu henüz girilemediği için bu testler insan incelemelidir
    (parti bekletilir; docs/mimari.md madde 5).
 
+8. Tip/sınıf: katalogdan gelirse (`kontrol_et(..., tip=, sinif=)`) şartların
+   uygulanabilirliği ona göre seçilir; sertifikadaki atıf yalnız çelişki
+   denetimi için okunur (çelişirse `tip_sinif` satırı insan incelemelidir).
+   Katalog yoksa eski davranış: tip/sınıf sertifikadaki atıftan okunur.
+9. Parti kuralı (`parti_karari`): bir satır uygun değilse parti uygun değil
+   (red), uygun değil yoksa ve bir satır insan incelemeliyse parti bekletilir
+   (inceleme), hepsi uygunsa kabul.
+
 Emin olunmayan her durumda karar insana bırakılır; böylece belirsizlik yanlış
 kabule dönüşmez.
 """
@@ -66,6 +74,7 @@ class KararSatiri(BaseModel):
     karar: Karar
     gerekce: str
     madde: str | None = None
+    sayfa: int | None = None  # standarttaki şartın PDF sayfası
     sertifikadaki_ad: str | None = None
     okunan_sonuc: str | None = None
     okunan_birim: str | None = None
@@ -82,6 +91,7 @@ class KontrolSonucu(BaseModel):
     belge_karari: BelgeKarari
     revizyon: KararSatiri
     satirlar: list[KararSatiri]
+    tip_sinif: KararSatiri | None = None
     eslesmeyen_satirlar: list[str] = []
 
 
@@ -428,7 +438,8 @@ def _degerlendir(test: TestSarti, sonuc_metni: str, birim: str | None) -> tuple[
 # --- ana fonksiyon --------------------------------------------------------
 
 
-def _belge_karari(kararlar: list[Karar]) -> BelgeKarari:
+def parti_karari(kararlar: list[Karar]) -> BelgeKarari:
+    """Parti kuralı: bir uygun değil → red; yoksa bir insan incelemeli → inceleme; hepsi uygun → kabul."""
     if "uygun_degil" in kararlar:
         return "red"
     if "insan_incelemeli" in kararlar:
@@ -454,11 +465,48 @@ def _revizyon_kontrolu(dokuman: KabulDokumani, atif: Atif, ayar: KararAyarlari) 
     return satir("uygun", f"atıf {beklenen}")
 
 
-def kontrol_et(dokuman: KabulDokumani, sertifika: Sertifika, ayar: KararAyarlari | None = None) -> KontrolSonucu:
-    """Sertifikayı kabul dokümanının kabul testleriyle karşılaştırır."""
+def _kod(deger: str | None) -> str | None:
+    """Katalogdaki tip/sınıf kodunu uygulanabilirlikle aynı biçime getirir ('1' -> 'I', 'n' -> 'N')."""
+    if deger is None or not deger.strip():
+        return None
+    deger = deger.strip().upper()
+    return _ROMEN.get(deger, deger)
+
+
+def _tip_sinif_kontrolu(atif: Atif, tip: str | None, sinif: str | None) -> KararSatiri:
+    def satir(karar: Karar, gerekce: str) -> KararSatiri:
+        return KararSatiri(test_id="tip_sinif", test_adi="Tip ve sınıf (katalog)", karar=karar, gerekce=gerekce)
+
+    celiski = [
+        f"{ad} katalogda {beklenen}, sertifikada {okunan}"
+        for ad, beklenen, okunan in (("tip", tip, atif.tip), ("sınıf", sinif, atif.sinif))
+        if beklenen is not None and okunan is not None and beklenen != okunan
+    ]
+    if celiski:
+        return satir("insan_incelemeli", "; ".join(celiski))
+    return satir("uygun", f"katalog: Type {tip or '-'} Class {sinif or '-'}")
+
+
+def kontrol_et(
+    dokuman: KabulDokumani,
+    sertifika: Sertifika,
+    ayar: KararAyarlari | None = None,
+    tip: str | None = None,
+    sinif: str | None = None,
+) -> KontrolSonucu:
+    """Sertifikayı kabul dokümanının kabul testleriyle karşılaştırır.
+
+    `tip` ve `sinif` katalogdan verilirse uygulanabilirlik onlara göre seçilir
+    (docs/mimari.md madde 2); verilmezse sertifikadaki atıftan okunur.
+    """
     ayar = ayar or KararAyarlari()
     atif = atfi_coz(sertifika.standart_atfi)
     revizyon = _revizyon_kontrolu(dokuman, atif, ayar)
+    tip_sinif = None
+    if tip is not None or sinif is not None:
+        tip, sinif = _kod(tip), _kod(sinif)
+        tip_sinif = _tip_sinif_kontrolu(atif, tip, sinif)
+        atif = Atif(atif.belge_no, atif.revizyon, tip, sinif)
 
     uygulanan = [t for t in dokuman.kabul_testleri if uygulanir_mi(t.uygulanabilirlik, atif.tip, atif.sinif) is not False]
     aranan = [t for t in uygulanan if t.sonuc_kaynagi == "coc"]
@@ -475,7 +523,7 @@ def kontrol_et(dokuman: KabulDokumani, sertifika: Sertifika, ayar: KararAyarlari
 
     satirlar: list[KararSatiri] = []
     for test in uygulanan:
-        ortak = {"test_id": test.id, "test_adi": test.test_adi, "madde": test.kaynak.etiket}
+        ortak = {"test_id": test.id, "test_adi": test.test_adi, "madde": test.kaynak.etiket, "sayfa": test.kaynak.sayfa}
         if test.sonuc_kaynagi == "ic_laboratuvar":
             neden = "sonuç iç laboratuvardan gelir; CoC'de aranmadı, iç laboratuvar sonucu bekleniyor"
             satirlar.append(KararSatiri(karar="insan_incelemeli", gerekce=neden, **ortak))
@@ -508,9 +556,12 @@ def kontrol_et(dokuman: KabulDokumani, sertifika: Sertifika, ayar: KararAyarlari
 
     return KontrolSonucu(
         sertifika_no=sertifika.sertifika_no,
-        belge_karari=_belge_karari([revizyon.karar] + [s.karar for s in satirlar]),
+        belge_karari=parti_karari(
+            [revizyon.karar] + ([tip_sinif.karar] if tip_sinif else []) + [s.karar for s in satirlar]
+        ),
         revizyon=revizyon,
         satirlar=satirlar,
+        tip_sinif=tip_sinif,
         eslesmeyen_satirlar=eslesmeyen,
     )
 
@@ -526,6 +577,7 @@ __all__ = [
     "atfi_coz",
     "birimi_cevir",
     "kontrol_et",
+    "parti_karari",
     "sonucu_ayristir",
     "eslestir",
     "uygulanir_mi",

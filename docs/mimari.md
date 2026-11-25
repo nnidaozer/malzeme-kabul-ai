@@ -97,7 +97,12 @@ Parti kuralı:
 
 Bugün: alan şemada var. Karar motoru iç laboratuvar testlerini CoC'de aramıyor
 ve sonuç girilemediği için "insan incelemeli" veriyor, yani parti bekletiliyor.
-Parti kuralı `kontrol_et` sonucundaki `belge_karari` ile aynı.
+Parti kuralı `kural/karar_motoru.parti_karari`. Katalogla karar
+`hat/katalog_karari.malzeme_koduyla_kontrol`: kabul dokümanı malzeme koduna
+göre katalogdan (en son onaylı sürüm) gelir, tip/sınıf katalogdan alınır
+(sertifikadaki atıf yalnız çelişki denetimi), onaylı tedarikçi ve sipariş
+revizyonu denetlenir; parti kararı parti durumuna yazılır: kabul → serbest,
+red → karantina, inceleme → bekliyor. Komut satırı: `scripts/karar_ver.py`.
 
 ## 6. Dil modelinin sınırı
 
