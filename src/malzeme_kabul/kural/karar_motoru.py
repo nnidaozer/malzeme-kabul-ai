@@ -119,7 +119,8 @@ class Atif:
     sinif: str | None
 
 
-_BELGE = re.compile(r"\b(MIL)[-\s]?(PRF|DTL|C|P|S)[-\s]?(\d+)([A-Z])?(?![A-Z0-9])")
+# Revizyon harfi numaraya bitişik ya da tek boşlukla yazılabilir ("23377K", "23377 K,").
+_BELGE = re.compile(r"\b(MIL)[-\s]?(PRF|DTL|C|P|S)[-\s]?(\d+)(?:\s?([A-Z]))?(?![A-Z0-9])")
 _REV = re.compile(r"\bREV(?:IZYON|ISION)?\.?\s*:?\s*([A-Z])(?![A-Z0-9])")
 _TIP = re.compile(r"\b(?:TYPE|TIP)\s*:?\s*(II|I|2|1)(?![A-Z0-9])")
 _SINIF = re.compile(r"\b(?:CLASS|SINIF)\s*:?\s*(C1|C2|N)(?![A-Z0-9])")
@@ -490,6 +491,20 @@ def _tip_sinif_kontrolu(atif: Atif, tip: str | None, sinif: str | None) -> Karar
     return satir("uygun", f"katalog: Type {tip or '-'} Class {sinif or '-'}")
 
 
+def uygulanan_testler(dokuman: KabulDokumani, tip: str | None, sinif: str | None) -> list[TestSarti]:
+    """Tip/sınıfa uygulanan (ya da uygulanıp uygulanmadığı bilinmeyen) kabul testleri."""
+    return [t for t in dokuman.kabul_testleri if uygulanir_mi(t.uygulanabilirlik, tip, sinif) is not False]
+
+
+def aranan_testler(dokuman: KabulDokumani, tip: str | None, sinif: str | None) -> list[TestSarti]:
+    """Sertifikada (CoC) aranan testler: uygulanan kabul testlerinden sonucu CoC'den gelenler.
+
+    Sertifika satırları yalnız bu kümeye eşlenir (`kontrol_et` ve
+    `okuma_karsilastirma` aynı kümeyi kullanır).
+    """
+    return [t for t in uygulanan_testler(dokuman, tip, sinif) if t.sonuc_kaynagi == "coc"]
+
+
 def kontrol_et(
     dokuman: KabulDokumani,
     sertifika: Sertifika,
@@ -511,8 +526,8 @@ def kontrol_et(
         tip_sinif = _tip_sinif_kontrolu(atif, tip, sinif)
         atif = Atif(atif.belge_no, atif.revizyon, tip, sinif)
 
-    uygulanan = [t for t in dokuman.kabul_testleri if uygulanir_mi(t.uygulanabilirlik, atif.tip, atif.sinif) is not False]
-    aranan = [t for t in uygulanan if t.sonuc_kaynagi == "coc"]
+    uygulanan = uygulanan_testler(dokuman, atif.tip, atif.sinif)
+    aranan = aranan_testler(dokuman, atif.tip, atif.sinif)
 
     eslesmeler: dict[str, list[int]] = {t.id: [] for t in aranan}
     eslesmeyen: list[str] = []
@@ -572,6 +587,7 @@ def kontrol_et(
 __all__ = [
     "Atif",
     "BIRIM_ESANLAMLILARI",
+    "aranan_testler",
     "ESANLAMLILAR",
     "KararAyarlari",
     "KararSatiri",
@@ -583,6 +599,7 @@ __all__ = [
     "kontrol_et",
     "parti_karari",
     "sonucu_ayristir",
+    "uygulanan_testler",
     "eslestir",
     "uygulanir_mi",
 ]
