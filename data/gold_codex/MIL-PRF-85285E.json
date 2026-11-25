@@ -1,0 +1,3727 @@
+{
+  "standart": {
+    "belge_no": "MIL-PRF-85285",
+    "revizyon": "E",
+    "baslik": "COATING: POLYURETHANE, AIRCRAFT AND SUPPORT EQUIPMENT",
+    "tarih": "12 January 2012"
+  },
+  "durum": "taslak",
+  "testler": [
+    {
+      "id": "toxicity",
+      "test_adi": "Toxicity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": "Health Hazard Assessment (HHA)",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.15",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coatings shall have no adverse effect on the health of personnel when used for its intended purpose and with the precautions listed in 3.10.1 through 3.10.3, when evaluated in accordance with 4.6.15 (see 6.3)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.3",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "cadmium_and_cadmium_compounds",
+      "test_adi": "Cadmium and cadmium compounds",
+      "kaynak_tablo_adi": "Lead and cadmium content",
+      "test_metodu": "ASTM D3335",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested in accordance with 4.6, no component of the coating shall contain cadmium, cadmium compounds, or more than 0.05 percent by weight of lead metal or lead compounds, and the coating shall not contain hexavalent chromium."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "lead_metal_and_lead_compounds",
+      "test_adi": "Lead metal and lead compounds",
+      "kaynak_tablo_adi": "Lead and cadmium content",
+      "test_metodu": "ASTM D3335",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.05,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "When tested in accordance with 4.6, no component of the coating shall contain cadmium, cadmium compounds, or more than 0.05 percent by weight of lead metal or lead compounds, and the coating shall not contain hexavalent chromium."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "hexavalent_chromium",
+      "test_adi": "Hexavalent chromium",
+      "kaynak_tablo_adi": "Chromium content",
+      "test_metodu": "ASTM D3718",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested in accordance with 4.6, no component of the coating shall contain cadmium, cadmium compounds, or more than 0.05 percent by weight of lead metal or lead compounds, and the coating shall not contain hexavalent chromium."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "manufacturer_specified_volume_mixing_ratio",
+      "test_adi": "Manufacturer-specified volume mixing ratio",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The volume mixing ratio shall be as specified by the manufacturer."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "minimum_admixed_coating_volume",
+      "test_adi": "Minimum admixed coating volume",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating kit shall be supplied such that the admixed coating consists of the minimum volume specified by the procuring activity (see 6.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "thinning_solvents_supplied_with_kit",
+      "test_adi": "Thinning solvents supplied with kit",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "All solvents necessary for thinning purposes shall be supplied as part of the coating kit, with the exception of Class W."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "solvent_resistivity_for_electrostatic_spray",
+      "test_adi": "Solvent resistivity for electrostatic spray",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The resistivity of the solvents shall permit application of class H coatings by electrostatic spray methods."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "voc_content_types_i_and_iv",
+      "test_adi": "VOC content (Types I and IV)",
+      "kaynak_tablo_adi": "VOC content",
+      "test_metodu": "ASTM D3960",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 420,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/L",
+        "orijinal_metin": "When tested in accordance with 4.6, the maximum VOC content shall be 420 grams per liter (g/l) for types I and IV coatings, 340 g/l for type II coatings, and 50 g/l for type III coatings."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type IV"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "voc_content_type_ii",
+      "test_adi": "VOC content (Type II)",
+      "kaynak_tablo_adi": "VOC content",
+      "test_metodu": "ASTM D3960",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 340,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/L",
+        "orijinal_metin": "When tested in accordance with 4.6, the maximum VOC content shall be 420 grams per liter (g/l) for types I and IV coatings, 340 g/l for type II coatings, and 50 g/l for type III coatings."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "voc_content_type_iii",
+      "test_adi": "VOC content (Type III)",
+      "kaynak_tablo_adi": "VOC content",
+      "test_metodu": "ASTM D3960",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 50,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/L",
+        "orijinal_metin": "When tested in accordance with 4.6, the maximum VOC content shall be 420 grams per liter (g/l) for types I and IV coatings, 340 g/l for type II coatings, and 50 g/l for type III coatings."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "urethane_grade_solvents_and_solvent_purity",
+      "test_adi": "Urethane-grade solvents and solvent purity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Solvents used for class H shall be urethane grade and contain a minimum of water and alcohol (see 6.4)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "thinner_compatibility",
+      "test_adi": "Thinner compatibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Class H coatings shall be compatible with thinner conforming to MIL-T-81772, type I."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "brominated_and_chlorinated_solvents",
+      "test_adi": "Brominated and chlorinated solvents",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Brominated and chlorinated solvents, except for para-chlorotrifluoromethylbenzene or equal, shall be prohibited in the formulation of this product."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.4.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "vohap_content_type_i_17925",
+      "test_adi": "VOHAP content (Type I, 17925)",
+      "kaynak_tablo_adi": "VOHAP content",
+      "test_metodu": "EPA Method 311",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.2,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "pound/gallon",
+        "orijinal_metin": "I | H | 17925, Gloss/Semi-Gloss | 0.20 | 24"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE I",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Class H",
+        "17925, Gloss/Semi-Gloss"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "vohap_content_type_i_36375",
+      "test_adi": "VOHAP content (Type I, 36375)",
+      "kaynak_tablo_adi": "VOHAP content",
+      "test_metodu": "EPA Method 311",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.27,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "pound/gallon",
+        "orijinal_metin": "I | H | 36375, Camouflage | 0.27 | 32"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE I",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Class H",
+        "36375, Camouflage"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "vohap_content_type_ii_17925",
+      "test_adi": "VOHAP content (Type II, 17925)",
+      "kaynak_tablo_adi": "VOHAP content",
+      "test_metodu": "EPA Method 311",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.33,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "pound/gallon",
+        "orijinal_metin": "II | H | 17925, Gloss/Semi-Gloss | 1.33 | 159"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE I",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class H",
+        "17925, Gloss/Semi-Gloss"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "vohap_content_type_ii_36375",
+      "test_adi": "VOHAP content (Type II, 36375)",
+      "kaynak_tablo_adi": "VOHAP content",
+      "test_metodu": "EPA Method 311",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.19,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "pound/gallon",
+        "orijinal_metin": "II | H | 36375, Camouflage | 1.19 | 142"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE I",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II",
+        "Class H",
+        "36375, Camouflage"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "vohap_content_type_iii_17925",
+      "test_adi": "VOHAP content (Type III, 17925)",
+      "kaynak_tablo_adi": "VOHAP content",
+      "test_metodu": "EPA Method 311",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.03,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "pound/gallon",
+        "orijinal_metin": "III | W | 17925, Gloss | 0.03 | 3"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE I",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type III",
+        "Class W",
+        "17925, Gloss"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "vohap_content_type_iv_17925",
+      "test_adi": "VOHAP content (Type IV, 17925)",
+      "kaynak_tablo_adi": "VOHAP content",
+      "test_metodu": "EPA Method 311",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "pound/gallon",
+        "orijinal_metin": "IV | H | 17925, Gloss/Semi-Gloss | 1.30 | 156"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE I",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Class H",
+        "17925, Gloss/Semi-Gloss"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "vohap_content_type_iv_36375",
+      "test_adi": "VOHAP content (Type IV, 36375)",
+      "kaynak_tablo_adi": "VOHAP content",
+      "test_metodu": "EPA Method 311",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.8,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "pound/gallon",
+        "orijinal_metin": "IV | H | 36375, Camouflage | 0.80 | 95"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE I",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Class H",
+        "36375, Camouflage"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "component_a_smoothness_homogeneity_and_pourability",
+      "test_adi": "Component A – Smoothness, homogeneity and pourability",
+      "kaynak_tablo_adi": "Condition in container (component A)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.1",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When tested in accordance with 4.6.1, component A shall be smooth, homogeneous, and pourable."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.1.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "component_a_defects_and_redispersibility",
+      "test_adi": "Component A – Defects and redispersibility",
+      "kaynak_tablo_adi": "Condition in container (component A)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.1",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall be free of grit, skin, seeds, lumps, foreign contaminants, and abnormal thickening or livering, and shall not exhibit pigment floatation nor excessive settling that cannot be reincorporated into a smooth, homogeneous state by mixing with a hand paddle."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.1.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "component_b_homogeneity_clarity_and_particulate_matter",
+      "test_adi": "Component B – Homogeneity, clarity and particulate matter",
+      "kaynak_tablo_adi": "Condition in container (component B)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.1",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Component B shall be homogeneous, clear, and free from gelation or detectable particulate matter, either suspended in solution or settled on the inner surface of the container."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.1.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "component_b_container_deformation",
+      "test_adi": "Component B – Container deformation",
+      "kaynak_tablo_adi": "Condition in container (component B)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.1",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Component B shall not cause its container to deform (see 4.6.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.1.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "component_c_clarity_and_organic_solvent_content",
+      "test_adi": "Component C – Clarity and organic solvent content",
+      "kaynak_tablo_adi": "Condition in container (component C)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.1",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Component C shall be clear and contain predominately organic solvents."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.1.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "component_c_container_deformation",
+      "test_adi": "Component C – Container deformation",
+      "kaynak_tablo_adi": "Condition in container (component C)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.1",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Component C shall not cause its container to deform (see 4.6.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.1.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "storage_stability_metal_containers",
+      "test_adi": "Storage stability (Metal containers)",
+      "kaynak_tablo_adi": "Storage stability",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The unopened coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for a period of one year for metal containers and six months for plastic containers (see 4.6 and 6.5.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Metal containers"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "storage_stability_plastic_containers",
+      "test_adi": "Storage stability (Plastic containers)",
+      "kaynak_tablo_adi": "Storage stability",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The unopened coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for a period of one year for metal containers and six months for plastic containers (see 4.6 and 6.5.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Plastic containers"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "accelerated_storage_stability_coating_compliance",
+      "test_adi": "Accelerated storage stability – coating compliance",
+      "kaynak_tablo_adi": "Accelerated storage stability (component B only)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.2",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating components, after storage for 14 days (see 4.6.2) as packaged by the manufacturer, when admixed shall meet all requirements of this specification."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "accelerated_storage_stability_container_and_lid_integrity",
+      "test_adi": "Accelerated storage stability – container and lid integrity",
+      "kaynak_tablo_adi": "Accelerated storage stability (component B only)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.2",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The containers shall not become deformed or the lid shall not become unsealed during the storage period."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "freeze_thaw_stability",
+      "test_adi": "Freeze-thaw stability",
+      "kaynak_tablo_adi": "Freeze-thaw stability (class W only)",
+      "test_metodu": "ASTM D2243",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating components, as packaged by the manufacturer, shall meet all the requirements of this specification after being subjected to five cycles of freezing and thawing as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.4",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class W"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "moisture_content",
+      "test_adi": "Moisture content",
+      "kaynak_tablo_adi": "Moisture content (class H only)",
+      "test_metodu": "ASTM D1364",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 2,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "Component A shall contain no more than 2.0 percent by weight of water when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.5",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "fineness_of_grind_gloss",
+      "test_adi": "Fineness of grind (Gloss)",
+      "kaynak_tablo_adi": "Fineness of grind",
+      "test_metodu": "ASTM D1210",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 7,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The fineness of grind (measured on the Hegman scale) of the admixed coating shall be a minimum of 7 for gloss colors and a minimum of 5 for camouflage (flat or lusterless) colors when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Gloss"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "fineness_of_grind_camouflage",
+      "test_adi": "Fineness of grind (Camouflage)",
+      "kaynak_tablo_adi": "Fineness of grind",
+      "test_metodu": "ASTM D1210",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 5,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The fineness of grind (measured on the Hegman scale) of the admixed coating shall be a minimum of 7 for gloss colors and a minimum of 5 for camouflage (flat or lusterless) colors when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "coarse_particles",
+      "test_adi": "Coarse particles",
+      "kaynak_tablo_adi": null,
+      "test_metodu": "ASTM D185",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.5,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "Coarse particles retained on a No. 325 sieve shall be no more than 0.5 percent by weight of the admixed coating when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "characteristic_solvent_odor_packaged_components",
+      "test_adi": "Characteristic solvent odor (Packaged components)",
+      "kaynak_tablo_adi": "Odor",
+      "test_metodu": "ASTM D1296",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The odor of the coating, as packaged components, as an admixed coating, and as a film after application, shall be characteristic of the solvents used when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "characteristic_solvent_odor_admixed_coating",
+      "test_adi": "Characteristic solvent odor (Admixed coating)",
+      "kaynak_tablo_adi": "Odor",
+      "test_metodu": "ASTM D1296",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The odor of the coating, as packaged components, as an admixed coating, and as a film after application, shall be characteristic of the solvents used when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "characteristic_solvent_odor_applied_film",
+      "test_adi": "Characteristic solvent odor (Applied film)",
+      "kaynak_tablo_adi": "Odor",
+      "test_metodu": "ASTM D1296",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The odor of the coating, as packaged components, as an admixed coating, and as a film after application, shall be characteristic of the solvents used when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "residual_odor",
+      "test_adi": "Residual odor",
+      "kaynak_tablo_adi": "Odor",
+      "test_metodu": "ASTM D1296",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The air-dried coating shall retain no residual odor 48 hours after application."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "ford_cup_viscosity_initially",
+      "test_adi": "Ford cup viscosity (Initially)",
+      "kaynak_tablo_adi": "Viscosity and pot life",
+      "test_metodu": "ASTM D1200",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 30,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "second",
+        "orijinal_metin": "Initially | 30 seconds"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE II",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "ford_cup_viscosity_after_4_hours",
+      "test_adi": "Ford cup viscosity (After 4 hours)",
+      "kaynak_tablo_adi": "Viscosity and pot life",
+      "test_metodu": "ASTM D1200",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 60,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "second",
+        "orijinal_metin": "4 hours | 60 seconds"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE II",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "no_gelation_after_5_hours",
+      "test_adi": "No gelation (After 5 hours)",
+      "kaynak_tablo_adi": "Viscosity and pot life",
+      "test_metodu": "ASTM D1200",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "5 hours | no gelation"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE II",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "drying_time_set_to_touch",
+      "test_adi": "Drying time (Set-to-touch)",
+      "kaynak_tablo_adi": "Drying time",
+      "test_metodu": "ASTM D5895",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 6,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "When applied by spray techniques and tested as specified in 4.6, the coating shall be set-to-touch within six hours and dry-hard within twelve hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "drying_time_dry_hard",
+      "test_adi": "Drying time (Dry-hard)",
+      "kaynak_tablo_adi": "Drying time",
+      "test_metodu": "ASTM D5895",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 12,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "When applied by spray techniques and tested as specified in 4.6, the coating shall be set-to-touch within six hours and dry-hard within twelve hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "surface_appearance_uniformity_and_defects",
+      "test_adi": "Surface appearance – uniformity and defects",
+      "kaynak_tablo_adi": "Surface appearance",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.3",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall dry to a uniform, smooth surface, free from runs, sags, bubbles, streaks, hazing, seeding, dusting, floating, mottling, or other defects (see 4.6.3)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "surface_appearance_panel"
+    },
+    {
+      "id": "surface_appearance_orange_peel",
+      "test_adi": "Surface appearance – orange peel",
+      "kaynak_tablo_adi": "Surface appearance",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.3",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "No orange peel (wavy appearance) shall be evident when viewed from six feet away."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "surface_appearance_panel"
+    },
+    {
+      "id": "color_difference",
+      "test_adi": "Color difference",
+      "kaynak_tablo_adi": "Color",
+      "test_metodu": "ASTM D2244",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": null,
+        "orijinal_metin": "The applied coating dry film shall have a color difference (ΔE) of less than 1 when compared to the specified color chip in FED-STD-595."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "infrared_reflectance",
+      "test_adi": "Infrared reflectance",
+      "kaynak_tablo_adi": "Infrared reflectance (color number 34095 only)",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.4",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 8,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The total infrared reflectance (specular and diffuse) of the coating (FED-STD-595, color number 34095), relative to barium sulfate shall be not greater than 8 throughout the range of 700 to 2,600 nanometers (nm) (see 4.6.4)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.4",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "FED-STD-595 34095"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "60_specular_gloss_gloss",
+      "test_adi": "60° specular gloss (Gloss)",
+      "kaynak_tablo_adi": "Gloss",
+      "test_metodu": "ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 90,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Gloss | 90 | ---"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE III",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Gloss"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "60_specular_gloss_semi_gloss",
+      "test_adi": "60° specular gloss (Semi-gloss)",
+      "kaynak_tablo_adi": "Gloss",
+      "test_metodu": "ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 15,
+        "ust": 45,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Semi-gloss | 15 | 45"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE III",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Semi-gloss"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "60_specular_gloss_camouflage",
+      "test_adi": "60° specular gloss (Camouflage)",
+      "kaynak_tablo_adi": "Gloss",
+      "test_metodu": "ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 5,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Camouflage (flat or lusterless) | --- | 5"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE III",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "85_specular_gloss_camouflage",
+      "test_adi": "85° specular gloss (Camouflage)",
+      "kaynak_tablo_adi": "Gloss",
+      "test_metodu": "ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 10,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "A maximum of 10 for camouflage colors at an 85° angle of incidence."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.5",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "opacity_all_colors_except_fed_std_595_13538",
+      "test_adi": "Opacity (All colors except FED-STD-595 13538)",
+      "kaynak_tablo_adi": "Opacity (hiding power)",
+      "test_metodu": "ASTM D2244",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 0.95,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall have a contrast ratio of no less than 0.95 for all colors except yellow (FED-STD-595, Color 13538), which shall have a contrast ratio of not less than 0.90, when cast to a dry film thickness of 1.9 to 2.1 mils [48 to 53 micrometer (µm)] on a black and white chart and tested in accordance with 4.6.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.6",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "All colors except FED-STD-595 13538"
+      ],
+      "numune_hazirlama_id": "opacity_chart"
+    },
+    {
+      "id": "opacity_fed_std_595_13538",
+      "test_adi": "Opacity (FED-STD-595 13538)",
+      "kaynak_tablo_adi": "Opacity (hiding power)",
+      "test_metodu": "ASTM D2244",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 0.9,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall have a contrast ratio of no less than 0.95 for all colors except yellow (FED-STD-595, Color 13538), which shall have a contrast ratio of not less than 0.90, when cast to a dry film thickness of 1.9 to 2.1 mils [48 to 53 micrometer (µm)] on a black and white chart and tested in accordance with 4.6.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.6",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "FED-STD-595 13538"
+      ],
+      "numune_hazirlama_id": "opacity_chart"
+    },
+    {
+      "id": "adhesion_rating",
+      "test_adi": "Adhesion rating",
+      "kaynak_tablo_adi": "Adhesion, tape test",
+      "test_metodu": "ASTM D3359",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.6",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 4,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall have a rating of no less than 4A when examined in accordance with ASTM D3359 (see 4.6.6)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.7",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "impact_flexibility_types_i_iii_and_iv",
+      "test_adi": "Impact flexibility (Types I, III and IV)",
+      "kaynak_tablo_adi": "Impact flexibility",
+      "test_metodu": "ASTM D6905",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7.1",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 40,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "The coating shall meet the following minimum requirements for ambient temperature impact flexibility: types I, III and IV, 40 percent; and type II, 5 percent; when tested in accordance with 4.6.7.1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.8.1",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type III",
+        "Type IV"
+      ],
+      "numune_hazirlama_id": "flexibility_panel"
+    },
+    {
+      "id": "impact_flexibility_type_ii",
+      "test_adi": "Impact flexibility (Type II)",
+      "kaynak_tablo_adi": "Impact flexibility",
+      "test_metodu": "ASTM D6905",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7.1",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 5,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "The coating shall meet the following minimum requirements for ambient temperature impact flexibility: types I, III and IV, 40 percent; and type II, 5 percent; when tested in accordance with 4.6.7.1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.8.1",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type II"
+      ],
+      "numune_hazirlama_id": "flexibility_panel"
+    },
+    {
+      "id": "low_temperature_flexibility_gloss_and_semi_gloss",
+      "test_adi": "Low-temperature flexibility (Gloss and semi-gloss)",
+      "kaynak_tablo_adi": "Low-temperature flexibility (types I, III and IV)",
+      "test_metodu": "ASTM D522 Method B",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7.2",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The type I, type III, and type IV coatings, at a temperature of -51 ±3 °C (-60 ±5 °F), shall exhibit no cracking when bent, coated side away, over a 1.0 inch (in.) [25.4 millimeter (mm)] mandrel for gloss and semi-gloss colors, and over a 2.0 in. (50.8 mm) mandrel for camouflage colors, when tested in accordance with 4.6.7.2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type III",
+        "Type IV",
+        "Gloss",
+        "Semi-gloss"
+      ],
+      "numune_hazirlama_id": "flexibility_panel"
+    },
+    {
+      "id": "low_temperature_flexibility_camouflage",
+      "test_adi": "Low-temperature flexibility (Camouflage)",
+      "kaynak_tablo_adi": "Low-temperature flexibility (types I, III and IV)",
+      "test_metodu": "ASTM D522 Method B",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7.2",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The type I, type III, and type IV coatings, at a temperature of -51 ±3 °C (-60 ±5 °F), shall exhibit no cracking when bent, coated side away, over a 1.0 inch (in.) [25.4 millimeter (mm)] mandrel for gloss and semi-gloss colors, and over a 2.0 in. (50.8 mm) mandrel for camouflage colors, when tested in accordance with 4.6.7.2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type III",
+        "Type IV",
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": "flexibility_panel"
+    },
+    {
+      "id": "fluid_resistance_mil_prf_23699_lubricating_oil",
+      "test_adi": "Fluid resistance (MIL-PRF-23699 lubricating oil)",
+      "kaynak_tablo_adi": "Fluid resistance",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.8",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When immersed in lubricating oil conforming to MIL-PRF-23699, hydraulic fluid conforming to MIL-PRF-83282, and JP-5 fuel conforming to MIL-DTL-5624, the coating shall not exhibit any blistering, softening, or other coating defects. Slight staining of the coating is acceptable (see 4.6.8)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.1",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "fluid_resistance_mil_prf_83282_hydraulic_fluid",
+      "test_adi": "Fluid resistance (MIL-PRF-83282 hydraulic fluid)",
+      "kaynak_tablo_adi": "Fluid resistance",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.8",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When immersed in lubricating oil conforming to MIL-PRF-23699, hydraulic fluid conforming to MIL-PRF-83282, and JP-5 fuel conforming to MIL-DTL-5624, the coating shall not exhibit any blistering, softening, or other coating defects. Slight staining of the coating is acceptable (see 4.6.8)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.1",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "fluid_resistance_mil_dtl_5624_jp_5_fuel",
+      "test_adi": "Fluid resistance (MIL-DTL-5624 JP-5 fuel)",
+      "kaynak_tablo_adi": "Fluid resistance",
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.8",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When immersed in lubricating oil conforming to MIL-PRF-23699, hydraulic fluid conforming to MIL-PRF-83282, and JP-5 fuel conforming to MIL-DTL-5624, the coating shall not exhibit any blistering, softening, or other coating defects. Slight staining of the coating is acceptable (see 4.6.8)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.1",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_60_gloss_types_i_ii_and_iii",
+      "test_adi": "Weather resistance – 60° gloss (Types I, II and III)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 80,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "For types I, II, and III, after exposure in Xenon-arc weatherometer for 500 hours as specified in 4.6.9: (a) 60° specular gloss of the coating shall be a minimum of 80 Gloss Units (G.U.) for gloss colors; a minimum of 15 G.U. for semi-gloss colors; a maximum of 5 G.U. for camouflage colors, and (b) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type III",
+        "Gloss"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_60_semi_gloss_types_i_ii_and_iii",
+      "test_adi": "Weather resistance – 60° semi-gloss (Types I, II and III)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 15,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "For types I, II, and III, after exposure in Xenon-arc weatherometer for 500 hours as specified in 4.6.9: (a) 60° specular gloss of the coating shall be a minimum of 80 Gloss Units (G.U.) for gloss colors; a minimum of 15 G.U. for semi-gloss colors; a maximum of 5 G.U. for camouflage colors, and (b) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type III",
+        "Semi-gloss"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_60_camouflage_gloss_types_i_ii_and_iii",
+      "test_adi": "Weather resistance – 60° camouflage gloss (Types I, II and III)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 5,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "For types I, II, and III, after exposure in Xenon-arc weatherometer for 500 hours as specified in 4.6.9: (a) 60° specular gloss of the coating shall be a minimum of 80 Gloss Units (G.U.) for gloss colors; a minimum of 15 G.U. for semi-gloss colors; a maximum of 5 G.U. for camouflage colors, and (b) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type III",
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_color_difference_types_i_ii_and_iii",
+      "test_adi": "Weather resistance – Color difference (Types I, II and III)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D2244",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": null,
+        "orijinal_metin": "For types I, II, and III, after exposure in Xenon-arc weatherometer for 500 hours as specified in 4.6.9: (a) 60° specular gloss of the coating shall be a minimum of 80 Gloss Units (G.U.) for gloss colors; a minimum of 15 G.U. for semi-gloss colors; a maximum of 5 G.U. for camouflage colors, and (b) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type III"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_60_gloss_change_type_iv",
+      "test_adi": "Weather resistance – 60° gloss change (Type IV)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 20,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": null,
+        "orijinal_metin": "For type IV, after exposure in Xenon-arc weatherometer for 3000 hours as specified in 4.6.9: (a) The 60° specular gloss of gloss colors shall have a change in Gloss Units (G.U.) of less than 20 from the unexposed initial value. (b) The semi-gloss colors shall have a minimum of 15 G.U. at 60°. (c) The camouflage colors shall have a change in G.U. of less than 3 at 60° and 85° from the unexposed initial values, and (d) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Gloss"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_60_semi_gloss_type_iv",
+      "test_adi": "Weather resistance – 60° semi-gloss (Type IV)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 15,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "For type IV, after exposure in Xenon-arc weatherometer for 3000 hours as specified in 4.6.9: (a) The 60° specular gloss of gloss colors shall have a change in Gloss Units (G.U.) of less than 20 from the unexposed initial value. (b) The semi-gloss colors shall have a minimum of 15 G.U. at 60°. (c) The camouflage colors shall have a change in G.U. of less than 3 at 60° and 85° from the unexposed initial values, and (d) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Semi-gloss"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_60_camouflage_gloss_change_type_iv",
+      "test_adi": "Weather resistance – 60° camouflage gloss change (Type IV)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 3,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": null,
+        "orijinal_metin": "For type IV, after exposure in Xenon-arc weatherometer for 3000 hours as specified in 4.6.9: (a) The 60° specular gloss of gloss colors shall have a change in Gloss Units (G.U.) of less than 20 from the unexposed initial value. (b) The semi-gloss colors shall have a minimum of 15 G.U. at 60°. (c) The camouflage colors shall have a change in G.U. of less than 3 at 60° and 85° from the unexposed initial values, and (d) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_85_camouflage_gloss_change_type_iv",
+      "test_adi": "Weather resistance – 85° camouflage gloss change (Type IV)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D523",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 3,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": null,
+        "orijinal_metin": "For type IV, after exposure in Xenon-arc weatherometer for 3000 hours as specified in 4.6.9: (a) The 60° specular gloss of gloss colors shall have a change in Gloss Units (G.U.) of less than 20 from the unexposed initial value. (b) The semi-gloss colors shall have a minimum of 15 G.U. at 60°. (c) The camouflage colors shall have a change in G.U. of less than 3 at 60° and 85° from the unexposed initial values, and (d) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV",
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "weather_resistance_color_difference_type_iv",
+      "test_adi": "Weather resistance – Color difference (Type IV)",
+      "kaynak_tablo_adi": "Weather resistance",
+      "test_metodu": "ASTM G155; ASTM D2244",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": null,
+        "orijinal_metin": "For type IV, after exposure in Xenon-arc weatherometer for 3000 hours as specified in 4.6.9: (a) The 60° specular gloss of gloss colors shall have a change in Gloss Units (G.U.) of less than 20 from the unexposed initial value. (b) The semi-gloss colors shall have a minimum of 15 G.U. at 60°. (c) The camouflage colors shall have a change in G.U. of less than 3 at 60° and 85° from the unexposed initial values, and (d) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Type IV"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "humidity_resistance",
+      "test_adi": "Humidity resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": "ASTM D2247",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE IV",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 30,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "day",
+        "orijinal_metin": "The coating shall withstand exposure for no less than 30 days in a humidity cabinet maintained at 49 ±2 °C (120 ±3 °F) and 100 percent relative humidity (RH) without blistering, softening, exhibiting any loss of adhesion, nor other film defects when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.3",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "heat_resistance_color_change",
+      "test_adi": "Heat resistance (color change)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": "ASTM D2244",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.10",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating after exposure shall have a color difference (ΔE) less than or equal to 1.0 when compared to an unexposed sample of the same batch and tested as specified in 4.6.10 using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.4",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "solvent_resistance_cure",
+      "test_adi": "Solvent resistance (cure)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": "ASTM D5402 Method A",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.11",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 25,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall withstand 25 double rubs with a cotton terrycloth rag soaked in methyl ethyl ketone (MEK) solvent (see 6.10) when tested in accordance with 4.6.11. Rubbing through to bare metal indicates failure of the coating due to improper cure."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.5",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "tape_resistance",
+      "test_adi": "Tape resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.12",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall not exhibit permanent marring caused by masking tape applied to the coated test panels, when tested in accordance with 4.6.12."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.6",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "tape_resistance_panel"
+    },
+    {
+      "id": "mixing_homogeneity",
+      "test_adi": "Mixing homogeneity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The components of the coating, including thinner if applicable (see 3.5.1.3), shall homogeneously blend when mixed by a paint shaker in the volume mixing ratio specified by the manufacturer."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.1",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "mixing_separation_and_foam",
+      "test_adi": "Mixing separation and foam",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Within one hour of mixing, the admixed coating shall not separate into visually distinct layers or exhibit foaming that persists one hour or more after mixing."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.1",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "spray_application_film_smoothness_and_uniformity",
+      "test_adi": "Spray application – film smoothness and uniformity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "When spray is applied at 15.6 to 32.2 °C (60 to 90°F) and a relative humidity of 20 to 80 percent, the coating material shall yield a smooth, uniform film at a dry-film thickness of 1.7 to 2.3 mil."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "spray_application_dry_film_thickness",
+      "test_adi": "Spray application – dry-film thickness",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 2.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "orijinal_metin": "When spray is applied at 15.6 to 32.2 °C (60 to 90°F) and a relative humidity of 20 to 80 percent, the coating material shall yield a smooth, uniform film at a dry-film thickness of 1.7 to 2.3 mil."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "spray_application_orange_peel",
+      "test_adi": "Spray application – orange peel",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "No orange peel (wavy appearance) shall be evident when viewed from six feet away."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "cleanability_semi_gloss_and_camouflage",
+      "test_adi": "Cleanability (Semi-gloss and camouflage)",
+      "kaynak_tablo_adi": "Cleanability",
+      "test_metodu": "MIL-PRF-85570",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.13",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 75,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "The coating shall maintain a cleaning efficiency of not less than 75 percent for semi-gloss and camouflage colors and 90 percent for gloss colors, when cleaned in accordance with 4.6.13 through 4.6.13.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.3",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Semi-gloss",
+        "Camouflage"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "cleanability_gloss",
+      "test_adi": "Cleanability (Gloss)",
+      "kaynak_tablo_adi": "Cleanability",
+      "test_metodu": "MIL-PRF-85570",
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.13",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 90,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "The coating shall maintain a cleaning efficiency of not less than 75 percent for semi-gloss and camouflage colors and 90 percent for gloss colors, when cleaned in accordance with 4.6.13 through 4.6.13.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.3",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Gloss"
+      ],
+      "numune_hazirlama_id": "standard_panel"
+    },
+    {
+      "id": "strippability",
+      "test_adi": "Strippability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.14",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 90,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "Coatings shall be tested in accordance with Methods A and B of 4.6.14, and a minimum of 90 percent of the coating shall be stripped by one of the methods."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.4",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": "strippability_panel"
+    },
+    {
+      "id": "permanent_material_identification",
+      "test_adi": "Permanent material identification",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Individual containers greater than 1 pint and cases of containers 1 pint or less, shall bear permanent labels showing the information contained herein.\nSpecification MIL-PRF-85285E, “Coating: Polyurethane, Aircraft and Support Equipment”\nComponent A, B, or C (as applicable)\nType and class\nColor (name and FED-STD-595 color number)\nManufacturer's name, product number, and batch number\nDate of manufacture by month and year\nVOC content in grams/liter\nNet contents\nMixing and thinning instructions"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "identification_of_approved_modified_coatings",
+      "test_adi": "Identification of approved modified coatings",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Approved modified coatings shall be clearly identified on the label (6.5.3.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "legal_labeling_of_component_containers",
+      "test_adi": "Legal labeling of component containers",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "All containers of toxic and hazardous chemicals and materials shall be labeled in accordance with the applicable federal, state, and municipal laws, statutes, regulations, and ordinances."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.1",
+        "sayfa": 11,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "component_b_lid_warning",
+      "test_adi": "Component B lid warning",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Each lid of component B material shall have a red printed label with the following information: \"USE CAUTION. OPEN SLOWLY.\""
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.2",
+        "sayfa": 11,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "precautions_sheet",
+      "test_adi": "Precautions sheet",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Each kit shall include a sheet listing the following precautions:"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 11,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "caution_label",
+      "test_adi": "Caution label",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "In addition to the labeling, the following shall appear on each component container in every kit, on each exterior shipping container, and on the case of containers less than 1 pint. CAUTION THIS COATING MATERIAL IS TOXIC AND FLAMMABLE (if applicable) DO NOT USE IN CONFINED AREAS DO NOT USE WHERE THERE ARE OPEN FLAMES, ARCING EQUIPMENT, HOT SURFACES, NOR WHERE SMOKING IS PERMITTED. USE ONLY WITH ADEQUATE VENTILATION. AVOID BREATHING OF VAPOR. DO NOT GET IN EYES, ON SKIN, ON CLOTHING. IN CASE OF CONTACT, IMMEDIATELY FLUSH EYES OR SKIN WITH PLENTY OF WATER. FOR EYES, GET MEDICAL ATTENTION."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.1",
+        "sayfa": 11,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul",
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    },
+    {
+      "id": "permitted_spray_application_methods",
+      "test_adi": "Permitted spray application methods",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "The coating shall be applied by conventional, airless, HVLP (High Volume Low Pressure), or electrostatic (class H only) spray application."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [],
+      "numune_hazirlama_id": null
+    }
+  ],
+  "raf_omurleri": [
+    {
+      "kap_turu": "metal",
+      "sure": 1,
+      "birim": "year",
+      "kosul": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 46,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "orijinal_metin": "The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46 °C (35 to 115 °F)."
+      },
+      "baslangic": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.2",
+        "sayfa": 7,
+        "alinti": null
+      }
+    },
+    {
+      "kap_turu": "plastik",
+      "sure": 6,
+      "birim": "month",
+      "kosul": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 46,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "orijinal_metin": "The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46 °C (35 to 115 °F)."
+      },
+      "baslangic": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.2",
+        "sayfa": 7,
+        "alinti": null
+      }
+    }
+  ],
+  "kosullar": [
+    {
+      "kategori": "kullanim",
+      "ad": "Püskürtme sıcaklığı",
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 15.6,
+        "ust": 32.2,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "orijinal_metin": "When spray is applied at 15.6 to 32.2 °C (60 to 90°F) and a relative humidity of 20 to 80 percent, the coating material shall yield a smooth, uniform film at a dry-film thickness of 1.7 to 2.3 mil."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.2",
+        "sayfa": 10,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Püskürtme bağıl nemi",
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 20,
+        "ust": 80,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "orijinal_metin": "When spray is applied at 15.6 to 32.2 °C (60 to 90°F) and a relative humidity of 20 to 80 percent, the coating material shall yield a smooth, uniform film at a dry-film thickness of 1.7 to 2.3 mil."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.2",
+        "sayfa": 10,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Kapalı alanlarda kullanım yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "DO NOT USE IN CONFINED AREAS"
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.1",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Tutuşma kaynaklarının bulunduğu alanlarda kullanım yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "DO NOT USE WHERE THERE ARE OPEN FLAMES, ARCING EQUIPMENT, HOT SURFACES, NOR WHERE SMOKING IS PERMITTED."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.1",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Yeterli havalandırma",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "USE ONLY WITH ADEQUATE VENTILATION."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.1",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Buharı solumaktan kaçınma",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "AVOID BREATHING OF VAPOR."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.1",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Göz, cilt ve giysiyle temas yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "DO NOT GET IN EYES, ON SKIN, ON CLOTHING."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.1",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Karıştırılacak miktarın kullanım süresi",
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 4,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "orijinal_metin": "Mix only the amount of coating to be used within four hours."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Farklı satıcıların ürünlerini veya bileşenlerini karıştırma yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Never mix coating or individual component from one vendor with that of another vendor."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Farklı kitlerin bileşenlerini birbirinin yerine kullanma yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Components from different kits are not interchangeable. For example, do not use Component A in white with component B in gray."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 11,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Şişmiş veya deforme olmuş kabı açma yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Dispose of, without opening, any container that is bulged or deformed."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 12,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "B bileşeni berrak değilse kullanma yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Open component B carefully. If the contained material is not clear, dispose of it."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 12,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Üretim işlemi alanı kısıtlaması",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Perform production type operations only in specifically designated areas with local exhaust ventilation and other environmental control measures, as may be recommended on the basis of an on-site industrial hygiene survey."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 12,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Rötuş alanı havalandırması",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Perform touch-up type operations only in areas with good ventilation (such as a hangar deck or in a hangar with the doors open)."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 12,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Korunmasız personeli maruz bırakma yasağı",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Do not expose unprotected personnel in adjacent areas to mist, spray, or vapor."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 12,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Rötuş uygulama aracı kısıtlaması",
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "orijinal_metin": "Application shall be restricted to brush, roller, or self-pressurized spray kit."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 12,
+        "alinti": null
+      }
+    },
+    {
+      "kategori": "kullanim",
+      "ad": "Kendinden basınçlı püskürtmede kişi başına günlük miktar",
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "quart",
+        "orijinal_metin": "No one person shall apply more than one quart of polyurethane coating by self-pressurized spray in any 24-hour period."
+      },
+      "aciklama": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.10.3",
+        "sayfa": 12,
+        "alinti": null
+      }
+    }
+  ],
+  "numune_hazirlama": [
+    {
+      "id": "standard_panel",
+      "kupon_malzemesi": "aluminum alloy 2024 (T3 temper) conforming to SAE AMS-QQ-A-250/4",
+      "kupon_boyutu": "approximately 0.020 by 3.0 by 6.0 in. (0.5 by 76.2 by 152.4 mm)",
+      "yuzey_hazirligi": "MIL-DTL-5541, class 1A conversion coating.",
+      "uygulama_yontemi": "Spray one cross-coat of MIL-PRF-23377 or MIL-PRF-85582 primer (0.6 to 0.9 mil) and topcoat per ASTM D823 Method D; allow admixed topcoat to stand no less than 30 minutes before use.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 2.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "orijinal_metin": "Spray apply the topcoat in accordance with ASTM D823 Method D to a dry-film thickness of 1.7 to 2.3 mil (43 to 58 µm)."
+      },
+      "kurlenme": "Air dry primer for at least five hours (MIL-PRF-23377) or at least two hours (MIL-PRF-85582). Air-dry applied topcoat for no less than 14 days at room temperature.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.5",
+        "sayfa": 12,
+        "alinti": null
+      }
+    },
+    {
+      "id": "surface_appearance_panel",
+      "kupon_malzemesi": "aluminum alloy 2024 (T3 temper) conforming to SAE AMS-QQ-A-250/4",
+      "kupon_boyutu": "approximately 0.020 by 3.0 by 6.0 in. (0.5 by 76.2 by 152.4 mm)",
+      "yuzey_hazirligi": "MIL-DTL-5541, class 1A conversion coating.",
+      "uygulama_yontemi": "Spray one cross-coat of MIL-PRF-23377 or MIL-PRF-85582 primer (0.6 to 0.9 mil) and topcoat per ASTM D823 Method D; allow admixed topcoat to stand no less than 30 minutes before use. Apply within four hours after mixing.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 2.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "orijinal_metin": "Spray apply the topcoat in accordance with ASTM D823 Method D to a dry-film thickness of 1.7 to 2.3 mil (43 to 58 µm)."
+      },
+      "kurlenme": "Primer as specified in 4.5.2.1. Air dry topcoat for no less than 24 hours per 4.6.3.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.3",
+        "sayfa": 15,
+        "alinti": null
+      }
+    },
+    {
+      "id": "tape_resistance_panel",
+      "kupon_malzemesi": "aluminum alloy 2024 (T3 temper) conforming to SAE AMS-QQ-A-250/4",
+      "kupon_boyutu": "approximately 0.020 by 3.0 by 6.0 in. (0.5 by 76.2 by 152.4 mm)",
+      "yuzey_hazirligi": "MIL-DTL-5541, class 1A conversion coating.",
+      "uygulama_yontemi": "Spray one cross-coat of MIL-PRF-23377 or MIL-PRF-85582 primer (0.6 to 0.9 mil) and topcoat per ASTM D823 Method D; allow admixed topcoat to stand no less than 30 minutes before use.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 2.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "orijinal_metin": "Spray apply the topcoat in accordance with ASTM D823 Method D to a dry-film thickness of 1.7 to 2.3 mil (43 to 58 µm)."
+      },
+      "kurlenme": "Primer as specified in 4.5.2.1. Air dry topcoat for no less than twelve hours per 4.6.12.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.12",
+        "sayfa": 17,
+        "alinti": null
+      }
+    },
+    {
+      "id": "flexibility_panel",
+      "kupon_malzemesi": "aluminum alloy 2024 (0 temper) conforming to SAE AMS-QQ-A-250/4",
+      "kupon_boyutu": "0.020 by 3.0 by 6.0 in. (0.5 by 76.2 by 152.4 mm)",
+      "yuzey_hazirligi": "Anodize in accordance with MIL-A-8625, type I.",
+      "uygulama_yontemi": "Apply topcoat without a primer per 4.5.2.2.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 2.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "orijinal_metin": "Spray apply the topcoat in accordance with ASTM D823 Method D to a dry-film thickness of 1.7 to 2.3 mil (43 to 58 µm)."
+      },
+      "kurlenme": "Air-dry for no less than 14 days.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7",
+        "sayfa": 16,
+        "alinti": null
+      }
+    },
+    {
+      "id": "opacity_chart",
+      "kupon_malzemesi": "black and white chart (Leneta Form 3B, or equivalent)",
+      "kupon_boyutu": null,
+      "yuzey_hazirligi": null,
+      "uygulama_yontemi": "Cast admixed coating.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 1.9,
+        "ust": 2.1,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "orijinal_metin": "The admixed coating shall be cast to a dry film thickness of 1.9 to 2.1 mil [48 to 53 micrometer (µm)] on a black and white chart (Leneta Form 3B, or equivalent)."
+      },
+      "kurlenme": null,
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.5",
+        "sayfa": 15,
+        "alinti": null
+      }
+    },
+    {
+      "id": "strippability_panel",
+      "kupon_malzemesi": "aluminum alloy 2024 (T3 temper) conforming to SAE AMS-QQ-A-250/4",
+      "kupon_boyutu": "approximately 0.020 by 3.0 by 6.0 in. (0.5 by 76.2 by 152.4 mm)",
+      "yuzey_hazirligi": "MIL-DTL-5541, class 1A conversion coating.",
+      "uygulama_yontemi": "Spray one cross-coat of MIL-PRF-23377 or MIL-PRF-85582 primer (0.6 to 0.9 mil) and topcoat per ASTM D823 Method D; allow admixed topcoat to stand no less than 30 minutes before use. Seal edges with beeswax to a depth not to exceed 6 mm (0.25 in.). Method A also requires a 1-inch X scribed through to the substrate.",
+      "kuru_film_kalinligi": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 2.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "orijinal_metin": "Spray apply the topcoat in accordance with ASTM D823 Method D to a dry-film thickness of 1.7 to 2.3 mil (43 to 58 µm)."
+      },
+      "kurlenme": "Air dry primer for at least five hours (MIL-PRF-23377) or at least two hours (MIL-PRF-85582). Air-dry applied topcoat for no less than 14 days at room temperature. Weather for no less than 500 hours as specified in 4.6.9.",
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.14",
+        "sayfa": 18,
+        "alinti": null
+      }
+    }
+  ]
+}
