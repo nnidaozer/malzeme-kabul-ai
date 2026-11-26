@@ -116,8 +116,22 @@ son özet dışarıda saklanmalıdır (`--son-ozet`).
 
 Partinin son kullanma tarihi = üretim tarihi + onaylı kabul dokümanındaki raf
 ömrü (`kural/raf_omru.py`). Yıl ve ay takvimle eklenir, gün/hafta gün olarak.
-Kap türüne göre birden çok kayıt varsa partinin kap türü (`partiler.kap_turu`)
-seçilir; bilinmiyorsa en kısa raf ömrü alınır. 30 gün (ayarlanabilir) kala
+Raf ömrü kaydı tip/sınıfa uygulanan kayıtlar arasından seçilir
+(`raf_omru_sec`); partinin kap türü (`partiler.kap_turu`) `None`, boş ya da
+yalnız boşluksa bilinmiyor sayılır:
+
+- kap türü eşleşen kayıt varsa (harf büyüklüğü gözetilmez) o alınır, notsuz;
+- kap türü verilmiş ama eşleşmiyorsa tek kayıt varsa o, değilse tek genel
+  kayıt varsa genel kayıt, değilse en kısa raf ömrü alınır; hepsi not edilir;
+- kap türü bilinmiyorsa tek kayıt varsa o alınır (kap türüne özgüyse not
+  edilir); birden çok kayıt varsa genel kayıt olsa bile **en kısa** raf ömrü
+  alınır ve not edilir.
+
+En kısa, süreler partinin üretim tarihine `sure_ekle` ile eklenince en erken
+biten kayıttır (ör. 1 ay ile 30 gün, ya da artık yılda 1 yıl ile 366 gün,
+üretim tarihine göre farklı sonuç verir); eşitlikte belge sırasındaki ilk
+kayıt alınır. Kap türü `""` olan kayıt `None` gibi genel sayılır. Notlar depo raporunda
+görünür. 30 gün (ayarlanabilir) kala
 `yaklasiyor`, geçmişse `doldu` uyarısı verilir ve uyarılı partiler için o
 tip/sınıfa uygulanan ömür uzatma testleri (`test_turleri` içinde
 `omur_uzatma`) listelenir. Rapor: `hat/raf_omru_raporu.raf_raporu`, komut
@@ -361,8 +375,16 @@ standart için hibrit yalnız deney olarak tanımlıdır (`deney/hibrit_standart
     `scripts/kabul_dokumani_uret.py`, `scripts/revizyon_karsilastir.py`,
     `deney/dil_modeli_cikar.py`, `deney/kanit_kontrol.py`,
     `deney/taslak_karsilastir.py`, `deney/kontrol_listesi_uret.py`,
-    `deney/degerlendir.py`. Bölünmede hiç olmayan standart da reddedilir.
+    `deney/degerlendir.py`. Arayüzde de zorlanır
+    (`arayuz/ekran_verisi.py`, `standart_izinli_mi` üzerinden):
+    `standart_yukle` (taslak üretme) ve `revizyon_raporu` (iki revizyon da
+    `revizyon_izinli_mi` ile; ekran bunu dosyaları kaydetmeden önce de
+    çağırır). Bölünmede hiç olmayan standart da reddedilir.
     Kilidi yalnız proje sahibi açar.
+  - **Bilinen sınır:** arayüzdeki kilit belge no ve revizyonu dosya adından
+    okur; test kümesindeki bir PDF'i geliştirme kümesindeki bir standardın
+    adıyla yeniden adlandırmak kilidi aşar. Bu `standart_yukle` ve
+    `revizyon_raporu` için aynıdır.
 
 ## Şema eklemeleri
 

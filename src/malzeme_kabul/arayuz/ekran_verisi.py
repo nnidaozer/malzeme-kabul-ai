@@ -5,14 +5,16 @@ sonuçlarını gösterir; iş kuralı ekranda değil burada ve alttaki katmanlar
 
 - M&P: `standart_yukle` (kural çıkarıcıyla taslak), `test_tablosu` /
   `tablodan_dokuman` (taslağı tabloda düzeltme), `taslak_duzelt`,
-  `taslak_onayla`, `revizyon_raporu`.
+  `taslak_onayla`, `revizyon_izinli_mi`, `revizyon_raporu`.
 - Giriş kalite: `parti_hazirla`, `sertifika_karari`, `karar_tablosu`.
 - Depo: `depo_tablosu`.
 
 Test kümesi kilidi: arayüz yalnız `data/bolunme.yaml` içinde geliştirme
-kümesinde olan standartlardan taslak çıkarır (`standart_izinli_mi`); test
-kümesindeki ya da bölünmede olmayan standartları reddeder (docs/mimari.md
-madde 7). Kilidi yalnız proje sahibi açar.
+kümesinde olan standartlardan taslak çıkarır (`standart_yukle`) ve revizyon
+karşılaştırır (`revizyon_raporu`; iki revizyon da `revizyon_izinli_mi` ile
+denetlenir); test kümesindeki ya da bölünmede olmayan standartları reddeder
+(`standart_izinli_mi`, docs/mimari.md madde 7). Kilit dosya adını okur.
+Kilidi yalnız proje sahibi açar.
 """
 
 from __future__ import annotations
@@ -189,12 +191,31 @@ def taslak_onayla(katalog: Katalog, defter: DenetimKaydi, taslak_id: int, kullan
     return surum
 
 
-def revizyon_raporu(eski_pdf: str | Path, yeni_pdf: str | Path, dokuman: KabulDokumani | None = None) -> tuple[str, dict]:
-    """İki revizyon PDF'ini karşılaştırır; Markdown rapor ve özet döner."""
+def revizyon_izinli_mi(eski_ad: str | Path, yeni_ad: str | Path, bolunme_yolu: Path = BOLUNME) -> tuple[bool, str]:
+    """İki revizyonun ikisi de test kümesi kilidinden geçiyor mu? İlk reddi döner."""
+    for ad in (eski_ad, yeni_ad):
+        no, rev = belge_no_ve_revizyon(Path(ad).name)
+        izin, neden = standart_izinli_mi(f"{no}{rev}", bolunme_yolu)
+        if not izin:
+            return False, neden
+    return True, ""
+
+
+def revizyon_raporu(eski_pdf: str | Path, yeni_pdf: str | Path, dokuman: KabulDokumani | None = None,
+                    bolunme_yolu: Path = BOLUNME) -> tuple[str, dict]:
+    """İki revizyon PDF'ini karşılaştırır; Markdown rapor ve özet döner.
+
+    Önce iki dosyanın aynı standart olduğu (ValueError), sonra iki revizyonun da
+    test kümesi kilidinden geçtiği (KatalogHatasi) denetlenir; karşılaştırma
+    ancak ondan sonra yapılır.
+    """
     eski_no, eski_rev = belge_no_ve_revizyon(Path(eski_pdf).name)
     yeni_no, yeni_rev = belge_no_ve_revizyon(Path(yeni_pdf).name)
     if eski_no != yeni_no:
         raise ValueError(f"iki dosya aynı standardın revizyonu olmalı: {eski_no} / {yeni_no}")
+    izin, neden = revizyon_izinli_mi(eski_pdf, yeni_pdf, bolunme_yolu)
+    if not izin:
+        raise KatalogHatasi(neden)
     fark = revizyonlari_karsilastir(eski_pdf, yeni_pdf, eski_no, eski_rev, yeni_rev)
     oneriler = guncelleme_onerileri(fark, dokuman) if dokuman is not None else None
     return markdown_raporu(fark, oneriler), fark.ozet()
@@ -270,6 +291,7 @@ __all__ = [
     "json_sertifika_karari",
     "karar_tablosu",
     "parti_hazirla",
+    "revizyon_izinli_mi",
     "revizyon_raporu",
     "standart_izinli_mi",
     "standart_yukle",
