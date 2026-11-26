@@ -98,6 +98,13 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
 - **Örnek dokümanlar v1 olarak "onaylı" kaydedildi, onaylayan `ornek-veri`.**
   Giriş kalite yalnız onaylı sürümle karar verebildiği için örnek akışın
   çalışması buna bağlı. Not alanında "M&P onayı değildir" yazar.
+  **Nida onayladı:** örnek kabul dokümanları onaylı sayılır, ama ekranda ve
+  veritabanında "demo onayı" olarak işaretlenir. Uygulama:
+  `dokuman_surumleri.demo_onayi` sütunu (değiştirilemez; eski veritabanlarında
+  `ornek-veri` satırları göçle işaretlenir), yalnız `ornek-veri` demo onayı
+  verir ve yalnız demo onayı verebilir, `ornek-veri` ayrılmış kullanıcı adıdır;
+  karar ve raf raporu işareti taşır, ekranda "DEMO ONAYI (M&P onayı değil)"
+  yazar. Karar mantığı değişmedi.
 - **Onaylı sürümler ayrı tabloda, değiştirilemez.** Taslaklar bu tabloya girmez;
   düzeltme yeni sürümdür. SQLite tetikleyicileri UPDATE ve DELETE'i reddeder,
   içerik okunurken SHA-256 özetiyle denetlenir.

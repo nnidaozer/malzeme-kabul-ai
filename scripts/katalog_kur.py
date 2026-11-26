@@ -19,7 +19,7 @@ from pathlib import Path
 
 from malzeme_kabul.arayuz.kimlik import KimlikHatasi, kullanici_ekle
 from malzeme_kabul.katalog.ornek_veri import ornek_yukle
-from malzeme_kabul.katalog.veritabani import Katalog
+from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN, Katalog
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 
 KOK = Path(__file__).resolve().parents[1]
@@ -50,9 +50,12 @@ def main(argv: list[str] | None = None) -> int:
             with katalog.islem():  # örnek veri ve onay kayıtları tek işlem: biri düşerse hiçbiri yazılmaz
                 ozet = ornek_yukle(katalog, args.ornek_dosyasi, KOK)
                 for etiket in ozet.dokuman_surumleri:
-                    defter.ekle("onay", "ornek-veri", {"dokuman_surumu": etiket, "not": "örnek veri, M&P onayı değil"},
+                    defter.ekle("onay", ORNEK_ONAYLAYAN,
+                                {"dokuman_surumu": etiket, "not": "örnek veri, M&P onayı değil", "demo_onayi": True},
                                 dokuman_surumu=etiket)
             print(f"yeni doküman sürümleri: {', '.join(ozet.dokuman_surumleri) or '-'}")
+            if ozet.atlanan_dokumanlar:
+                print(f"atlanan örnek dokümanlar (demo onayı yazılmadı): {', '.join(ozet.atlanan_dokumanlar)}")
             print(f"yeni malzemeler: {', '.join(ozet.malzemeler) or '-'}")
             print(f"yeni partiler: {', '.join(ozet.partiler) or '-'}")
         if args.ornek_kullanicilar:
@@ -64,7 +67,10 @@ def main(argv: list[str] | None = None) -> int:
                     pass
         for m in katalog.malzemeler():
             surumler = katalog.dokuman_surumleri(m.belge_no, m.revizyon)
-            son = f"v{surumler[-1].surum}" if surumler else "onaylı sürüm yok"
+            if not surumler:
+                son = "onaylı sürüm yok"
+            else:
+                son = f"v{surumler[-1].surum}" + (", demo onayı" if surumler[-1].demo_onayi else "")
             print(f"{m.kod}: {m.standart_etiketi} Type {m.tip} Class {m.sinif} ({son}), "
                   f"tedarikçiler: {', '.join(katalog.onayli_tedarikciler(m.kod)) or '-'}, "
                   f"parti: {len(katalog.partiler(m.kod))}")

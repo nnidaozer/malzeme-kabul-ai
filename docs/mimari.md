@@ -64,6 +64,21 @@ onaylı sürümü kullanılır. Kurulum ve örnek veri:
 `python scripts/katalog_kur.py --ornek` (data/ornek/katalog.json,
 varsayılan veritabanı data/calisma/katalog.sqlite).
 
+Örnek verinin kabul dokümanları **demo onaylıdır** (Nida'nın kararı: onaylı
+sayılır, ama ekranda ve veritabanında "demo onayı" olarak işaretlenir).
+`dokuman_surumleri.demo_onayi` sütunu (`INTEGER NOT NULL DEFAULT 0 CHECK
+(demo_onayi IN (0, 1))`) bunu tutar; `DokumanSurumu.demo_onayi` olarak okunur.
+Demo işaretini yalnız `Katalog.dokuman_onayla(..., demo_onayi=True)` ve yalnız
+tam `ORNEK_ONAYLAYAN` (`"ornek-veri"`) verir; `ornek-veri` de demo işaretsiz
+onay veremez. `ornek_yukle` dosyadaki onaylayan `ornek-veri` değilse hiçbir şey
+yazmadan reddeder. Bir standart + revizyonun gerçek (demo olmayan) onaylı sürümü
+varsa örnek dokümanı onun üstüne demo sürüm olarak yazmaz; etiketi
+`YuklemeOzeti.atlanan_dokumanlar`'a ekler ve `katalog_kur.py` onun için onay
+kaydı yazmaz, "atlanan" olarak basar. Yalnız demo sürümü olan standarda yeni
+örnek içerik yeni demo sürüm olur. `ornek-veri` ayrılmış kullanıcı adıdır: `arayuz/kimlik`
+bu adla (`strip` + `casefold` ile karşılaştırılarak) hesap açmaz, ilk kurulum
+da reddeder; yoksa gerçek bir hesabın onayları örnek veriyle karışırdı.
+
 ## 3. Kabul dokümanı sürümleri ve karar kaydı
 
 Kabul dokümanları değiştirilemez sürümlerle tutulur (v1, v2, ...). Bir sürüm
@@ -76,6 +91,30 @@ Her karar şunları kaydeder:
 - kararın dayandığı PDF sayfası (sertifika ve standart),
 - model ve istem sürümü (dil modeli kullanıldıysa),
 - kararı alan kullanıcı ve zaman.
+
+Demo işareti sürümün parçasıdır: değiştirilemezlik tetikleyicisi
+(`dokuman_surumu_degistirilemez`) `demo_onayi`'nın UPDATE'ini de reddeder;
+demo sürümü gerçek onaya çevirmenin tek yolu M&P'nin yeni (gerçek onaylı)
+sürümüdür, o da en son sürüm olarak demo sürümün yerine geçer. Kararda
+`KatalogKarari.demo_onayi`, raf raporunda `RafSatiri.demo_onayi` işareti
+taşınır; karar mantığı değişmez. `karar` kaydının içeriği de işareti taşır,
+`katalog_kur.py --ornek` onay kayıtlarına `"demo_onayi": true` yazar. İşaretin
+metni `katalog.veritabani.DEMO_ETIKETI`'dir ("DEMO ONAYI (M&P onayı değil)");
+ekran (`arayuz.ekran_verisi` yeniden dışa verir) ve komut satırı
+(`scripts/karar_ver.py`, `scripts/sertifika_kontrol.py`: "... ile karar: ...,
+DEMO ONAYI (M&P onayı değil)") aynı metni kullanır.
+
+Göç: `demo_onayi` sütunu olmayan eski veritabanında `Katalog` açılırken tek bir
+işlemde (`BEGIN IMMEDIATE` ... COMMIT; yazma kilidi baştan alınır) sütun eklenir, tetikleyici düşürülür,
+`onaylayan = 'ornek-veri'` satırları `demo_onayi = 1` yapılır ve tetikleyici
+şemadaki tanımla yeniden kurulur. Bir adım düşerse ROLLBACK: sütun eklenmemiş
+ve tetikleyici yerinde kalır; tetikleyicisiz bir an diske hiç yazılmaz.
+ROLLBACK yalnız işlem hâlâ açıksa çalışır, böylece özgün hata örtülmez; BEGIN
+kilit alamazsa onun hatası ("database is locked") iletilir. Sütun işlem içinde
+yeniden denetlenir: aynı anda açan başka bir bağlantı göçü bitirdiyse işlem
+boş commit edilir. Açık bir işlemin ortasında çağrılan göç o işlemi bitirmez,
+`KatalogHatasi` verir. Sonraki açılış göçü yeniden dener; sütun varsa göç
+çalışmaz.
 
 Bugün: sürümler katalogda (`katalog/veritabani.py`). Denetim kaydı
 `kayit/denetim_kaydi.py`: her karar, onay ve düzeltme kullanıcı, zaman,

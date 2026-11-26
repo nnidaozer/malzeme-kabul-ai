@@ -14,6 +14,11 @@ Kurallar:
   için sürümler 1'den başlayıp artar (v1, v2, ...). Düzeltme yeni sürümdür.
   Değiştirilemezlik veritabanında tetikleyicilerle (trigger) zorlanır:
   UPDATE ve DELETE reddedilir. Her sürüm içeriğinin SHA-256 özetini taşır.
+- Örnek verinin onayı "demo onayı"dır: `demo_onayi` sütunu 1, onaylayan
+  `ORNEK_ONAYLAYAN` ("ornek-veri"). Demo onaylı sürüm karar için onaylı sayılır
+  ama ekranda ve kayıtta işaretlenir; işaret de sürümün parçasıdır, sonradan
+  değiştirilemez. Demo işaretini yalnız tam `ORNEK_ONAYLAYAN` verebilir ve
+  `ORNEK_ONAYLAYAN` yalnız demo onayı verebilir.
 - Bir malzeme kodu tek bir standart + revizyon + tip/sınıf kombinasyonuna
   bağlıdır. Karar için o standart + revizyonun **en son onaylı** sürümü
   kullanılır (`gecerli_dokuman`).
@@ -44,7 +49,24 @@ PARTI_DURUMLARI: tuple[str, ...] = ("serbest", "karantina", "bekliyor")
 DurumKaynagi = Literal["makine", "insan"]
 DURUM_KAYNAKLARI: tuple[str, ...] = ("makine", "insan")
 
-SEMA = """
+# Örnek verinin (data/ornek/katalog.json) onaylayanı; bu adla verilen onay demo onayıdır.
+# Ayrılmış addır: bu adla kullanıcı hesabı açılmaz (arayuz.kimlik).
+ORNEK_ONAYLAYAN = "ornek-veri"
+# Demo onaylı sürümün ekranda ve betik çıktısında görünen işareti (arayuz.ekran_verisi yeniden dışa verir).
+DEMO_ETIKETI = "DEMO ONAYI (M&P onayı değil)"
+
+DEMO_SUTUNU = "demo_onayi"
+DEMO_SUTUN_TANIMI = "INTEGER NOT NULL DEFAULT 0 CHECK (demo_onayi IN (0, 1))"
+
+# Değiştirilemezlik tetikleyicisi; SEMA ve demo_onayi göçü aynı metni kullanır.
+DEGISTIRILEMEZ_TETIKLEYICI = "dokuman_surumu_degistirilemez"
+_DEGISTIRILEMEZ_TETIKLEYICI_SQL = f"""CREATE TRIGGER IF NOT EXISTS {DEGISTIRILEMEZ_TETIKLEYICI}
+BEFORE UPDATE ON dokuman_surumleri
+BEGIN
+    SELECT RAISE(ABORT, 'onaylı kabul dokümanı sürümü değiştirilemez; yeni sürüm ekleyin');
+END;"""
+
+SEMA = f"""
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS standartlar (
@@ -76,15 +98,12 @@ CREATE TABLE IF NOT EXISTS dokuman_surumleri (
     onaylayan    TEXT NOT NULL,
     onay_zamani  TEXT NOT NULL,
     not_         TEXT,
+    {DEMO_SUTUNU}   {DEMO_SUTUN_TANIMI},
     PRIMARY KEY (belge_no, revizyon, surum),
     FOREIGN KEY (belge_no, revizyon) REFERENCES standartlar (belge_no, revizyon)
 );
 
-CREATE TRIGGER IF NOT EXISTS dokuman_surumu_degistirilemez
-BEFORE UPDATE ON dokuman_surumleri
-BEGIN
-    SELECT RAISE(ABORT, 'onaylı kabul dokümanı sürümü değiştirilemez; yeni sürüm ekleyin');
-END;
+{_DEGISTIRILEMEZ_TETIKLEYICI_SQL}
 
 CREATE TRIGGER IF NOT EXISTS dokuman_surumu_silinemez
 BEFORE DELETE ON dokuman_surumleri
@@ -173,6 +192,7 @@ class DokumanSurumu:
     onaylayan: str
     onay_zamani: str
     not_: str | None
+    demo_onayi: bool = False  # örnek verinin demo onayı (M&P onayı değil)
 
     @property
     def etiket(self) -> str:
@@ -242,6 +262,7 @@ class Katalog:
         try:
             self.baglanti.executescript(SEMA)
             self._sutunlari_tamamla()
+            self._demo_gocu()
         except Exception:
             self.baglanti.close()
             raise
@@ -270,6 +291,43 @@ class Katalog:
             except Exception:
                 b.execute("ROLLBACK")
                 raise
+
+    def _demo_gocu(self) -> None:
+        """demo_onayi sütunu olmayan eski veritabanına sütunu ekler ve örnek satırları işaretler.
+
+        Değiştirilemezlik tetikleyicisi UPDATE'i reddettiğinden göç tek bir açık
+        işlemdir (BEGIN IMMEDIATE ... COMMIT): sütun eklenir, tetikleyici düşürülür,
+        `onaylayan = ORNEK_ONAYLAYAN` satırları demo işaretlenir, tetikleyici SEMA
+        tanımıyla yeniden kurulur. Herhangi bir adım düşerse ROLLBACK (yalnız işlem
+        hâlâ açıksa): sütun eklenmemiş, tetikleyici yerinde kalır, özgün hata yukarı
+        iletilir ve sonraki açılış göçü yeniden dener. Sütun varsa göç çalışmaz.
+
+        Yazma kilidi baştan alınır ve sütun işlem içinde yeniden denetlenir: aynı
+        anda açan başka bir bağlantı göçü bitirdiyse bu çağrı hiçbir şey yapmaz.
+        Bağlantıda açık bir işlem varsa onu bitirmez, KatalogHatasi verir. BEGIN
+        IMMEDIATE kilit alamazsa `sqlite3.OperationalError` olduğu gibi iletilir.
+        """
+        b = self.baglanti
+        if b.in_transaction:
+            raise KatalogHatasi("demo onayı göçü açık bir işlemin içinde çalıştırılamaz")
+
+        def sutun_var() -> bool:
+            return DEMO_SUTUNU in {s["name"] for s in b.execute("PRAGMA table_info(dokuman_surumleri)")}
+
+        if sutun_var():
+            return
+        b.execute("BEGIN IMMEDIATE")
+        try:
+            if not sutun_var():
+                b.execute(f"ALTER TABLE dokuman_surumleri ADD COLUMN {DEMO_SUTUNU} {DEMO_SUTUN_TANIMI}")
+                b.execute(f"DROP TRIGGER IF EXISTS {DEGISTIRILEMEZ_TETIKLEYICI}")
+                b.execute(f"UPDATE dokuman_surumleri SET {DEMO_SUTUNU} = 1 WHERE onaylayan = ?", (ORNEK_ONAYLAYAN,))
+                b.execute(_DEGISTIRILEMEZ_TETIKLEYICI_SQL)
+            b.execute("COMMIT")
+        except BaseException:
+            if b.in_transaction:
+                b.execute("ROLLBACK")
+            raise
 
     def kapat(self) -> None:
         self.baglanti.close()
@@ -370,10 +428,20 @@ class Katalog:
 
     # --- kabul dokümanı sürümleri ----------------------------------------
 
-    def dokuman_onayla(self, dokuman: KabulDokumani, onaylayan: str, not_: str | None = None) -> DokumanSurumu:
-        """Dokümanı yeni ve değiştirilemez bir sürüm olarak kaydeder (v1, v2...)."""
+    def dokuman_onayla(
+        self, dokuman: KabulDokumani, onaylayan: str, not_: str | None = None, *, demo_onayi: bool = False
+    ) -> DokumanSurumu:
+        """Dokümanı yeni ve değiştirilemez bir sürüm olarak kaydeder (v1, v2...).
+
+        `demo_onayi=True` yalnız tam `ORNEK_ONAYLAYAN` ile verilir; `ORNEK_ONAYLAYAN`
+        de yalnız demo onayı verebilir. Aksi KatalogHatasi, hiçbir şey yazılmaz.
+        """
         if not onaylayan.strip():
             raise KatalogHatasi("onaylayan kullanıcı boş olamaz")
+        if demo_onayi and onaylayan != ORNEK_ONAYLAYAN:
+            raise KatalogHatasi(f"demo onayını yalnız {ORNEK_ONAYLAYAN!r} verebilir (onaylayan {onaylayan!r})")
+        if not demo_onayi and onaylayan == ORNEK_ONAYLAYAN:
+            raise KatalogHatasi(f"{ORNEK_ONAYLAYAN!r} ayrılmış addır; yalnız demo onayı verebilir")
         std = dokuman.standart
         self.standart_ekle(std.belge_no, std.revizyon, std.baslik, std.tarih)
         onayli = dokuman.model_copy(update={"durum": "onaylandi"})
@@ -384,9 +452,11 @@ class Katalog:
                 (std.belge_no, std.revizyon),
             ).fetchone()[0]
             b.execute(
-                "INSERT INTO dokuman_surumleri (belge_no, revizyon, surum, icerik, ozet, onaylayan, onay_zamani, not_)"
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (std.belge_no, std.revizyon, onceki + 1, icerik, icerik_ozeti(icerik), onaylayan, _simdi(), not_),
+                "INSERT INTO dokuman_surumleri"
+                " (belge_no, revizyon, surum, icerik, ozet, onaylayan, onay_zamani, not_, demo_onayi)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (std.belge_no, std.revizyon, onceki + 1, icerik, icerik_ozeti(icerik), onaylayan, _simdi(), not_,
+                 1 if demo_onayi else 0),
             )
         return self.dokuman_surumu(std.belge_no, std.revizyon, onceki + 1)
 
@@ -395,7 +465,7 @@ class Katalog:
             raise KatalogHatasi(f"{s['belge_no']}{s['revizyon']} v{s['surum']}: içerik özeti tutmuyor (kurcalanmış)")
         return DokumanSurumu(
             s["belge_no"], s["revizyon"], s["surum"], KabulDokumani.model_validate_json(s["icerik"]),
-            s["ozet"], s["onaylayan"], s["onay_zamani"], s["not_"],
+            s["ozet"], s["onaylayan"], s["onay_zamani"], s["not_"], bool(s["demo_onayi"]),
         )
 
     def dokuman_surumu(self, belge_no: str, revizyon: str, surum: int) -> DokumanSurumu:
@@ -591,6 +661,8 @@ __all__ = [
     "KatalogHatasi",
     "Malzeme",
     "DURUM_KAYNAKLARI",
+    "DEMO_ETIKETI",
+    "ORNEK_ONAYLAYAN",
     "DurumKaynagi",
     "PARTI_DURUMLARI",
     "Parti",

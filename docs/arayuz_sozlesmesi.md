@@ -53,8 +53,8 @@ kısımlarını koda karşı denetlediği, hangilerini denetlemediği en sondaki
 | `standart`: Standart yükle | `mp` | `ekran_verisi.standart_yukle`, `Katalog.taslaklar` |
 | `taslak`: Taslağı düzelt ve onayla | `mp` | `Katalog.taslaklar(yalniz_acik=True)`, `ekran_verisi.test_tablosu`, `TABLO_SUTUNLARI`, `tablodan_dokuman`, `taslak_duzelt`, `taslak_onayla` |
 | `revizyon`: Revizyon farkı ve M&P incelemesi | `mp` | `ekran_verisi.hazir_revizyon_raporlari`, `revizyon_izinli_mi`, `revizyon_raporu`, `revizyon_etkisi.yeni_revizyon_yukle`, `mp_bekleyenler`, `Katalog.malzeme`, `mp_incelemesini_kapat` |
-| `giris`: Giriş kalite: CoC kontrolü | `giris_kalite` | `Katalog.malzemeler`, `gecerli_dokuman`, `partiler`, `onayli_tedarikciler`, `ekran_verisi.parti_hazirla`, `json_sertifika_karari`, `hibrit_hat.sertifika_hatti`, `karar_tablosu`, `PARTI_ETIKETI`; düzeltme formu: `PARTI_DURUMLARI`, `katalog_karari.karari_duzelt` |
-| `depo`: Depo: partiler ve raf ömrü | `mp`, `giris_kalite` | `ekran_verisi.depo_tablosu`, `RAF_ETIKETI` |
+| `giris`: Giriş kalite: CoC kontrolü | `giris_kalite` | `Katalog.malzemeler`, `gecerli_dokuman`, `partiler`, `onayli_tedarikciler`, `ekran_verisi.parti_hazirla`, `json_sertifika_karari`, `hibrit_hat.sertifika_hatti`, `karar_tablosu`, `PARTI_ETIKETI`, `surum_etiketi`, `karar_basligi`, `DEMO_ETIKETI`; düzeltme formu: `PARTI_DURUMLARI`, `katalog_karari.karari_duzelt` |
+| `depo`: Depo: partiler ve raf ömrü | `mp`, `giris_kalite` | `ekran_verisi.depo_tablosu`, `RAF_ETIKETI`, `DEMO_ETIKETI` |
 | kenar çubuğu (her ekran) | herkes | `kimlik.yetkili_mi`, `kimlik.EKRANLAR`, `denetim_kaydi.sema_eksikleri` (defter kurulmadan önce), `DenetimKaydi.zinciri_dogrula` |
 
 ## Bağlantı ve kimlik
@@ -96,6 +96,19 @@ yakalamaz.
 - şemayı kurar (`CREATE TABLE IF NOT EXISTS`)
 - eski veritabanlarına eksik sütunları veri kaybetmeden ekler:
   `partiler.kap_turu`, `partiler.mp_inceleme`, `malzemeler.mp_inceleme`
+- demo onayı göçü: `dokuman_surumleri.demo_onayi` sütunu yoksa tek bir
+  işlemde (`BEGIN IMMEDIATE` ... COMMIT; yazma kilidi baştan alınır) sütunu ekler (`INTEGER NOT NULL DEFAULT 0
+  CHECK (demo_onayi IN (0, 1))`), değiştirilemezlik tetikleyicisini
+  (`dokuman_surumu_degistirilemez`) düşürür, `onaylayan = 'ornek-veri'`
+  satırlarını `demo_onayi = 1` yapar ve tetikleyiciyi şemadaki tanımla
+  yeniden kurar. Sütun işlem içinde yeniden denetlenir: aynı anda açan
+  başka bir bağlantı göçü bitirdiyse işlem hiçbir şey yapmadan biter
+  ("duplicate column" hatası olmaz). Bir adım düşerse işlem hâlâ açıksa
+  ROLLBACK yapılır: sütun eklenmemiş, tetikleyici yerinde kalır; özgün hata
+  yukarı iletilir (arayüz yakalamaz) ve sonraki açılış göçü yeniden dener.
+  Kilit alınamazsa `sqlite3.OperationalError` ("database is locked") olduğu
+  gibi iletilir. Göç açık bir işlemin içinde çağrılırsa o işlemi bitirmez,
+  `KatalogHatasi` verir. Sütun varsa göç çalışmaz.
 
 Arayüz her Streamlit yeniden çalıştırmasında yeni bir `Katalog`'u
 `with katalog:` bloğuyla açar; blok bitince `kapat()` bağlantıyı kapatır
@@ -439,13 +452,19 @@ Taslağı yeni ve değiştirilemez bir onaylı kabul dokümanı sürümü yapar.
 - `dokuman` (`KabulDokumani`, `durum="onaylandi"`)
 - `ozet` (içeriğin SHA-256 özeti)
 - `onaylayan`, `onay_zamani`, `not_`
+- `demo_onayi` (`bool`, varsayılan `False`, son alan): sürüm örnek verinin
+  demo onayıyla mı yazıldı (M&P onayı değil). `dokuman_surumleri.demo_onayi`
+  sütunundan gelir; sürümün parçasıdır, değiştirilemez. Bu fonksiyonun
+  yazdığı sürümde her zaman `False`'tur: taslak onayı demo parametresi
+  almaz ve onaylayan `ornek-veri` olamaz.
 - `etiket` özelliği, ör. `"MIL-PRF-23377K v2"`
 
 **Hatalar**
 
 - `KatalogHatasi`: defter katalogla aynı bağlantıyı paylaşmıyor (hiçbir şey
-  yazılmaz), taslak bilinmiyor, taslak zaten onaylanmış ya da onaylayan boş.
-  Arayüz yakalar.
+  yazılmaz), taslak bilinmiyor, taslak zaten onaylanmış, onaylayan boş ya
+  da onaylayan ayrılmış ad `ornek-veri` (`ORNEK_ONAYLAYAN`; yalnız demo
+  onayı verebilir). Arayüz yakalar.
 - `DenetimHatasi` (bir `ValueError` alt sınıfı): denetim kaydı adımı
   reddetti (ör. kayıt zamanı geçersiz). Arayüz yakalar (`ValueError`
   olarak). Onaylayan boşsa önce `KatalogHatasi` verilir.
@@ -807,6 +826,9 @@ kullanılmaz.
   hesaplanır (en az inceleme). Serbest bırakmak `karari_duzelt` ile insanın
   işidir.
 - `hat` (`dict | None`): bu fonksiyonda `{"mod": "json"}`
+- `demo_onayi` (`bool`, varsayılan `False`): kararın kullandığı kabul
+  dokümanı sürümünün `DokumanSurumu.demo_onayi` değeri. Karar mantığını
+  değiştirmez; yalnız işarettir. `karar` kaydının içeriğine de yazılır.
 
 `KararSatiri` alanları: `test_id`, `test_adi`, `karar` (`"uygun" |
 "uygun_degil" | "insan_incelemeli"`), `gerekce`, `madde`, `sayfa`,
@@ -946,6 +968,46 @@ IMMEDIATE) alınır. Kayda ayrıca şunlar yazılır:
 - `red` → "RED (karantina)"
 - `inceleme` → "İNCELEME (bekliyor)"
 
+### `malzeme_kabul.arayuz.ekran_verisi.DEMO_ETIKETI`
+
+`str`: `"DEMO ONAYI (M&P onayı değil)"`. Demo onaylı kabul dokümanı
+sürümünün ekrandaki işareti. Asıl tanımı `katalog.veritabani.DEMO_ETIKETI`'dir;
+`ekran_verisi` aynı nesneyi yeniden dışa verir. Komut satırı betikleri
+(`scripts/karar_ver.py`, `scripts/sertifika_kontrol.py`) arayüzü içe
+aktarmadan bunu `veritabani`'ndan alır; karar demo onaylı dokümanla
+verildiyse "... ile karar: ..." satırının sonuna `", DEMO ONAYI (M&P onayı
+değil)"` eklenir. Giriş kalite ekranı geçerli sürüm demo
+onaylıysa bu metinle `st.warning` gösterir; demo onaylı dokümanla verilen
+karardan sonra da bir `st.warning` gösterilir. Depo ekranı kabul dokümanı
+demo onaylı partileri sayıp `st.info` gösterir.
+
+### `malzeme_kabul.arayuz.ekran_verisi.surum_etiketi(surum)`
+
+**Girdiler**
+
+- `surum` (`DokumanSurumu`, zorunlu).
+
+**Çıktı**: `str`. `surum.etiket`; `surum.demo_onayi` ise sonuna
+`" (DEMO ONAYI (M&P onayı değil))"` eklenir. Giriş kalite ekranı bunu
+"Kabul dokümanı: <etiket> (onaylayan ...)" başlığında kullanır.
+
+**Hatalar**: yok.
+
+**Yan etkiler**: yok.
+
+### `malzeme_kabul.arayuz.ekran_verisi.karar_basligi(karar)`
+
+**Girdiler**
+
+- `karar` (`KatalogKarari`, zorunlu).
+
+**Çıktı**: `str`. `"Parti kararı: " + PARTI_ETIKETI[karar.parti_karari]`;
+`karar.demo_onayi` ise sonuna `" (DEMO ONAYI (M&P onayı değil))"` eklenir.
+
+**Hatalar**: yok.
+
+**Yan etkiler**: yok.
+
 ### `malzeme_kabul.arayuz.ekran_verisi.karar_tablosu(karar)`
 
 **Girdiler**
@@ -1031,6 +1093,9 @@ tarihi önce gelir, bilinmeyenler sondadır. Anahtarlar:
 
 - `malzeme`, `lot`, `tedarikçi`, `durum`
 - `M&P`: işaret ya da boş
+- `kabul dokümanı`: raf ömrünün alındığı geçerli sürümün etiketi (ör.
+  `"MIL-PRF-23377K v1"`); sürüm demo onaylıysa sonuna
+  `" (DEMO ONAYI (M&P onayı değil))"` eklenir. Onaylı doküman yoksa boş.
 - `üretim`: ISO tarih
 - `son kullanma`: ISO tarih ya da boş
 - `kalan gün`: `int | None`
@@ -1139,7 +1204,7 @@ Sabitlerin başlıkları ilgili ekran bölümlerindedir:
 
 - `EKRANLAR`: Bağlantı ve kimlik
 - `TABLO_SUTUNLARI`: M&P ekranı
-- `PARTI_ETIKETI` ve `PARTI_DURUMLARI`: Giriş kalite ekranı
+- `PARTI_ETIKETI`, `DEMO_ETIKETI` ve `PARTI_DURUMLARI`: Giriş kalite ekranı
 - `RAF_ETIKETI`: Depo ekranı
 
 Etiket sözlükleri yalnız gösterim içindir. Karar ve durum değerleri her
@@ -1177,6 +1242,13 @@ ve `STREAMLIT_*` yalnız Docker'a özgüdür; ürün kodu (`src/`) bunları okum
   mp|giris_kalite [--db yol]` çalıştırılır. Parola sorulur ya da
   `MALZEME_KABUL_PAROLA`'dan okunur. Parola en az 8 karakter olmalıdır;
   kullanıcı adı boş olamaz; aynı ad ikinci kez eklenemez (`KimlikHatasi`).
+- **Ayrılmış ad:** `ornek-veri` (`katalog.veritabani.ORNEK_ONAYLAYAN`)
+  örnek verinin demo onaylayanıdır. Bu adla hesap açılmaz: `kimlik.kullanici_ekle`
+  ve ilk kurulum (`ortamdan_kullanicilar`, `MALZEME_KABUL_MP_KULLANICI` /
+  `MALZEME_KABUL_GK_KULLANICI`) adı baştaki/sondaki boşluk atılıp harf
+  farkı gözetilmeden (`strip` + `casefold`) karşılaştırır ve `KimlikHatasi`
+  verir; ilk kurulumda hiçbir hesap açılmaz. `ornek-veri2`, `ornek` gibi
+  benzer adlar kabul edilir.
 - Deneme için `python scripts/katalog_kur.py --ornek --ornek-kullanicilar`
   çalıştırılır. Bu, örnek kataloğu ve iki deneme kullanıcısını kurar:
   - `mp` / `mp-ornek-parola` (M&P)
@@ -1184,8 +1256,16 @@ ve `STREAMLIT_*` yalnız Docker'a özgüdür; ürün kodu (`src/`) bunları okum
 
   Parolalar betikte sabit yazılıdır ve ekrana basılır. Kullanıcılar zaten
   varsa atlanır. Örnek doküman sürümleri `ornek-veri` kullanıcısıyla
-  onaylanır ve denetim kaydına `"örnek veri, M&P onayı değil"` notuyla
-  yazılır.
+  **demo onayıyla** (`dokuman_surumleri.demo_onayi = 1`) onaylanır ve
+  denetim kaydına `"örnek veri, M&P onayı değil"` notu ve
+  `"demo_onayi": true` ile yazılır. Özet satırında sürüm
+  `(v1, demo onayı)` olarak görünür. Örnek veri dosyasındaki `onaylayan`
+  tam `ornek-veri` değilse yükleme `KatalogHatasi` verir, hiçbir şey
+  yazılmaz. Bir standart + revizyonun gerçek (demo olmayan) onaylı sürümü
+  zaten varsa o örnek doküman yazılmaz: `ornek_yukle` etiketini
+  `YuklemeOzeti.atlanan_dokumanlar`'a ekler, `katalog_kur.py` onun için
+  `onay` kaydı yazmaz ve "atlanan örnek dokümanlar" satırında gösterir.
+  Yalnız demo sürümü olan standarda yeni örnek içerik yeni demo sürüm olur.
   Bu deneme yolu yalnız yerel geliştirme içindir. Docker imajında
   `MALZEME_KABUL_DOCKER=1` ayarlıdır ve `--ornek-kullanicilar` sıfırdan
   farklı kodla reddedilir.
@@ -1284,7 +1364,8 @@ gelince ilgili bölümler de güncellenecek.
      Biri içeriği değiştirip özeti de yeniden hesaplarsa bu fark edilmez.
      Sürüm, denetim kaydındaki onay kaydının özetiyle çapraz
      karşılaştırılmaz. Ayrıca `scripts/katalog_kur.py` örnek onay
-     kayıtlarına özet yazmaz (yalnız `dokuman_surumu` ve `not`).
+     kayıtlarına özet yazmaz (yalnız `dokuman_surumu`, `not` ve
+     `demo_onayi`).
    - Zincir: bir kayıt değiştirilip sonraki bütün kayıtlar yeniden
      hesaplanırsa bunu yalnız dışarıda saklanan son özet yakalar.
      Arayüz bu özeti kullanmaz (bkz. madde 17).
@@ -1298,15 +1379,28 @@ gelince ilgili bölümler de güncellenecek.
 9. **Kural ve model anlaşmazlığı.** Kural okuması ile dil modeli okuması
    anlaşmazsa uygulanacak kural ayrı bir PR'da ekleniyor; bu doküman onu
    henüz anlatmıyor.
-10. **Demo onayı işareti.** Örnek kabul dokümanları onaylı sayılabilir,
-    ama ekranda ve veritabanında "demo onayı" olarak işaretlenmeleri
-    gerekiyor. Bugün bu bilgi yalnız serbest metin notlarda durur. Denetim
-    kaydında "örnek veri, M&P onayı değil" yazar. `dokuman_surumleri.not_`
-    sütununda da `data/ornek/katalog.json`'daki `onay_notu` yazar ("Örnek
-    veri: sistemin taslağı, M&P mühendisi onayı değildir."). Giriş kalite
-    ekranında sürüm yalnız "onaylayan ornek-veri" olarak görünür
-    (`uygulama.py`, `gecerli_dokuman` başlığı); demo olduğu açıkça
-    işaretlenmez.
+10. **Demo onayı işareti (düzeltildi).** Nida'nın kararı: örnek kabul
+    dokümanları onaylı sayılır, ama ekranda ve veritabanında "demo onayı"
+    olarak işaretlenir.
+    - Veritabanı: `dokuman_surumleri.demo_onayi` (`INTEGER NOT NULL DEFAULT
+      0 CHECK (demo_onayi IN (0, 1))`). Sürümün parçasıdır;
+      değiştirilemezlik tetikleyicisi onu da korur. Eski veritabanlarında
+      `Katalog.__init__` göçü sütunu ekler ve `ornek-veri` satırlarını
+      işaretler (tek işlem; düşerse tetikleyici yerinde kalır).
+    - Yalnız `Katalog.dokuman_onayla(..., demo_onayi=True)` ve yalnız tam
+      `ORNEK_ONAYLAYAN` (`"ornek-veri"`) ile verilir; `ornek-veri` de demo
+      işaretsiz onay veremez. Taslak onayı (`taslak_onayla`,
+      `Katalog.taslagi_onayla`) ve `katalog_karari.dokuman_onayla` demo
+      parametresi almaz. `ornek-veri` ayrılmış kullanıcı adıdır (bkz.
+      "Kullanıcı oluşturma").
+    - Karar ve rapor: `KatalogKarari.demo_onayi`, `RafSatiri.demo_onayi`;
+      karar mantığı değişmez. M&P'nin gerçek onaylı yeni sürümü demo
+      sürümün yerine geçer (en son sürüm).
+    - Ekran: `DEMO_ETIKETI`, `surum_etiketi`, `karar_basligi`, depo
+      tablosunun `kabul dokümanı` sütunu; giriş kalite ve depo ekranlarında
+      uyarı/bilgi kutusu.
+    - Açık kalan: `mp_incelemesini_kapat` ile demo sürümlü bir revizyona
+      geçişin kabul edilip edilmeyeceği sorulacak.
 11. **Docker varsayılan parolası (düzeltildi).** Compose artık deneme
     kullanıcısı açmıyor. Parolalar ortam değişkeninden (Docker'da secrets
     dosyası) okunuyor; parola yoksa ya da zayıfsa uygulama başlamıyor (bkz.

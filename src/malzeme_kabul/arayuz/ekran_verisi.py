@@ -6,8 +6,13 @@ sonuçlarını gösterir; iş kuralı ekranda değil burada ve alttaki katmanlar
 - M&P: `standart_yukle` (kural çıkarıcıyla taslak), `test_tablosu` /
   `tablodan_dokuman` (taslağı tabloda düzeltme), `taslak_duzelt`,
   `taslak_onayla`, `revizyon_izinli_mi`, `revizyon_raporu`.
-- Giriş kalite: `parti_hazirla`, `sertifika_karari`, `karar_tablosu`.
+- Giriş kalite: `parti_hazirla`, `sertifika_karari`, `karar_tablosu`,
+  `surum_etiketi`, `karar_basligi`.
 - Depo: `depo_tablosu`.
+
+Demo onayı: örnek verinin kabul dokümanları onaylı sayılır ama ekranda
+`DEMO_ETIKETI` ile işaretlenir (`surum_etiketi`, `karar_basligi`, depo
+tablosunun "kabul dokümanı" sütunu).
 
 Test kümesi kilidi: arayüz yalnız `data/bolunme.yaml` içinde geliştirme
 kümesinde olan standartlardan taslak çıkarır (`standart_yukle`) ve revizyon
@@ -29,7 +34,7 @@ from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
 from malzeme_kabul.cikarim.kural_cikarici import cikar
 from malzeme_kabul.hat.katalog_karari import KatalogKarari, malzeme_koduyla_kontrol
 from malzeme_kabul.hat.raf_omru_raporu import raf_raporu
-from malzeme_kabul.katalog.veritabani import DokumanSurumu, Katalog, KatalogHatasi, Parti, Taslak
+from malzeme_kabul.katalog.veritabani import DEMO_ETIKETI, DokumanSurumu, Katalog, KatalogHatasi, Parti, Taslak
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 from malzeme_kabul.revizyon.revizyon_karsilastirici import (
     guncelleme_onerileri,
@@ -250,6 +255,17 @@ ETIKETLER = {"uygun": "✅ uygun", "uygun_degil": "❌ uygun değil", "insan_inc
 PARTI_ETIKETI = {"kabul": "✅ KABUL (serbest)", "red": "❌ RED (karantina)", "inceleme": "⚠️ İNCELEME (bekliyor)"}
 
 
+def surum_etiketi(surum: DokumanSurumu) -> str:
+    """Kabul dokümanı sürümünün ekran etiketi; demo onaylıysa DEMO_ETIKETI eklenir."""
+    return f"{surum.etiket} ({DEMO_ETIKETI})" if surum.demo_onayi else surum.etiket
+
+
+def karar_basligi(karar: KatalogKarari) -> str:
+    """Parti kararı başlığı; kabul dokümanı demo onaylıysa DEMO_ETIKETI eklenir."""
+    baslik = f"Parti kararı: {PARTI_ETIKETI[karar.parti_karari]}"
+    return f"{baslik} ({DEMO_ETIKETI})" if karar.demo_onayi else baslik
+
+
 def karar_tablosu(karar: KatalogKarari) -> list[dict]:
     k = karar.kontrol
     satirlar = [k.revizyon] + ([k.tip_sinif] if k.tip_sinif else []) + karar.ek_denetimler + k.satirlar
@@ -270,6 +286,7 @@ def depo_tablosu(katalog: Katalog, bugun: date | None = None, uyari_esigi_gun: i
         {
             "malzeme": s.parti.malzeme_kodu, "lot": s.parti.lot_no, "tedarikçi": s.parti.tedarikci,
             "durum": s.parti.durum, "M&P": s.parti.mp_inceleme or "",
+            "kabul dokümanı": (s.dokuman_surumu or "") + (f" ({DEMO_ETIKETI})" if s.demo_onayi else ""),
             "üretim": s.parti.uretim_tarihi.isoformat(),
             "son kullanma": s.raf.son_kullanma.isoformat() if s.raf.son_kullanma else "",
             "kalan gün": s.raf.kalan_gun, "raf": RAF_ETIKETI[s.raf.durum],
@@ -282,6 +299,7 @@ def depo_tablosu(katalog: Katalog, bugun: date | None = None, uyari_esigi_gun: i
 
 
 __all__ = [
+    "DEMO_ETIKETI",
     "ETIKETLER",
     "PARTI_ETIKETI",
     "TABLO_SUTUNLARI",
@@ -289,12 +307,14 @@ __all__ = [
     "depo_tablosu",
     "hazir_revizyon_raporlari",
     "json_sertifika_karari",
+    "karar_basligi",
     "karar_tablosu",
     "parti_hazirla",
     "revizyon_izinli_mi",
     "revizyon_raporu",
     "standart_izinli_mi",
     "standart_yukle",
+    "surum_etiketi",
     "tablodan_dokuman",
     "taslak_duzelt",
     "taslak_onayla",
