@@ -142,14 +142,22 @@ def revizyon_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
         eski = st.file_uploader("Eski revizyon PDF'i", type=["pdf"], key="eski")
         yeni = st.file_uploader("Yeni revizyon PDF'i", type=["pdf"], key="yeni")
         if eski and yeni and st.button("Karşılaştır"):
+            # Test kümesi kilidi dosya kaydedilmeden önce denetlenir.
             try:
-                with st.spinner("Karşılaştırılıyor..."):
-                    md, ozet = ev.revizyon_raporu(dosyayi_kaydet(eski), dosyayi_kaydet(yeni))
-                st.session_state["revizyon_ozet"] = ozet
-                st.json(ozet)
-                st.markdown(md)
+                izin, neden = ev.revizyon_izinli_mi(eski.name, yeni.name)
             except ValueError as hata:
-                st.error(str(hata))
+                izin, neden = False, str(hata)
+            if not izin:
+                st.error(neden)
+            else:
+                try:
+                    with st.spinner("Karşılaştırılıyor..."):
+                        md, ozet = ev.revizyon_raporu(dosyayi_kaydet(eski), dosyayi_kaydet(yeni))
+                    st.session_state["revizyon_ozet"] = ozet
+                    st.json(ozet)
+                    st.markdown(md)
+                except (KatalogHatasi, ValueError) as hata:
+                    st.error(str(hata))
         st.subheader("Yeni revizyonu kataloğa yükle")
         with st.form("revizyon_yukle"):
             belge_no = st.text_input("Belge no", "MIL-PRF-23377")

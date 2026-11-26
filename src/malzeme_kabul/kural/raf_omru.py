@@ -4,9 +4,22 @@
   ay takvimle eklenir (31 Ocak + 1 ay = 28/29 Şubat, ayın son günü); gün ve
   hafta gün olarak; diğer zaman birimleri pint ile güne çevrilip aşağı
   yuvarlanır (ömür kısalır, uzamaz).
-- Kap türüne göre birden çok raf ömrü varsa partinin kap türüyle eşleşen
-  kayıt seçilir. Kap türü bilinmiyor ya da eşleşmiyorsa **en kısa** raf ömrü
-  alınır ve bu not edilir (güvenli taraf).
+- Raf ömrü seçimi (uygulanan adaylar arasından; kap türü None, boş ya da
+  yalnız boşluksa bilinmiyor sayılır):
+  - aday yoksa kayıt yok (not: "kabul dokümanında raf ömrü yok");
+  - kap türü verilmiş ve eşleşen kayıt varsa (büyük/küçük harf duyarsız) o
+    kayıt, notsuz;
+  - kap türü verilmiş, eşleşmiyorsa: tek kayıt varsa o kayıt; değilse tek
+    genel kayıt varsa genel kayıt; değilse **en kısa** raf ömrü. Üçü de not
+    edilir;
+  - kap türü bilinmiyorsa: tek kayıt varsa o kayıt (kap türüne özgüyse not
+    edilir, genelse notsuz); birden çok kayıt varsa genel kayıt olsa bile
+    **en kısa** raf ömrü alınır ve not edilir (güvenli taraf).
+  En kısa, süreler partinin üretim tarihine (verilmezse sabit bir başlangıç
+  tarihine) `sure_ekle` ile eklenince en erken biten kayıttır (ör. 1 ay ile
+  30 gün, artık yılda 1 yıl ile 366 gün üretim tarihine göre değişir);
+  eşitlikte belge sırasındaki ilk kayıt alınır. Kap türü "" olan kayıt
+  None gibi genel sayılır.
 - Raf ömrü kaydının uygulanabilirliği tip/sınıfa uymuyorsa kayıt atlanır.
 - Durum: kalan gün < 0 → `doldu`; kalan gün ≤ uyarı eşiği (varsayılan 30) →
   `yaklasiyor`; değilse `gecerli`. Raf ömrü bulunamazsa `bilinmiyor`.
@@ -66,23 +79,32 @@ def _uygulanan(kayitlar: list[RafOmru], tip: str | None, sinif: str | None) -> l
 
 
 def raf_omru_sec(
-    dokuman: KabulDokumani, kap_turu: str | None = None, tip: str | None = None, sinif: str | None = None
+    dokuman: KabulDokumani, kap_turu: str | None = None, tip: str | None = None, sinif: str | None = None,
+    *, uretim_tarihi: date | None = None,
 ) -> tuple[RafOmru | None, list[str]]:
     """Partiye uygulanacak raf ömrü kaydını ve seçim notlarını döner."""
     adaylar = _uygulanan(dokuman.raf_omurleri, tip, sinif)
     if not adaylar:
         return None, ["kabul dokümanında raf ömrü yok"]
-    if kap_turu:
-        eslesen = [r for r in adaylar if (r.kap_turu or "").casefold() == kap_turu.casefold()]
+    kap = (kap_turu or "").strip() or None
+    if kap is not None:
+        eslesen = [r for r in adaylar if (r.kap_turu or "").casefold() == kap.casefold()]
         if eslesen:
             return eslesen[0], []
-    genel = [r for r in adaylar if r.kap_turu is None]
-    if len(adaylar) == 1 or (len(genel) == 1 and not kap_turu):
-        return (genel or adaylar)[0], []
-    ref = date(2000, 1, 1)
-    en_kisa = min(adaylar, key=lambda r: sure_ekle(ref, r.sure, r.birim))
-    neden = f"kap türü {kap_turu!r} eşleşmedi" if kap_turu else "kap türü bilinmiyor"
-    return en_kisa, [f"{neden}; en kısa raf ömrü alındı ({en_kisa.kap_turu or 'genel'}: {en_kisa.sure:g} {en_kisa.birim})"]
+    genel = [r for r in adaylar if not r.kap_turu]  # None ya da "" genel kayıttır
+    if len(adaylar) == 1:
+        secilen, neden = adaylar[0], "için kayıt yok; tek kayıt alındı" if kap else "bilinmiyor; tek kayıt alındı"
+        if kap is None and not secilen.kap_turu:
+            return secilen, []
+    elif kap is not None and len(genel) == 1:
+        secilen, neden = genel[0], "eşleşmedi; genel kayıt alındı"
+    else:
+        # En kısa: üretim tarihine (yoksa sabit tarihe) eklenince en erken biten; min kararlı, eşitlikte belge sırasındaki ilk.
+        ref = uretim_tarihi if uretim_tarihi is not None else date(2000, 1, 1)
+        secilen = min(adaylar, key=lambda r: sure_ekle(ref, r.sure, r.birim))
+        neden = "eşleşmedi; en kısa raf ömrü alındı" if kap else "bilinmiyor; en kısa raf ömrü alındı"
+    bas = f"kap türü {kap!r}" if kap else "kap türü"
+    return secilen, [f"{bas} {neden} ({secilen.kap_turu or 'genel'}: {secilen.sure:g} {secilen.birim})"]
 
 
 def raf_durumu(
@@ -95,7 +117,7 @@ def raf_durumu(
     uyari_esigi_gun: int = UYARI_ESIGI_GUN,
 ) -> RafDurumBilgisi:
     """Partinin son kullanma tarihini ve raf durumunu hesaplar."""
-    kayit_, notlar = raf_omru_sec(dokuman, kap_turu, tip, sinif)
+    kayit_, notlar = raf_omru_sec(dokuman, kap_turu, tip, sinif, uretim_tarihi=uretim_tarihi)
     if kayit_ is None:
         return RafDurumBilgisi("bilinmiyor", None, None, None, notlar)
     son = sure_ekle(uretim_tarihi, kayit_.sure, kayit_.birim)

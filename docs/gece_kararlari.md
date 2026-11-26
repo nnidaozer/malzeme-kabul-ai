@@ -150,6 +150,21 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   plastik 6 ay → 6 ay). Güvenli taraf; partiye `kap_turu` girilirse doğru kayıt
   seçilir. Partiler tablosuna `kap_turu` sütunu eklendi; eski veritabanına
   açılışta kendiliğinden eklenir.
+  - Nida "kap türü bilinmiyorsa en kısa" kararını sabah onayladı. Düzeltme
+    iki sapmayı da kapsıyor: tek genel kayıt (kap türü bilinmiyor ve birden
+    çok kayıt varken artık genel kayıt değil, en kısa alınır; kap türü verilip
+    eşleşmezse genel kayıt alınır ve not düşülür) ve tek aday (kap türü
+    eşleşmese ya da bilinmeyip kayıt kap türüne özgü olsa da not düşülür).
+    Boş ya da yalnız boşluk kap türü bilinmiyor sayılır.
+  - İnceleme ikinci tur: en kısa, sabit bir tarihten değil partinin üretim
+    tarihinden ölçülür (`raf_durumu` üretim tarihini `raf_omru_sec`'e
+    geçirir; 1 ay ile 30 gün ya da 1 yıl ile 366 gün üretim tarihine göre
+    değişir). Eşitlikte belge sırasındaki ilk kayıt alınır. Kap türü `""`
+    olan kayıt genel sayılır. Bu, Nida'nın "en kısa" onayının teknik
+    uygulamasıdır (sabit tarih planlayıcının ayrıntısıydı, Nida'nın kararı
+    değil); Nida aksini isterse geri alınır.
+  - S3 (revizyon ekranının test kümesi kilidi) de düzeltildi:
+    `revizyon_raporu` iki revizyonu da `revizyon_izinli_mi` ile denetler.
 - **Uyarı eşiği 30 gün dahil** (kalan ≤ 30 gün → yaklaşıyor).
 - **Ömür uzatma testleri yalnız uyarılı partiler için listelenir.** Bugünkü
   kabul dokümanlarında `omur_uzatma` türünde test yok (kural çıkarıcı bu türü

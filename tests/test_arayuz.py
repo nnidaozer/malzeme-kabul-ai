@@ -13,7 +13,7 @@ from malzeme_kabul.arayuz.kimlik import KimlikHatasi, giris, kullanici_ekle, kul
 from malzeme_kabul.katalog.ornek_veri import ornek_yukle
 from malzeme_kabul.katalog.veritabani import Katalog, KatalogHatasi
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
-from malzeme_kabul.sozlesme.sema import KabulDokumani
+from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, RafOmru, StandartBilgisi
 from tests.conftest import KOK, betik_yukle
 
 DOKUMAN = KabulDokumani.model_validate_json((KOK / "data/cikti/MIL-PRF-23377K_kabul_dokumani.json").read_text(encoding="utf-8"))
@@ -175,6 +175,122 @@ def test_depo_tablosu(katalog):
     assert tablo[0]["lot"] == "A-2510-03" and tablo[0]["raf"] == ev.RAF_ETIKETI["doldu"]
     yakin = next(s for s in tablo if s["lot"] == "A-2512-01")
     assert yakin["kalan gün"] == 15 and yakin["ömür uzatma testleri"] == "tanımlı değil"
+
+
+def test_depo_tablosu_raf_notunu_gosterir():
+    kaynak = Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde="3.9")
+    d = KabulDokumani(
+        standart=StandartBilgisi(belge_no="MIL-PRF-23377", revizyon="K"),
+        raf_omurleri=[RafOmru(sure=1, birim="year", kaynak=kaynak),
+                      RafOmru(kap_turu="plastik", sure=6, birim="month", kaynak=kaynak)],
+    )
+    with Katalog() as k:
+        k.dokuman_onayla(d, "mp1")
+        k.malzeme_ekle("AST-N", "MIL-PRF-23377", "K", tip="I", sinif="N")
+        k.tedarikci_onayla("AST-N", "Ted A")
+        k.parti_ekle("KAPSIZ", "AST-N", "Ted A", "K", "2026-03-10")
+        (satir,) = ev.depo_tablosu(k, date(2026, 4, 1))
+    assert satir["son kullanma"] == "2026-09-10"
+    assert "kap türü bilinmiyor" in satir["not"] and "en kısa" in satir["not"]
+
+
+# --- M&P: revizyon raporu ve test kümesi kilidi ---------------------------------------------
+
+
+@pytest.fixture
+def karsilastirma_yasak(monkeypatch):
+    """Kilit reddederse revizyonlari_karsilastir hiç çağrılmamalı."""
+    def yasak(*a, **k):
+        raise AssertionError("revizyonlari_karsilastir kilitten önce çağrıldı")
+
+    monkeypatch.setattr(ev, "revizyonlari_karsilastir", yasak)
+
+
+def bolunme(tmp_path, gelistirme=(), test=(), acik=False):
+    yol = tmp_path / "bolunme.yaml"
+    satirlar = [f"test_kumesi_acik: {'true' if acik else 'false'}", "gelistirme:"]
+    satirlar += [f"  - {s}" for s in gelistirme]
+    satirlar += ["test:"] + [f"  - {s}" for s in test]
+    yol.write_text("\n".join(satirlar) + "\n", encoding="utf-8")
+    return yol
+
+
+def test_revizyon_raporu_test_kumesindeki_standardi_reddeder(tmp_path, karsilastirma_yasak):
+    yaml = bolunme(tmp_path, gelistirme=["MIL-PRF-99999B"], test=["MIL-PRF-99999A"])
+    with pytest.raises(KatalogHatasi, match="test kümesinde"):
+        ev.revizyon_raporu(tmp_path / "MIL-PRF-99999A.pdf", tmp_path / "MIL-PRF-99999B.pdf", bolunme_yolu=yaml)
+
+
+def test_revizyon_raporu_yeni_revizyon_test_kumesindeyse_reddeder(tmp_path, karsilastirma_yasak):
+    yaml = bolunme(tmp_path, gelistirme=["MIL-PRF-99999A"], test=["MIL-PRF-99999B"])
+    with pytest.raises(KatalogHatasi, match="MIL-PRF-99999B test kümesinde"):
+        ev.revizyon_raporu(tmp_path / "MIL-PRF-99999A.pdf", tmp_path / "MIL-PRF-99999B.pdf", bolunme_yolu=yaml)
+
+
+def test_revizyon_raporu_bolunmede_olmayani_reddeder(tmp_path, karsilastirma_yasak):
+    yaml = bolunme(tmp_path, gelistirme=["MIL-PRF-99999A"])
+    with pytest.raises(KatalogHatasi, match="bölünmede yok"):
+        ev.revizyon_raporu(tmp_path / "MIL-PRF-99999A.pdf", tmp_path / "MIL-PRF-99999B.pdf", bolunme_yolu=yaml)
+
+
+def test_revizyon_raporu_bolunme_dosyasi_yoksa_reddeder(tmp_path, karsilastirma_yasak):
+    with pytest.raises(KatalogHatasi, match="denetlenemedi"):
+        ev.revizyon_raporu(tmp_path / "MIL-PRF-99999A.pdf", tmp_path / "MIL-PRF-99999B.pdf",
+                           bolunme_yolu=tmp_path / "yok.yaml")
+
+
+class SahteFark:
+    def ozet(self):
+        return {"degisen": 1}
+
+
+def sahte_karsilastirma(monkeypatch):
+    cagrilar = []
+
+    def karsilastir(eski_pdf, yeni_pdf, belge_no, eski_rev, yeni_rev):
+        cagrilar.append((eski_pdf, yeni_pdf, belge_no, eski_rev, yeni_rev))
+        return SahteFark()
+
+    monkeypatch.setattr(ev, "revizyonlari_karsilastir", karsilastir)
+    monkeypatch.setattr(ev, "markdown_raporu", lambda fark, oneriler=None: "# sahte rapor")
+    return cagrilar
+
+
+def test_revizyon_raporu_gelistirme_kumesinde_karsilastirir(tmp_path, monkeypatch):
+    cagrilar = sahte_karsilastirma(monkeypatch)
+    yaml = bolunme(tmp_path, gelistirme=["MIL-PRF-99999A", "MIL-PRF-99999B"])
+    eski, yeni = tmp_path / "MIL-PRF-99999A.pdf", tmp_path / "MIL-PRF-99999B.pdf"
+    assert ev.revizyon_raporu(eski, yeni, bolunme_yolu=yaml) == ("# sahte rapor", {"degisen": 1})
+    assert cagrilar == [(eski, yeni, "MIL-PRF-99999", "A", "B")]
+
+
+def test_revizyon_raporu_kilit_acikken_test_kumesine_izin_verir(tmp_path, monkeypatch):
+    cagrilar = sahte_karsilastirma(monkeypatch)
+    yaml = bolunme(tmp_path, test=["MIL-PRF-99999A", "MIL-PRF-99999B"], acik=True)
+    md, ozet = ev.revizyon_raporu(tmp_path / "MIL-PRF-99999A.pdf", tmp_path / "MIL-PRF-99999B.pdf", bolunme_yolu=yaml)
+    assert (md, ozet) == ("# sahte rapor", {"degisen": 1}) and len(cagrilar) == 1
+
+
+def test_revizyon_raporu_farkli_standart_valueerror_kalir(tmp_path, karsilastirma_yasak):
+    # Belge no denetimi kilitten önce: bölünmede olmasalar da ValueError.
+    yaml = bolunme(tmp_path)
+    with pytest.raises(ValueError, match="aynı standardın"):
+        ev.revizyon_raporu(tmp_path / "MIL-PRF-99999A.pdf", tmp_path / "MIL-PRF-88888B.pdf", bolunme_yolu=yaml)
+
+
+def test_revizyon_izinli_mi_iki_revizyonu_da_denetler(tmp_path):
+    yaml = bolunme(tmp_path, gelistirme=["MIL-PRF-99999A", "MIL-PRF-99999C"], test=["MIL-PRF-99999B"])
+    assert ev.revizyon_izinli_mi("MIL-PRF-99999A.pdf", "MIL-PRF-99999C.pdf", yaml)[0] is True
+    for eski, yeni, reddedilen in [
+        ("MIL-PRF-99999A.pdf", "MIL-PRF-99999B.pdf", "MIL-PRF-99999B"),  # yeni test kümesinde
+        ("MIL-PRF-99999B.pdf", "MIL-PRF-99999C.pdf", "MIL-PRF-99999B"),  # eski test kümesinde
+        ("MIL-PRF-99999A.pdf", "MIL-PRF-99999D.pdf", "MIL-PRF-99999D"),  # yeni bölünmede yok
+        ("MIL-PRF-99999D.pdf", "MIL-PRF-99999A.pdf", "MIL-PRF-99999D"),  # eski bölünmede yok
+    ]:
+        assert ev.revizyon_izinli_mi(eski, yeni, yaml) == (False, ev.standart_izinli_mi(reddedilen, yaml)[1])
+    eksik = tmp_path / "yok.yaml"
+    assert ev.revizyon_izinli_mi("MIL-PRF-99999A.pdf", "MIL-PRF-99999C.pdf", eksik) == (
+        False, ev.standart_izinli_mi("MIL-PRF-99999A", eksik)[1])
 
 
 # --- Streamlit ekranları (streamlit kuruluysa; CI'da arayuz işi) -------------------------------------

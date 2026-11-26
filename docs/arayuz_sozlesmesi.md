@@ -52,7 +52,7 @@ kısımlarını koda karşı denetlediği, hangilerini denetlemediği en sondaki
 | giriş (oturum yok) | herkes | `kimlik.giris` |
 | `standart`: Standart yükle | `mp` | `ekran_verisi.standart_yukle`, `Katalog.taslaklar` |
 | `taslak`: Taslağı düzelt ve onayla | `mp` | `Katalog.taslaklar(yalniz_acik=True)`, `ekran_verisi.test_tablosu`, `TABLO_SUTUNLARI`, `tablodan_dokuman`, `taslak_duzelt`, `taslak_onayla` |
-| `revizyon`: Revizyon farkı ve M&P incelemesi | `mp` | `ekran_verisi.hazir_revizyon_raporlari`, `revizyon_raporu`, `revizyon_etkisi.yeni_revizyon_yukle`, `mp_bekleyenler`, `Katalog.malzeme`, `mp_incelemesini_kapat` |
+| `revizyon`: Revizyon farkı ve M&P incelemesi | `mp` | `ekran_verisi.hazir_revizyon_raporlari`, `revizyon_izinli_mi`, `revizyon_raporu`, `revizyon_etkisi.yeni_revizyon_yukle`, `mp_bekleyenler`, `Katalog.malzeme`, `mp_incelemesini_kapat` |
 | `giris`: Giriş kalite: CoC kontrolü | `giris_kalite` | `Katalog.malzemeler`, `gecerli_dokuman`, `partiler`, `onayli_tedarikciler`, `ekran_verisi.parti_hazirla`, `json_sertifika_karari`, `hibrit_hat.sertifika_hatti`, `karar_tablosu`, `PARTI_ETIKETI`; düzeltme formu: `PARTI_DURUMLARI`, `katalog_karari.karari_duzelt` |
 | `depo`: Depo: partiler ve raf ömrü | `mp`, `giris_kalite` | `ekran_verisi.depo_tablosu`, `RAF_ETIKETI` |
 | kenar çubuğu (her ekran) | herkes | `kimlik.yetkili_mi`, `kimlik.EKRANLAR`, `denetim_kaydi.sema_eksikleri` (defter kurulmadan önce), `DenetimKaydi.zinciri_dogrula` |
@@ -479,7 +479,34 @@ sıralıdır. Klasör yoksa boş döner.
 
 **Yan etkiler**: yok.
 
-### `malzeme_kabul.arayuz.ekran_verisi.revizyon_raporu(eski_pdf, yeni_pdf, dokuman)`
+### `malzeme_kabul.arayuz.ekran_verisi.revizyon_izinli_mi(eski_ad, yeni_ad, bolunme_yolu)`
+
+İki revizyonun ikisinin de test kümesi kilidinden geçip geçmediğini
+denetler. Her iki dosya adı `belge.adlandirma.belge_no_ve_revizyon` ile
+ayrıştırılır ve `{belge_no}{revizyon}` (ör. `MIL-PRF-23377K`) önce eski, sonra
+yeni için `standart_izinli_mi` ile denetlenir. Arayüz bunu yüklenen dosya
+adlarıyla, dosyalar kaydedilmeden önce çağırır.
+
+**Girdiler**
+
+- `eski_ad` (`str | Path`, zorunlu) ve `yeni_ad` (`str | Path`, zorunlu):
+  dosya adları ya da yolları (yalnız ad kısmı okunur), ör.
+  `MIL-PRF-23377J.pdf`.
+- `bolunme_yolu` (`Path`, isteğe bağlı, varsayılan `data/bolunme.yaml`):
+  test kümesi kilidi için bölünme dosyası (bkz. `standart_yukle`).
+
+**Çıktı**: `tuple[bool, str]`. İkisi de izinliyse `(True, "")`; değilse
+`(False, neden)`; `neden`, ilk reddedilen revizyon için `standart_izinli_mi`
+iletisidir (test kümesinde, bölünmede yok ya da bölünme dosyası yok).
+
+**Hatalar**
+
+- `ValueError`: dosya adından belge no veya revizyon çıkarılamadı. Arayüz
+  yakalar ve izin verilmemiş gibi gösterir.
+
+**Yan etkiler**: yok; yalnız bölünme dosyasını okur.
+
+### `malzeme_kabul.arayuz.ekran_verisi.revizyon_raporu(eski_pdf, yeni_pdf, dokuman, bolunme_yolu)`
 
 **Girdiler**
 
@@ -489,22 +516,27 @@ sıralıdır. Klasör yoksa boş döner.
 - `dokuman` (`KabulDokumani | None`, isteğe bağlı, varsayılan `None`):
   verilirse rapora bu doküman için güncelleme önerileri eklenir. Arayüz bunu
   vermez.
+- `bolunme_yolu` (`Path`, isteğe bağlı, varsayılan `data/bolunme.yaml`):
+  test kümesi kilidi için bölünme dosyası (bkz. `standart_yukle`).
 
 **Çıktı**: `tuple[str, dict]`: Markdown rapor ve özet sözlüğü
 (`RevizyonFarki.ozet()`). Arayüz özeti oturumda tutar ve
 `yeni_revizyon_yukle`'ye `fark_ozeti` olarak geçirir.
 
-**Test kümesi kilidi yok.** Bu fonksiyon `data/bolunme.yaml`'a bakmaz.
-Test kümesindeki bir standardın PDF'leri de ekrandan karşılaştırılabilir.
-Komut satırı betiği (`scripts/revizyon_karsilastir.py`) ise kilidi
-`deney.bolunme.betik_korumasi` ile denetler. Ekranın da kilidi denetlemesi
-ayrı bir PR'la gelecek.
+**Test kümesi kilidi.** Önce iki dosyanın aynı standardın revizyonu olduğu
+denetlenir (`ValueError`). Sonra iki revizyon da `revizyon_izinli_mi` ile
+denetlenir; biri reddedilirse karşılaştırma yapılmadan `KatalogHatasi`
+verilir. Komut satırı betiği (`scripts/revizyon_karsilastir.py`) kilidi
+`deney.bolunme.betik_korumasi` ile denetler. Kilit dosya adını okur (bkz.
+docs/mimari.md madde 7).
 
 **Hatalar**
 
 - `ValueError`: iki dosya aynı standardın revizyonu değil, dosya adından
   belge no veya revizyon çıkarılamadı, PDF okunamadı ya da PDF sınırı
   aşıldı. Arayüz yakalar.
+- `KatalogHatasi`: revizyonlardan biri test kümesinde ve kilit kapalı,
+  bölünmede yok, ya da bölünme dosyası yok. Arayüz yakalar.
 - `FileNotFoundError`: PDF yok. Arayüz yakalamaz; olağan akışta oluşmaz.
 
 **Yan etkiler**: yok. Veritabanına da denetim kaydına da yazmaz.
@@ -1007,20 +1039,29 @@ tarihi önce gelir, bilinmeyenler sondadır. Anahtarlar:
 - `not`
 
 **Raf ömrü seçimi** kural katmanında yapılır (`kural/raf_omru.raf_omru_sec`).
-Önce tip/sınıfa uygulanan kayıtlar alınır. Sonra sırayla:
+Önce tip/sınıfa uygulanan kayıtlar alınır; hiç yoksa satır `bilinmiyor`
+olur ("kabul dokümanında raf ömrü yok"). Partinin kap türü `None`, boş ya da
+yalnız boşluksa **bilinmiyor** sayılır. Sonra:
 
-1. Kap türü verilmişse ve bir kaydın kap türüyle eşleşiyorsa (harf büyüklüğü
-   gözetilmez), o kayıt alınır.
-2. Uygulanan **tek kayıt** varsa o alınır. Kap türü eşleşmese de alınır ve
-   not yazılmaz.
-3. Kap türü bilinmiyorsa ve kap türü boş olan **tek bir genel kayıt**
-   varsa, o genel kayıt alınır. Daha kısa ömürlü bir kap türü kaydı olsa da
-   bu böyledir.
-4. Bu üç durumun dışında en kısa raf ömrü alınır ve nedeni nota yazılır.
+1. Kap türü verilmiş ve bir kaydın kap türüyle eşleşiyorsa (harf büyüklüğü
+   gözetilmez), o kayıt alınır; not yazılmaz.
+2. Kap türü verilmiş ama eşleşmiyorsa:
+   - uygulanan **tek kayıt** varsa o alınır;
+   - değilse kap türü boş olan **tek bir genel kayıt** varsa genel kayıt
+     alınır (daha kısa bir kap kaydı olsa da);
+   - değilse **en kısa** raf ömrü alınır.
+   Üç durumda da verilen kap türünü anan bir not yazılır.
+3. Kap türü bilinmiyorsa:
+   - uygulanan **tek kayıt** varsa o alınır; genel kayıtsa not yazılmaz,
+     kap türüne özgüyse not yazılır;
+   - birden çok kayıt varsa genel kayıt olsa bile **en kısa** raf ömrü
+     alınır ve not yazılır ("kap türü bilinmiyor; en kısa raf ömrü alındı").
 
-Nida'nın onayladığı karar şudur: "kap türü bilinmiyorsa en kısa raf ömrü
-alınır". 3. adım bu kararla çelişir. 2. adım da kap türü verilip
-eşleşmediğinde uyarı vermez. Bu iki konu ayrı bir PR'la düzeltilecek.
+En kısa, süreler partinin üretim tarihine eklenince (`sure_ekle`) en erken
+biten kayıttır; ör. 1 ay ile 30 gün, ya da artık yılda 1 yıl ile 366 gün,
+üretim tarihine göre farklı sonuç verir. Eşitlikte belge sırasındaki ilk
+kayıt alınır. Kap türü `""` olan kayıt `None` gibi genel sayılır. Bu, Nida'nın
+onayladığı "kap türü bilinmiyorsa en kısa raf ömrü alınır" kararıdır.
 
 **Hatalar**: `KatalogHatasi`: bir partinin malzemesi katalogda yok.
 Onaylı dokümanın eksik olması hata değildir; satır `bilinmiyor` olur ve
@@ -1079,7 +1120,8 @@ Arayüzdeki yakalama tablosu (`main`, `uygulama.py`):
 | `standart_yukle` | KatalogHatasi, ValueError | sqlite3.OperationalError, FileNotFoundError ve diğer OSError'lar |
 | `tablodan_dokuman`, `taslak_duzelt` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
 | `taslak_onayla` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
-| `revizyon_raporu` | yalnız ValueError | FileNotFoundError ve diğer OSError'lar |
+| `revizyon_izinli_mi` (dosyalar kaydedilmeden önce) | ValueError (izin yok gibi gösterilir) | |
+| `revizyon_raporu` | KatalogHatasi, ValueError | FileNotFoundError ve diğer OSError'lar |
 | `yeni_revizyon_yukle` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
 | `mp_bekleyenler`, `Katalog.malzeme` (revizyon ekranı) | hiçbiri | KatalogHatasi |
 | `mp_incelemesini_kapat` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
@@ -1271,10 +1313,15 @@ gelince ilgili bölümler de güncellenecek.
     "Kullanıcı oluşturma"). Önceden kurulmuş birimlerdeki deneme hesapları
     kendiliğinden kaldırılmaz ama artık her açılışta yakalanır ve uygulama
     başlamaz; hesap README'deki yolla silinip yeniden açılmalıdır.
-12. **Revizyon ekranı kilidi.** `revizyon_raporu` test kümesi kilidine
-    bakmıyor.
-13. **Raf ömrü seçimi.** Tek genel kayıt ve tek aday durumları "bilinmiyorsa
-    en kısa" kararıyla çelişiyor (bkz. `depo_tablosu`).
+12. **Revizyon ekranı kilidi (düzeltildi).** `revizyon_raporu` iki
+    revizyonu da `revizyon_izinli_mi` ile test kümesi kilidinden geçirir;
+    ekran bunu dosyalar kaydedilmeden önce de çağırır. Kilit dosya adını
+    okur; yeniden adlandırılan bir dosya kilidi aşar (`standart_yukle` ile
+    aynı sınır, bkz. docs/mimari.md madde 7).
+13. **Raf ömrü seçimi (düzeltildi).** Kap türü bilinmiyorsa ve birden çok
+    kayıt varsa genel kayıt olsa bile en kısa alınır; kap türü verilip
+    eşleşmediğinde tek aday ve tek genel kayıt durumları da not yazar (bkz.
+    `depo_tablosu`).
 14. **Yüklenen dosyanın üzerine yazma.** `dosyayi_kaydet` dosyayı yalnız
     temizlenmiş adıyla yazıyor. Aynı adlı bir yükleme önceki dosyanın
     üzerine yazılır.
