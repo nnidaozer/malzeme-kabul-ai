@@ -219,15 +219,44 @@ yönü metinle çelişen okuma `belirsiz` yapılır). Yalnız dil modeli deneyi
 
 **Hibrit hat** (`hat/hibrit_hat.py`, sertifika tarafı): mod anahtarı `kural`
 ya da `hibrit` (parametre ya da `MALZEME_KABUL_MODU`, varsayılan `kural`).
+Açıkça verilen boş mod (`""`) hatadır (`HatHatasi`); betik bunu ve diğer hat
+ayarı hatalarını stderr'e yazıp sıfır olmayan kodla çıkar, karar yazmaz.
 
 - `kural`: `cikarim/sertifika_okuyucu.kural_ile_oku` PDF tablosunu başlık
   adlarıyla okur (150 sentetik sertifikanın hepsinde JSON ile aynı).
 - `hibrit`: her sayfa yerel modele (yalnız localhost) gider; model hücreleri
   aynen döner (`sozlesme/okuma.SertifikaOkumaYaniti`, karar ve sayı alanı
   yok). Her satır `kural/kanit_dogrulama.satir_kaniti` ile belgenin metin
-  katmanında, aynı satırda aranır; kanıtsız satırlar karara girmez ve `kanit`
-  denetimi insan incelemeli olur. Model yanıt vermezse ya da şemaya uymazsa
-  kural okumasına düşülür ve kayda yazılır.
+  katmanında aranır: test adıyla başlayan satır sayfada tam bir olmalı (iki
+  satır varsa ikisi de kanıtsız; biri gizli metin olabilir); sonuç o satırda,
+  bütün sözcükler olarak geçmeli, birim aynı satırda ve ardından şart
+  sözcüğü gelmeyen bir yerde geçmeli ("70 min max 47 s" → "47 min" kanıtsız);
+  sonuçtan önce işaret ya da olumsuzluk ("<", "-", "Not"), sonra şart sözcüğü
+  ("max", "min") olmamalı ("1 ppm max" şart sütunudur). Sarılan hücre ancak
+  satırın sonundan sonraki satırın başına taşabilir. Üst bilgiler (tedarikçi,
+  sertifika no, parti no, üretim tarihi) `deger_kaniti` ile sayı ve sözcük
+  sınırıyla, standart atfı `atif_kaniti` ile tam atıf olarak aranır
+  ("MIL-PRF-23377K", belgede "... Type II" iken kanıt değildir; bilinen
+  etiketler "Standart Şartname:", "Şartname:", "Specification", "Spec."
+  iki taraftan da atılır). Parti ve sertifika numarasının iki yanında harf,
+  rakam ya da "-" olamaz; etikete yapışık değer yalnız üretim tarihinde
+  kabul edilir. Sonucun önünde "max/min" (önceki sayının eki değilse), "to",
+  "NMT", "NLT" varsa ya da sonuç bir aralıksa ("15-23") şarttır; birimi "min"
+  gibi şart sözcüğü olan okuma sonuca bitişik olmalı ve ardından şart dışı
+  bir sayı gelmemelidir ("5 min 6"). Kural ve model okumasının tedarikçi,
+  parti no, sertifika no ve üretim tarihi farkı da anlaşmazlıktır
+  (`test_id=<alan>`). Kanıtsız
+  satırlar ve alanlar karara girmez (alan boşaltılır; ör. tedarikçi yoksa
+  `tedarikci` denetimi insan incelemeli) ve `kanit` denetimi insan incelemeli
+  olur; model hiç satır okumadıysa da `kanit` insan incelemelidir. Kanıtsız
+  okumayı `Sertifika` olarak döndüren arayüz yoktur (eski
+  `sertifika_okuyucu.sertifika_oku` kaldırıldı). Belge metnindeki `<belge>`
+  benzeri etiketler istemde `[belge]` yapılır; sınırlayıcı kapatılamaz.
+  Model yanıt vermezse, şemaya uymazsa ya da sunucu beklenmedik yanıt
+  dönerse (`cikarim/yerel_model.YEDEK_HATALARI`: OSError, ValueError,
+  `ModelYanitHatasi`; yalnız `sohbet` çağrısından gelen KeyError, TypeError,
+  IndexError ve HTTPException `ModelYanitHatasi`'na sarılır) kural okumasına
+  düşülür ve kayda yazılır.
 - Okuma anlaşmazlığı: hibritte model başarılıysa sertifika `kural_ile_oku` ile
   de okunur ve `kural/okuma_karsilastirma.sertifika_okumalarini_karsilastir`
   iki okumayı karşılaştırır: standart atfı (belge no, revizyon, tip, sınıf)
@@ -245,7 +274,7 @@ ya da `hibrit` (parametre ya da `MALZEME_KABUL_MODU`, varsayılan `kural`).
   `standart_okumalarini_dogrula(..., kural_dokumani=...)` modelin sınır ve
   yönünü kural dokümanıyla karşılaştırır; farklı okuma `belirsiz` olur.
 - Karar her iki modda `hat/katalog_karari` ile verilir; kayıtta mod, model ve
-  istem sürümü (`sertifika-okuma-v1`) bulunur. Komut satırı:
+  istem sürümü (`sertifika-okuma-v2`; v2 belge sınırlayıcısını kaçışlar) bulunur. Komut satırı:
   `scripts/sertifika_kontrol.py`. Testler sahte modelle çalışır.
 
 **Standart tarafı hibrit (deney):** ürün içi standart çıkarıcısı gelene kadar

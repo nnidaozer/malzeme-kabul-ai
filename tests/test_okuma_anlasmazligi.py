@@ -376,20 +376,6 @@ def katalog():
     k.kapat()
 
 
-def hucre_degistir(ad: str, sonuc: str, birim: str | None = "__ayni__"):
-    """SahteModel bozucusu: bir satırın hücresini PDF'te geçen başka bir metinle değiştirir (kanıtlı kalır)."""
-
-    def boz(satirlar):
-        for s in satirlar:
-            if s["test_adi"] == ad:
-                s["sonuc_hucresi"] = sonuc
-                if birim != "__ayni__":
-                    s["birim_hucresi"] = birim
-        return satirlar
-
-    return boz
-
-
 def satir(karar, test_id):
     return next(s for s in karar.kontrol.satirlar if s.test_id == test_id)
 
@@ -405,8 +391,37 @@ def hibrit(katalog, no, bozucu=None, **k):
                            istemci=SahteModel(sertifika_json(no), bozucu), **k)
 
 
+UST_ALANLARI = ("tedarikci", "parti_no", "sertifika_no", "uretim_tarihi", "standart_atfi")
+
+
+class UstBilgiliSahteModel(SahteModel):
+    """SahteModel, üretim tarihini de döner (temel SahteModel yalnız atıf, no, tedarikçi ve partiyi döner)."""
+
+    def sohbet(self, mesajlar, sema):
+        import json
+
+        yanit = json.loads(super().sohbet(mesajlar, sema))
+        yanit["uretim_tarihi"] = self.sertifika.uretim_tarihi
+        return json.dumps(yanit)
+
+
+def ayni_okuyan_model(pdf: Path) -> UstBilgiliSahteModel:
+    """Kural okuyucunun okuduğu üst bilgileri ve satırları aynen döndüren sahte model."""
+    from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
+    from malzeme_kabul.cikarim.sertifika_okuyucu import kural_ile_oku
+
+    return UstBilgiliSahteModel(kural_ile_oku(pdf_oku(pdf)))
+
+
 def test_kural_ve_model_ayni_okursa_okuma_uyumu_uygun(katalog):
-    karar, okuma_ = hibrit(katalog, "S-028", lot_no=S028_LOT)
+    from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
+
+    pdf = SET / "pdf/S-028.pdf"
+    model = ayni_okuyan_model(pdf)
+    assert all(getattr(model.sertifika, a) for a in UST_ALANLARI)  # üst bilgilerin hepsi okundu, boş değil
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no=S028_LOT)
+    assert {a: getattr(okuma_.sertifika, a) for a in UST_ALANLARI} == {
+        a: getattr(okuma_.kural_sertifikasi, a) for a in UST_ALANLARI}
     assert okuma_.kanitsiz == [] and okuma_.anlasmazliklar == []
     assert ek_denetim(karar, "parti_no")[0].karar == "uygun"
     assert ek_denetim(karar, "parti_tedarikcisi")[0].karar == "uygun"
@@ -416,18 +431,25 @@ def test_kural_ve_model_ayni_okursa_okuma_uyumu_uygun(katalog):
     assert (karar.parti_karari, karar.parti_durumu) == ("kabul", "serbest")
 
 
-def test_model_farkli_ama_kanitli_deger_okursa_satir_insana_gider(katalog):
+def test_model_farkli_ama_kanitli_deger_okursa_satir_insana_gider(katalog, tmp_path):
     from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
 
-    # Önce kural modu: S-028 kendi partisinde (hiç karar verilmemiş) serbest bırakılır.
-    kural, _ = sertifika_hatti(katalog, "AST-001", SET / "pdf/S-028.pdf", mod="kural", lot_no=S028_LOT)
+    # VOC satırında "Result" 258 g/L, "Retest" 312 g/L: iki değer de o satırın sonuç hücreleridir
+    # (şart hücresi "340 g/L max" değil), ikisi de 340 g/L sınırının içindedir. Kural "Result"u okur,
+    # model tekrar testi okur: kanıtlı ama farklı okuma.
+    katalog.parti_ekle(TEKRAR_LOT, "AST-001", ONAYLI_TEDARIKCILER[0], "K", "2025-12-10")
+    pdf = tekrar_testli_pdf(tmp_path / "voc.pdf", s028_satirlari(), "VOC solvent content", "312 g/L")
+
+    # Önce kural modu: kendi partisinde (hiç karar verilmemiş) serbest bırakılır.
+    kural, _ = sertifika_hatti(katalog, "AST-001", pdf, mod="kural", lot_no=TEKRAR_LOT)
+    assert satir(kural, "voc_solvent_content").karar == "uygun"
     assert (kural.parti_karari, kural.parti_durumu) == ("kabul", "serbest")
 
-    # Model VOC için aynı satırdaki şart hücresini (340) okur: belgede geçer, kanıtlıdır, sınırın içindedir.
-    karar, okuma_ = hibrit(katalog, "S-028", hucre_degistir("VOC solvent content", "340"), lot_no=S028_LOT)
+    model = SahteModel(model_sertifikasi(pdf, **{"VOC solvent content": ("312", "g/L")}))
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no=TEKRAR_LOT)
     assert okuma_.kanitsiz == []
     assert [(a.test_id, a.alan, a.kural, a.model) for a in okuma_.anlasmazliklar] == [
-        ("voc_solvent_content", "deger", "258", "340")]
+        ("voc_solvent_content", "deger", "258", "312")]
     voc = satir(karar, "voc_solvent_content")
     assert voc.karar == "insan_incelemeli" and FARKLI_OKUDU in voc.gerekce
     assert karar.hat["anlasmazlik_sayisi"] == 1
@@ -435,20 +457,25 @@ def test_model_farkli_ama_kanitli_deger_okursa_satir_insana_gider(katalog):
     uyum = ek_denetim(karar, "okuma_uyumu")
     assert len(uyum) == 1 and uyum[0].karar == "insan_incelemeli" and "1" in uyum[0].gerekce
     assert (karar.parti_karari, karar.parti_durumu) == ("inceleme", "bekliyor")
-    assert katalog.parti("AST-001", S028_LOT).durum == "bekliyor"
+    assert katalog.parti("AST-001", TEKRAR_LOT).durum == "bekliyor"
 
 
-def test_kural_red_model_kabul_derse_sessizce_ne_red_ne_kabul(katalog):
+def test_kural_red_model_kabul_derse_sessizce_ne_red_ne_kabul(katalog, tmp_path):
     from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
 
-    # S-089: "Drying time 0.25 day" (6 saat) > 5 saat; kural okuması reddeder.
-    kural, _ = sertifika_hatti(katalog, "AST-001", SET / "pdf/S-089.pdf", mod="kural")
+    # S-089 satırları: "Drying time" Result "0.25 day" (6 saat) > 5 saat; kural okuması reddeder.
+    # Aynı satırın "Retest" hücresi "5 hour": sınırın tam üstünde (en çok 5 saat), uygun.
+    pdf = tekrar_testli_pdf(tmp_path / "kuruma.pdf", s028_satirlari("S-089"), "Drying time", "5 hour",
+                            tedarikci=ONAYLI_TEDARIKCILER[1])
+    kural, _ = sertifika_hatti(katalog, "AST-001", pdf, mod="kural")
     assert satir(kural, "drying_time").karar == "uygun_degil" and kural.parti_karari == "red"
 
-    # Model aynı satırdaki "5 hour max" şartından "5" ve "hour" okur: kanıtlı ve sınırın tam üstünde (uygun).
-    karar, okuma_ = hibrit(katalog, "S-089", hucre_degistir("Drying time", "5", "hour"), lot_no="A-2512-01")
+    # Model tekrar testinden "5" ve "hour" okur: kanıtlı, tek başına uygun olurdu.
+    model = SahteModel(model_sertifikasi(pdf, **{"Drying time": ("5", "hour")}))
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no="A-2512-01")
     assert okuma_.kanitsiz == []
-    assert {(a.test_id, a.alan) for a in okuma_.anlasmazliklar} == {("drying_time", "deger"), ("drying_time", "birim")}
+    assert {(a.test_id, a.alan, a.kural, a.model) for a in okuma_.anlasmazliklar} == {
+        ("drying_time", "deger", "0.25", "5"), ("drying_time", "birim", "day", "hour")}
     kuruma = satir(karar, "drying_time")
     assert kuruma.karar == "insan_incelemeli" and FARKLI_OKUDU in kuruma.gerekce
     assert karar.parti_karari == "inceleme"
@@ -476,14 +503,19 @@ def test_model_hata_verip_kurala_dusulurse_anlasmazlik_yok(katalog):
     assert ek_denetim(karar, "okuma_uyumu") == []  # yedekte karşılaştırma yok, satır da yok
 
 
-def test_denetim_kaydinda_anlasmazliklar_gorunur(katalog):
+def test_denetim_kaydinda_anlasmazliklar_gorunur(katalog, tmp_path):
+    from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
+
+    # VOC: kural "Result" 258'i, model aynı satırın "Retest" hücresindeki 312'yi okur (kanıtlı).
+    pdf = tekrar_testli_pdf(tmp_path / "voc.pdf", s028_satirlari(), "VOC solvent content", "312 g/L")
     d = DenetimKaydi(katalog.baglanti)
-    hibrit(katalog, "S-028", hucre_degistir("VOC solvent content", "340"), lot_no="A-2512-01",
-           defter=d, kullanici="gk1")
+    model = SahteModel(model_sertifikasi(pdf, **{"VOC solvent content": ("312", "g/L")}))
+    sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no="A-2512-01",
+                    defter=d, kullanici="gk1")
     hat = d.kayitlar("karar")[-1].veri["hat"]
     assert hat["anlasmazlik_sayisi"] == 1
     assert [(a["test_id"], a["alan"], a["kural"], a["model"]) for a in hat["anlasmazliklar"]] == [
-        ("voc_solvent_content", "deger", "258", "340")]
+        ("voc_solvent_content", "deger", "258", "312")]
     assert d.zinciri_dogrula().gecerli
 
 
@@ -580,18 +612,29 @@ def test_birimde_ayni_anlama_gelen_yazimlar_anlasmazlik_degildir(dokuman, kural_
 # Hat düzeyi senaryolar için küçük sertifika PDF'i (tmp_path altında; data/ altına yazılmaz).
 
 
-def sertifika_pdf_yaz(yol: Path, satirlar: list[list], atif: str, notlar: tuple[str, ...] = ()) -> Path:
+BASLIK = ("Test", "Method", "Requirement", "Result", "Units")
+# Ek "Retest" sütunu: tedarikçinin tekrar test sonucu. Kural okuyucu yalnız "Result" sütununu okur
+# ("retest" başlığı tanınmaz); model ise aynı satırın sonuç olarak yazılmış tekrar test değerini okuyabilir.
+# İki okuma da o satırın kendi sonuç hücrelerine dayanır (şart ya da metot hücresine değil): kanıtlı,
+# gerçek bir okuma anlaşmazlığıdır.
+TEKRAR_BASLIK = (*BASLIK, "Retest")
+TEKRAR_LOT = "T900"  # sertifika_pdf_yaz'ın yazdığı parti numarası
+
+
+def sertifika_pdf_yaz(yol: Path, satirlar: list[list], atif: str, notlar: tuple[str, ...] = (),
+                      baslik: tuple[str, ...] = BASLIK, tedarikci: str = ONAYLI_TEDARIKCILER[0]) -> Path:
     """S-028 düzeninde tek sayfalık sertifika: üst bilgi, isteğe bağlı not satırları, test tablosu."""
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle
     from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
     stil = ParagraphStyle("g", fontName="Helvetica", fontSize=9, leading=11)
-    ogeler = [Paragraph(m, stil) for m in (ONAYLI_TEDARIKCILER[0], "Certificate No T-900", "Batch/Lot T900",
+    ogeler = [Paragraph(m, stil) for m in (tedarikci, "Certificate No T-900", f"Batch/Lot {TEKRAR_LOT}",
                                              f"Specification {atif}", *notlar)]
-    tablo = [["Test", "Method", "Requirement", "Result", "Units"]]
+    tablo = [list(baslik)]
     tablo += [[Paragraph(str(h or ""), stil) for h in s] for s in satirlar]
-    t = Table(tablo, colWidths=[170, 85, 90, 80, 55])
+    genislik = [170, 85, 90, 80, 55] if len(baslik) == 5 else [170, 70, 75, 55, 45, 60]
+    t = Table(tablo, colWidths=genislik)
     t.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.4, "grey")]))
     SimpleDocTemplate(str(yol), pagesize=A4, invariant=1).build(ogeler + [Spacer(1, 8), t])
     return yol
@@ -600,14 +643,21 @@ def sertifika_pdf_yaz(yol: Path, satirlar: list[list], atif: str, notlar: tuple[
 ATIF_K = "MIL-PRF-23377K Type I Class N"
 
 
-def s028_satirlari(**degisiklik) -> list[list]:
-    """S-028 satırları [ad, metot, şart, sonuç, birim]; degisiklik: {eski_ad_öneki: [yeni hücreler]}."""
-    satirlar = [[x.test_adi, x.metot, x.sart, x.sonuc, x.birim] for x in sertifika_json("S-028").satirlar]
+def s028_satirlari(no: str = "S-028", **degisiklik) -> list[list]:
+    """Sertifika satırları [ad, metot, şart, sonuç, birim]; degisiklik: {eski_ad_öneki: [yeni hücreler]}."""
+    satirlar = [[x.test_adi, x.metot, x.sart, x.sonuc, x.birim] for x in sertifika_json(no).satirlar]
     for onek, yeni in degisiklik.items():
         for s in satirlar:
             if s[0].startswith(onek):
                 s[:] = yeni
     return satirlar
+
+
+def tekrar_testli_pdf(yol: Path, satirlar: list[list], ad: str, tekrar: str,
+                      tedarikci: str = ONAYLI_TEDARIKCILER[0]) -> Path:
+    """Satırlardan PDF; adı `ad` olan satırın "Retest" sütununa `tekrar` yazılır, ötekilerinki boştur."""
+    satirlar = [[*s, tekrar if s[0] == ad else None] for s in satirlar]
+    return sertifika_pdf_yaz(yol, satirlar, ATIF_K, baslik=TEKRAR_BASLIK, tedarikci=tedarikci)
 
 
 def model_sertifikasi(pdf: Path, atif: str | None = None, **hucreler) -> Sertifika:
@@ -624,18 +674,19 @@ def model_sertifikasi(pdf: Path, atif: str | None = None, **hucreler) -> Sertifi
 def test_hatta_tip_sinifa_gore_eslenen_satir_anlasmazliginda_insana_gider(katalog, tmp_path):
     from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
 
-    # Kural sonuç hücresindeki "Conforms"u okur, model aynı satırdaki metot hücresinden "Pass"
-    # (kanıtlı); iki okuma da tek başına uygun olurdu, farkı insan görmeli. Satır adı yalnız
-    # "Color" (AST-001 Type I). Düz sonuç kullanılır: dipnotlu "Conforms*" kural okumasında
-    # tek başına belirsizdir (K1 beyaz listesi), anlaşmazlığın etkisini gizlerdi.
+    # Kural "Result" hücresindeki "Conforms"u okur, model aynı satırın "Retest" hücresindeki "Pass"i
+    # (kanıtlı; metot hücresindeki "Pass/Fail" değil). İki okuma da tek başına uygun olurdu, farkı
+    # insan görmeli. Satır adı yalnız "Color" (AST-001 Type I). Düz sonuç kullanılır: dipnotlu
+    # "Conforms*" kural okumasında tek başına belirsizdir (K1 beyaz listesi), anlaşmazlığın etkisini gizlerdi.
     renk_satiri = ["Color", "Visual Pass/Fail", "See spec", "Conforms", None]
-    pdf = sertifika_pdf_yaz(tmp_path / "renk.pdf", s028_satirlari(Color=renk_satiri), ATIF_K)
+    pdf = tekrar_testli_pdf(tmp_path / "renk.pdf", s028_satirlari(Color=renk_satiri), "Color", "Pass")
     kural, _ = sertifika_hatti(katalog, "AST-001", pdf, mod="kural")
     assert satir(kural, "color_type_i").karar == "uygun" and kural.parti_karari == "kabul"
     model = SahteModel(model_sertifikasi(pdf, Color=("Pass", None)))
     karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model)
     assert okuma_.kanitsiz == []
-    assert [(a.test_id, a.alan) for a in okuma_.anlasmazliklar] == [("color_type_i", "deger")]
+    assert [(a.test_id, a.alan, a.kural, a.model) for a in okuma_.anlasmazliklar] == [
+        ("color_type_i", "deger", "Conforms", "Pass")]
     renk = satir(karar, "color_type_i")
     assert renk.karar == "insan_incelemeli" and FARKLI_OKUDU in renk.gerekce
     assert karar.parti_karari == "inceleme"
@@ -659,9 +710,10 @@ def test_hatta_atif_farkinda_revizyon_satiri_insana_gider(katalog, tmp_path):
 def test_iki_okuma_da_sinir_disindaysa_uygun_degil_kalir_ve_anlasmazlik_sayilir(katalog, tmp_path):
     from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
 
-    # VOC en çok 340 g/L: kural 400, model aynı satırdaki 401'i okur (kanıtlı). İkisi de sınır dışı.
-    voc = ["VOC solvent content", "Run 401", "340 g/L max", "400", "g/L"]
-    pdf = sertifika_pdf_yaz(tmp_path / "voc.pdf", s028_satirlari(VOC=voc), ATIF_K)
+    # VOC en çok 340 g/L: kural "Result" 400'ü, model aynı satırın "Retest" hücresindeki 401'i okur
+    # (kanıtlı). İkisi de sınır dışı.
+    voc = ["VOC solvent content", "ASTM D3960", "340 g/L max", "400", "g/L"]
+    pdf = tekrar_testli_pdf(tmp_path / "voc.pdf", s028_satirlari(VOC=voc), "VOC solvent content", "401 g/L")
     model = SahteModel(model_sertifikasi(pdf, **{"VOC solvent content": ("401", "g/L")}))
     karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no="A-2512-01")
     assert okuma_.kanitsiz == []

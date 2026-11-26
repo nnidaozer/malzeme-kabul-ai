@@ -11,9 +11,10 @@ Kullanım:
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
-from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
+from malzeme_kabul.hat.hibrit_hat import HatHatasi, sertifika_hatti
 from malzeme_kabul.katalog.veritabani import Katalog
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 
@@ -30,9 +31,13 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("--kullanici", default="komut-satiri")
     ayr.add_argument("--db", default=str(VARSAYILAN_DB))
     args = ayr.parse_args(argv)
-    with Katalog(args.db) as katalog:
-        karar, okuma = sertifika_hatti(katalog, args.malzeme, args.pdf, mod=args.mod, lot_no=args.lot,
-                                       defter=DenetimKaydi(katalog.baglanti), kullanici=args.kullanici)
+    try:
+        with Katalog(args.db) as katalog:
+            karar, okuma = sertifika_hatti(katalog, args.malzeme, args.pdf, mod=args.mod, lot_no=args.lot,
+                                           defter=DenetimKaydi(katalog.baglanti), kullanici=args.kullanici)
+    except HatHatasi as hata:  # bilinmeyen ya da boş mod, hibritte model yok, yerel olmayan adres
+        print(f"hata: {hata}", file=sys.stderr)
+        return 2
     print(f"mod: {okuma.mod}" + (f" (model {okuma.model}, istem {okuma.istem_surumu})" if okuma.model else "")
           + (f"; YEDEK: {okuma.yedek}" if okuma.yedek else ""))
     print(f"{karar.malzeme_kodu} / {karar.lot_no or '-'}: {karar.dokuman_surumu} ile karar: {karar.parti_karari} (parti {karar.parti_durumu})")
