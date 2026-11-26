@@ -260,3 +260,39 @@ def test_sertifika_kontrol_betigi_kural_modu(tmp_path, capsys, monkeypatch):
         ["--db", str(db), "--malzeme", "AST-001", "--pdf", str(SET / "pdf/S-001.pdf")]) == 0
     cikti = capsys.readouterr().out
     assert cikti.startswith("mod: kural") and "MIL-PRF-23377K v1 ile karar" in cikti
+
+
+# --- demo onayı (ek plan madde 1): sertifika_kontrol.py çıktısı demo işaretini söyler -------------
+
+DEMO_METNI = "DEMO ONAYI (M&P onayı değil)"  # ekran_verisi.DEMO_ETIKETI
+
+
+def _sertifika_kontrol(db, capsys) -> str:
+    from tests.conftest import betik_yukle
+
+    capsys.readouterr()
+    assert betik_yukle("scripts/sertifika_kontrol.py").main(
+        ["--db", str(db), "--malzeme", "AST-001", "--pdf", str(SET / "pdf/S-001.pdf")]) == 0
+    return capsys.readouterr().out
+
+
+def test_sertifika_kontrol_betigi_demo_onayli_dokumanda_demo_yazar(tmp_path, capsys, monkeypatch):
+    from tests.conftest import betik_yukle
+
+    monkeypatch.delenv("MALZEME_KABUL_MODU", raising=False)
+    db = tmp_path / "k.sqlite"
+    betik_yukle("scripts/katalog_kur.py").main(["--db", str(db), "--ornek"])
+    satir = next(s for s in _sertifika_kontrol(db, capsys).splitlines() if " ile karar: " in s)
+    assert "MIL-PRF-23377K v1" in satir and DEMO_METNI in satir
+
+
+def test_sertifika_kontrol_betigi_gercek_onayli_dokumanda_demo_yazmaz(tmp_path, capsys, monkeypatch):
+    from tests.conftest import betik_yukle
+
+    monkeypatch.delenv("MALZEME_KABUL_MODU", raising=False)
+    db = tmp_path / "k.sqlite"
+    betik_yukle("scripts/katalog_kur.py").main(["--db", str(db), "--ornek"])
+    with Katalog(db) as k:
+        k.dokuman_onayla(k.gecerli_dokuman("AST-001").dokuman, "mp1", not_="M&P onayı")
+    cikti = _sertifika_kontrol(db, capsys)
+    assert "MIL-PRF-23377K v2 ile karar" in cikti and "DEMO" not in cikti.upper()

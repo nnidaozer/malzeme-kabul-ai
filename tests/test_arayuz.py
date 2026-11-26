@@ -293,6 +293,83 @@ def test_revizyon_izinli_mi_iki_revizyonu_da_denetler(tmp_path):
         False, ev.standart_izinli_mi("MIL-PRF-99999A", eksik)[1])
 
 
+# --- demo onayı (plan adım 7 ve 9): ayrılmış kullanıcı adı, ekran etiketleri ----------------------------
+
+ORNEK = "ornek-veri"  # veritabani.ORNEK_ONAYLAYAN
+
+
+@pytest.mark.parametrize("ad", ["ornek-veri", "ORNEK-VERI", "Ornek-Veri", " ornek-veri ", "ornek-veri\t"])
+def test_ayrilmis_kullanici_adi_reddedilir(ad):
+    b = sqlite3.connect(":memory:")
+    with pytest.raises(KimlikHatasi):
+        kullanici_ekle(b, ad, "uzun-parola-1", "mp")
+    assert kullanicilar(b) == []
+
+
+@pytest.mark.parametrize("ad", ["ornek-veri2", "ornek", "ornek_veri"])
+def test_ayrilmis_ada_benzeyen_kullanici_adi_kabul_edilir(ad):
+    b = sqlite3.connect(":memory:")
+    assert kullanici_ekle(b, ad, "uzun-parola-1", "mp").ad == ad
+
+
+def test_demo_etiketi_metni():
+    assert ev.DEMO_ETIKETI == "DEMO ONAYI (M&P onayı değil)"
+
+
+def _gercek_onay(katalog) -> None:
+    """AST-001'in standardı için M&P'nin gerçek onaylı v2 sürümü (taslak yoluyla)."""
+    t = katalog.taslak_kaydet(DOKUMAN, "mp1")
+    ev.taslak_onayla(katalog, DenetimKaydi(katalog.baglanti), t.id, "mp1", "M&P onayı")
+
+
+def test_surum_etiketi_demo_isaretini_gosterir(katalog):
+    surum = katalog.gecerli_dokuman("AST-001")
+    etiket = ev.surum_etiketi(surum)
+    assert surum.etiket in etiket and ev.DEMO_ETIKETI in etiket
+
+
+def test_surum_etiketi_gercek_onayda_demo_yazmaz(katalog):
+    _gercek_onay(katalog)
+    surum = katalog.gecerli_dokuman("AST-001")
+    etiket = ev.surum_etiketi(surum)
+    assert surum.etiket in etiket and "DEMO" not in etiket.upper()
+
+
+def _karar(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    return ev.json_sertifika_karari(katalog, d, "AST-001", (SET / "json/S-001.json").read_text(encoding="utf-8"), "gk1")
+
+
+def test_karar_basligi_demo_isareti(katalog):
+    karar = _karar(katalog)
+    baslik = ev.karar_basligi(karar)
+    assert karar.demo_onayi is True
+    assert ev.PARTI_ETIKETI[karar.parti_karari] in baslik and ev.DEMO_ETIKETI in baslik
+
+
+def test_karar_basligi_gercek_onayda_demo_yazmaz(katalog):
+    _gercek_onay(katalog)
+    karar = _karar(katalog)
+    baslik = ev.karar_basligi(karar)
+    assert karar.demo_onayi is False
+    assert ev.PARTI_ETIKETI[karar.parti_karari] in baslik and "DEMO" not in baslik.upper()
+
+
+def test_depo_tablosu_kabul_dokumani_sutunu_ve_demo_isareti(katalog):
+    _gercek_onay(katalog)  # AST-001/AST-002 (MIL-PRF-23377K) artık v2 gerçek; SZD ve PUB demo v1
+    katalog.standart_ekle("MIL-PRF-1", "A")
+    katalog.malzeme_ekle("X-1", "MIL-PRF-1", "A")
+    katalog.tedarikci_onayla("X-1", "Ted A")
+    katalog.parti_ekle("BELGESIZ", "X-1", "Ted A", "A", "2026-01-01")
+    tablo = {s["lot"]: s for s in ev.depo_tablosu(katalog, date(2026, 11, 25))}
+    assert all("kabul dokümanı" in s for s in tablo.values())
+    demo = tablo["C-2609-11"]["kabul dokümanı"]  # SZD-001, örnek veri
+    assert "MIL-PRF-81733D v1" in demo and ev.DEMO_ETIKETI in demo
+    gercek = tablo["A-2512-01"]["kabul dokümanı"]  # AST-001
+    assert "MIL-PRF-23377K v2" in gercek and "DEMO" not in gercek.upper()
+    assert "DEMO" not in (tablo["BELGESIZ"]["kabul dokümanı"] or "").upper()
+
+
 # --- Streamlit ekranları (streamlit kuruluysa; CI'da arayuz işi) -------------------------------------
 
 
@@ -349,3 +426,11 @@ def test_ekran_mp_taslak_ve_revizyon(uygulama):
     assert not at.exception and at.selectbox[0].value.id == 1
     at.sidebar.radio[0].set_value("revizyon").run()
     assert not at.exception and any("MIL-PRF-23377" in m.value for m in at.markdown)
+
+
+def test_ekran_giris_kalite_demo_isareti_gorunur(uygulama):
+    at, _ = uygulama("gk", "gk-ornek-parola")
+    assert not at.exception
+    metinler = [e.value for e in [*at.warning, *at.caption, *at.header, *at.subheader, *at.markdown]]
+    assert any("DEMO ONAYI" in m for m in metinler)
+    assert any("DEMO ONAYI" in w.value for w in at.warning)

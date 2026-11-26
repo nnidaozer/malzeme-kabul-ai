@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from malzeme_kabul.hat.katalog_karari import PARTI_DURUMU, malzeme_koduyla_kontrol
+from malzeme_kabul.hat.katalog_karari import PARTI_DURUMU, KatalogKarari, malzeme_koduyla_kontrol
 from malzeme_kabul.katalog.veritabani import Katalog, KatalogHatasi
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 from malzeme_kabul.kural.karar_motoru import kontrol_et, parti_karari
@@ -196,3 +196,100 @@ def test_karar_ver_betigi(tmp_path, capsys):
         ["--malzeme", "AST-001", "--sertifika", str(ser), "--lot", "A-2512-01", "--db", str(db)]) == 0
     cikti = capsys.readouterr().out
     assert "MIL-PRF-23377K v1 ile karar" in cikti and "Tip ve sınıf (katalog)" in cikti
+
+
+# --- demo onayı (plan adım 8): kararda demo işareti; karar mantığı değişmez -------------------------
+
+ORNEK = "ornek-veri"  # veritabani.ORNEK_ONAYLAYAN
+
+
+def _demo_katalog() -> Katalog:
+    """test_katalog_karari.katalog ile aynı, ama kabul dokümanı örnek verinin demo onayıyla."""
+    k = Katalog()
+    k.dokuman_onayla(dokuman(), ORNEK, demo_onayi=True)
+    k.malzeme_ekle("AST-N", "MIL-PRF-23377", "K", tip="I", sinif="N")
+    k.tedarikci_onayla("AST-N", "Ted A")
+    k.parti_ekle("L1", "AST-N", "Ted A", "K", "2026-06-01")
+    return k
+
+
+def test_katalog_karari_demo_alani_varsayilani_false():
+    alan = KatalogKarari.model_fields["demo_onayi"]
+    assert alan.annotation is bool and alan.default is False
+
+
+def test_demo_onayli_dokumanla_karar_isaretli():
+    with _demo_katalog() as k:
+        sonuc = malzeme_koduyla_kontrol(k, "AST-N", sertifika())
+    assert sonuc.demo_onayi is True
+    assert sonuc.dokuman_surumu == "MIL-PRF-23377K v1"
+
+
+def test_demo_onayli_dokumanla_karar_mantigi_degismez(katalog):
+    # Aynı doküman ve sertifika: demo onaylı katalogda da gerçek onaylıda da aynı kararlar.
+    with _demo_katalog() as demo:
+        demo_sonuc = malzeme_koduyla_kontrol(demo, "AST-N", sertifika(voc="350"), lot_no="L1", **denetimli(demo))
+        assert demo.parti("AST-N", "L1").durum == "karantina"
+    gercek = malzeme_koduyla_kontrol(katalog, "AST-N", sertifika(voc="350"), lot_no="L1", **denetimli(katalog))
+    assert (demo_sonuc.parti_karari, demo_sonuc.parti_durumu) == (gercek.parti_karari, gercek.parti_durumu) == ("red", "karantina")
+    assert [s.karar for s in demo_sonuc.kontrol.satirlar] == [s.karar for s in gercek.kontrol.satirlar]
+
+
+def test_gercek_onayli_dokumanla_karar_demo_degil(katalog):
+    assert malzeme_koduyla_kontrol(katalog, "AST-N", sertifika()).demo_onayi is False
+
+
+def test_gercek_yeni_surum_demo_surumunun_yerine_gecer():
+    with _demo_katalog() as k:
+        k.dokuman_onayla(dokuman(), "mp1", not_="M&P onayı")
+        sonuc = malzeme_koduyla_kontrol(k, "AST-N", sertifika())
+    assert sonuc.dokuman_surumu == "MIL-PRF-23377K v2" and sonuc.demo_onayi is False
+
+
+def test_karar_kaydi_demo_isaretini_tasir():
+    import json
+
+    with _demo_katalog() as k:
+        d = denetimli(k)
+        malzeme_koduyla_kontrol(k, "AST-N", sertifika(), lot_no="L1", **d)
+        (kayit,) = d["defter"].kayitlar("karar")
+    assert json.loads(kayit.icerik)["demo_onayi"] is True
+
+
+# --- demo onayı (ek plan madde 1): karar_ver.py çıktısı demo işaretini söyler ----------------------
+
+DEMO_METNI = "DEMO ONAYI (M&P onayı değil)"  # ekran_verisi.DEMO_ETIKETI
+
+
+def _karar_satiri(cikti: str) -> str:
+    return next(s for s in cikti.splitlines() if " ile karar: " in s)
+
+
+def _karar_ver(db, capsys) -> str:
+    from tests.conftest import KOK, betik_yukle
+
+    ser = KOK / "data/sentetik/sertifikalar/MIL-PRF-23377K/json/S-001.json"
+    capsys.readouterr()
+    assert betik_yukle("scripts/karar_ver.py").main(
+        ["--malzeme", "AST-001", "--sertifika", str(ser), "--lot", "A-2512-01", "--db", str(db)]) == 0
+    return capsys.readouterr().out
+
+
+def test_karar_ver_betigi_demo_onayli_dokumanda_demo_yazar(tmp_path, capsys):
+    from tests.conftest import betik_yukle
+
+    db = tmp_path / "k.sqlite"
+    assert betik_yukle("scripts/katalog_kur.py").main(["--db", str(db), "--ornek"]) == 0
+    satir = _karar_satiri(_karar_ver(db, capsys))
+    assert "MIL-PRF-23377K v1" in satir and DEMO_METNI in satir
+
+
+def test_karar_ver_betigi_gercek_onayli_dokumanda_demo_yazmaz(tmp_path, capsys):
+    from tests.conftest import betik_yukle
+
+    db = tmp_path / "k.sqlite"
+    assert betik_yukle("scripts/katalog_kur.py").main(["--db", str(db), "--ornek"]) == 0
+    with Katalog(db) as k:
+        k.dokuman_onayla(k.gecerli_dokuman("AST-001").dokuman, "mp1", not_="M&P onayı")
+    cikti = _karar_ver(db, capsys)
+    assert "MIL-PRF-23377K v2" in _karar_satiri(cikti) and "DEMO" not in cikti.upper()

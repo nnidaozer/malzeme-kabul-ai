@@ -14,7 +14,7 @@ import argparse
 from pathlib import Path
 
 from malzeme_kabul.hat.katalog_karari import malzeme_koduyla_kontrol
-from malzeme_kabul.katalog.veritabani import Katalog
+from malzeme_kabul.katalog.veritabani import DEMO_ETIKETI, Katalog
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 from malzeme_kabul.sozlesme.sertifika import Sertifika
 
@@ -35,7 +35,8 @@ def main(argv: list[str] | None = None) -> int:
     with Katalog(args.db) as katalog:
         defter = DenetimKaydi(katalog.baglanti)
         k = malzeme_koduyla_kontrol(katalog, args.malzeme, sertifika, lot_no=args.lot, defter=defter, kullanici=args.kullanici)
-    print(f"{k.malzeme_kodu} / {k.lot_no or '-'}: {k.dokuman_surumu} ile karar: {k.parti_karari} (parti {k.parti_durumu})")
+    print(f"{k.malzeme_kodu} / {k.lot_no or '-'}: {k.dokuman_surumu} ile karar: {k.parti_karari} (parti {k.parti_durumu})"
+          + (f", {DEMO_ETIKETI}" if k.demo_onayi else ""))
     satirlar = [k.kontrol.revizyon] + ([k.kontrol.tip_sinif] if k.kontrol.tip_sinif else []) + k.ek_denetimler + k.kontrol.satirlar
     for s in satirlar:
         print(f"  {s.karar:<17} {s.test_adi} [{s.madde or '-'}]: {s.gerekce}")

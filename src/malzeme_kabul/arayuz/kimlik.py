@@ -13,6 +13,10 @@ Ekran yetkileri:
 İlk kurulum (Docker): `ortamdan_kullanicilar` veritabanında hiç kullanıcı yoksa
 parolaları ortam değişkenlerinden (ya da `*_DOSYASI` ile dosyadan) okuyarak M&P
 ve giriş kalite hesaplarını açar; varsayılan parola yoktur.
+
+Ayrılmış ad: `katalog.veritabani.ORNEK_ONAYLAYAN` ("ornek-veri") örnek verinin
+demo onaylayanıdır; bu adla (harf farkı ve baştaki/sondaki boşluk gözetilmeden)
+hesap açılmaz, yoksa gerçek bir hesabın onayları örnek veriyle karışırdı.
 """
 
 from __future__ import annotations
@@ -24,6 +28,8 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, Mapping
+
+from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN
 
 Rol = Literal["mp", "giris_kalite"]
 ROLLER: dict[str, str] = {"mp": "M&P mühendisi", "giris_kalite": "Giriş kalite"}
@@ -83,6 +89,8 @@ def kullanici_ekle(baglanti: sqlite3.Connection, ad: str, parola: str, rol: str)
         raise KimlikHatasi(f"bilinmeyen rol: {rol!r} ({', '.join(ROLLER)})")
     if not ad.strip():
         raise KimlikHatasi("kullanıcı adı boş olamaz")
+    if ad.strip().casefold() == ORNEK_ONAYLAYAN.casefold():
+        raise KimlikHatasi(f"{ad.strip()!r} ayrılmış addır (örnek verinin demo onaylayanı); başka ad seçin")
     if len(parola) < 8:
         raise KimlikHatasi("parola en az 8 karakter olmalı")
     tuz = os.urandom(16)
@@ -185,6 +193,8 @@ def ortamdan_kullanicilar(ortam: Mapping[str, str], baglanti: sqlite3.Connection
     hesaplar: list[tuple[str, str, str]] = []
     for onek, rol, varsayilan_ad in _ILK_HESAPLAR:
         ad = ortam.get(f"{onek}_KULLANICI", "").strip() or varsayilan_ad
+        if ad.casefold() == ORNEK_ONAYLAYAN.casefold():
+            raise KimlikHatasi(f"{onek}_KULLANICI: {ad!r} ayrılmış addır (örnek verinin demo onaylayanı)")
         parola, kaynak = _ortam_parolasi(ortam, onek)
         _parola_denetle(parola, ad, kaynak)
         hesaplar.append((ad, rol, parola))

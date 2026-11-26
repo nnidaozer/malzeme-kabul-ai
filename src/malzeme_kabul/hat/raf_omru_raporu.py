@@ -22,6 +22,7 @@ class RafSatiri:
     dokuman_surumu: str | None
     raf: RafDurumBilgisi
     omur_uzatma_testleri: list[TestSarti]
+    demo_onayi: bool = False  # kabul dokümanı örnek verinin demo onayıyla mı (onaylı doküman yoksa False)
 
 
 def raf_raporu(
@@ -40,7 +41,7 @@ def raf_raporu(
             continue
         raf = raf_durumu(surum.dokuman, parti.uretim_tarihi, bugun, parti.kap_turu, tip, sinif, uyari_esigi_gun)
         uzatma = omur_uzatma_testleri(surum.dokuman, tip, sinif) if raf.uyari else []
-        satirlar.append(RafSatiri(parti, surum.etiket, raf, uzatma))
+        satirlar.append(RafSatiri(parti, surum.etiket, raf, uzatma, surum.demo_onayi))
     if yalniz_uyari:
         satirlar = [s for s in satirlar if s.raf.uyari]
     return sorted(satirlar, key=lambda s: (s.raf.son_kullanma is None, s.raf.son_kullanma or date.max))

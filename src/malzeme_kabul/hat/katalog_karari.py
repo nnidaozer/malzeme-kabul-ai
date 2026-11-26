@@ -28,6 +28,9 @@ insan) bekleyen partiyi makine serbest bırakmaz; durum korunur ve
 `parti_durumu` ek denetimi insan incelemeli olur, gerekçesinde partinin neden
 o durumda kaldığı yazar. Serbest bırakmak `karari_duzelt` ile insanın işidir.
 
+Kabul dokümanı sürümü örnek verinin demo onayıyla onaylıysa karar
+`demo_onayi=True` taşır (ekranda ve kayıtta işaretlenir); karar mantığı değişmez.
+
 Denetim kaydı (`kayit.denetim_kaydi`) verilirse her karar, onay ve düzeltme
 zincire yazılır: kullanıcı, zaman, doküman sürümü, PDF sayfası, model ve
 istem sürümü. Durum değişikliği ile onun kaydı tek işlemdir (`Katalog.islem`):
@@ -78,6 +81,7 @@ class KatalogKarari(BaseModel):
     parti_karari: BelgeKarari
     parti_durumu: PartiDurumu
     hat: dict | None = None  # okuma modu, model, istem sürümü, kanıtsız okumalar
+    demo_onayi: bool = False  # kabul dokümanı sürümü örnek verinin demo onayıyla mı (M&P onayı değil)
 
 
 def _ad(metin: str) -> str:
@@ -253,6 +257,7 @@ def malzeme_koduyla_kontrol(
             parti_karari=karar,
             parti_durumu=durum,
             hat=hat_bilgisi,
+            demo_onayi=surum.demo_onayi,
         )
         if yazilacak:
             katalog.parti_durumu_ata(malzeme_kodu, parti.lot_no, durum, kaynak="makine")

@@ -206,7 +206,10 @@ def giris_kalite_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> No
     m = st.selectbox("Malzeme kodu", malzemeler, format_func=lambda x: f"{x.kod} ({x.standart_etiketi} Type {x.tip} Class {x.sinif})")
     try:
         surum = katalog.gecerli_dokuman(m.kod)
-        st.caption(f"Kabul dokümanı: {surum.etiket} (onaylayan {surum.onaylayan})")
+        st.caption(f"Kabul dokümanı: {ev.surum_etiketi(surum)} (onaylayan {surum.onaylayan})")
+        if surum.demo_onayi:
+            st.warning(f"{ev.DEMO_ETIKETI}: bu kabul dokümanı örnek verinin demo onayıyla onaylı; "
+                       "M&P mühendisi onaylayana kadar kararlar demo olarak işaretlenir.")
     except KatalogHatasi as hata:
         st.error(str(hata))
         return
@@ -240,7 +243,9 @@ def giris_kalite_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> No
     except sqlite3.OperationalError as hata:
         st.error(f"{MESGUL} ({hata}).")
         return
-    st.subheader(f"Parti kararı: {ev.PARTI_ETIKETI[karar.parti_karari]}")
+    st.subheader(ev.karar_basligi(karar))
+    if karar.demo_onayi:
+        st.warning(f"{ev.DEMO_ETIKETI}: karar demo onaylı kabul dokümanıyla ({karar.dokuman_surumu}) verildi.")
     if karar.hat and karar.hat.get("yedek"):
         st.warning(f"Dil modeli kullanılamadı, kural okumasıyla karar verildi: {karar.hat['yedek']}")
     st.dataframe(ev.karar_tablosu(karar), width="stretch")
@@ -279,6 +284,9 @@ def depo_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
     mp = [s for s in tablo if s["M&P"]]
     if mp:
         st.info(f"{len(mp)} parti M&P incelemesi bekliyor (kilit değildir).")
+    demo = [s for s in tablo if ev.DEMO_ETIKETI in s["kabul dokümanı"]]
+    if demo:
+        st.info(f"{len(demo)} partinin kabul dokümanı demo onaylı ({ev.DEMO_ETIKETI}).")
     st.dataframe(tablo, width="stretch")
 
 

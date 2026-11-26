@@ -372,3 +372,35 @@ def test_raf_omru_betigi(tmp_path, capsys):
     cikti = capsys.readouterr().out
     assert "AST-001 / A-2512-01: son kullanma 2026-12-10 (15 gün) UYARI: yaklaşıyor" in cikti
     assert "ömür uzatma testleri" in cikti and "B-2606-07" not in cikti
+
+
+# --- demo onayı (plan adım 8): raf raporu demo işaretini taşır ----------------------------------------
+
+
+def test_raf_satiri_demo_alani_var():
+    import dataclasses
+
+    from malzeme_kabul.hat.raf_omru_raporu import RafSatiri
+
+    assert "demo_onayi" in {a.name for a in dataclasses.fields(RafSatiri)}
+
+
+def test_raf_raporu_demo_isaretini_tasir():
+    with Katalog() as k:
+        k.dokuman_onayla(dokuman([raf(1, "year")]), "ornek-veri", demo_onayi=True)  # MIL-PRF-23377K demo
+        k.malzeme_ekle("AST-N", "MIL-PRF-23377", "K", tip="I", sinif="N")
+        gercek = dokuman([raf(1, "year")]).model_copy(update={
+            "standart": StandartBilgisi(belge_no="MIL-PRF-81733", revizyon="D")})
+        k.dokuman_onayla(gercek, "mp1")
+        k.malzeme_ekle("SZD-N", "MIL-PRF-81733", "D", tip="I", sinif="1")
+        k.standart_ekle("MIL-PRF-1", "A")
+        k.malzeme_ekle("X-1", "MIL-PRF-1", "A")
+        for kod in ("AST-N", "SZD-N", "X-1"):
+            k.tedarikci_onayla(kod, "Ted A")
+        k.parti_ekle("DEMO", "AST-N", "Ted A", "K", "2026-01-01")
+        k.parti_ekle("GERCEK", "SZD-N", "Ted A", "D", "2026-02-01")
+        k.parti_ekle("BELGESIZ", "X-1", "Ted A", "A", "2026-03-01")
+        satirlar = {s.parti.lot_no: s for s in raf_raporu(k, date(2026, 4, 1))}
+    assert satirlar["DEMO"].demo_onayi is True and satirlar["DEMO"].dokuman_surumu == "MIL-PRF-23377K v1"
+    assert satirlar["GERCEK"].demo_onayi is False
+    assert satirlar["BELGESIZ"].demo_onayi is False  # onaylı doküman yoksa demo da değil

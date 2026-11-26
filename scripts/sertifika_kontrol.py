@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from malzeme_kabul.hat.hibrit_hat import HatHatasi, sertifika_hatti
-from malzeme_kabul.katalog.veritabani import Katalog
+from malzeme_kabul.katalog.veritabani import DEMO_ETIKETI, Katalog
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 
 KOK = Path(__file__).resolve().parents[1]
@@ -40,7 +40,8 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     print(f"mod: {okuma.mod}" + (f" (model {okuma.model}, istem {okuma.istem_surumu})" if okuma.model else "")
           + (f"; YEDEK: {okuma.yedek}" if okuma.yedek else ""))
-    print(f"{karar.malzeme_kodu} / {karar.lot_no or '-'}: {karar.dokuman_surumu} ile karar: {karar.parti_karari} (parti {karar.parti_durumu})")
+    print(f"{karar.malzeme_kodu} / {karar.lot_no or '-'}: {karar.dokuman_surumu} ile karar: {karar.parti_karari} (parti {karar.parti_durumu})"
+          + (f", {DEMO_ETIKETI}" if karar.demo_onayi else ""))
     for s in [karar.kontrol.revizyon] + ([karar.kontrol.tip_sinif] if karar.kontrol.tip_sinif else []) + karar.ek_denetimler + karar.kontrol.satirlar:
         print(f"  {s.karar:<17} {s.test_adi} [{s.madde or '-'}]: {s.gerekce}")
     return 0

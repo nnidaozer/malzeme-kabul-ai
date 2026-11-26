@@ -222,6 +222,23 @@ def test_bosluklu_ayni_kullanici_adi_da_hata_verir(baglanti):
     assert kullanici_sayisi(baglanti) == 0
 
 
+# Demo onayı planı adım 7: "ornek-veri" örnek verinin demo onaylayanıdır (veritabani.ORNEK_ONAYLAYAN);
+# gerçek bir hesap bu adı alırsa onun onayları örnek veriyle karışırdı.
+
+
+@pytest.mark.parametrize("degisken", ["MALZEME_KABUL_MP_KULLANICI", "MALZEME_KABUL_GK_KULLANICI"])
+@pytest.mark.parametrize("ad", ["ornek-veri", "ORNEK-VERI", "  Ornek-Veri  "])
+def test_ilk_kurulum_ayrilmis_adi_reddeder(baglanti, degisken, ad):
+    with pytest.raises(kimlik.KimlikHatasi):
+        kimlik.ortamdan_kullanicilar(gecerli_ortam(**{degisken: ad}), baglanti)
+    assert kullanici_sayisi(baglanti) == 0  # ya ikisi ya hiçbiri
+
+
+def test_ilk_kurulum_ayrilmis_ada_benzeyen_adi_kabul_eder(baglanti):
+    olusan = kimlik.ortamdan_kullanicilar(gecerli_ortam(MALZEME_KABUL_MP_KULLANICI="ornek-veri2"), baglanti)
+    assert kimlik.Kullanici("ornek-veri2", "mp") in olusan
+
+
 # --- (d) Docker secrets: *_DOSYASI --------------------------------------------------------
 
 
