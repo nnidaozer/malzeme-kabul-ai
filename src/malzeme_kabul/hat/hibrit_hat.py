@@ -44,11 +44,11 @@ from typing import Literal
 
 from malzeme_kabul.belge.pdf_okuyucu import Belge, pdf_oku
 from malzeme_kabul.cikarim.sertifika_okuyucu import ISTEM_SURUMU, dil_modeli_ile_oku, kural_ile_oku, okumadan_sertifika
-from malzeme_kabul.cikarim.yerel_model import SohbetIstemcisi, YerelModelIstemcisi
+from malzeme_kabul.cikarim.yerel_model import YEDEK_HATALARI, SohbetIstemcisi, YerelModelIstemcisi
 from malzeme_kabul.hat.katalog_karari import KatalogKarari, malzeme_koduyla_kontrol
 from malzeme_kabul.katalog.veritabani import Katalog
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
-from malzeme_kabul.kural.kanit_dogrulama import metin_sayfada_mi, okuma_kaniti, satir_kaniti
+from malzeme_kabul.kural.kanit_dogrulama import atif_kaniti, deger_kaniti, okuma_kaniti, satir_kaniti
 from malzeme_kabul.kural.karar_motoru import KararAyarlari, KararSatiri
 from malzeme_kabul.kural.okuma_karsilastirma import (
     Anlasmazlik,
@@ -56,7 +56,7 @@ from malzeme_kabul.kural.okuma_karsilastirma import (
     standart_okumalarini_karsilastir,
 )
 from malzeme_kabul.kural.yon_dogrulama import okuma_yonu_dogrula
-from malzeme_kabul.sozlesme.okuma import HamOkuma
+from malzeme_kabul.sozlesme.okuma import HamOkuma, SertifikaOkumaYaniti
 from malzeme_kabul.sozlesme.sema import KabulDokumani
 from malzeme_kabul.sozlesme.sertifika import Sertifika
 
@@ -71,8 +71,16 @@ class HatHatasi(ValueError):
 
 
 def mod_sec(mod: str | None = None) -> Mod:
-    """Verilen mod, yoksa MALZEME_KABUL_MODU, yoksa 'kural'."""
-    secilen = (mod or os.environ.get("MALZEME_KABUL_MODU") or "kural").strip().casefold()
+    """Verilen mod; mod None ise MALZEME_KABUL_MODU, o da yoksa 'kural'.
+
+    Açıkça verilen boş mod ("") hatadır: ortam değişkenine ya da 'kural'a
+    sessizce düşülmez (retro H12).
+    """
+    if mod is None:
+        mod = os.environ.get("MALZEME_KABUL_MODU") or "kural"
+    secilen = mod.strip().casefold()
+    if not secilen:
+        raise HatHatasi(f"mod boş verildi ({', '.join(MODLAR)})")
     if secilen not in MODLAR:
         raise HatHatasi(f"bilinmeyen mod: {secilen!r} ({', '.join(MODLAR)})")
     return secilen  # type: ignore[return-value]
@@ -83,11 +91,14 @@ def ortamdan_istemci() -> YerelModelIstemcisi:
     model = os.environ.get("MALZEME_KABUL_MODELI")
     if not model:
         raise HatHatasi("hibrit mod için MALZEME_KABUL_MODELI ortam değişkeni gerekli")
-    return YerelModelIstemcisi(
-        model,
-        arka_uc=os.environ.get("MALZEME_KABUL_ARKA_UCU", "ollama"),
-        adres=os.environ.get("MALZEME_KABUL_MODEL_ADRESI") or None,
-    )
+    try:
+        return YerelModelIstemcisi(
+            model,
+            arka_uc=os.environ.get("MALZEME_KABUL_ARKA_UCU", "ollama"),
+            adres=os.environ.get("MALZEME_KABUL_MODEL_ADRESI") or None,
+        )
+    except ValueError as hata:  # yerel olmayan adres, bilinmeyen arka uç
+        raise HatHatasi(str(hata)) from hata
 
 
 @dataclass
@@ -112,6 +123,8 @@ class SertifikaOkumasi:
             return KararSatiri(karar="uygun", gerekce=f"dil modeli kullanılamadı, kural okuması: {self.yedek}", **ortak)
         if self.kanitsiz:
             return KararSatiri(karar="insan_incelemeli", gerekce="belgede bulunamayan okumalar: " + "; ".join(self.kanitsiz), **ortak)
+        if not self.sertifika.satirlar:
+            return KararSatiri(karar="insan_incelemeli", gerekce="dil modeli hiçbir test satırı okumadı", **ortak)
         return KararSatiri(karar="uygun", gerekce="okunan bütün hücreler belgede bulundu", **ortak)
 
     def okuma_uyumu_denetimi(self) -> KararSatiri | None:
@@ -145,6 +158,31 @@ class SertifikaOkumasi:
                 "anlasmazlik_sayisi": len(self.anlasmazliklar)}
 
 
+_UST_ALANLAR = {"tedarikci": "tedarikçi", "sertifika_no": "sertifika no", "parti_no": "parti no",
+                "uretim_tarihi": "üretim tarihi"}
+
+
+def _ust_bilgileri_dogrula(okuma: SertifikaOkumaYaniti, metinler: dict[int, str],
+                           kanitsiz: list[str]) -> SertifikaOkumaYaniti:
+    """Modelin okuduğu üst bilgileri ve standart atfını belgede arar (retro H5, H6).
+
+    Belgede (sınırla; atıfta tam olarak) bulunmayan alan boşaltılır ve
+    `kanitsiz`'e yazılır; boş alan karara girmez, ilgili denetim insan
+    incelemesine gider (ör. tedarikçi yoksa `tedarikci` denetimi).
+    """
+    bosalt: dict[str, None] = {}
+    for alan, ad in _UST_ALANLAR.items():
+        deger = getattr(okuma, alan)
+        if deger and not (k := deger_kaniti(deger, metinler, alan=alan)).kanitli:
+            kanitsiz.append(f"{ad}: {k.neden}")
+            bosalt[alan] = None
+    atif = okuma.standart_atfi
+    if atif and not (k := atif_kaniti(atif, metinler)).kanitli:
+        kanitsiz.append(f"standart atfı: {k.neden}")
+        bosalt["standart_atfi"] = None
+    return okuma.model_copy(update=bosalt) if bosalt else okuma
+
+
 def _model_adi(istemci: SohbetIstemcisi) -> str:
     return getattr(istemci, "model", None) or type(istemci).__name__
 
@@ -172,7 +210,7 @@ def sertifikayi_oku(
     model = _model_adi(istemci)
     try:
         okuma = dil_modeli_ile_oku(belge, istemci)
-    except (OSError, ValueError) as hata:  # bağlantı yok, zaman aşımı, şemaya uymayan yanıt
+    except YEDEK_HATALARI as hata:
         s = kural_ile_oku(belge)
         return SertifikaOkumasi(s, "hibrit", model, ISTEM_SURUMU, [x.no for x in belge.sayfalar],
                                 yedek=f"{type(hata).__name__}: {hata}")
@@ -184,10 +222,7 @@ def sertifikayi_oku(
             kabul.append(satir)
         else:
             kanitsiz.append(f"{satir.test_adi}: {k.neden}")
-    atif = okuma.standart_atfi
-    if atif and not any(metin_sayfada_mi(atif, m) for m in metinler.values()):
-        kanitsiz.append(f"standart atfı: {atif!r} belgede yok")
-        okuma = okuma.model_copy(update={"standart_atfi": None})
+    okuma = _ust_bilgileri_dogrula(okuma, metinler, kanitsiz)
     sertifika = okumadan_sertifika(okuma, belge.dosya.stem, kabul)
     kural_sertifikasi, anlasmazliklar = None, []
     if dokuman is not None:

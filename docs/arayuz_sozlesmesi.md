@@ -728,7 +728,8 @@ Sertifika PDF'inden parti kararına kadar bütün hat. Adımlar:
 - `pdf_yolu` (`str | Path`, zorunlu): kaydedilmiş sertifika PDF'i.
 - `mod` (`str | None`, isteğe bağlı, varsayılan `None`): `"kural"` ya da
   `"hibrit"`. `None` ise `MALZEME_KABUL_MODU` kullanılır; o da yoksa
-  `"kural"`. Arayüz modu her zaman açıkça verir.
+  `"kural"`. Boş dizgi (`""`) `HatHatasi` verir. Arayüz modu her zaman
+  açıkça verir.
 - `istemci` (`SohbetIstemcisi | None`, isteğe bağlı, varsayılan `None`):
   hibritte yerel model istemcisi. `None` ise ortam değişkenlerinden kurulur
   (bkz. "Ortam değişkenleri"). Arayüz bunu vermez.
@@ -753,20 +754,25 @@ Hibrit mod şöyle çalışır:
 
 - Kanıtsız satırlar karara girmez ve `kanit` ek denetimi "insan
   incelemeli" olur.
-- Dil modelinin okuduğu standart atfı belgede yoksa atıf silinir
-  (`standart_atfi=None`) ve `kanitsiz` listesine eklenir.
-- Dil modeli yanıt vermezse (`OSError`) ya da şemaya uymayan bir yanıt
-  dönerse (`ValueError`), hat kural okumasına düşer ve nedeni
+- Dil modelinin okuduğu standart atfı belgede tam atıf olarak yoksa atıf
+  silinir (`standart_atfi=None`) ve `kanitsiz` listesine eklenir. Tedarikçi,
+  parti no, sertifika no ve üretim tarihi de belgede aranır; bulunamayan
+  alan boşaltılır ve `kanitsiz`'e yazılır. Kural ve model bu alanları farklı
+  okursa anlaşmazlık yazılır ve ilgili ek denetim insan incelemeli olur.
+- Dil modeli yanıt vermezse (`OSError`), şemaya uymayan bir yanıt dönerse
+  (`ValueError`) ya da sunucu yanıtı beklenmedik ya da yarımsa
+  (`ModelYanitHatasi`), hat kural okumasına düşer ve nedeni
   `hat["yedek"]`'e yazar. Arayüz bu durumda uyarı gösterir. Yedekte `kanit`
   denetimi **"uygun"** olur, çünkü karar kural okumasıyla verilir. Karar
   her durumda kurallarla verilir.
 
 **Hatalar**
 
-- `HatHatasi` (bir `ValueError` alt sınıfı): mod bilinmiyor, ya da hibritte
-  istemci yok ve `MALZEME_KABUL_MODELI` tanımsız. Arayüz yakalar.
-- `ValueError`: yerel model adresi localhost değil, arka uç bilinmiyor, PDF
-  okunamadı ya da PDF sınırı aşıldı. Arayüz yakalar.
+- `HatHatasi` (bir `ValueError` alt sınıfı): mod bilinmiyor ya da boş
+  (`mod=""`), hibritte istemci yok ve `MALZEME_KABUL_MODELI` tanımsız, ya da
+  ortamdan kurulan istemcinin adresi localhost değil / arka ucu bilinmiyor.
+  Arayüz yakalar.
+- `ValueError`: PDF okunamadı ya da PDF sınırı aşıldı. Arayüz yakalar.
 - `KatalogHatasi`: `defter` verilmiş ama kullanıcı boş, malzeme bilinmiyor,
   onaylı doküman yok ya da parti bilinmiyor. Arayüz yakalar.
 - `FileNotFoundError` ve diğer `OSError`'lar: PDF yok ya da okunamıyor.
@@ -1086,9 +1092,9 @@ gelince ilgili bölümler de güncellenecek.
      Arayüz bu özeti kullanmaz (bkz. madde 17).
 
    Bunlar denetim kaydı PR'ında ele alınacak.
-8. **Hibrit kanıt gevşekliği.** Kanıt doğrulayıcının eşleştirmesi
-   sıkılaştırılacak. Yedekte `kanit` denetiminin "uygun" olması da gözden
-   geçirilecek.
+8. **Hibrit kanıt gevşekliği.** Kanıt doğrulayıcı retro H1-H14 ile
+   sıkılaştırıldı (docs/mimari.md madde 6, hibrit hat). Yedekte `kanit`
+   denetiminin "uygun" olması hâlâ gözden geçirilecek.
 9. **Kural ve model anlaşmazlığı.** Kural okuması ile dil modeli okuması
    anlaşmazsa uygulanacak kural ayrı bir PR'da ekleniyor; bu doküman onu
    henüz anlatmıyor.

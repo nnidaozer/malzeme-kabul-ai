@@ -19,6 +19,10 @@ Sertifika tarafı (`sertifika_okumalarini_karsilastir`):
 - Standart atfı: belge no, revizyon, tip ve sınıf (`atfi_coz`) farklıysa
   `test_id="revizyon"`, `alan="deger"` anlaşmazlığı yazılır; yalnız yazım
   farkı ("23377K" / "23377 K," / "Rev. K") anlaşmazlık değildir.
+- Üst bilgiler (tedarikçi, parti no, sertifika no, üretim tarihi): boşluk ve
+  büyük/küçük harf dışında farklıysa ya da yalnız bir okumada varsa
+  `test_id=<alan adı>`, `alan="deger"` anlaşmazlığı yazılır. Hat bu test_id'yi
+  ilgili ek denetime (ör. `tedarikci`, `parti_no`) bağlar.
 - Değer: sayısal sonuçta sayı, karşılaştırma işareti ve dahil/hariç
   (`sonucu_ayristir`) ile sayının arkasındaki ek aynı olmalı ("320" = "320.0",
   "<1" = "< 1"; "<1" ≠ "<=1" ≠ "1"; "4A" ≠ "4B"). Sayısal olmayan sonuçta
@@ -158,6 +162,10 @@ def _hucreler(satirlar: list[SertifikaSatiri]) -> str:
     return "; ".join(f"{s.sonuc} {s.birim}" if s.birim else s.sonuc for s in satirlar)
 
 
+_UST_BILGI_ADLARI = {"tedarikci": "Tedarikçi", "parti_no": "Parti no", "sertifika_no": "Sertifika no",
+                    "uretim_tarihi": "Üretim tarihi"}
+
+
 def _atif_anahtari(atif: str | None) -> tuple:
     a = atfi_coz(atif or "")
     return (a.belge_no, a.revizyon, a.tip, a.sinif)
@@ -170,7 +178,7 @@ def sertifika_okumalarini_karsilastir(
     tip: str | None = None,
     sinif: str | None = None,
 ) -> list[Anlasmazlik]:
-    """Kuralın ve modelin aynı sertifikadan okuduğu standart atfını ve satırları karşılaştırır.
+    """Kuralın ve modelin aynı sertifikadan okuduğu standart atfını, üst bilgileri ve satırları karşılaştırır.
 
     `tip` ve `sinif` (katalogdaki malzemenin) `kontrol_et`'teki gibi aranan
     testleri seçer; verilmezse kural okumasının atfından alınır. Dönen liste
@@ -193,6 +201,13 @@ def sertifika_okumalarini_karsilastir(
             kural=kural.standart_atfi, model=model.standart_atfi,
             aciklama=f"standart atfı: kural {kural.standart_atfi!r}, model {model.standart_atfi!r}",
         ))
+    for alan, ad in _UST_BILGI_ADLARI.items():
+        k_deger, m_deger = getattr(kural, alan), getattr(model, alan)
+        if _metin(k_deger) != _metin(m_deger):
+            sonuc.append(Anlasmazlik(
+                taraf="sertifika", test_id=alan, test_adi=ad, alan="deger", kural=k_deger, model=m_deger,
+                aciklama=f"{ad.lower()}: kural {k_deger!r}, model {m_deger!r}",
+            ))
     for test_id in sorted(set(k_gruplar) | set(m_gruplar)):
         k, m = k_gruplar.get(test_id, []), m_gruplar.get(test_id, [])
         ortak = {"taraf": "sertifika", "test_id": test_id, "test_adi": adlar[test_id]}

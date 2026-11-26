@@ -8,8 +8,8 @@ ikizininkiyle aynıdır.
 İki katman:
 - Kural motoru (bugün): ham hücreler (JSON) doğrudan karar motoruna verilir.
 - Dil modeli (`dil_modeli` işaretli, ayrıca çalıştırılır): PDF'i yerel dil
-  modeli okur, karar motoru karar verir. Model yoksa ya da dil modelli
-  sertifika okuyucu henüz yoksa test atlanır. Çalıştırmak için:
+  modeli okur (`hat.hibrit_hat.sertifikayi_oku`, kanıt doğrulamasıyla),
+  karar motoru karar verir. Model verilmezse test atlanır. Çalıştırmak için:
       pytest -m dil_modeli --dil-modeli qwen2.5:7b-instruct-q4_K_M
 """
 
@@ -158,12 +158,14 @@ def test_kayitli_set_ureticiyle_ayni(enjekte):
 @pytest.mark.dil_modeli
 @pytest.mark.parametrize("no", [f"S-{i:03d}" for i in range(151, 161)])
 def test_dil_modeli_okumasinda_karar_degismez(no, dokuman, dil_modeli_istemcisi):
-    okuyucu = pytest.importorskip(
-        "malzeme_kabul.cikarim.sertifika_okuyucu",
-        reason="dil modelli sertifika okuyucu (sertifika_oku(pdf_yolu, istemci) -> Sertifika) henüz yok",
-    )
+    # Dil modelli okuma yalnız hat üzerinden yapılır (kanıt doğrulamasıyla; retro H8).
+    from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
+    from malzeme_kabul.hat.hibrit_hat import sertifikayi_oku
+
     dogru = {d["sertifika_no"]: d for d in json.loads((SET_KLASORU / "dogru_kararlar.json").read_text(encoding="utf-8"))}[no]
-    okunan = okuyucu.sertifika_oku(SET_KLASORU / "pdf" / f"{no}.pdf", dil_modeli_istemcisi)
+    okuma = sertifikayi_oku(pdf_oku(SET_KLASORU / "pdf" / f"{no}.pdf"), "hibrit", dil_modeli_istemcisi)
+    assert okuma.yedek is None, f"dil modeli kullanılamadı: {okuma.yedek}"
+    okunan = okuma.sertifika
     sonuc = kontrol_et(dokuman, okunan)
     assert sonuc.belge_karari == dogru["belge_karari"]
     assert {s.test_id: s.karar for s in sonuc.satirlar} == dogru["satirlar"]

@@ -16,6 +16,7 @@ okuma döndürür (`malzeme_kabul.sozlesme.okuma`, docs/mimari.md madde 6);
 
 from __future__ import annotations
 
+import http.client
 import json
 import urllib.request
 from typing import Any, Protocol
@@ -29,6 +30,21 @@ YEREL_ADRESLER = {"localhost", "127.0.0.1", "::1"}
 
 Mesaj = dict[str, str]
 
+
+
+class ModelYanitHatasi(Exception):
+    """Yerel model çağrısı beklenmedik biçimde bitti: sunucu yanıtı beklenen yapıda değil ya da yarım."""
+
+
+# `sohbet` çağrısından gelip `ModelYanitHatasi`'na sarılan hatalar (cikarim/sertifika_okuyucu,
+# retro H10, K4): beklenmedik sunucu yanıtı (KeyError, TypeError, IndexError: ör. {"error": ...},
+# boş "choices") ve yarım HTTP yanıtı (HTTPException, ör. IncompleteRead). Yalnız çağrının kendisi
+# sarılır; ayrıştırma kodundaki aynı türden hatalar sarılmaz. AttributeError bilerek yoktur.
+SOHBET_HATALARI: tuple[type[BaseException], ...] = (KeyError, TypeError, IndexError, http.client.HTTPException)
+
+# Hattın kural okumasına düştüğü hatalar (hat/hibrit_hat): bağlantı yok ve zaman aşımı (OSError),
+# şemaya uymayan yanıt (ValueError) ve sarılmış sunucu yanıtı hatası (ModelYanitHatasi).
+YEDEK_HATALARI: tuple[type[BaseException], ...] = (OSError, ValueError, ModelYanitHatasi)
 
 def adres_yerel_mi(adres: str) -> bool:
     """Adres http(s) ile bu makineye (localhost) mı gidiyor?"""
