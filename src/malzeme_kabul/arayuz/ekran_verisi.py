@@ -157,22 +157,35 @@ def degisiklik_ozeti(eski: KabulDokumani, yeni: KabulDokumani) -> list[str]:
 
 
 def taslak_duzelt(katalog: Katalog, defter: DenetimKaydi, taslak_id: int, yeni: KabulDokumani, kullanici: str) -> list[str]:
-    """Taslağı günceller ve farkları denetim kaydına `duzeltme` olarak yazar. Farkları döner."""
+    """Taslağı günceller ve farkları denetim kaydına `duzeltme` olarak yazar. Farkları döner.
+
+    Defter katalogla aynı bağlantıyı paylaşmalıdır (yoksa KatalogHatasi, hiçbir şey yazılmaz).
+    """
+    if defter.baglanti is not katalog.baglanti:
+        raise KatalogHatasi("denetim kaydı katalogla aynı bağlantıyı paylaşmalı (taslak ve kayıt tek işlem)")
     eski = katalog.taslak(taslak_id).dokuman
     farklar = degisiklik_ozeti(eski, yeni)
     if not farklar:
         return []
-    katalog.taslak_guncelle(taslak_id, yeni)
     std = yeni.standart
-    defter.ekle("duzeltme", kullanici, {"taslak": taslak_id, "farklar": farklar},
-                dokuman_surumu=f"{std.belge_no}{std.revizyon} taslak {taslak_id}")
+    with katalog.islem():  # taslak ve kaydı tek işlem
+        katalog.taslak_guncelle(taslak_id, yeni)
+        defter.ekle("duzeltme", kullanici, {"taslak": taslak_id, "farklar": farklar},
+                    dokuman_surumu=f"{std.belge_no}{std.revizyon} taslak {taslak_id}")
     return farklar
 
 
 def taslak_onayla(katalog: Katalog, defter: DenetimKaydi, taslak_id: int, kullanici: str, not_: str | None = None) -> DokumanSurumu:
-    surum = katalog.taslagi_onayla(taslak_id, kullanici, not_)
-    defter.ekle("onay", kullanici, {"taslak": taslak_id, "dokuman_surumu": surum.etiket, "ozet": surum.ozet, "not": not_},
-                dokuman_surumu=surum.etiket)
+    """Taslağı onaylı sürüm yapar ve onayı kaydeder; ikisi tek işlemdir.
+
+    Defter katalogla aynı bağlantıyı paylaşmalıdır (yoksa KatalogHatasi, hiçbir şey yazılmaz).
+    """
+    if defter.baglanti is not katalog.baglanti:
+        raise KatalogHatasi("denetim kaydı katalogla aynı bağlantıyı paylaşmalı (taslak ve kayıt tek işlem)")
+    with katalog.islem():
+        surum = katalog.taslagi_onayla(taslak_id, kullanici, not_)
+        defter.ekle("onay", kullanici, {"taslak": taslak_id, "dokuman_surumu": surum.etiket, "ozet": surum.ozet, "not": not_},
+                    dokuman_surumu=surum.etiket)
     return surum
 
 

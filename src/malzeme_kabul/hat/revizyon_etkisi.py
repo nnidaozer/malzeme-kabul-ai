@@ -85,7 +85,7 @@ def yeni_revizyon_yukle(
         etki.etkilenen_malzemeler.append(m.kod)
         etki.etkilenen_partiler += [f"{p.malzeme_kodu}/{p.lot_no}" for p in katalog.partiler(m.kod)]
     b = katalog.baglanti
-    b.executescript(_OLAYLAR)
+    b.execute(_OLAYLAR)  # tek ifade; executescript açık bir dış işlemi sessizce bitirirdi
     with katalog.islem():
         b.execute(
             "INSERT INTO revizyon_olaylari (belge_no, yeni_revizyon, zaman, kullanici, etkilenen_malzemeler,"
@@ -111,27 +111,34 @@ def mp_incelemesini_kapat(
     not_: str | None = None,
     yeni_revizyon: str | None = None,
 ) -> Kayit:
-    """M&P incelemesini kapatır ve denetim kaydına yazar."""
+    """M&P incelemesini kapatır ve denetim kaydına yazar.
+
+    Revizyon değişikliği, işaretin kaldırılması ve kayıt tek işlemdir: kayıt
+    yazılamazsa revizyon da işaret de eski kalır.
+    """
+    if defter.baglanti is not katalog.baglanti:
+        raise KatalogHatasi("denetim kaydı katalogla aynı bağlantıyı paylaşmalı (durum ve kayıt tek işlem)")
     m = katalog.malzeme(malzeme_kodu)
     if not m.mp_inceleme:
         raise KatalogHatasi(f"{malzeme_kodu} için bekleyen M&P incelemesi yok")
-    if karar == "yeni_revizyona_gec":
-        if not yeni_revizyon:
-            raise KatalogHatasi("yeni revizyona geçmek için revizyon harfi gerekli")
-        m2 = katalog.malzeme_revizyonu_ata(malzeme_kodu, yeni_revizyon)
-        icerik = {"karar": karar, "eski": m.standart_etiketi, "yeni": m2.standart_etiketi, "not": not_}
-        surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
-    elif karar == "gerek_yok":
-        icerik = {"karar": karar, "malzeme": m.standart_etiketi, "isaret": m.mp_inceleme, "not": not_}
-        surum = None
-        try:
-            surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
-        except KatalogHatasi:
-            pass
-    else:
+    if karar not in ("gerek_yok", "yeni_revizyona_gec"):
         raise KatalogHatasi(f"bilinmeyen karar: {karar!r} (gerek_yok, yeni_revizyona_gec)")
-    katalog.mp_inceleme_ata(malzeme_kodu, None)
-    return defter.ekle("onay", kullanici, icerik, malzeme_kodu=malzeme_kodu, dokuman_surumu=surum)
+    if karar == "yeni_revizyona_gec" and not yeni_revizyon:
+        raise KatalogHatasi("yeni revizyona geçmek için revizyon harfi gerekli")
+    with katalog.islem():
+        if karar == "yeni_revizyona_gec":
+            m2 = katalog.malzeme_revizyonu_ata(malzeme_kodu, yeni_revizyon)
+            icerik = {"karar": karar, "eski": m.standart_etiketi, "yeni": m2.standart_etiketi, "not": not_}
+            surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
+        else:
+            icerik = {"karar": karar, "malzeme": m.standart_etiketi, "isaret": m.mp_inceleme, "not": not_}
+            surum = None
+            try:
+                surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
+            except KatalogHatasi:
+                pass
+        katalog.mp_inceleme_ata(malzeme_kodu, None)
+        return defter.ekle("onay", kullanici, icerik, malzeme_kodu=malzeme_kodu, dokuman_surumu=surum)
 
 
 __all__ = [

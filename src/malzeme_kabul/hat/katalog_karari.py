@@ -30,7 +30,10 @@ o durumda kaldığı yazar. Serbest bırakmak `karari_duzelt` ile insanın işid
 
 Denetim kaydı (`kayit.denetim_kaydi`) verilirse her karar, onay ve düzeltme
 zincire yazılır: kullanıcı, zaman, doküman sürümü, PDF sayfası, model ve
-istem sürümü.
+istem sürümü. Durum değişikliği ile onun kaydı tek işlemdir (`Katalog.islem`):
+kayıt yazılamazsa durum da değişmez. Bunun için defter katalogla aynı SQLite
+bağlantısını paylaşmalıdır. Parti durumu yazan karar (lot verilmiş,
+`durumu_yaz` açık) defter olmadan verilmez.
 """
 
 from __future__ import annotations
@@ -176,7 +179,9 @@ def malzeme_koduyla_kontrol(
     """Sertifikayı malzeme kodunun onaylı kabul dokümanıyla karşılaştırır.
 
     `lot_no` verilir ve parti katalogda varsa, `durumu_yaz` ise parti durumu
-    karara göre güncellenir. `defter` verilirse karar denetim kaydına yazılır
+    karara göre güncellenir; bunun için `defter` zorunludur (yoksa
+    KatalogHatasi, hiçbir şey yazılmaz). Durum ve karar kaydı tek işlemdir.
+    `defter` verilirse karar denetim kaydına yazılır
     (`kullanici` zorunlu); `model` ve `istem_surumu` dil modeli kullanıldıysa,
     `pdf_sayfasi` sertifikanın okunduğu sayfa(lar).
 
@@ -188,8 +193,10 @@ def malzeme_koduyla_kontrol(
     (`okuma_karsilastirma.anlasmazlik_karari`). Kontrol satırlarında olmayan
     test için insan incelemeli bir ek denetim satırı eklenir.
     """
-    if defter is not None and not (kullanici and kullanici.strip()):
+    if defter is not None and not (isinstance(kullanici, str) and kullanici.strip()):
         raise KatalogHatasi("denetim kaydı için kullanıcı gerekli")
+    if defter is not None:
+        _ayni_baglanti(katalog, defter)
     malzeme = katalog.malzeme(malzeme_kodu)
     surum = katalog.gecerli_dokuman(malzeme_kodu)
     kontrol = kontrol_et(surum.dokuman, sertifika, ayar, tip=malzeme.tip, sinif=malzeme.sinif, katalogdan=True)
@@ -207,59 +214,68 @@ def malzeme_koduyla_kontrol(
             for t, g in eksik.items()
         )
     ek.append(_tedarikci_denetimi(katalog, malzeme_kodu, sertifika))
-    parti = None
-    if lot_no is not None:
-        parti = katalog.parti(malzeme_kodu, lot_no)
-        ortak = {"test_id": "siparis_revizyonu", "test_adi": "Sipariş revizyonu"}
-        if parti.siparis_revizyonu != malzeme.revizyon:
-            ek.append(KararSatiri(
-                karar="insan_incelemeli",
-                gerekce=f"sipariş revizyonu {parti.siparis_revizyonu}, kabul dokümanı {malzeme.standart_etiketi}",
-                **ortak,
-            ))
-        else:
-            ek.append(KararSatiri(karar="uygun", gerekce=f"sipariş revizyonu {parti.siparis_revizyonu}", **ortak))
-        ek.extend(_parti_denetimleri(parti, sertifika))
+    # Parti okuması, geçiş kararı, durum yazımı ve kayıt tek IMMEDIATE işlemdir (K2 yarışı):
+    # okunan durum, yazılana kadar başka bir bağlantı tarafından değiştirilemez.
+    with katalog.islem():
+        parti = None
+        if lot_no is not None:
+            parti = katalog.parti(malzeme_kodu, lot_no)
+            if durumu_yaz and defter is None:  # denetim B5: denetimsiz durum değişimi olmaz
+                raise KatalogHatasi("parti durumu yazan karar denetim kaydı (defter) olmadan verilemez")
+            ortak = {"test_id": "siparis_revizyonu", "test_adi": "Sipariş revizyonu"}
+            if parti.siparis_revizyonu != malzeme.revizyon:
+                ek.append(KararSatiri(
+                    karar="insan_incelemeli",
+                    gerekce=f"sipariş revizyonu {parti.siparis_revizyonu}, kabul dokümanı {malzeme.standart_etiketi}",
+                    **ortak,
+                ))
+            else:
+                ek.append(KararSatiri(karar="uygun", gerekce=f"sipariş revizyonu {parti.siparis_revizyonu}", **ortak))
+            ek.extend(_parti_denetimleri(parti, sertifika))
 
-    karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
-    durum = PARTI_DURUMU[karar]
-    if parti is not None:
-        if _makine_gecebilir_mi(parti, durum):
-            if durumu_yaz:
-                katalog.parti_durumu_ata(malzeme_kodu, parti.lot_no, durum, kaynak="makine")
-        else:
-            ek.append(_parti_durumu_satiri(parti, durum))
-            karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
-            durum = parti.durum
-    sonuc = KatalogKarari(
-        malzeme_kodu=malzeme_kodu,
-        lot_no=lot_no,
-        dokuman_surumu=surum.etiket,
-        dokuman_ozeti=surum.ozet,
-        kontrol=kontrol,
-        ek_denetimler=ek,
-        parti_karari=karar,
-        parti_durumu=durum,
-        hat=hat_bilgisi,
-    )
-    if defter is not None:
-        defter.ekle(
-            "karar", kullanici, sonuc.model_dump(mode="json"),
-            malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum.etiket,
-            pdf_sayfasi=pdf_sayfasi, model=model, istem_surumu=istem_surumu,
+        karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
+        durum = PARTI_DURUMU[karar]
+        yazilacak = False
+        if parti is not None:
+            if _makine_gecebilir_mi(parti, durum):
+                yazilacak = durumu_yaz
+            else:
+                ek.append(_parti_durumu_satiri(parti, durum))
+                karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
+                durum = parti.durum
+        sonuc = KatalogKarari(
+            malzeme_kodu=malzeme_kodu,
+            lot_no=lot_no,
+            dokuman_surumu=surum.etiket,
+            dokuman_ozeti=surum.ozet,
+            kontrol=kontrol,
+            ek_denetimler=ek,
+            parti_karari=karar,
+            parti_durumu=durum,
+            hat=hat_bilgisi,
         )
+        if yazilacak:
+            katalog.parti_durumu_ata(malzeme_kodu, parti.lot_no, durum, kaynak="makine")
+        if defter is not None:
+            defter.ekle(
+                "karar", kullanici, sonuc.model_dump(mode="json"),
+                malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum.etiket,
+                pdf_sayfasi=pdf_sayfasi, model=model, istem_surumu=istem_surumu,
+            )
     return sonuc
 
 
 def dokuman_onayla(
     katalog: Katalog, defter: DenetimKaydi, dokuman: KabulDokumani, kullanici: str, not_: str | None = None
 ) -> DokumanSurumu:
-    """Kabul dokümanını yeni onaylı sürüm olarak kaydeder ve onayı denetim kaydına yazar."""
-    surum = katalog.dokuman_onayla(dokuman, kullanici, not_)
-    defter.ekle(
-        "onay", kullanici, {"dokuman_surumu": surum.etiket, "ozet": surum.ozet, "not": not_},
-        dokuman_surumu=surum.etiket,
-    )
+    """Kabul dokümanını yeni onaylı sürüm olarak kaydeder ve onayı denetim kaydına yazar (tek işlem)."""
+    _ayni_baglanti(katalog, defter)
+    with katalog.islem():
+        surum = katalog.dokuman_onayla(dokuman, kullanici, not_)
+        defter.ekle(
+            "onay", kullanici, {"dokuman_surumu": surum.etiket, "ozet": surum.ozet, "not": not_},
+            dokuman_surumu=surum.etiket,
+        )
     return surum
 
 
@@ -272,16 +288,29 @@ def karari_duzelt(
     yeni_durum: PartiDurumu,
     neden: str,
 ) -> Kayit:
-    """İnsanın parti kararını düzeltmesi: parti durumu değişir, eski ve yeni durum gerekçesiyle kaydedilir."""
+    """İnsanın parti kararını düzeltmesi: parti durumu değişir, eski ve yeni durum gerekçesiyle kaydedilir.
+
+    Kullanıcı ve gerekçe hiçbir şey yazılmadan doğrulanır; durum ve kayıt tek işlemdir.
+    """
+    if not isinstance(kullanici, str) or not kullanici.strip():
+        raise KatalogHatasi("düzeltme için kullanıcı gerekli")
     if not neden or not neden.strip():
         raise KatalogHatasi("düzeltme için gerekçe gerekli")
-    onceki = katalog.parti(malzeme_kodu, lot_no).durum
-    katalog.parti_durumu_ata(malzeme_kodu, lot_no, yeni_durum, kaynak="insan")
-    surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
-    return defter.ekle(
-        "duzeltme", kullanici, {"onceki_durum": onceki, "yeni_durum": yeni_durum, "neden": neden},
-        malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum,
-    )
+    _ayni_baglanti(katalog, defter)
+    with katalog.islem():  # onceki_durum yazma işleminin içinde okunur (K2 yarışı)
+        onceki = katalog.parti(malzeme_kodu, lot_no).durum
+        surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
+        katalog.parti_durumu_ata(malzeme_kodu, lot_no, yeni_durum, kaynak="insan")
+        return defter.ekle(
+            "duzeltme", kullanici, {"onceki_durum": onceki, "yeni_durum": yeni_durum, "neden": neden},
+            malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum,
+        )
+
+
+def _ayni_baglanti(katalog: Katalog, defter: DenetimKaydi) -> None:
+    """Durum ve kaydın tek işlem olabilmesi için defter katalogla aynı bağlantıyı paylaşmalı."""
+    if defter.baglanti is not katalog.baglanti:
+        raise KatalogHatasi("denetim kaydı katalogla aynı bağlantıyı paylaşmalı (durum ve kayıt tek işlem)")
 
 
 def _incelemeye_al(

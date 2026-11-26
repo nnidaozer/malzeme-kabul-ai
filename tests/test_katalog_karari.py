@@ -6,6 +6,7 @@ import pytest
 
 from malzeme_kabul.hat.katalog_karari import PARTI_DURUMU, malzeme_koduyla_kontrol
 from malzeme_kabul.katalog.veritabani import Katalog, KatalogHatasi
+from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 from malzeme_kabul.kural.karar_motoru import kontrol_et, parti_karari
 from malzeme_kabul.sozlesme.sema import KabulDokumani, Kaynak, Sinir, StandartBilgisi, TestSarti
 from malzeme_kabul.sozlesme.sertifika import Sertifika, SertifikaSatiri
@@ -35,6 +36,14 @@ def sertifika(voc="300", atif="MIL-PRF-23377K Type I Class N", krom="0.05", teda
     if krom is not None:
         satirlar.append(SertifikaSatiri(test_adi="Chromium content", sonuc=krom, birim="%"))
     return Sertifika(sertifika_no="S1", standart_atfi=atif, tedarikci=tedarikci, satirlar=satirlar)
+
+
+def denetimli(katalog: Katalog, kullanici: str = "gk1") -> dict:
+    """Parti durumu yazan karar için gereken denetim argümanları (denetim B5).
+
+    Defter katalogla aynı bağlantıyı paylaşır; durum ve kayıt tek işlemdir.
+    """
+    return {"defter": DenetimKaydi(katalog.baglanti), "kullanici": kullanici}
 
 
 @pytest.fixture
@@ -122,20 +131,20 @@ def test_yeni_onayli_surum_kullanilir(katalog):
 
 
 def test_bir_test_uygun_degilse_parti_karantinaya(katalog):
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", sertifika(voc="400"), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", sertifika(voc="400"), lot_no="L1", **denetimli(katalog))
     assert k.parti_karari == "red" and k.parti_durumu == "karantina"
     assert katalog.parti("AST-N", "L1").durum == "karantina"
 
 
 def test_insan_incelemeli_varsa_parti_bekliyor(katalog):
     katalog.parti_durumu_ata("AST-N", "L1", "serbest", kaynak="insan")
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", sertifika(krom=None), lot_no="L1")  # krom eksik
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", sertifika(krom=None), lot_no="L1", **denetimli(katalog))  # krom eksik
     assert k.parti_karari == "inceleme" and katalog.parti("AST-N", "L1").durum == "bekliyor"
 
 
 def test_hepsi_uygunsa_parti_serbest(katalog):
     s = sertifika().model_copy(update={"parti_no": "L1"})  # parti no denetimi (K3)
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", s, lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", s, lot_no="L1", **denetimli(katalog))
     assert k.parti_karari == "kabul" and katalog.parti("AST-N", "L1").durum == "serbest"
     assert {"tedarikci", "siparis_revizyonu", "parti_no", "parti_tedarikcisi"} <= {s.test_id for s in k.ek_denetimler}
 
@@ -157,7 +166,7 @@ def test_tedarikci_adi_buyuk_kucuk_harf_ve_bosluk_duyarsiz(katalog):
 
 def test_siparis_revizyonu_farkliysa_insan_incelemeli(katalog):
     katalog.parti_ekle("L2", "AST-N", "Ted A", "J", "2026-06-01")
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", sertifika(), lot_no="L2")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", sertifika(), lot_no="L2", **denetimli(katalog))
     siparis = [s for s in k.ek_denetimler if s.test_id == "siparis_revizyonu"]
     assert [s.karar for s in siparis] == ["insan_incelemeli"] and k.parti_karari == "inceleme"
 

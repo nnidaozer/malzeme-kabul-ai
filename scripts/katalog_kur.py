@@ -46,11 +46,12 @@ def main(argv: list[str] | None = None) -> int:
 
     with Katalog(args.db) as katalog:
         if args.ornek:
-            ozet = ornek_yukle(katalog, args.ornek_dosyasi, KOK)
             defter = DenetimKaydi(katalog.baglanti)
-            for etiket in ozet.dokuman_surumleri:
-                defter.ekle("onay", "ornek-veri", {"dokuman_surumu": etiket, "not": "örnek veri, M&P onayı değil"},
-                            dokuman_surumu=etiket)
+            with katalog.islem():  # örnek veri ve onay kayıtları tek işlem: biri düşerse hiçbiri yazılmaz
+                ozet = ornek_yukle(katalog, args.ornek_dosyasi, KOK)
+                for etiket in ozet.dokuman_surumleri:
+                    defter.ekle("onay", "ornek-veri", {"dokuman_surumu": etiket, "not": "örnek veri, M&P onayı değil"},
+                                dokuman_surumu=etiket)
             print(f"yeni doküman sürümleri: {', '.join(ozet.dokuman_surumleri) or '-'}")
             print(f"yeni malzemeler: {', '.join(ozet.malzemeler) or '-'}")
             print(f"yeni partiler: {', '.join(ozet.partiler) or '-'}")

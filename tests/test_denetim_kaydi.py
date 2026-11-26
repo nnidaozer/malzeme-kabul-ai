@@ -194,3 +194,75 @@ def test_betikler_denetim_kaydina_yazar(tmp_path, capsys):
         assert [k.tur for k in d.kayitlar()] == ["onay", "onay", "onay", "karar"]
         assert d.kayitlar("karar")[0].kullanici == "gk1"
     assert betik_yukle("scripts/denetim_dogrula.py").main(["--db", str(db)]) == 0
+
+
+def test_dogrulama_komutu_tetikleyiciler_yerindeyken_kurcalanan_kaydi_yakalar(tmp_path, capsys):
+    """Denetim inceleme 2: şema denetimi geçse de (tetikleyici kaldırılıp kayıt değiştirilip geri kurulmuş) özet uyuşmazlığı yakalanır."""
+    yol = tmp_path / "k.sqlite"
+    with DenetimKaydi(yol) as d:
+        d.ekle("karar", "u", {"a": 1})
+        d.ekle("karar", "u", {"a": 2})
+    b = sqlite3.connect(yol)
+    tanim = b.execute("SELECT sql FROM sqlite_master WHERE type = 'trigger' AND name = 'denetim_kaydi_degistirilemez'").fetchone()[0]
+    b.execute("DROP TRIGGER denetim_kaydi_degistirilemez")
+    b.execute("UPDATE denetim_kaydi SET icerik = '{\"a\":9}' WHERE sira = 2")
+    b.execute(tanim)
+    b.commit()
+    b.close()
+    betik = betik_yukle("scripts/denetim_dogrula.py")
+    assert betik.main(["--db", str(yol)]) == 1
+    cikti = capsys.readouterr().out
+    assert "ZİNCİR BOZUK (kayıt 2)" in cikti and "değiştirilmiş" in cikti and "şema" not in cikti
+
+
+# --- sema_eksikleri: şemayı yalnız okuyarak eksik nesneleri bildirir ----------------------------
+
+
+def test_sema_eksikleri_bos_veritabaninda_tablo_ve_uc_tetikleyiciyi_bildirir():
+    from malzeme_kabul.kayit.denetim_kaydi import TETIKLEYICILER, sema_eksikleri
+
+    b = sqlite3.connect(":memory:")
+    assert sema_eksikleri(b) == ["tablo denetim_kaydi"] + [f"tetikleyici {t}" for t in TETIKLEYICILER]
+    b.close()
+
+
+def test_sema_eksikleri_bos_veritabaninda_sema_kurmaz():
+    from malzeme_kabul.kayit.denetim_kaydi import sema_eksikleri
+
+    b = sqlite3.connect(":memory:")
+    sema_eksikleri(b)
+    assert b.execute("SELECT count(*) FROM sqlite_master").fetchone()[0] == 0
+    b.close()
+
+
+def test_sema_eksikleri_tam_semada_bos_liste_doner(defter):
+    from malzeme_kabul.kayit.denetim_kaydi import sema_eksikleri
+
+    assert sema_eksikleri(defter.baglanti) == []
+
+
+@pytest.mark.parametrize("tetikleyici", ["denetim_kaydi_degistirilemez", "denetim_kaydi_silinemez",
+                                         "denetim_kaydi_uzerine_yazilamaz"])
+def test_sema_eksikleri_tek_eksik_tetikleyiciyi_yalniz_onu_bildirir(defter, tetikleyici):
+    from malzeme_kabul.kayit.denetim_kaydi import sema_eksikleri
+
+    defter.baglanti.execute(f"DROP TRIGGER {tetikleyici}")
+    assert sema_eksikleri(defter.baglanti) == [f"tetikleyici {tetikleyici}"]
+
+
+def test_sema_eksikleri_eksik_tetikleyiciyi_yeniden_kurmaz(defter):
+    from malzeme_kabul.kayit.denetim_kaydi import sema_eksikleri
+
+    defter.baglanti.execute("DROP TRIGGER denetim_kaydi_silinemez")
+    sema_eksikleri(defter.baglanti)
+    assert sema_eksikleri(defter.baglanti) == ["tetikleyici denetim_kaydi_silinemez"]
+
+
+def test_sema_eksikleri_ayni_adli_baska_tur_nesneyi_tablo_saymaz():
+    from malzeme_kabul.kayit.denetim_kaydi import sema_eksikleri
+
+    b = sqlite3.connect(":memory:")
+    b.execute("CREATE TABLE baska (x)")
+    b.execute("CREATE VIEW denetim_kaydi AS SELECT x FROM baska")
+    assert "tablo denetim_kaydi" in sema_eksikleri(b)
+    b.close()

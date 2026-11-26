@@ -384,6 +384,11 @@ def ek_denetim(karar, test_id):
     return [d for d in karar.ek_denetimler if d.test_id == test_id]
 
 
+def denetim(katalog) -> dict:
+    """Parti durumu yazan karar için defter (katalogla aynı bağlantıda) ve kullanıcı."""
+    return {"defter": DenetimKaydi(katalog.baglanti), "kullanici": "gk1"}
+
+
 def hibrit(katalog, no, bozucu=None, **k):
     from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
 
@@ -419,7 +424,8 @@ def test_kural_ve_model_ayni_okursa_okuma_uyumu_uygun(katalog):
     pdf = SET / "pdf/S-028.pdf"
     model = ayni_okuyan_model(pdf)
     assert all(getattr(model.sertifika, a) for a in UST_ALANLARI)  # üst bilgilerin hepsi okundu, boş değil
-    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no=S028_LOT)
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no=S028_LOT,
+                                   **denetim(katalog))
     assert {a: getattr(okuma_.sertifika, a) for a in UST_ALANLARI} == {
         a: getattr(okuma_.kural_sertifikasi, a) for a in UST_ALANLARI}
     assert okuma_.kanitsiz == [] and okuma_.anlasmazliklar == []
@@ -441,12 +447,14 @@ def test_model_farkli_ama_kanitli_deger_okursa_satir_insana_gider(katalog, tmp_p
     pdf = tekrar_testli_pdf(tmp_path / "voc.pdf", s028_satirlari(), "VOC solvent content", "312 g/L")
 
     # Önce kural modu: kendi partisinde (hiç karar verilmemiş) serbest bırakılır.
-    kural, _ = sertifika_hatti(katalog, "AST-001", pdf, mod="kural", lot_no=TEKRAR_LOT)
+    kayit = denetim(katalog)  # iki karar da aynı defter zincirine yazılır
+    kural, _ = sertifika_hatti(katalog, "AST-001", pdf, mod="kural", lot_no=TEKRAR_LOT, **kayit)
     assert satir(kural, "voc_solvent_content").karar == "uygun"
     assert (kural.parti_karari, kural.parti_durumu) == ("kabul", "serbest")
 
     model = SahteModel(model_sertifikasi(pdf, **{"VOC solvent content": ("312", "g/L")}))
-    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no=TEKRAR_LOT)
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no=TEKRAR_LOT,
+                                   **kayit)
     assert okuma_.kanitsiz == []
     assert [(a.test_id, a.alan, a.kural, a.model) for a in okuma_.anlasmazliklar] == [
         ("voc_solvent_content", "deger", "258", "312")]
@@ -472,7 +480,8 @@ def test_kural_red_model_kabul_derse_sessizce_ne_red_ne_kabul(katalog, tmp_path)
 
     # Model tekrar testinden "5" ve "hour" okur: kanıtlı, tek başına uygun olurdu.
     model = SahteModel(model_sertifikasi(pdf, **{"Drying time": ("5", "hour")}))
-    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no="A-2512-01")
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no="A-2512-01",
+                                   **denetim(katalog))
     assert okuma_.kanitsiz == []
     assert {(a.test_id, a.alan, a.kural, a.model) for a in okuma_.anlasmazliklar} == {
         ("drying_time", "deger", "0.25", "5"), ("drying_time", "birim", "day", "hour")}
@@ -715,7 +724,8 @@ def test_iki_okuma_da_sinir_disindaysa_uygun_degil_kalir_ve_anlasmazlik_sayilir(
     voc = ["VOC solvent content", "ASTM D3960", "340 g/L max", "400", "g/L"]
     pdf = tekrar_testli_pdf(tmp_path / "voc.pdf", s028_satirlari(VOC=voc), "VOC solvent content", "401 g/L")
     model = SahteModel(model_sertifikasi(pdf, **{"VOC solvent content": ("401", "g/L")}))
-    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no="A-2512-01")
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no="A-2512-01",
+                                   **denetim(katalog))
     assert okuma_.kanitsiz == []
     assert [(a.test_id, a.alan, a.kural, a.model) for a in okuma_.anlasmazliklar] == [
         ("voc_solvent_content", "deger", "400", "401")]

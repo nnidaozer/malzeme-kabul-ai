@@ -90,11 +90,25 @@ Kayıtları şu fonksiyonlar yazar:
 - `hat/revizyon_etkisi`: `mp_incelemesini_kapat` (onay)
 - `scripts/katalog_kur.py --ornek`: örnek onaylar
 
-Durum değişikliği ile kayıt bugün ayrı işlemlerde yazılır; kayıt adımı
-başarısız olursa durum değişmiş kalır. Tetikleyiciler yalnız uygulamanın
-kendi UPDATE/DELETE'ine karşı korur. Dosyaya yazabilen biri `REPLACE`,
-`DROP TRIGGER` ya da doğrudan düzenlemeyle onları aşabilir. Ayrıntı
-docs/arayuz_sozlesmesi.md "Bilinen açıklar" bölümündedir.
+Durum değişikliği ile kaydı tek işlemdir (`Katalog.islem` iç içe çağrıda
+SAVEPOINT olur; `DenetimKaydi.ekle` açık işleme SAVEPOINT ile katılır): kayıt
+yazılamazsa durum da değişmez. Bunun için defter katalogla aynı bağlantıyı
+paylaşır; paylaşmazsa `KatalogHatasi` verilir. Lot verilip parti durumu
+yazılacaksa defter zorunludur. Her karar (lot verilmese de) yazma kilidini
+baştan alır (`BEGIN IMMEDIATE`): parti okuması, geçiş kararı, durum yazımı ve
+kayıt aynı kilit altındadır; kilit alınamazsa `sqlite3.OperationalError`
+yükselir, hiçbir şey yazılmaz ve arayüz "meşgul" der. Dil modeli çağrısı
+(ve PDF okuma) işlemin dışında kalır; kilit model yanıtını beklerken
+tutulmaz. Malzeme ve geçerli doküman sürümü işlemden önce okunur; kayıt
+kararın gerçekten kullandığı sürümü (`dokuman_surumu`) saklar. Açık işlemi
+olan bir bağlantıyla `DenetimKaydi` kurulamaz (`DenetimHatasi`). Bir BEFORE
+INSERT tetikleyicisi var olan sıra ya da özetle eklemeyi reddeder; böylece
+`INSERT OR REPLACE` kayıt silemez. `ekle` zamanı (saat dilimli ISO 8601, geri
+gitmez, şimdiden en çok `ILERI_ZAMAN_PAYI` = 5 dakika ileride), metin
+alanlarını ve içeriği (NaN/Infinity yok, kümeler sıralı) doğrular. `denetim_dogrula.py` veritabanını salt okunur açar; tablo ya da
+tetikleyicilerden biri yoksa zinciri bozuk sayar. Dosyaya yazabilen biri
+tetikleyicileri yine de kaldırıp sonra geri kurabilir; uygulamanın sonraki
+açılışı eksik tetikleyiciyi kayıtsız onarır.
 Veritabanını baştan yazabilen biri zinciri yeniden hesaplayabilir; buna karşı
 son özet dışarıda saklanmalıdır (`--son-ozet`).
 
