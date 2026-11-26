@@ -32,7 +32,7 @@ from malzeme_kabul.sozlesme.sema import (
     UrunTanimi,
 )
 from malzeme_kabul.sozlesme.sertifika import Sertifika, SertifikaSatiri
-from tests.test_katalog_karari import _test, dokuman, sertifika
+from tests.test_katalog_karari import _test, denetimli, dokuman, sertifika
 
 _KAYNAK = Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde="1.2")
 
@@ -197,14 +197,14 @@ def test_yeni_partinin_varsayilan_durumu_bekliyor(katalog):
 
 
 def test_hic_karar_verilmemis_yeni_parti_uygun_coc_ile_serbest_olur(katalog):
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1", **denetimli(katalog))
     assert k.parti_karari == "kabul" and k.parti_durumu == "serbest"
     assert katalog.parti("AST-N", "L1").durum == "serbest"
 
 
 def test_karantinadaki_parti_uygun_coc_ile_karantinada_kalir_ve_nedeni_gorunur(katalog):
     katalog.parti_ekle("L3", "AST-N", "Ted A", "K", "2026-06-01", durum="karantina")
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser("L3"), lot_no="L3")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser("L3"), lot_no="L3", **denetimli(katalog))
     assert katalog.parti("AST-N", "L3").durum == "karantina"
     assert k.parti_durumu == "karantina"
     assert k.parti_karari != "kabul"
@@ -215,7 +215,7 @@ def test_karantinadaki_parti_uygun_coc_ile_karantinada_kalir_ve_nedeni_gorunur(k
 def test_insan_karantinaya_aldiysa_makinenin_kabul_karari_serbest_birakmaz(katalog):
     defter = DenetimKaydi(katalog.baglanti)
     karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "karantina", "numune şüpheli")
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1", defter=defter, kullanici="gk1")
     assert katalog.parti("AST-N", "L1").durum == "karantina"
     assert k.parti_durumu == "karantina" and k.parti_karari != "kabul"
     assert _ek(k, "parti_durumu").karar == "insan_incelemeli"
@@ -225,7 +225,7 @@ def test_insan_beklettiyse_makinenin_kabul_karari_serbest_birakmaz(katalog):
     # Yeni parti de "bekliyor"dur; fark, insanın bu durumu bilerek vermiş olmasıdır.
     defter = DenetimKaydi(katalog.baglanti)
     karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "bekliyor", "iç laboratuvar sonucu bekleniyor")
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1", defter=defter, kullanici="gk1")
     assert katalog.parti("AST-N", "L1").durum == "bekliyor"
     assert k.parti_durumu == "bekliyor" and k.parti_karari != "kabul"
     assert _ek(k, "parti_durumu").karar == "insan_incelemeli"
@@ -234,14 +234,15 @@ def test_insan_beklettiyse_makinenin_kabul_karari_serbest_birakmaz(katalog):
 def test_insan_serbest_biraktiysa_makine_karantinaya_alabilir(katalog):
     defter = DenetimKaydi(katalog.baglanti)
     karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun")
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(voc="400"), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(voc="400"), lot_no="L1", defter=defter, kullanici="gk1")
     assert k.parti_karari == "red" and k.parti_durumu == "karantina"
     assert katalog.parti("AST-N", "L1").durum == "karantina"
 
 
 def test_makinenin_karantinaya_aldigi_parti_sonraki_uygun_coc_ile_serbest_olmaz(katalog):
-    malzeme_koduyla_kontrol(katalog, "AST-N", _ser(voc="400"), lot_no="L1")
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1")
+    denetim = denetimli(katalog)
+    malzeme_koduyla_kontrol(katalog, "AST-N", _ser(voc="400"), lot_no="L1", **denetim)
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1", **denetim)
     assert katalog.parti("AST-N", "L1").durum == "karantina"
     assert k.parti_durumu == "karantina" and k.parti_karari != "kabul"
 
@@ -249,9 +250,10 @@ def test_makinenin_karantinaya_aldigi_parti_sonraki_uygun_coc_ile_serbest_olmaz(
 def test_makinenin_beklettigi_parti_sonraki_uygun_coc_ile_serbest_olmaz(katalog):
     # Varsayım: "hiç karar verilmemiş" yalnız yeni eklenmiş partidir; makinenin
     # önceki "inceleme" kararı da karardır, serbest bırakmayı insan yapar.
-    malzeme_koduyla_kontrol(katalog, "AST-N", _ser(krom=None), lot_no="L1")  # krom eksik -> inceleme
+    denetim = denetimli(katalog)
+    malzeme_koduyla_kontrol(katalog, "AST-N", _ser(krom=None), lot_no="L1", **denetim)  # krom eksik -> inceleme
     assert katalog.parti("AST-N", "L1").durum == "bekliyor"
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1", **denetim)
     assert katalog.parti("AST-N", "L1").durum == "bekliyor"
     assert k.parti_durumu == "bekliyor" and k.parti_karari != "kabul"
 
@@ -298,7 +300,7 @@ def test_eski_veritabanindaki_partiye_goc_bilinmiyor_kaynagi_yazar(eski_katalog_
 
 def test_eski_veritabanindaki_bekleyen_parti_makinenin_kabul_karariyla_serbest_olmaz(eski_katalog_yolu):
     with Katalog(eski_katalog_yolu) as k:
-        sonuc = malzeme_koduyla_kontrol(k, "AST-N", _ser(), lot_no="L1")
+        sonuc = malzeme_koduyla_kontrol(k, "AST-N", _ser(), lot_no="L1", **denetimli(k))
         assert sonuc.parti_karari != "kabul"
         assert sonuc.parti_durumu == "bekliyor"
         assert k.parti("AST-N", "L1").durum == "bekliyor"
@@ -309,7 +311,7 @@ def test_goc_sonrasi_eklenen_yeni_parti_uygun_coc_ile_serbest_olur(eski_katalog_
     with Katalog(eski_katalog_yolu) as k:
         k.parti_ekle("L2", "AST-N", "Ted A", "K", "2026-06-02")
         assert k.parti("AST-N", "L2").durum_kaynagi is None  # göç doldurması yalnız eski satırlara
-        sonuc = malzeme_koduyla_kontrol(k, "AST-N", _ser("L2"), lot_no="L2")
+        sonuc = malzeme_koduyla_kontrol(k, "AST-N", _ser("L2"), lot_no="L2", **denetimli(k))
         assert sonuc.parti_karari == "kabul" and sonuc.parti_durumu == "serbest"
         assert k.parti("AST-N", "L2").durum == "serbest"
         assert k.parti("AST-N", "L1").durum == "bekliyor"  # eski parti etkilenmez
@@ -355,7 +357,7 @@ def test_goc_doldurmasi_basarisiz_olduktan_sonra_eski_bekleyen_parti_serbest_olm
     # Sonraki açılış doğru doldurmayla.
     with Katalog(eski_katalog_yolu) as k:
         assert k.parti("AST-N", "L1").durum_kaynagi == "bilinmiyor"
-        sonuc = malzeme_koduyla_kontrol(k, "AST-N", _ser(), lot_no="L1")
+        sonuc = malzeme_koduyla_kontrol(k, "AST-N", _ser(), lot_no="L1", **denetimli(k))
         assert sonuc.parti_karari != "kabul"
         assert k.parti("AST-N", "L1").durum == "bekliyor"
 
@@ -399,25 +401,25 @@ def test_parti_durumu_ata_kaynak_verilmezse_hata_verir(katalog):
 
 @pytest.mark.parametrize("parti_no", ["L1", "l1", "  L1  "])
 def test_sertifikadaki_parti_no_lot_ile_tutarsa_uygun(katalog, parti_no):
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(parti_no), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(parti_no), lot_no="L1", **denetimli(katalog))
     assert _ek(k, "parti_no").karar == "uygun"
 
 
 @pytest.mark.parametrize("parti_no", [None, "", "L2", "L10"])
 def test_sertifikadaki_parti_no_yoksa_ya_da_tutmuyorsa_insan_incelemeli(katalog, parti_no):
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(parti_no), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(parti_no), lot_no="L1", **denetimli(katalog))
     assert _ek(k, "parti_no").karar == "insan_incelemeli"
     assert k.parti_karari != "kabul" and katalog.parti("AST-N", "L1").durum != "serbest"
 
 
 @pytest.mark.parametrize("tedarikci", ["Ted A", "ted a", "  TED   A "])
 def test_sertifikadaki_tedarikci_partinin_tedarikcisiyle_tutarsa_uygun(katalog, tedarikci):
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(tedarikci=tedarikci), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(tedarikci=tedarikci), lot_no="L1", **denetimli(katalog))
     assert _ek(k, "parti_tedarikcisi").karar == "uygun"
 
 
 def test_onayli_ama_partinin_tedarikcisi_olmayan_firma_insan_incelemeli(katalog):
-    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(tedarikci="Ted B"), lot_no="L1")
+    k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(tedarikci="Ted B"), lot_no="L1", **denetimli(katalog))
     assert _ek(k, "tedarikci").karar == "uygun"  # Ted B onaylı listede
     assert _ek(k, "parti_tedarikcisi").karar == "insan_incelemeli"  # ama L1'in tedarikçisi Ted A
     assert k.parti_karari != "kabul"
@@ -599,7 +601,7 @@ def test_tanimsiz_sinifli_malzemenin_partisi_serbest_olmaz(urunlu_katalog):
     urunlu_katalog.malzeme_ekle("AST-C", "MIL-PRF-23377", "K", tip="I", sinif="C")
     urunlu_katalog.tedarikci_onayla("AST-C", "Ted A")
     urunlu_katalog.parti_ekle("L9", "AST-C", "Ted A", "K", "2026-06-01")
-    k = malzeme_koduyla_kontrol(urunlu_katalog, "AST-C", _ser("L9", atif="MIL-PRF-23377K", krom=None), lot_no="L9")
+    k = malzeme_koduyla_kontrol(urunlu_katalog, "AST-C", _ser("L9", atif="MIL-PRF-23377K", krom=None), lot_no="L9", **denetimli(urunlu_katalog))
     assert k.parti_karari != "kabul" and urunlu_katalog.parti("AST-C", "L9").durum != "serbest"
 
 
@@ -657,7 +659,7 @@ def test_onekli_sinif_kodunda_eksik_krom_sonucu_kabul_vermez(katalog):
     katalog.malzeme_ekle("AST-P", "MIL-PRF-23377", "K", tip="Type I", sinif="Class N")
     katalog.tedarikci_onayla("AST-P", "Ted A")
     katalog.parti_ekle("L5", "AST-P", "Ted A", "K", "2026-06-01")
-    k = malzeme_koduyla_kontrol(katalog, "AST-P", _ser("L5", krom=None), lot_no="L5")
+    k = malzeme_koduyla_kontrol(katalog, "AST-P", _ser("L5", krom=None), lot_no="L5", **denetimli(katalog))
     assert "krom" in [x.test_id for x in k.kontrol.satirlar]
     assert k.parti_karari != "kabul" and katalog.parti("AST-P", "L5").durum != "serbest"
 
@@ -695,7 +697,7 @@ def test_urun_tanimi_yokken_bilinmeyen_sinifli_malzemenin_partisi_serbest_olmaz(
     katalog.malzeme_ekle("AST-X", "MIL-PRF-23377", "K", tip="I", sinif="X")
     katalog.tedarikci_onayla("AST-X", "Ted A")
     katalog.parti_ekle("L6", "AST-X", "Ted A", "K", "2026-06-01")
-    k = malzeme_koduyla_kontrol(katalog, "AST-X", _ser("L6", krom=None), lot_no="L6")
+    k = malzeme_koduyla_kontrol(katalog, "AST-X", _ser("L6", krom=None), lot_no="L6", **denetimli(katalog))
     assert any(s.karar == "insan_incelemeli" for s in _tip_sinif_satiri(k))
     assert k.parti_karari != "kabul" and katalog.parti("AST-X", "L6").durum != "serbest"
 

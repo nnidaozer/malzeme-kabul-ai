@@ -282,13 +282,38 @@ class Katalog:
 
     @contextmanager
     def islem(self) -> Iterator[sqlite3.Connection]:
-        """Tek bir işlem (transaction): hata olursa hepsi geri alınır."""
+        """Tek bir işlem (transaction): hata olursa hepsi geri alınır.
+
+        Bağlantıda açık bir işlem varsa (ör. dıştaki bir `islem()`), içteki
+        işlem SAVEPOINT olarak ona katılır: hatada yalnız kendi yazdıklarını
+        geri alır, başarıda dış işlemi bitirmez. Böylece bir durum değişikliği
+        ile onun denetim kaydı dıştaki tek işlemde yazılır (denetim B1).
+
+        Dış işlem BEGIN IMMEDIATE ile başlar: yazma kilidi baştan alınır, işlem
+        içinde yapılan okuma (ör. parti durumu) yazılana kadar başka bir
+        bağlantı tarafından değiştirilemez (K2 yarışı). Kilit alınamazsa
+        `sqlite3.OperationalError` ("database is locked") yükselir.
+        """
+        b = self.baglanti
+        if b.in_transaction:
+            self._kayit_noktasi = getattr(self, "_kayit_noktasi", 0) + 1
+            ad = f"katalog_islem_{self._kayit_noktasi}"
+            b.execute(f"SAVEPOINT {ad}")
+            try:
+                yield b
+            except BaseException:
+                b.execute(f"ROLLBACK TO {ad}")
+                b.execute(f"RELEASE {ad}")
+                raise
+            b.execute(f"RELEASE {ad}")
+            return
+        b.execute("BEGIN IMMEDIATE")
         try:
-            yield self.baglanti
-            self.baglanti.commit()
-        except Exception:
-            self.baglanti.rollback()
+            yield b
+        except BaseException:
+            b.rollback()
             raise
+        b.commit()
 
     # --- standart ---------------------------------------------------------
 

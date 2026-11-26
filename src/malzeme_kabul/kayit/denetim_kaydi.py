@@ -26,7 +26,7 @@ import hashlib
 import json
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Literal
 
@@ -62,7 +62,25 @@ BEFORE DELETE ON denetim_kaydi
 BEGIN
     SELECT RAISE(ABORT, 'denetim kaydı silinemez');
 END;
+
+-- INSERT OR REPLACE, çakışan satırı DELETE tetikleyicisini çalıştırmadan siler
+-- (recursive_triggers kapalıyken). BEFORE INSERT çakışma çözümünden önce çalışır:
+-- var olan bir sıra ya da özetle eklemek reddedilir, böylece REPLACE hiçbir
+-- satırı silemez. Bağlantı ayarına (pragma) bağlı değildir; şemadadır.
+CREATE TRIGGER IF NOT EXISTS denetim_kaydi_uzerine_yazilamaz
+BEFORE INSERT ON denetim_kaydi
+WHEN EXISTS (SELECT 1 FROM denetim_kaydi WHERE sira = NEW.sira OR ozet = NEW.ozet)
+BEGIN
+    SELECT RAISE(ABORT, 'denetim kaydının üzerine yazılamaz (sıra ya da özet zaten var)');
+END;
 """
+
+# Doğrulayıcının (scripts/denetim_dogrula.py) şemada araması gereken tetikleyiciler.
+TETIKLEYICILER: tuple[str, ...] = (
+    "denetim_kaydi_degistirilemez",
+    "denetim_kaydi_silinemez",
+    "denetim_kaydi_uzerine_yazilamaz",
+)
 
 _ALANLAR = (
     "sira", "zaman", "tur", "kullanici", "malzeme_kodu", "lot_no", "dokuman_surumu",
@@ -115,11 +133,57 @@ def _simdi() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="microseconds")
 
 
+# Verilen zaman şimdiden en çok bu kadar ileride olabilir (saat kayması payı).
+ILERI_ZAMAN_PAYI = timedelta(minutes=5)
+
+_METIN_ALANLARI = ("malzeme_kodu", "lot_no", "dokuman_surumu", "model", "istem_surumu")
+
+
+def _zaman_coz(zaman: Any) -> datetime:
+    """ISO 8601, saat dilimli zamanı çözer; değilse DenetimHatasi."""
+    if not isinstance(zaman, str) or not zaman.strip():
+        raise DenetimHatasi(f"zaman boş olamaz ve metin olmalı: {zaman!r}")
+    try:
+        an = datetime.fromisoformat(zaman)
+    except ValueError as hata:
+        raise DenetimHatasi(f"zaman ISO 8601 biçiminde olmalı: {zaman!r}") from hata
+    if an.tzinfo is None or an.utcoffset() is None:
+        raise DenetimHatasi(f"zaman saat dilimi içermeli (ör. +00:00): {zaman!r}")
+    return an
+
+
+def sema_eksikleri(baglanti: sqlite3.Connection) -> list[str]:
+    """Denetim kaydı şemasında eksik olan nesneler ("tablo denetim_kaydi", "tetikleyici ...").
+
+    Yalnız okur; şemayı kurmaz ya da onarmaz. Boş liste şemanın tam olduğunu
+    gösterir. `DenetimKaydi` kurulmadan (şema betiği çalışmadan) önce
+    çağrılmalıdır; kurulum eksik tetikleyiciyi sessizce yeniden yaratır.
+    """
+    nesneler = {(t, ad) for t, ad in baglanti.execute("SELECT type, name FROM sqlite_master")}
+    eksik = ["tablo denetim_kaydi"] if ("table", "denetim_kaydi") not in nesneler else []
+    return eksik + [f"tetikleyici {t}" for t in TETIKLEYICILER if ("trigger", t) not in nesneler]
+
+
+def _json_varsayilan(nesne: Any) -> Any:
+    """JSON'a doğrudan girmeyen değerler: küme sıralı listeye (hash tohumundan bağımsız), gerisi metne."""
+    if isinstance(nesne, (set, frozenset)):
+        return sorted(nesne, key=lambda x: json.dumps(x, sort_keys=True, default=_json_varsayilan, allow_nan=False))
+    return str(nesne)
+
+
+def _icerik_json(icerik: Any) -> str:
+    """Kayıt içeriğinin katı ve kararlı JSON'u: NaN/Infinity ValueError verir, kümeler sıralanır."""
+    return json.dumps(icerik, ensure_ascii=False, sort_keys=True, allow_nan=False, default=_json_varsayilan)
+
+
 class DenetimKaydi:
     """Zincirli denetim kaydı. Katalogla aynı SQLite bağlantısını paylaşabilir."""
 
     def __init__(self, baglanti: sqlite3.Connection | str | Path = ":memory:"):
+        """Açık işlemdeki bir bağlantıyla kurulamaz: şema betiği (executescript) o işlemi sessizce bitirirdi."""
         if isinstance(baglanti, sqlite3.Connection):
+            if baglanti.in_transaction:
+                raise DenetimHatasi("bağlantıda açık işlem var; denetim kaydı işlem dışında kurulmalı")
             self.baglanti = baglanti
             self._sahip = False
         else:
@@ -128,7 +192,7 @@ class DenetimKaydi:
             self.baglanti = sqlite3.connect(str(baglanti), check_same_thread=False)
             self._sahip = True
         self.baglanti.row_factory = sqlite3.Row
-        self.baglanti.executescript(SEMA)
+        self.baglanti.executescript(SEMA)  # IF NOT EXISTS: şema tamsa salt okunur bağlantıda da yazmaz
 
     def kapat(self) -> None:
         if self._sahip:
@@ -158,27 +222,52 @@ class DenetimKaydi:
         istem_surumu: str | None = None,
         zaman: str | None = None,
     ) -> Kayit:
-        """Zincirin sonuna bir kayıt ekler ve onu döner."""
+        """Zincirin sonuna bir kayıt ekler ve onu döner.
+
+        Bağlantıda açık bir işlem varsa kayıt o işleme SAVEPOINT ile katılır ve
+        dış işlemi bitirmez: durum değişikliği ile kaydı tek işlemde yazılır,
+        dış işlem geri alınırsa kayıt da gider. Açık işlem yoksa kayıt kendi
+        işleminde (BEGIN IMMEDIATE) yazılır.
+
+        `zaman` verilirse saat dilimli ISO 8601 olmalı ve bir önceki kayıttan
+        eski olmamalıdır. Metin alanları metin olmalıdır; içerik katı JSON'dur
+        (NaN/Infinity ValueError).
+        """
         if tur not in KAYIT_TURLERI:
             raise DenetimHatasi(f"bilinmeyen kayıt türü: {tur!r} ({', '.join(KAYIT_TURLERI)})")
-        if not kullanici or not kullanici.strip():
-            raise DenetimHatasi("kullanıcı boş olamaz")
+        if not isinstance(kullanici, str) or not kullanici.strip():
+            raise DenetimHatasi("kullanıcı boş olamaz ve metin olmalı")
+        metinler = {"malzeme_kodu": malzeme_kodu, "lot_no": lot_no, "dokuman_surumu": dokuman_surumu,
+                    "model": model, "istem_surumu": istem_surumu}
+        for ad in _METIN_ALANLARI:
+            if metinler[ad] is not None and not isinstance(metinler[ad], str):
+                raise DenetimHatasi(f"{ad} metin olmalı: {metinler[ad]!r} ({type(metinler[ad]).__name__})")
+        if pdf_sayfasi is not None and (isinstance(pdf_sayfasi, bool) or not isinstance(pdf_sayfasi, (str, int))):
+            raise DenetimHatasi(f"pdf_sayfasi metin ya da tam sayı olmalı: {pdf_sayfasi!r}")
+        if zaman is not None and _zaman_coz(zaman) > datetime.now(timezone.utc) + ILERI_ZAMAN_PAYI:
+            raise DenetimHatasi(f"zaman şimdiden {ILERI_ZAMAN_PAYI} fazla ileride olamaz: {zaman}")
+        govde = _icerik_json(icerik)
         b = self.baglanti
-        b.execute("BEGIN IMMEDIATE")
+        ic_islem = b.in_transaction
+        b.execute("SAVEPOINT denetim_ekle" if ic_islem else "BEGIN IMMEDIATE")
         try:
-            son = b.execute("SELECT sira, ozet FROM denetim_kaydi ORDER BY sira DESC LIMIT 1").fetchone()
+            son = b.execute("SELECT sira, zaman, ozet FROM denetim_kaydi ORDER BY sira DESC LIMIT 1").fetchone()
+            kayit_zamani = zaman if zaman is not None else _simdi()
+            if son is not None:
+                try:
+                    onceki_an = _zaman_coz(son["zaman"])
+                except DenetimHatasi:
+                    onceki_an = None  # eski, biçimsiz kayıt: monotonluk denetlenemez
+                if onceki_an is not None and _zaman_coz(kayit_zamani) < onceki_an:
+                    raise DenetimHatasi(f"zaman bir önceki kayıttan ({son['zaman']}) eski olamaz: {kayit_zamani}")
             alanlar: dict[str, Any] = {
                 "sira": (son["sira"] + 1) if son else 1,
-                "zaman": zaman or _simdi(),
+                "zaman": kayit_zamani,
                 "tur": tur,
                 "kullanici": kullanici,
-                "malzeme_kodu": malzeme_kodu,
-                "lot_no": lot_no,
-                "dokuman_surumu": dokuman_surumu,
+                **metinler,
                 "pdf_sayfasi": None if pdf_sayfasi is None else str(pdf_sayfasi),
-                "model": model,
-                "istem_surumu": istem_surumu,
-                "icerik": json.dumps(icerik, ensure_ascii=False, sort_keys=True, default=str),
+                "icerik": govde,
                 "onceki_ozet": son["ozet"] if son else BASLANGIC,
             }
             alanlar["ozet"] = kayit_ozeti(alanlar)
@@ -186,9 +275,13 @@ class DenetimKaydi:
                 f"INSERT INTO denetim_kaydi ({', '.join(alanlar)}) VALUES ({', '.join('?' * len(alanlar))})",
                 tuple(alanlar.values()),
             )
-            b.execute("COMMIT")
-        except Exception:
-            b.execute("ROLLBACK")
+            b.execute("RELEASE denetim_ekle" if ic_islem else "COMMIT")
+        except BaseException:
+            if ic_islem:
+                b.execute("ROLLBACK TO denetim_ekle")
+                b.execute("RELEASE denetim_ekle")
+            else:
+                b.execute("ROLLBACK")
             raise
         return Kayit(**alanlar)
 
@@ -239,5 +332,8 @@ __all__ = [
     "KAYIT_TURLERI",
     "Kayit",
     "KayitTuru",
+    "ILERI_ZAMAN_PAYI",
+    "TETIKLEYICILER",
     "kayit_ozeti",
+    "sema_eksikleri",
 ]

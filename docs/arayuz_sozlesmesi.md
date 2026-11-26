@@ -25,9 +25,14 @@ kısımlarını koda karşı denetlediği, hangilerini denetlemediği en sondaki
 - **Arayüz yalnız bu dokümandaki adları çağırır.** Ekranın arkasındaki işler
   `arayuz/ekran_verisi.py`'de durur ve Streamlit olmadan test edilir. Kimlik
   işleri `arayuz/kimlik.py`'dedir. Streamlit'e yalnız `uygulama.py` bağımlıdır.
-- **Bağlantı.** `uygulama.py` bir `Katalog` açar. Aynı SQLite bağlantısını
-  (`katalog.baglanti`, bir `sqlite3.Connection` özniteliği) hem
-  `DenetimKaydi`'ya hem `kimlik.giris`'e verir. Katalog, denetim kaydı ve
+- **Bağlantı.** Her Streamlit çalıştırması (`main`) kendi `Katalog`'unu
+  `with Katalog(DB) as katalog:` ile açar ve çalıştırma bitince kapatır;
+  `st.rerun` istisnasında ve defter kurulamadığında da kapanır. Bağlantı
+  oturumlar (iplikler) arasında paylaşılmaz. Çalıştırma içinde aynı SQLite
+  bağlantısını (`katalog.baglanti`, bir `sqlite3.Connection` özniteliği) hem
+  `sema_eksikleri`'ne ve `DenetimKaydi`'ya (uygulama içi `baglan` yardımcısı)
+  hem `kimlik.giris`'e verir. Durum değişikliği ile denetim kaydının tek
+  işlem olması bu ortak bağlantıya dayanır. Katalog, denetim kaydı ve
   kullanıcılar aynı dosyada durur (bkz. "Ortam değişkenleri").
 - **Birim ve sınır.** Birim dönüşümünü ve sınır karşılaştırmasını arayüz de
   dil modeli de hiçbir zaman yapmaz. Bu işler `kural/` katmanındaki Python
@@ -50,7 +55,7 @@ kısımlarını koda karşı denetlediği, hangilerini denetlemediği en sondaki
 | `revizyon`: Revizyon farkı ve M&P incelemesi | `mp` | `ekran_verisi.hazir_revizyon_raporlari`, `revizyon_raporu`, `revizyon_etkisi.yeni_revizyon_yukle`, `mp_bekleyenler`, `Katalog.malzeme`, `mp_incelemesini_kapat` |
 | `giris`: Giriş kalite: CoC kontrolü | `giris_kalite` | `Katalog.malzemeler`, `gecerli_dokuman`, `partiler`, `onayli_tedarikciler`, `ekran_verisi.parti_hazirla`, `json_sertifika_karari`, `hibrit_hat.sertifika_hatti`, `karar_tablosu`, `PARTI_ETIKETI`; düzeltme formu: `PARTI_DURUMLARI`, `katalog_karari.karari_duzelt` |
 | `depo`: Depo: partiler ve raf ömrü | `mp`, `giris_kalite` | `ekran_verisi.depo_tablosu`, `RAF_ETIKETI` |
-| kenar çubuğu (her ekran) | herkes | `kimlik.yetkili_mi`, `kimlik.EKRANLAR`, `DenetimKaydi.zinciri_dogrula` |
+| kenar çubuğu (her ekran) | herkes | `kimlik.yetkili_mi`, `kimlik.EKRANLAR`, `denetim_kaydi.sema_eksikleri` (defter kurulmadan önce), `DenetimKaydi.zinciri_dogrula` |
 
 ## Bağlantı ve kimlik
 
@@ -68,7 +73,8 @@ SQLite malzeme kataloğu. Şunları tutar:
 
 Karar vermez; yalnız saklar ve getirir. `baglanti` özniteliği açıktır
 (`sqlite3.Connection`, `row_factory = sqlite3.Row`). Arayüz bu özniteliği
-yalnız `DenetimKaydi`'ya ve `kimlik.giris`'e vermek için okur; bu bağlantıyla
+yalnız `DenetimKaydi`'ya, `sema_eksikleri`'ne ve `kimlik.giris`'e vermek
+için okur; bu bağlantıyla
 doğrudan SQL çalıştırmaz.
 
 ### `malzeme_kabul.katalog.veritabani.Katalog.__init__(yol)`
@@ -91,18 +97,30 @@ yakalamaz.
 - eski veritabanlarına eksik sütunları veri kaybetmeden ekler:
   `partiler.kap_turu`, `partiler.mp_inceleme`, `malzemeler.mp_inceleme`
 
-Arayüz her Streamlit yeniden çalıştırmasında yeni bir `Katalog` açar ve
-kapatmaz (bkz. "Bilinen açıklar").
+Arayüz her Streamlit yeniden çalıştırmasında yeni bir `Katalog`'u
+`with katalog:` bloğuyla açar; blok bitince `kapat()` bağlantıyı kapatır
+(bkz. "Kapsam ve katman sınırı", **Bağlantı**).
 
 ### `malzeme_kabul.kayit.denetim_kaydi.DenetimKaydi`
 
 Zincirli (SHA-256) denetim kaydı. Kayıt türleri `karar`, `onay` ve
-`duzeltme`'dir. Kayıtlara yalnız ekleme yapılır; UPDATE ve DELETE
-tetikleyiciyle reddedilir. Tetikleyici yalnız uygulamanın kendi
-UPDATE/DELETE'ine karşı korur. Dosyaya yazabilen biri onu aşabilir (bkz.
-"Bilinen açıklar" madde 7). Her kaydın özeti bir önceki kaydın özetini
-içerir. Arayüz bu sınıfa doğrudan kayıt yazmaz; kayıtları aşağıdaki hat ve
-ekran verisi fonksiyonları yazar.
+`duzeltme`'dir. Kayıtlara yalnız ekleme yapılır. Şemadaki üç tetikleyici
+(`denetim_kaydi.TETIKLEYICILER`) UPDATE'i, DELETE'i ve var olan bir sıra ya
+da özetle INSERT'i reddeder; sonuncusu (BEFORE INSERT) `INSERT OR REPLACE` /
+`REPLACE INTO` ile kayıt silinmesini de engeller. Dosyaya yazabilen biri
+tetikleyicileri `DROP TRIGGER` ile kaldırarak ya da dosyayı doğrudan
+düzenleyerek bunu aşabilir (bkz. "Bilinen açıklar" madde 7). Her kaydın
+özeti bir önceki kaydın özetini içerir. Arayüz bu sınıfa doğrudan kayıt
+yazmaz; kayıtları aşağıdaki hat ve ekran verisi fonksiyonları yazar.
+
+Kayıt ekleme (`ekle`) şunları denetler ve aykırılıkta `DenetimHatasi` verir:
+kayıt türü, boş olmayan kullanıcı, metin alanlarının tipi ve `zaman`.
+`zaman` verilirse saat dilimli ISO 8601 olmalıdır; bir önceki kaydın
+zamanından eski olamaz (monoton) ve şimdiden en çok `ILERI_ZAMAN_PAYI`
+(5 dakika) ileride olabilir. Verilmezse UTC şimdi yazılır. İçerik katı
+JSON'dur (NaN/Infinity `ValueError`). Bağlantıda açık bir işlem varsa kayıt
+o işleme SAVEPOINT ile katılır; böylece durum değişikliği ile kaydı tek
+işlemde yazılır.
 
 ### `malzeme_kabul.kayit.denetim_kaydi.DenetimKaydi.__init__(baglanti)`
 
@@ -114,15 +132,58 @@ ekran verisi fonksiyonları yazar.
 
 **Çıktı**: `DenetimKaydi` nesnesi.
 
+**Hatalar**
+
+- `DenetimHatasi`: verilen bağlantıda açık bir işlem var
+  (`baglanti.in_transaction`). Şema betiği (`executescript`) o işlemi
+  sessizce bitireceği için defter işlem dışında kurulmalıdır. Arayüz
+  yakalamaz; `main` defteri işlem açılmadan kurduğu için olağan akışta
+  oluşmaz.
+- `sqlite3` hataları (ör. dosya açılamıyor, veritabanı okunamıyor). Arayüz
+  yakalamaz.
+
 **Yan etkiler**:
 
 - bağlantının `row_factory`'sini `sqlite3.Row` yapar
-- `denetim_kaydi` tablosunu ve tetikleyicilerini kurar
+- `denetim_kaydi` tablosunu ve üç tetikleyicisini kurar
+  (`CREATE ... IF NOT EXISTS`). Eksik bir tetikleyici sessizce yeniden
+  yaratılır; bu yüzden arayüz eksikleri defteri kurmadan önce
+  `sema_eksikleri` ile okur.
+
+### `malzeme_kabul.kayit.denetim_kaydi.sema_eksikleri(baglanti)`
+
+Denetim kaydı şemasında eksik olan nesneleri bulur. Arayüz bunu her
+çalıştırmada, `DenetimKaydi` kurulmadan önce `katalog.baglanti` ile çağırır
+(uygulama içi `baglan` yardımcısı). Sonuç kenar çubuğundaki zincir yazısına
+(uygulama içi `zincir_durumu`) geçer: liste boş değilse kenar çubuğu zinciri
+doğrulamadan "Denetim zinciri: BOZUK (şema: eksik ...)" yazar.
+`scripts/denetim_dogrula.py` aynı denetimi salt okunur bağlantıyla yapar.
+
+**Girdiler**
+
+- `baglanti` (`sqlite3.Connection`, zorunlu): denetim kaydının durduğu
+  bağlantı. Arayüzde `katalog.baglanti`. Salt okunur bir bağlantı da
+  olabilir.
+
+**Çıktı**: `list[str]`: eksik nesneler, şu sırayla:
+`"tablo denetim_kaydi"` (tablo yoksa), ardından `TETIKLEYICILER`
+sırasıyla her eksik tetikleyici için `"tetikleyici <ad>"`
+(`denetim_kaydi_degistirilemez`, `denetim_kaydi_silinemez`,
+`denetim_kaydi_uzerine_yazilamaz`). Boş liste şemanın tam olduğunu gösterir.
+
+**Hatalar**: `sqlite3.DatabaseError`: veritabanı okunamıyor (ör. dosya
+SQLite değil). Arayüz yakalamaz; `denetim_dogrula.py` yakalar ve zinciri
+bozuk sayar.
+
+**Yan etkiler**: yok; yalnız `sqlite_master`'ı okur. Şemayı kurmaz ya da
+onarmaz.
 
 ### `malzeme_kabul.kayit.denetim_kaydi.DenetimKaydi.zinciri_dogrula(beklenen_son_ozet)`
 
-Zinciri baştan sona doğrular. Arayüz bunu kenar çubuğunda argümansız
-çağırır ve `gecerli` alanına göre "sağlam" ya da "BOZUK" yazar.
+Zinciri baştan sona doğrular. Arayüz bunu kenar çubuğunda (uygulama içi
+`zincir_durumu`) yalnız `sema_eksikleri` boş döndüyse ve argümansız çağırır;
+`gecerli` alanına göre "sağlam" ya da "BOZUK" yazar. Şemada eksik varsa
+zinciri doğrulamadan "BOZUK" yazar (bkz. `sema_eksikleri`).
 
 **Girdiler**
 
@@ -340,20 +401,24 @@ için hata verilmez, `[]` döner.
 
 **Hatalar**
 
-- `KatalogHatasi`: taslak bilinmiyor, fark var ama taslak onaylanmış, ya da
+- `KatalogHatasi`: defter katalogla aynı bağlantıyı paylaşmıyor (hiçbir şey
+  yazılmaz), taslak bilinmiyor, fark var ama taslak onaylanmış, ya da
   standart veya revizyon değiştirilmiş. Arayüz yakalar.
-- `DenetimHatasi` (bir `ValueError` alt sınıfı): kullanıcı boş. Arayüz bunu
-  `ValueError` olarak yakalar.
+- `DenetimHatasi` (bir `ValueError` alt sınıfı): kullanıcı boş ya da kayıt
+  zamanı geçersiz. Arayüz yakalar (`ValueError` olarak).
+- `sqlite3.OperationalError`: yazma kilidi alınamadı ("database is locked").
+  Arayüz yakalar ve "meşgul" iletisini (`MESGUL`) gösterir; hiçbir şey
+  yazılmamıştır.
 
-**Yan etkiler**: fark yoksa hiçbir şey yazmaz. Fark varsa iki ayrı işlem
-yapar:
+**Yan etkiler**: fark yoksa hiçbir şey yazmaz. Fark varsa tek işlemde
+(`Katalog.islem`, BEGIN IMMEDIATE) şunları yapar:
 
-1. Taslağın içeriğini ve `guncelleme` zamanını günceller ve commit eder.
+1. Taslağın içeriğini ve `guncelleme` zamanını günceller.
 2. Denetim kaydına `duzeltme` türünde bir kayıt ekler. İçerik: `taslak`,
    `farklar`. `dokuman_surumu`: `"<belge><rev> taslak <id>"`.
 
-İkinci adım hata verirse taslak değişmiş ama kaydı yazılmamış kalır. Bu açık
-denetim kaydı PR'ında düzeltilecek.
+Herhangi bir adım hata verirse ikisi de geri alınır: taslak değişmez, kayıt
+yazılmaz.
 
 ### `malzeme_kabul.arayuz.ekran_verisi.taslak_onayla(katalog, defter, taslak_id, kullanici, not_)`
 
@@ -378,13 +443,17 @@ Taslağı yeni ve değiştirilemez bir onaylı kabul dokümanı sürümü yapar.
 
 **Hatalar**
 
-- `KatalogHatasi`: taslak bilinmiyor, taslak zaten onaylanmış ya da
-  onaylayan boş. Arayüz yakalar.
-- `DenetimHatasi`: kullanıcı boş, denetim kaydı adımında. Arayüz yakalamaz
-  (yalnız `KatalogHatasi` yakalar). Onaylayan boşsa önce `KatalogHatasi`
-  verildiği için bu olağan akışta oluşmaz.
+- `KatalogHatasi`: defter katalogla aynı bağlantıyı paylaşmıyor (hiçbir şey
+  yazılmaz), taslak bilinmiyor, taslak zaten onaylanmış ya da onaylayan boş.
+  Arayüz yakalar.
+- `DenetimHatasi` (bir `ValueError` alt sınıfı): denetim kaydı adımı
+  reddetti (ör. kayıt zamanı geçersiz). Arayüz yakalar (`ValueError`
+  olarak). Onaylayan boşsa önce `KatalogHatasi` verilir.
+- `sqlite3.OperationalError`: yazma kilidi alınamadı. Arayüz yakalar ve
+  "meşgul" iletisini gösterir; hiçbir şey yazılmamıştır.
 
-**Yan etkiler**: üç ayrı işlem yapar:
+**Yan etkiler**: tek işlemde (`Katalog.islem`, BEGIN IMMEDIATE) şunları
+yapar:
 
 1. Standart yoksa `standartlar`'a ekler; `dokuman_surumleri`'ne yeni sürümü
    ekler.
@@ -392,8 +461,8 @@ Taslağı yeni ve değiştirilemez bir onaylı kabul dokümanı sürümü yapar.
 3. Denetim kaydına bir `onay` kaydı ekler. İçerik: `taslak`,
    `dokuman_surumu`, `ozet`, `not`.
 
-Üçüncü adım hata verirse sürüm onaylanmış ama kaydı yazılmamış kalır. Bu açık
-denetim kaydı PR'ında düzeltilecek.
+Herhangi bir adım hata verirse hepsi geri alınır: sürüm onaylanmaz, taslak
+açık kalır, kayıt yazılmaz.
 
 ### `malzeme_kabul.arayuz.ekran_verisi.hazir_revizyon_raporlari(klasor)`
 
@@ -469,10 +538,11 @@ işaretler. İşaret kilit değildir: parti durumu değişmez.
 
 **Hatalar**
 
-- `KatalogHatasi`: kullanıcı boş. Arayüzdeki çağrı (`uygulama.py`,
-  revizyon ekranı) `try` içinde değildir, yani hiçbir istisna yakalanmaz.
+- `KatalogHatasi`: kullanıcı boş. Arayüz yakalar (revizyon yükleme formu
+  `KatalogHatasi` ve `ValueError` yakalar, `DenetimHatasi` dahil).
   Oturumdaki kullanıcı adı boş olamadığı için bu hata olağan akışta oluşmaz.
-  SQLite hataları da yakalanmaz.
+- `sqlite3.OperationalError`: yazma kilidi alınamadı. Arayüz yakalar ve
+  "meşgul" iletisini gösterir.
 
 **Yan etkiler**:
 
@@ -534,27 +604,32 @@ altındadır.
 **Hatalar**
 
 - `KatalogHatasi`: şu durumlarda verilir. Arayüz yakalar.
+  - defter katalogla aynı bağlantıyı paylaşmıyor (hiçbir şey yazılmaz)
   - malzeme bilinmiyor
   - bekleyen inceleme yok
   - `yeni_revizyona_gec` için revizyon harfi verilmemiş ya da o revizyonun
     onaylı kabul dokümanı yok
   - karar bilinmiyor
-- `DenetimHatasi`: kullanıcı boş. Arayüz yakalamaz (yalnız `KatalogHatasi`
-  yakalar). Oturumdaki kullanıcı adı boş olamadığı için olağan akışta
-  oluşmaz.
+- `DenetimHatasi` (bir `ValueError` alt sınıfı): kullanıcı boş ya da kayıt
+  zamanı geçersiz. Arayüz yakalar (`ValueError` olarak). Oturumdaki
+  kullanıcı adı boş olamadığı için kullanıcı durumu olağan akışta oluşmaz.
+- `sqlite3.OperationalError`: yazma kilidi alınamadı. Arayüz yakalar ve
+  "meşgul" iletisini gösterir; hiçbir şey yazılmamıştır.
 
-**Yan etkiler**: sırayla ayrı işlemler yapar:
+**Yan etkiler**: tek işlemde (`Katalog.islem`, BEGIN IMMEDIATE) şunları
+yapar:
 
-1. Yalnız `yeni_revizyona_gec`'te: malzemenin revizyonunu günceller ve
-   commit eder.
-2. Malzemenin ve partilerinin `mp_inceleme` işaretini kaldırır ve commit
-   eder.
+1. Yalnız `yeni_revizyona_gec`'te: malzemenin revizyonunu günceller.
+2. Malzemenin ve partilerinin `mp_inceleme` işaretini kaldırır.
 3. Denetim kaydına bir `onay` kaydı ekler. İçerik:
    - `gerek_yok`: `karar`, `malzeme` (standart etiketi), `isaret`, `not`
    - `yeni_revizyona_gec`: `karar`, `eski`, `yeni`, `not`
 
-Üçüncü adım hata verirse revizyon değişmiş ve işaret kalkmış ama kaydı
-yazılmamış kalır. Bu açık denetim kaydı PR'ında düzeltilecek.
+   `dokuman_surumu` olarak malzemenin (geçişten sonraki) geçerli doküman
+   sürümü yazılır; `gerek_yok`'ta onaylı doküman yoksa `None`.
+
+Herhangi bir adım hata verirse hepsi geri alınır: revizyon da işaret de eski
+kalır, kayıt yazılmaz.
 
 ## Giriş kalite ekranı
 
@@ -600,6 +675,9 @@ kalite ekranı yakalar.
 - `durum` (`PARTI_DURUMLARI`'ndan biri)
 - `kap_turu` (`str | None`)
 - `mp_inceleme` (`str | None`)
+- `durum_kaynagi` (`str | None`): `None` hiç karar verilmedi; `"makine"`,
+  `"insan"` ya da `"bilinmiyor"`
+- `karar_verildi` özelliği: `durum_kaynagi` doluysa `True`
 
 **Yan etkiler**: yok.
 
@@ -666,12 +744,21 @@ kullanılmaz.
   (`KararSatiri`), `satirlar` (`list[KararSatiri]`), `tip_sinif`
   (`KararSatiri | None`), `eslesmeyen_satirlar` (`list[str]`)
 - `ek_denetimler` (`list[KararSatiri]`):
-  - `tedarikci`: yalnız sertifikada tedarikçi yazılıysa üretilir.
-    Sertifikada tedarikçi boşsa bu denetim hiç eklenmez. Ad, onaylı listeyle
-    büyük/küçük harf ve boşluk farkı gözetilmeden karşılaştırılır. Listede
-    yoksa "insan incelemeli" olur.
+  - `tedarikci`: her zaman üretilir. Ad, onaylı listeyle büyük/küçük harf
+    ve boşluk farkı gözetilmeden karşılaştırılır. Listede yoksa ya da
+    sertifikada tedarikçi boşsa ("sertifikada tedarikçi yok") "insan
+    incelemeli" olur.
   - `siparis_revizyonu`: yalnız lot verildiyse üretilir. Partinin sipariş
     revizyonu malzemenin revizyonundan farklıysa "insan incelemeli" olur.
+  - `parti_no`: yalnız lot verildiyse üretilir. Sertifikadaki parti
+    numarası yoksa ya da lotla (büyük/küçük harf ve boşluk farkı
+    gözetilmeden) tutmuyorsa "insan incelemeli" olur.
+  - `parti_tedarikcisi`: yalnız lot verildiyse üretilir. Sertifikadaki
+    tedarikçi yoksa ya da partinin katalogdaki tedarikçisi değilse (başka
+    bir onaylı firma olsa bile) "insan incelemeli" olur.
+  - `parti_durumu`: yalnız makine kararı partiyi daha serbest bir duruma
+    geçiremediğinde üretilir (bkz. `parti_durumu` alanı); her zaman "insan
+    incelemeli"dir ve gerekçesinde partinin neden o durumda kaldığı yazar.
   - `kanit`: yalnız hibrit hatta üretilir.
 - `parti_karari` (`"kabul" | "red" | "inceleme"`): parti kuralının
   (`kural.karar_motoru.parti_karari`) sonucu:
@@ -679,7 +766,14 @@ kullanılmaz.
   - yoksa bir satır "insan incelemeli" ise inceleme
   - hepsi uygunsa kabul
 - `parti_durumu` (`"serbest" | "karantina" | "bekliyor"`): kabul → serbest,
-  red → karantina, inceleme → bekliyor
+  red → karantina, inceleme → bekliyor. Makine partiyi yalnız aynı ya da
+  daha kısıtlayıcı bir duruma geçirebilir (serbest < bekliyor < karantina).
+  Tek istisna hiç karar verilmemiş (`Parti.durum_kaynagi` `None`) bekleyen
+  yeni partidir. Karantinadaki ya da daha önce karar verilmiş bekleyen bir
+  partiyi makine serbest bırakmaz: `parti_durumu` partinin mevcut durumu
+  olarak kalır, `parti_durumu` ek denetimi eklenir ve `parti_karari` yeniden
+  hesaplanır (en az inceleme). Serbest bırakmak `karari_duzelt` ile insanın
+  işidir.
 - `hat` (`dict | None`): bu fonksiyonda `{"mod": "json"}`
 
 `KararSatiri` alanları: `test_id`, `test_adi`, `karar` (`"uygun" |
@@ -687,29 +781,41 @@ kullanılmaz.
 `sertifikadaki_ad`, `okunan_sonuc`, `okunan_birim`, `cevrilmis_deger`,
 `hedef_birim`.
 
-Sertifikadaki `parti_no`, katalogdaki lotla karşılaştırılmaz. Sertifikadaki
-tedarikçi de partinin kayıtlı tedarikçisiyle karşılaştırılmaz (bkz.
-"Bilinen açıklar").
+Lot verildiğinde sertifikadaki `parti_no` katalogdaki lotla, sertifikadaki
+tedarikçi de partinin kayıtlı tedarikçisiyle karşılaştırılır (`parti_no` ve
+`parti_tedarikcisi` ek denetimleri; bkz. "Bilinen açıklar" madde 3).
 
 **Hatalar**
 
 - `ValueError`: JSON bozuk ya da şemaya uymuyor (`pydantic.ValidationError`,
   bir `ValueError` alt sınıfı). Arayüz yakalar.
-- `KatalogHatasi`: kullanıcı boş, malzeme bilinmiyor, onaylı doküman yok ya
-  da parti bilinmiyor. Arayüz yakalar.
+- `KatalogHatasi`: kullanıcı boş, defter katalogla aynı bağlantıyı
+  paylaşmıyor, malzeme bilinmiyor, onaylı doküman yok ya da parti
+  bilinmiyor. Altta çağrılan `hat.katalog_karari.malzeme_koduyla_kontrol`
+  ayrıca lot verilip `durumu_yaz` açıkken defter yoksa da `KatalogHatasi`
+  verir; bu fonksiyon defteri her zaman verdiği için burada oluşmaz. Hiçbir
+  durumda bir şey yazılmaz. Arayüz yakalar.
 - `DenetimHatasi` (bir `ValueError` alt sınıfı): denetim kaydı adımı
-  reddetti. Arayüz bunu `ValueError` olarak yakalar.
+  reddetti (ör. kayıt zamanı geçersiz). Arayüz bunu `ValueError` olarak
+  yakalar.
+- `sqlite3.OperationalError`: yazma kilidi alınamadı. Arayüz yakalar ve
+  "meşgul" iletisini gösterir; hiçbir şey yazılmamıştır.
 
-**Yan etkiler**: iki ayrı işlem yapar:
+**Yan etkiler**: malzeme ve geçerli doküman sürümü işlemden önce okunur.
+Ardından tek işlemde (`Katalog.islem`, BEGIN IMMEDIATE; lot verilmese de)
+şunları yapar:
 
-1. Lot verildiyse parti durumunu karara göre günceller ve commit eder.
-   Partinin önceki durumu dikkate alınmaz; karantinadaki bir parti de
-   kabul kararıyla `serbest` olur.
+1. Lot verildiyse partiyi kilit altında okur ve makine geçişine izin
+   veriliyorsa parti durumunu karara göre günceller (`kaynak="makine"`).
+   İzin yoksa (karantinadaki ya da daha önce karar verilmiş bekleyen
+   partiyi serbest bırakmak) durum değişmez ve `parti_durumu` ek denetimi
+   eklenir (bkz. Çıktı, `parti_durumu`).
 2. Denetim kaydına bir `karar` kaydı ekler. İçerik `KatalogKarari`'nin
-   tamamıdır; ayrıca `malzeme_kodu`, `lot_no`, `dokuman_surumu` yazılır.
+   tamamıdır; ayrıca `malzeme_kodu`, `lot_no` ve kararın kullandığı
+   `dokuman_surumu` yazılır.
 
-İkinci adım hata verirse parti durumu değişmiş ama kaydı yazılmamış kalır.
-Bu açık denetim kaydı PR'ında düzeltilecek.
+Herhangi bir adım hata verirse ikisi de geri alınır: parti durumu değişmez,
+kayıt yazılmaz.
 
 ### `malzeme_kabul.hat.hibrit_hat.sertifika_hatti(katalog, malzeme_kodu, pdf_yolu, mod, istemci, lot_no, defter, kullanici, ayar)`
 
@@ -773,15 +879,26 @@ Hibrit mod şöyle çalışır:
   ortamdan kurulan istemcinin adresi localhost değil / arka ucu bilinmiyor.
   Arayüz yakalar.
 - `ValueError`: PDF okunamadı ya da PDF sınırı aşıldı. Arayüz yakalar.
-- `KatalogHatasi`: `defter` verilmiş ama kullanıcı boş, malzeme bilinmiyor,
-  onaylı doküman yok ya da parti bilinmiyor. Arayüz yakalar.
+- `KatalogHatasi`: şu durumlarda verilir; hiçbir şey yazılmaz. Arayüz
+  yakalar.
+  - `defter` verilmiş ama kullanıcı boş
+  - `defter` katalogla aynı bağlantıyı paylaşmıyor
+  - `lot_no` verilmiş ama `defter` yok: parti durumu yazan karar defter
+    olmadan verilmez (`malzeme_koduyla_kontrol`, `durumu_yaz` varsayılanı
+    açık)
+  - malzeme bilinmiyor, onaylı doküman yok ya da parti bilinmiyor
+- `DenetimHatasi` (bir `ValueError` alt sınıfı): denetim kaydı adımı
+  reddetti. Arayüz `ValueError` olarak yakalar.
+- `sqlite3.OperationalError`: yazma kilidi alınamadı. Arayüz yakalar ve
+  "meşgul" iletisini gösterir; hiçbir şey yazılmamıştır.
 - `FileNotFoundError` ve diğer `OSError`'lar: PDF yok ya da okunamıyor.
   Arayüz yakalamaz. Dil modeli bağlantısındaki `OSError`'ı arayüz yakalamaz,
   çünkü hat onu kendisi yakalar ve yedeğe düşer; arayüze ulaşmaz.
 
-**Yan etkiler**: `json_sertifika_karari` ile aynıdır (iki ayrı işlem: parti
-durumu, ardından `karar` kaydı). Aynı atomiklik açığı burada da geçerlidir.
-Kayda ayrıca şunlar yazılır:
+**Yan etkiler**: `json_sertifika_karari` ile aynıdır. PDF okuma, dil modeli
+çağrısı, malzeme ve doküman sürümünün okunması işlemin dışındadır; yazma
+kilidi yalnız parti durumu ve `karar` kaydı için tek işlemde (BEGIN
+IMMEDIATE) alınır. Kayda ayrıca şunlar yazılır:
 
 - `pdf_sayfasi`: sayfa numaraları, virgülle ayrılmış.
   - Kural modunda ve hibrit yedekte belgenin bütün sayfaları yazılır.
@@ -841,21 +958,28 @@ formunun seçenekleridir.
 
 **Hatalar**
 
-- `KatalogHatasi`: gerekçe boş, parti bilinmiyor, durum geçersiz ya da
-  onaylı doküman yok. Son durumda parti durumu zaten değişmiş olur. Arayüz
-  yakalar.
-- `DenetimHatasi`: kullanıcı boş. Arayüz yakalamaz (yalnız `KatalogHatasi`
-  yakalar); olağan akışta oluşmaz.
+- `KatalogHatasi`: kullanıcı boş, gerekçe boş (ikisi de hiçbir şey
+  yazılmadan denetlenir), defter katalogla aynı bağlantıyı paylaşmıyor,
+  parti bilinmiyor, durum geçersiz ya da onaylı doküman yok. Hiçbir
+  durumda parti durumu değişmez. Arayüz yakalar.
+- `DenetimHatasi` (bir `ValueError` alt sınıfı): denetim kaydı adımı
+  reddetti (ör. kayıt zamanı geçersiz). Arayüz yakalar (`ValueError`
+  olarak).
+- `sqlite3.OperationalError`: yazma kilidi alınamadı. Arayüz yakalar ve
+  "meşgul" iletisini gösterir; hiçbir şey yazılmamıştır.
 
-**Yan etkiler**: sırayla şunları yapar:
+**Yan etkiler**: tek işlemde (`Katalog.islem`, BEGIN IMMEDIATE) sırayla
+şunları yapar:
 
-1. Parti durumunu günceller ve commit eder.
+1. Partinin önceki durumunu okur (kilit altında; başka bir bağlantı araya
+   giremez).
 2. Geçerli doküman sürümünü okur.
-3. Denetim kaydına bir `duzeltme` kaydı ekler. İçerik: `onceki_durum`,
-   `yeni_durum`, `neden`.
+3. Parti durumunu günceller (`kaynak="insan"`).
+4. Denetim kaydına bir `duzeltme` kaydı ekler. İçerik: `onceki_durum`,
+   `yeni_durum`, `neden`; `dokuman_surumu` 2. adımda okunan sürümdür.
 
-2. ya da 3. adım hata verirse durum değişmiş ama kaydı yazılmamış kalır. Bu
-açık denetim kaydı PR'ında düzeltilecek.
+Herhangi bir adım hata verirse hepsi geri alınır: durum değişmez, kayıt
+yazılmaz.
 
 ## Depo ekranı
 
@@ -930,28 +1054,42 @@ etiketli satırları sayıp uyarı gösterir.
 hibritte model istemcisi kurulamadı (`MALZEME_KABUL_MODELI` yok).
 
 Ayrıca iki istisna daha `ValueError` alt sınıfıdır:
-`kayit.denetim_kaydi.DenetimHatasi` (kullanıcı boş, kayıt türü bilinmiyor) ve
-`belge.pdf_okuyucu.PdfSiniriAsildi`. Arayüz bunları doğrudan içe aktarmaz.
-Yalnız `ValueError` yakalayan çağrılarda yakalanırlar.
+`kayit.denetim_kaydi.DenetimHatasi` ve `belge.pdf_okuyucu.PdfSiniriAsildi`.
+Arayüz bunları doğrudan içe aktarmaz. `ValueError` yakalayan çağrılarda
+yakalanırlar.
+
+`DenetimHatasi` şu durumlarda verilir:
+
+- `DenetimKaydi` açık işlemi olan bir bağlantıyla kurulmak istendi
+- kayıt türü bilinmiyor ya da kullanıcı boş
+- metin alanı metin değil, `pdf_sayfasi` metin ya da tam sayı değil
+- `zaman` saat dilimli ISO 8601 değil, bir önceki kayıttan eski (zaman
+  monotondur) ya da şimdiden `ILERI_ZAMAN_PAYI` (5 dakika) fazla ileride
+
+Yazma yapan her çağrı `Katalog.islem` ile BEGIN IMMEDIATE alır. Kilit
+alınamazsa `sqlite3.OperationalError` ("database is locked") yükselir ve
+hiçbir şey yazılmaz. Yazan formlar bunu yakalar ve `uygulama.MESGUL`
+iletisini ("Veritabanı şu an başka bir işlemle meşgul; kaydedilmedi,
+yeniden deneyin") gösterir.
 
 Arayüzdeki yakalama tablosu (`main`, `uygulama.py`):
 
 | Çağrı | Yakalananlar | Yakalanmayanlar (örnek) |
 |---|---|---|
-| `standart_yukle` | KatalogHatasi, ValueError | FileNotFoundError ve diğer OSError'lar |
-| `tablodan_dokuman`, `taslak_duzelt` | KatalogHatasi, ValueError (DenetimHatasi dahil) | sqlite3 hataları |
-| `taslak_onayla` | yalnız KatalogHatasi | DenetimHatasi, sqlite3 hataları |
+| `standart_yukle` | KatalogHatasi, ValueError | sqlite3.OperationalError, FileNotFoundError ve diğer OSError'lar |
+| `tablodan_dokuman`, `taslak_duzelt` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
+| `taslak_onayla` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
 | `revizyon_raporu` | yalnız ValueError | FileNotFoundError ve diğer OSError'lar |
-| `yeni_revizyon_yukle` | **hiçbiri** (try yok) | KatalogHatasi, sqlite3 hataları |
+| `yeni_revizyon_yukle` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
 | `mp_bekleyenler`, `Katalog.malzeme` (revizyon ekranı) | hiçbiri | KatalogHatasi |
-| `mp_incelemesini_kapat` | yalnız KatalogHatasi | DenetimHatasi |
+| `mp_incelemesini_kapat` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
 | `Katalog.gecerli_dokuman` (giriş kalite) | KatalogHatasi | |
-| `parti_hazirla`, `json_sertifika_karari`, `sertifika_hatti` | KatalogHatasi, HatHatasi, ValueError | FileNotFoundError ve diğer OSError'lar |
-| `karari_duzelt` | yalnız KatalogHatasi | DenetimHatasi |
+| `parti_hazirla`, `json_sertifika_karari`, `sertifika_hatti` | KatalogHatasi, HatHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | FileNotFoundError ve diğer OSError'lar |
+| `karari_duzelt` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
 | `depo_tablosu` | **hiçbiri** (try yok) | KatalogHatasi |
 | `test_tablosu` (taslak ekranı) | hiçbiri (try dışında) | şema/öznitelik hataları |
 | `karar_tablosu`, `PARTI_ETIKETI[...]` (giriş kalite, karardan sonra) | hiçbiri (try dışında) | KeyError (beklenmeyen karar değeri) |
-| `Katalog(...)`, `giris`, `taslaklar`, `malzemeler`, `partiler`, `onayli_tedarikciler`, `zinciri_dogrula` | hiçbiri | sqlite3 ve şema hataları |
+| `Katalog(...)`, `sema_eksikleri`, `DenetimKaydi(...)`, `giris`, `taslaklar`, `malzemeler`, `partiler`, `onayli_tedarikciler`, `zinciri_dogrula` | hiçbiri | sqlite3 ve şema hataları, DenetimHatasi (açık işlem) |
 
 ## Sabitler
 
@@ -1044,14 +1182,22 @@ gelince ilgili bölümler de güncellenecek.
    "satisfactory", "ok" ve "kabul" kelimeleri "geçti" listesinde olduğu için
    bu metinler **geçti** sayılır. Sayısal olmayan bir şartta satır "uygun"
    olur. Ayrı bir PR'la düzeltilecek.
-2. **Karantinadan makineyle serbest bırakma.** `malzeme_koduyla_kontrol`
-   partinin önceki durumuna bakmaz; yeni bir "kabul" kararı karantinadaki
-   bir partiyi `serbest` yapar.
-3. **Lot ve tedarikçi karşılaştırması.** Sertifikadaki `parti_no`
-   katalogdaki lotla, sertifikadaki tedarikçi de partinin tedarikçisiyle
-   karşılaştırılmaz.
-4. **Tedarikçi yoksa denetim yok.** Sertifikada tedarikçi boşsa `tedarikci`
-   ek denetimi hiç üretilmez.
+2. **Karantinadan makineyle serbest bırakma (düzeltildi).**
+   `malzeme_koduyla_kontrol` partinin önceki durumunu kilit altında okur.
+   Makine partiyi yalnız aynı ya da daha kısıtlayıcı bir duruma geçirebilir
+   (serbest < bekliyor < karantina); tek istisna hiç karar verilmemiş
+   bekleyen yeni partidir. Karantinadaki ya da daha önce karar verilmiş
+   bekleyen partiyi makine serbest bırakmaz; durum korunur ve `parti_durumu`
+   ek denetimi "insan incelemeli" olur. Serbest bırakma `karari_duzelt` ile
+   insanın işidir.
+3. **Lot ve tedarikçi karşılaştırması (düzeltildi).** Lot verildiğinde
+   sertifikadaki `parti_no` katalogdaki lotla (`parti_no` ek denetimi),
+   sertifikadaki tedarikçi de partinin tedarikçisiyle (`parti_tedarikcisi`
+   ek denetimi) karşılaştırılır. Eksik ya da tutmayan değer "insan
+   incelemeli" olur.
+4. **Tedarikçi yoksa denetim yok (düzeltildi).** `tedarikci` ek denetimi
+   artık her zaman üretilir; sertifikada tedarikçi boşsa "insan incelemeli"
+   olur ("sertifikada tedarikçi yok").
 5. **Tip/sınıf tanımsız.** Katalogda tip ve sınıfın **ikisi de** boşsa
    `kontrol_et` katalog dalına girmez (`tip is not None or sinif is not
    None` koşulu). Bu durumda tip ve sınıf sertifikadaki atıftan alınır;
@@ -1068,20 +1214,30 @@ gelince ilgili bölümler de güncellenecek.
    okunamayan) bir standarttan çıkan boş taslak onaylanırsa bu yola
    çıkılır. Ayrı bir PR'la düzeltilecek.
 7. **Denetim kaydı ve sürümlerin değiştirilemezliği.**
-   - Atomiklik: durum değişikliği ile kayıt aynı işlemde yazılmıyor (bkz.
-     `taslak_duzelt`, `taslak_onayla`, `json_sertifika_karari`,
-     `sertifika_hatti`, `karari_duzelt`, `mp_incelemesini_kapat`).
-   - Tetikleyicilerin sınırı: kodda REPLACE kullanılmıyor. Ama SQLite
-     dosyasına yazabilen biri `denetim_kaydi` ve `dokuman_surumleri`
-     satırlarını değiştirebilir. Üç yolu var:
-     - `INSERT OR REPLACE` ya da `REPLACE INTO`. Çakışan satır silinip
-       yeniden yazılır; `recursive_triggers` kapalıyken (SQLite
-       varsayılanı) DELETE tetikleyicisi çalışmaz, UPDATE tetikleyicisi de
-       devreye girmez.
-     - `DROP TRIGGER`.
-     - Dosyayı doğrudan düzenlemek.
-
-     Tetikleyiciler yalnız uygulamanın kendi UPDATE/DELETE'ine karşı korur.
+   - Atomiklik (düzeltildi): durum değişikliği ile kaydı artık tek işlemde
+     (`Katalog.islem`, BEGIN IMMEDIATE; `DenetimKaydi.ekle` açık işleme
+     SAVEPOINT ile katılır) yazılıyor: `taslak_duzelt`, `taslak_onayla`,
+     `json_sertifika_karari`, `sertifika_hatti`, `karari_duzelt`,
+     `mp_incelemesini_kapat`. Kayıt yazılamazsa durum da değişmez. Defter
+     katalogla aynı bağlantıyı paylaşmazsa `KatalogHatasi` verilir; parti
+     durumu yazan karar defter olmadan verilmez.
+   - REPLACE açığı (denetim kaydında kapandı): `denetim_kaydi` üzerindeki
+     BEFORE INSERT tetikleyicisi (`denetim_kaydi_uzerine_yazilamaz`) var
+     olan bir sıra ya da özetle eklemeyi çakışma çözümünden önce reddeder.
+     Böylece `INSERT OR REPLACE` / `REPLACE INTO` hiçbir kaydı silemez;
+     bu `recursive_triggers` ayarına bağlı değildir.
+     `dokuman_surumleri` tablosunda böyle bir tetikleyici yoktur; orada
+     REPLACE yolu açıktır (kodda REPLACE kullanılmaz).
+   - Açık kalan: SQLite dosyasına yazabilen biri `DROP TRIGGER` ile
+     tetikleyicileri kaldırabilir ya da dosyayı doğrudan düzenleyebilir.
+     Kaldırılmış bir denetim tetikleyicisini `sema_eksikleri` yakalar
+     (kenar çubuğu ve `scripts/denetim_dogrula.py` zinciri bozuk sayar);
+     ama tetikleyiciyi kaldırıp satırı değiştiren ve sonra tetikleyiciyi
+     geri kuran biri bununla yakalanmaz, yalnız zincir (aşağıda) yakalar.
+     Ayrıca uygulamanın bir sonraki açılışı (giriş ekranı dahil) eksik
+     tetikleyiciyi kayıtsız onarır; o andan sonra ne kenar çubuğu ne
+     `denetim_dogrula.py` bunu görür. Onarımın zincire kayıt düşmesi ve
+     `dokuman_surumleri` için REPLACE koruması ayrı bir PR'la ele alınacak.
    - Sürüm özeti: `dokuman_surumleri.ozet` içerikle aynı satırda durur.
      Biri içeriği değiştirip özeti de yeniden hesaplarsa bu fark edilmez.
      Sürüm, denetim kaydındaki onay kaydının özetiyle çapraz
@@ -1091,7 +1247,9 @@ gelince ilgili bölümler de güncellenecek.
      hesaplanırsa bunu yalnız dışarıda saklanan son özet yakalar.
      Arayüz bu özeti kullanmaz (bkz. madde 17).
 
-   Bunlar denetim kaydı PR'ında ele alınacak.
+   Açık kalanlar (`DROP TRIGGER` / dosyayı doğrudan düzenleme, sürüm
+   özeti, zincirin dışarıdaki özetle karşılaştırılmaması) ayrı bir PR'la ele
+   alınacak.
 8. **Hibrit kanıt gevşekliği.** Kanıt doğrulayıcı retro H1-H14 ile
    sıkılaştırıldı (docs/mimari.md madde 6, hibrit hat). Yedekte `kanit`
    denetiminin "uygun" olması hâlâ gözden geçirilecek.
@@ -1120,8 +1278,9 @@ gelince ilgili bölümler de güncellenecek.
 14. **Yüklenen dosyanın üzerine yazma.** `dosyayi_kaydet` dosyayı yalnız
     temizlenmiş adıyla yazıyor. Aynı adlı bir yükleme önceki dosyanın
     üzerine yazılır.
-15. **Bağlantı sızıntısı.** Streamlit her yeniden çalıştırmada yeni bir
-    `Katalog` bağlantısı açıyor ve kapatmıyor.
+15. **Bağlantı sızıntısı (düzeltildi).** Her Streamlit çalıştırması kendi
+    `Katalog`'unu `with` bloğuyla açar ve kapatır (`st.rerun` istisnasında
+    ve defter kurulamadığında da). Bağlantı oturumlar arasında paylaşılmaz.
 16. **Rol denetimi yalnız arayüzde.** `ekran_verisi` ve `hat`
     fonksiyonları kullanıcının rolünü denetlemiyor.
 17. **Kenar çubuğundaki "sağlam".** Bu ifade yalnız zincirin kendi içinde

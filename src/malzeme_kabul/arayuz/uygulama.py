@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import os
 import re
+import sqlite3
 from datetime import date
 from pathlib import Path
 
@@ -25,16 +26,24 @@ from malzeme_kabul.hat.hibrit_hat import HatHatasi, sertifika_hatti
 from malzeme_kabul.hat.katalog_karari import karari_duzelt
 from malzeme_kabul.hat.revizyon_etkisi import mp_bekleyenler, mp_incelemesini_kapat, yeni_revizyon_yukle
 from malzeme_kabul.katalog.veritabani import PARTI_DURUMLARI, Katalog, KatalogHatasi
-from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
+from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi, sema_eksikleri
 
 KOK = Path(__file__).resolve().parents[3]
 DB = Path(os.environ.get("MALZEME_KABUL_DB", KOK / "data" / "calisma" / "katalog.sqlite"))
 YUKLEME = Path(os.environ.get("MALZEME_KABUL_YUKLEME", KOK / "data" / "calisma" / "yuklenen"))
 
 
-def baglan() -> tuple[Katalog, DenetimKaydi]:
-    katalog = Katalog(DB)
-    return katalog, DenetimKaydi(katalog.baglanti)
+def baglan(katalog: Katalog) -> tuple[DenetimKaydi, list[str]]:
+    """Defteri kurar; şemayı kurmadan önce denetim şemasında eksik olanları döner.
+
+    Defterin kurulumu eksik tetikleyiciyi yeniden yaratır; eksik önce okunmazsa
+    kenar çubuğu kurcalanmış veritabanını sağlam gösterirdi.
+    """
+    eksik = sema_eksikleri(katalog.baglanti)
+    return DenetimKaydi(katalog.baglanti), eksik
+
+
+MESGUL = "Veritabanı şu an başka bir işlemle meşgul; kaydedilmedi, yeniden deneyin"
 
 
 def dosyayi_kaydet(yuklenen) -> Path:
@@ -103,13 +112,17 @@ def taslak_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
                 st.write(f"- {f}")
         except (KatalogHatasi, ValueError) as hata:
             st.error(f"Kaydedilmedi: {hata}")
+        except sqlite3.OperationalError as hata:
+            st.error(f"{MESGUL} ({hata}).")
     not_ = sag.text_input("Onay notu", key=f"not_{secim.id}")
     if sag.button("Onayla (yeni değiştirilemez sürüm)"):
         try:
             s = ev.taslak_onayla(katalog, defter, secim.id, kullanici.ad, not_ or None)
             st.success(f"{s.etiket} onaylandı.")
-        except KatalogHatasi as hata:
+        except (KatalogHatasi, ValueError) as hata:
             st.error(str(hata))
+        except sqlite3.OperationalError as hata:
+            st.error(f"{MESGUL} ({hata}).")
     with st.expander("Koşullar ve raf ömrü (salt okunur)"):
         st.json({"raf_omurleri": [r.model_dump(mode="json") for r in secim.dokuman.raf_omurleri],
                  "kosullar": [k.model_dump(mode="json") for k in secim.dokuman.kosullar]})
@@ -142,10 +155,15 @@ def revizyon_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
             belge_no = st.text_input("Belge no", "MIL-PRF-23377")
             rev = st.text_input("Yeni revizyon harfi")
             if st.form_submit_button("Yükle ve etkilenenleri işaretle") and rev.strip():
-                etki = yeni_revizyon_yukle(katalog, belge_no.strip(), rev.strip().upper(), kullanici.ad,
-                                           fark_ozeti=st.session_state.get("revizyon_ozet"))
-                st.success(f"{etki.yeni_etiket}: {len(etki.etkilenen_malzemeler)} malzeme, "
-                           f"{len(etki.etkilenen_partiler)} parti 'M&P incelemesi bekliyor' işaretlendi.")
+                try:
+                    etki = yeni_revizyon_yukle(katalog, belge_no.strip(), rev.strip().upper(), kullanici.ad,
+                                               fark_ozeti=st.session_state.get("revizyon_ozet"))
+                    st.success(f"{etki.yeni_etiket}: {len(etki.etkilenen_malzemeler)} malzeme, "
+                               f"{len(etki.etkilenen_partiler)} parti 'M&P incelemesi bekliyor' işaretlendi.")
+                except (KatalogHatasi, ValueError) as hata:
+                    st.error(str(hata))
+                except sqlite3.OperationalError as hata:
+                    st.error(f"{MESGUL} ({hata}).")
     with sekme3:
         bekleyen = mp_bekleyenler(katalog)
         if not bekleyen:
@@ -162,8 +180,10 @@ def revizyon_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
             try:
                 mp_incelemesini_kapat(katalog, defter, kod, kullanici.ad, karar, not_ or None, yeni_rev.strip().upper() or None)
                 st.success("Kapatıldı ve denetim kaydına yazıldı.")
-            except KatalogHatasi as hata:
+            except (KatalogHatasi, ValueError) as hata:
                 st.error(str(hata))
+            except sqlite3.OperationalError as hata:
+                st.error(f"{MESGUL} ({hata}).")
 
 
 # --- giriş kalite --------------------------------------------------------------------------------
@@ -209,6 +229,9 @@ def giris_kalite_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> No
     except (KatalogHatasi, HatHatasi, ValueError) as hata:
         st.error(str(hata))
         return
+    except sqlite3.OperationalError as hata:
+        st.error(f"{MESGUL} ({hata}).")
+        return
     st.subheader(f"Parti kararı: {ev.PARTI_ETIKETI[karar.parti_karari]}")
     if karar.hat and karar.hat.get("yedek"):
         st.warning(f"Dil modeli kullanılamadı, kural okumasıyla karar verildi: {karar.hat['yedek']}")
@@ -229,8 +252,10 @@ def duzeltme_formu(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
             try:
                 karari_duzelt(katalog, defter, kullanici.ad, son[0], son[1], durum, neden)
                 st.success("Düzeltme kaydedildi.")
-            except KatalogHatasi as hata:
+            except (KatalogHatasi, ValueError) as hata:
                 st.error(str(hata))
+            except sqlite3.OperationalError as hata:
+                st.error(f"{MESGUL} ({hata}).")
 
 
 # --- depo --------------------------------------------------------------------------------------------
@@ -260,7 +285,25 @@ EKRAN_FONKSIYONLARI = {
 
 def main() -> None:
     st.set_page_config(page_title="Malzeme kabul", layout="wide")
-    katalog, defter = baglan()
+    # Her çalıştırma kendi bağlantısını açar ve kapatır (st.rerun istisnasında ve defter kurulamazsa
+    # da). Bağlantı oturumlar (iplikler) arasında paylaşılmaz; paylaşılsa işlemler birbirine karışırdı.
+    with Katalog(DB) as katalog:
+        defter, sema_eksik = baglan(katalog)
+        _ekran(katalog, defter, sema_eksik)
+
+
+def zincir_durumu(defter: DenetimKaydi, sema_eksik: list[str]) -> str:
+    """Kenar çubuğundaki zincir yazısı; scripts/denetim_dogrula.py ile aynı şema ve zincir denetimi."""
+    if sema_eksik:
+        return f"Denetim zinciri: BOZUK (şema: eksik {', '.join(sema_eksik)})"
+    s = defter.zinciri_dogrula()
+    if s.gecerli:
+        return f"Denetim zinciri: sağlam ({s.kayit_sayisi} kayıt)"
+    yer = f"kayıt {s.bozuk_sira}" if s.bozuk_sira is not None else "zincir sonu"
+    return f"Denetim zinciri: BOZUK ({yer}: {s.neden})"
+
+
+def _ekran(katalog: Katalog, defter: DenetimKaydi, sema_eksik: list[str]) -> None:
     kullanici = st.session_state.get("kullanici")
     if kullanici is None:
         giris_ekrani(katalog)
@@ -276,7 +319,7 @@ def main() -> None:
     EKRAN_FONKSIYONLARI[ekran](katalog, defter, kullanici)
     if ekran == "giris":
         duzeltme_formu(katalog, defter, kullanici)
-    st.sidebar.caption(f"Denetim zinciri: {'sağlam' if defter.zinciri_dogrula().gecerli else 'BOZUK'}")
+    st.sidebar.caption(zincir_durumu(defter, sema_eksik))
 
 
 if __name__ == "__main__":
