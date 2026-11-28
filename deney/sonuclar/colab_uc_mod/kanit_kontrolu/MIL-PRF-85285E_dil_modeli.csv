@@ -1,0 +1,51 @@
+durum,kayit,alan,deger,madde,sayfa,madde_sayfada
+bulundu,composition,test.sinir.ust,0.05,3.4,6,evet
+bulundu,solvent_content,test.sinir.ust,420,3.4.1,6,evet
+bulundu,vohap_limit,test.sinir.alt,0.2,TABLE I,7,evet
+bulundu,vohap_limit,test.sinir.ust,24,TABLE I,7,evet
+bulundu,vohap_limit_2,test.sinir.alt,0.27,TABLE I,7,evet
+bulundu,vohap_limit_2,test.sinir.ust,32,TABLE I,7,evet
+bulundu,vohap_limit_3,test.sinir.alt,1.33,TABLE I,7,evet
+bulundu,vohap_limit_3,test.sinir.ust,159,TABLE I,7,evet
+bulundu,vohap_limit_4,test.sinir.alt,1.19,TABLE I,7,evet
+bulundu,vohap_limit_4,test.sinir.ust,142,TABLE I,7,evet
+bulundu,vohap_limit_5,test.sinir.alt,0.03,TABLE I,7,evet
+bulundu,vohap_limit_5,test.sinir.ust,3,TABLE I,7,evet
+bulundu,vohap_limit_7,test.sinir.alt,1.3,TABLE I,7,evet
+bulundu,vohap_limit_7,test.sinir.ust,156,TABLE I,7,evet
+bulundu,vohap_limit_8,test.sinir.alt,0.8,TABLE I,7,evet
+bulundu,vohap_limit_8,test.sinir.ust,95,TABLE I,7,evet
+bulundu,moisture_content,test.sinir.ust,2,3.5.5,8,evet
+bulundu,fineness_of_grind,test.sinir.alt,7,3.6.1,8,evet
+bulundu,coarse_particles,test.sinir.ust,0.5,3.6.2,8,evet
+bulundu,drying_time,test.sinir.alt,6,3.7.1,8,evet
+bulundu,drying_time,test.sinir.ust,12,3.7.1,8,evet
+bulunamadi,color,test.sinir.alt,0,3.7.3,8,evet
+bulundu,color,test.sinir.ust,1,3.7.3,8,evet
+bulundu,infrared_reflectance,test.sinir.ust,8,3.7.4,8,evet
+bulundu,impact_flexibility,test.sinir.alt,40,3.7.8.1,9,evet
+bulundu,humidity_resistance,test.sinir.alt,30,3.8.3,10,evet
+bulundu,heat_resistance,test.sinir.ust,1,3.8.4,10,evet
+bulundu,cleanability,test.sinir.alt,75,3.9.3,10,evet
+bulundu,strippability,test.sinir.alt,90,3.9.4,10,evet
+bulundu,primer_coating,test.sinir.alt,0.6,4.5.2.1,13,evet
+bulundu,primer_coating,test.sinir.ust,0.9,4.5.2.1,13,evet
+bulundu,topcoat,test.sinir.alt,1.7,4.5.2.2,13,evet
+bulundu,topcoat,test.sinir.ust,2.3,4.5.2.2,13,evet
+bulundu,air_drying,test.sinir.alt,14,4.5.2.2,13,evet
+bulundu,immersion_duration,test.sinir.alt,24,TABLE V,17,evet
+bulundu,immersion_duration,test.sinir.ust,24,TABLE V,17,evet
+bulundu,fluid_temperature_2,test.sinir.alt,63,TABLE V,17,evet
+turetildi,fluid_temperature_2,test.sinir.ust,69,TABLE V,17,evet
+bulundu,immersion_duration_2,test.sinir.alt,24,TABLE V,17,evet
+bulundu,immersion_duration_2,test.sinir.ust,24,TABLE V,17,evet
+sonraki_sayfada,fluid_temperature_3,test.sinir.alt,15,TABLE V,17,evet
+bulundu,fluid_temperature_3,test.sinir.ust,25,TABLE V,17,evet
+bulundu,immersion_duration_3,test.sinir.alt,7,TABLE V,17,evet
+bulundu,immersion_duration_3,test.sinir.ust,7,TABLE V,17,evet
+turetildi,weather_resistance_4,test.sinir.alt,39,4.6.9,17,evet
+turetildi,weather_resistance_4,test.sinir.ust,45,4.6.9,17,evet
+bulundu,weather_resistance_5,test.sinir.alt,60,4.6.9,17,evet
+bulundu,weather_resistance_5,test.sinir.ust,66,4.6.9,17,evet
+turetildi,weather_resistance_6,test.sinir.alt,45,4.6.9,17,evet
+turetildi,weather_resistance_6,test.sinir.ust,55,4.6.9,17,evet

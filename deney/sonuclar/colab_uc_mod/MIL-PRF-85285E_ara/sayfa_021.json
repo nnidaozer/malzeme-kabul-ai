@@ -1,0 +1,74 @@
+{
+  "sayfa": 21,
+  "sure_s": 19.797,
+  "testler": [
+    {
+      "id": "moisture",
+      "test_adi": "Moisture (class H only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Polyurethane materials should be kept dry. The presence of moisture degrades the quality of the coating. Packaging of the materials should be done in a dry atmosphere. Solvents and resins should be examined for evidence of contamination before they are incorporated, even if they are \"urethane grade,\" as solvents and thinners may become contaminated with water in tank cars or storage tanks. The purchase of \"urethane grade\" solvents and thinners is no guarantee that excessive moisture is not present. It is recommended that all users check for moisture contamination prior to use."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "6.4",
+        "sayfa": 21,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "moisture_detection",
+      "test_adi": "Method to detect water in solvent used for polyurethane coatings",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The following is a suggested method that may be used to determine the presence of water in the solvents used for polyurethane coatings: Add one drop of aluminum secondary butoxide to 100 ml of the solvent in a stoppered flask and shake well. An appreciable amount of turbidity indicates the presence of water."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "6.4.1",
+        "sayfa": 21,
+        "alinti": null
+      },
+      "test_turleri": [
+        "yeterlilik"
+      ],
+      "uygulanabilirlik": [
+        "Class H"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

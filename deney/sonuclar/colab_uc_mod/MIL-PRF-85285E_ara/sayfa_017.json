@@ -1,0 +1,537 @@
+{
+  "sayfa": 17,
+  "sure_s": 132.944,
+  "testler": [
+    {
+      "id": "immersion_time",
+      "test_adi": "Immersion time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Time of immersion"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE V",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid_temperature",
+      "test_adi": "Fluid temperature",
+      "kaynak_tablo_adi": "Immersion time",
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Fluid Fluid temperature (minimum)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE V",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "immersion_duration",
+      "test_adi": "Immersion duration",
+      "kaynak_tablo_adi": "Immersion time",
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 24.0,
+        "ust": 24.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "yon": null,
+        "orijinal_metin": "24 hours"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE V",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid_temperature_2",
+      "test_adi": "Fluid temperature",
+      "kaynak_tablo_adi": "Immersion time",
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 63.0,
+        "ust": 69.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "yon": null,
+        "orijinal_metin": "66 ±3 °C (150 ±5 °F)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE V",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "immersion_duration_2",
+      "test_adi": "Immersion duration",
+      "kaynak_tablo_adi": "Immersion time",
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 24.0,
+        "ust": 24.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "yon": null,
+        "orijinal_metin": "24 hours"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE V",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid_temperature_3",
+      "test_adi": "Fluid temperature",
+      "kaynak_tablo_adi": "Immersion time",
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 15.0,
+        "ust": 25.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "yon": null,
+        "orijinal_metin": "Room temperature"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE V",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "immersion_duration_3",
+      "test_adi": "Immersion duration",
+      "kaynak_tablo_adi": "Immersion time",
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 7.0,
+        "ust": 7.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "day",
+        "yon": null,
+        "orijinal_metin": "7 days"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "TABLE V",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "weather_resistance",
+      "test_adi": "Weather resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "For types I, II, and III, the coating shall be applied to test panels in accordance with 4.5 through 4.5.2, and tested in accordance with ASTM G155 using a Xenon-arc weatherometer (Atlas Material Testing Technology or equivalent as approved by the qualifying activity) that is cycling between 102 minutes of light only and 18 minutes of light and water spray for not less than 500 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "weather_resistance_2",
+      "test_adi": "Weather resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "For type IV, the coating shall be applied to test panels in accordance with 4.5 through 4.5.2, and tested in accordance with ASTM G155 using a Xenon-arc weatherometer (Atlas Material Testing Technology Company or equivalent as approved by the qualifying activity) that is cycling between 102 minutes of light only and 18 minutes of light and water spray for not less than 3000 hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "weather_resistance_3",
+      "test_adi": "Weather resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The following conditions shall apply when tested in accordance with ASTM G155:"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "weather_resistance_4",
+      "test_adi": "Weather resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 39.0,
+        "ust": 45.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "yon": null,
+        "orijinal_metin": "Cabinet temperature: 42 ±3 °C (108 ±5 °F)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "weather_resistance_5",
+      "test_adi": "Weather resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 60.0,
+        "ust": 66.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "yon": null,
+        "orijinal_metin": "Black body temperature in cabinet: 63 ±3 °C (145 ±5 °F)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "weather_resistance_6",
+      "test_adi": "Weather resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 45.0,
+        "ust": 55.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": null,
+        "orijinal_metin": "Relative humidity in cabinet: 50 ±5 percent"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "weather_resistance_8",
+      "test_adi": "Weather resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "After removal from the weatherometer, the 60° specular gloss of the coating shall be tested in accordance with ASTM D523; in addition, the Type IV camouflage colors shall be tested for 85° specular gloss to determine conformance to 3.8.2 (a). The coating color shall then be tested in accordance with AST D2244 to determine conformance to 3.8.2(b). The coating color shall then be tested in accordance with ASTM D2244 using CIELAB color coordinates with a 10° observer and D65 illuminant and examined for conformance to 3.8.2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.9",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "heat_resistance",
+      "test_adi": "Heat resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Prepare two test panels in accordance with 4.5 through 4.5.2. One test panel shall act as control, the other as the test specimen. Expose the test specimen to 121 ±3 °C (250 ±5 °F) for 60 minutes. After exposure, allow the test panel to cool to room temperature. The coating shall then be tested in accordance with ASTM D2244 using CIELAB color coordinates with a 10° observer and D65 illuminant and examined for conformance to 3.8.4."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.10",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "solvent_resistance",
+      "test_adi": "Solvent resistance (cure)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Test panels shall be prepared in accordance with 4.5 through 4.5.2. A cotton, terrycloth rag shall be soaked in MEK solvent and rubbed back and forth 25 times (50 passes) over the coating with firm finger pressure in accordance with ASTM D5402 method A. The coating shall be examined for conformance to 3.8.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.11",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "tape_resistance",
+      "test_adi": "Tape resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Test panels, prepared as specified in 4.5 through 4.5.2, shall be air-dried for no less than twelve hours. A strip of masking tape (3M Company #250 or equivalent as approved by the qualifying activity), no less than 1.0 in. (25.4 mm) wide, shall be"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.12",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 13 (weather_resistance_7): sinir.birim: Value error, pint bu birimi tanımıyor: 'watt/meter2'"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

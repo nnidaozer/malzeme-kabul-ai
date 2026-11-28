@@ -1,0 +1,39 @@
+{
+  "sayfa": 18,
+  "sure_s": 19.131,
+  "testler": [
+    {
+      "id": "low_temperature_flexibility",
+      "test_adi": "Low-temperature flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Three test panels, prepared from aluminum alloy 7075-T6 conforming to QQ-A-250/12 and measuring 0.032 by 1 by 6 inches, shall be treated with MIL-A-8625 Type I. Sealing compound shall be applied to one side of each panel to produce a coating thickness of approximately 0.075 inch (from 0.005 to 0.007 inch for Type III) leaving 1 inch at the end of each panel uncoated. Upon completion of the curing time (see 4.7), panels shall be placed in an air-circulating oven and conditioned for 48 ± 1 hours at 250° ± 5° F (121° ± 2° C) for Class 1 and at 320° ± 5° F (160° ± 2° C) for Class 2. The panels shall then be placed in a flexibility fixture as shown on figures 4 and 5 so that the uncoated side touches the contour block and the weight touches only the uncoated end of the panel. The flexibility fixture and Class 1 or Class 2 panels shall be subjected to conditioning temperatures of -65° ± 2° F ( -54° ± 1° C) or"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.10",
+        "sayfa": 18,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

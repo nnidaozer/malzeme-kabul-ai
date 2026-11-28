@@ -1,0 +1,258 @@
+{
+  "sayfa": 9,
+  "sure_s": 72.976,
+  "testler": [
+    {
+      "id": "low_temperature_flexibility",
+      "test_adi": "Low-temperature flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "the cured sealing compound shall withstand the bend test without cracking, checking, or separating from the panel"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.4",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "thermal_stability",
+      "test_adi": "Thermal stability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "the cured sealing compound shall not blister, crack, or show evidence of 'blowing' at rest or when wrapped 180° on a mandrel. The hardness, after exposure, shall be within -5 to +15 points of the original 'as cured' hardness"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.5",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "tensile_strength",
+      "test_adi": "Tensile strength (Type II only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 200.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "psi",
+        "yon": "en_az",
+        "orijinal_metin": "the tensile strength of the cured sealing compound shall be not less than 200 pounds per square inch (psi) for Class 1 or 250 psi for Class 2"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.6",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "elongation",
+      "test_adi": "Elongation (Type II only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 150.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "the elongation of the cured sealing compound shall be not less than 150 percent for Class 1 or 250 percent for Class 2"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.7",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "anchorage",
+      "test_adi": "Anchorage (wet tape test, Type III only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "the cured sealing compound shall show no more than a slight widening (1/8 inch) of the scratch"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.9",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "repairability",
+      "test_adi": "Repairability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "the cured sealing compound shall be able to be used for repairing minor breaks in itself and all other materials qualified to this specification (see 4.3). A second coat of the sealing compound, applied over a freshly cured coating of the materials specified in 4.8.15, shall show satisfactory bonding with no lifting, blistering, loss of adhesion, or other coating irregularities. When tested as specified in 4.8.15, the adhesion strength of the compound shall be not less than 10 piw for Types I, II, and IV; Type III repairability shall be as specified in 3.3.2.9"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.10",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "air_content",
+      "test_adi": "Air content (Type II only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 4.0,
+        "alt_dahil": false,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_cok",
+        "orijinal_metin": "the air content of the cured sealing compound shall be not greater than 4 percent"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.11",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "long_term_storage",
+      "test_adi": "Long-term storage",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "the base compound and curing agent shall show no hardening, separating, or settling of material after being stored for 9 months. After the storage period, the mixed sealing compound shall meet the requirements for flow (3.3.1.4), application life (3.3.1.5), tack-free time (3.3.1.6), and hardness (3.3.2.1)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.3",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 4 (peel_strength): sinir.birim: Value error, pint bu birimi tanımıyor: 'piw'"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}
