@@ -1,0 +1,80 @@
+{
+  "tarih": "2026-11-28T12:55:27",
+  "makine": {
+    "platform": "Linux-6.18.44-fc-v880-x86_64-with-glibc2.39",
+    "islemci": "x86_64",
+    "cekirdek": 4,
+    "python": "3.13.18"
+  },
+  "motor": {
+    "ad": "tesseract",
+    "surum": "5.3.4",
+    "dil": "eng",
+    "psm": 3,
+    "dpi": 300
+  },
+  "metin_tabanli": [
+    {
+      "belge": "MIL-PRF-23377H",
+      "sayfa_sayisi": 19,
+      "wer": 0.018293696989855314,
+      "sayi_kesinlik": 0.9921135646687698,
+      "sayi_duyarlilik": 0.9843505477308294,
+      "sayi_f1": 0.988216810683425,
+      "ortalama_guven": 94.80586945406564,
+      "sure_s_sayfa_basi": 1.324,
+      "alan_f1_pdf_metnine_gore": 0.08275862068965519,
+      "kural_test_sayisi_pdf": 24,
+      "kural_test_sayisi_ocr": 0
+    },
+    {
+      "belge": "MIL-PRF-23377J",
+      "sayfa_sayisi": 18,
+      "wer": 0.013870541611624834,
+      "sayi_kesinlik": 0.987012987012987,
+      "sayi_duyarlilik": 0.9728,
+      "sayi_f1": 0.9798549556809025,
+      "ortalama_guven": 95.06507694311476,
+      "sure_s_sayfa_basi": 1.39,
+      "alan_f1_pdf_metnine_gore": 0.08053691275167786,
+      "kural_test_sayisi_pdf": 25,
+      "kural_test_sayisi_ocr": 0
+    },
+    {
+      "belge": "MIL-PRF-23377K",
+      "sayfa_sayisi": 19,
+      "wer": 0.017613636363636363,
+      "sayi_kesinlik": 1.0,
+      "sayi_duyarlilik": 0.9838709677419355,
+      "sayi_f1": 0.991869918699187,
+      "ortalama_guven": 95.29181675890837,
+      "sure_s_sayfa_basi": 1.476,
+      "alan_f1_pdf_metnine_gore": 0.09947643979057592,
+      "kural_test_sayisi_pdf": 27,
+      "kural_test_sayisi_ocr": 0
+    }
+  ],
+  "taranmis": [
+    {
+      "belge": "MIL-S-81733C",
+      "tur": "taranmış",
+      "sayfa_sayisi": 33,
+      "ortalama_guven": 90.64353226590143,
+      "dusuk_guvenli_oran": 0.05781381634372367,
+      "sure_s_sayfa_basi": 1.361,
+      "kural_test_sayisi_ocr": 0
+    },
+    {
+      "belge": "MIL-PRF-23377G",
+      "tur": "ocr_katmanlı",
+      "sayfa_sayisi": 25,
+      "ortalama_guven": 92.1128081166498,
+      "dusuk_guvenli_oran": 0.03706983805668016,
+      "sure_s_sayfa_basi": 1.47,
+      "kural_test_sayisi_ocr": 0,
+      "katman_uyumu_wer": 0.5212264150943396,
+      "kural_test_sayisi_katman": 0
+    }
+  ],
+  "atlandi": []
+}

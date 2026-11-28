@@ -60,7 +60,12 @@ python deney/coa_eslestirme.py       # gerçek CoA'ları şartnameyle eşleştir
 python scripts/kabul_dokumani_uret.py data/raw/MIL-PRF-23377K.pdf   # kural tabanlı kabul dokümanı taslağı
 python deney/degerlendir.py TAHMIN.json GOLD.json                  # alan bazında P/R/F1
 python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b-instruct-q4_K_M   # yerel dil modeliyle çıkarma
+python deney/uc_mod.py data/raw/MIL-S-81733C.pdf --model qwen3:8b --ocr   # taranmış belge: yerel Tesseract OCR ile
+python deney/ocr_olcumu.py           # OCR ölçümü, metin tabanlı ve taranmış ayrı -> deney/sonuclar/ocr/
 ```
+
+Taranmış belgeler için Tesseract gerekir (`apt-get install tesseract-ocr tesseract-ocr-eng`;
+Docker imajında ve CI'da kuruludur, docs/ocr.md). OCR tamamen yereldir.
 
 Üretilen taslaklar `data/cikti/` altına JSON, Markdown ve Word olarak yazılır.
 
