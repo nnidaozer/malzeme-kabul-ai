@@ -338,3 +338,54 @@ def test_depoda_mil_a_46146b_test_kumesinde_ve_ocr_gerekli():
 
 def test_depodaki_ocr_listesi_pdf_turleriyle_ayni():
     assert set(bolunme_oku().ocr_gerekli) == _pdf_turleri_taranmis()
+
+
+# --- OCR ile taranmış belgeler (docs/ocr.md, tasarım 3) -----------------------------
+
+
+def test_ocr_verilince_taranmis_gelistirme_belgesi_kullanilir():
+    assert bolunme_oku().kullanima_izin_ver("MIL-S-81733C", ocr=True) == "gelistirme"
+
+
+def test_ocr_varsayilani_kapali_taranmis_belge_hala_reddedilir():
+    with pytest.raises(OcrGerekli):
+        bolunme_oku().kullanima_izin_ver("MIL-S-81733C", ocr=False)
+
+
+def test_ocr_verilse_de_depodaki_taranmis_test_belgesi_kilitli():
+    with pytest.raises(TestKumesiKilitli):
+        bolunme_oku().kullanima_izin_ver("MIL-A-46146B", ocr=True)
+
+
+def test_test_kilidi_ocrdan_once_gelir():
+    b = Bolunme(yeni_standartlar=["MIL-PRF-1A"], test=["MIL-PRF-1A"], test_durumu="secildi",
+                ocr_gerekli=["MIL-PRF-1A"])
+    for ocr in (False, True):
+        with pytest.raises(TestKumesiKilitli):  # OcrGerekli değil
+            b.kullanima_izin_ver("MIL-PRF-1A", ocr=ocr)
+
+
+def test_kilit_acik_ve_ocr_verilince_taranmis_test_belgesi_kullanilir():
+    b = Bolunme(yeni_standartlar=["MIL-PRF-1A"], test=["MIL-PRF-1A"], test_durumu="secildi",
+                ocr_gerekli=["MIL-PRF-1A"], test_kumesi_acik=True)
+    assert b.kullanima_izin_ver("MIL-PRF-1A", ocr=True) == "test"
+    with pytest.raises(OcrGerekli):
+        b.kullanima_izin_ver("MIL-PRF-1A")
+
+
+def test_ocr_metin_belgesinin_kullanimini_degistirmez():
+    assert bolunme_oku().kullanima_izin_ver("MIL-PRF-23377K", ocr=True) == "gelistirme"
+
+
+def test_betik_korumasi_ocr_verilince_taranmis_belgeyi_gecirir():
+    assert betik_korumasi("MIL-S-81733C", ocr=True) is None
+
+
+def test_betik_korumasi_ocr_verilmezse_taranmis_belge_icin_2_doner(capsys):
+    assert betik_korumasi("MIL-S-81733C") == 2
+    assert OCR_GEREKLI in capsys.readouterr().err
+
+
+def test_betik_korumasi_ocr_ile_de_test_kumesini_reddeder(capsys):
+    assert betik_korumasi("MIL-A-46146B", betik="deneme", ocr=True) == 2
+    assert "test kümesinde" in capsys.readouterr().err

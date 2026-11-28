@@ -64,7 +64,8 @@ from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
 from malzeme_kabul.cikarim.yerel_model import ModelYanitHatasi, YerelModelIstemcisi, adres_yerel_mi
 
 from deney.bolunme import VARSAYILAN_YOL, TestKumesiKilitli, bolunme_oku
-from deney.uc_mod import MODLAR, _gold_altinda_mi, uc_mod_calistir, varsayilan_goldlar
+from deney.bolunme import gold_altinda_mi as _gold_altinda_mi
+from deney.uc_mod import MODLAR, uc_mod_calistir, varsayilan_goldlar
 
 KOK = Path(__file__).resolve().parents[1]
 VARSAYILAN_MODELLER = ("qwen2.5:1.5b-instruct-q4_K_M", "qwen2.5:3b-instruct-q4_K_M")

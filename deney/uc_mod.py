@@ -11,6 +11,13 @@ localhost'a bağlanır. Hibrit tanımı `deney/hibrit_standart.py` içindedir.
 
 Kullanım:
   python deney/uc_mod.py data/raw/MIL-PRF-23377K.pdf --model qwen3:8b --dusunme-kapali
+  python deney/uc_mod.py data/raw/MIL-S-81733C.pdf --model qwen3:8b --ocr   # taranmış belge (docs/ocr.md)
+
+Belge bir kez okunur ve hem kural çıkarıcıya hem dil modeline verilir. `--ocr`
+ile taranmış ve hazır OCR katmanlı sayfalar yerel Tesseract ile okunur; raporda
+"ocr" ve "ocr_sayfalari" yer alır. Taranmış (ocr_gerekli) belge `--ocr` olmadan
+reddedilir; test kümesi kilidi OCR'dan önce gelir. Dosya adından çözülen etiket
+de bölünmeden geçer ve --belge-no/--revizyon ile verilenle uyuşmalıdır.
 
 Varsayılan gold'lar data/gold_taslak/ETIKET.json ve data/gold_codex/ETIKET.json
 (varsa); yalnız okunur. data/gold/ altına çıktı yazılmaz. Yalnız data/bolunme.yaml'daki
@@ -31,31 +38,22 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
+from malzeme_kabul.belge.ocr import OcrKullanilamaz, OcrMotoru, TesseractMotoru, tesseract_var_mi
 from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
 from malzeme_kabul.cikarim import kural_cikarici
 from malzeme_kabul.cikarim.yerel_model import ARKA_UCLAR, SohbetIstemcisi, YerelModelIstemcisi
 from malzeme_kabul.sozlesme.sema import KabulDokumani
 
-from deney.bolunme import VARSAYILAN_YOL, TestKumesiKilitli, bolunme_oku
+from deney.bolunme import VARSAYILAN_YOL, TestKumesiKilitli, bolunme_oku, dosya_etiketi, gold_altinda_mi
 from deney.degerlendirme import degerlendir
 from deney.hibrit_standart import hibrit_birlestir
 from deney.taslak_karsilastirma import _b_yi_a_adlariyla_yaz, kaydi_eslestir
 from deney.yalniz_dil_modeli import ara_kayit_parmak_izi, belgeden_cikar
 
 KOK = Path(__file__).resolve().parents[1]
-GOLD = KOK / "data" / "gold"
 VARSAYILAN_CIKTI = KOK / "deney" / "sonuclar" / "colab_uc_mod"
 MODLAR = ("kural", "dil_modeli", "hibrit")
 OLCUM_SUTUNLARI = ["gold", "mod", "alan", "dp", "yp", "yn", "precision", "recall", "f1"]
-
-
-def _gold_altinda_mi(yol: Path) -> bool:
-    gercek = Path(yol).resolve()
-    if gercek == GOLD.resolve() or GOLD.resolve() in gercek.parents:
-        return True
-    parcalar = [p.casefold() for p in gercek.parts]
-    return any(a == "data" and b == "gold" for a, b in zip(parcalar, parcalar[1:]))
 
 
 def varsayilan_goldlar(etiket: str, kok: Path = KOK) -> dict[str, Path]:
@@ -93,6 +91,8 @@ def uc_mod_calistir(
     belge_no: str | None = None,
     revizyon: str | None = None,
     bolunme: str | Path = VARSAYILAN_YOL,
+    ocr: OcrMotoru | None = None,
+    ham_klasor: str | Path | None = None,
 ) -> dict[str, Any]:
     """Üç modu çalıştırır, çıktıları `cikti` altına yazar ve raporu döner (modül açıklaması).
 
@@ -100,23 +100,29 @@ def uc_mod_calistir(
     klasörü ya da okunamayan / şemaya uymayan gold için `ValueError` yükselir; bu
     denetimler model çağrılmadan ve hiçbir şey yazılmadan yapılır. Dil modeli
     süresi sayfa sürelerinin toplamıdır (devam edilen sayfalar ara kayıttaki süreyle).
+    Kural süresi belgenin okunmasını (OCR dahil) içerir.
+
+    `ocr` verilirse taranmış (ocr_gerekli) belge kabul edilir ve taranmış sayfalar
+    motorla okunur; verilmezse böyle bir belge `OcrGerekli` ile reddedilir.
+    Belge `Bolunme.belgeyi_denetle` ile denetlenir (yol kilidi, içerik özeti
+    data/raw ve ek `ham_klasor` altındaki test belgeleriyle, dosya adı ve
+    verilen etiket).
     """
     cikti = Path(cikti)
-    if _gold_altinda_mi(cikti):
+    if gold_altinda_mi(cikti):
         raise ValueError(f"çıktı data/gold altına yazılamaz: {cikti}")
-    if belge_no is None or revizyon is None:
-        belge_no, revizyon = belge_no_ve_revizyon(Path(pdf_yolu).name)
-    etiket = f"{belge_no}{revizyon}"
-    b = bolunme_oku(bolunme)
-    b.kullanima_izin_ver(etiket)
-    b.yol_kullanima_izin_ver(pdf_yolu)
+    verilen = f"{belge_no}{revizyon}" if belge_no is not None and revizyon is not None else None
+    etiket = bolunme_oku(bolunme).belgeyi_denetle(pdf_yolu, verilen, ocr=ocr is not None,
+                                                   ham_klasor=ham_klasor)
+    if verilen is None:
+        belge_no, revizyon = etiket[:-1], etiket[-1]
     gold_dokumanlari = _goldlari_oku(goldlar or {})
 
     t0 = time.perf_counter()
-    kural = kural_cikarici.cikar(pdf_yolu, belge_no, revizyon)
+    belge = pdf_oku(pdf_yolu, ocr=ocr)
+    kural = kural_cikarici.cikar(pdf_yolu, belge_no, revizyon, belge=belge)
     kural_sure = round(time.perf_counter() - t0, 3)
 
-    belge = pdf_oku(pdf_yolu)
     cikti.mkdir(parents=True, exist_ok=True)
     dil, dil_rapor = belgeden_cikar(belge, belge_no, revizyon, istemci, ara_kayit=cikti / f"{etiket}_ara",
                                     parmak_izi=ara_kayit_parmak_izi(istemci))
@@ -136,6 +142,8 @@ def uc_mod_calistir(
         "model": model_adi,
         "belge": etiket,
         "sayfa_sayisi": len(belge.sayfalar),
+        "ocr": ocr is not None,
+        "ocr_sayfalari": belge.ocr_sayfalari,
         "modlar": {
             mod: {"test_sayisi": len(d.testler), "sure_s": sureler[mod], "insan_incelemeli_sinir": _insan_incelemeli(d)}
             for mod, d in dokumanlar.items()
@@ -180,13 +188,31 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("--cikti", default=str(VARSAYILAN_CIKTI))
     ayr.add_argument("--gold-yok", action="store_true", help="Gold'lara karşı ölçüm yapma")
     ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
+    ayr.add_argument("--ham-klasor",
+                     help="İçerik kilidi için data/raw'a ek olarak taranan ham belge klasörü")
+    ayr.add_argument("--ocr", action="store_true",
+                     help="Taranmış sayfaları yerel Tesseract ile oku (docs/ocr.md)")
     args = ayr.parse_args(argv)
+    if args.ham_klasor is not None and not Path(args.ham_klasor).is_dir():
+        print(f"uc_mod: ham klasör yok ya da klasör değil: {args.ham_klasor}", file=sys.stderr)
+        return 2
+
+    motor = None
+    if args.ocr:
+        if not tesseract_var_mi():
+            print("uc_mod: --ocr için tesseract bulunamadı; kurulum: docs/ocr.md "
+                  "(apt-get install tesseract-ocr tesseract-ocr-eng)", file=sys.stderr)
+            return 2
+        motor = TesseractMotoru()
 
     try:
         if args.belge_no and args.revizyon:
             belge_no, revizyon = args.belge_no, args.revizyon
         else:
-            belge_no, revizyon = belge_no_ve_revizyon(Path(args.pdf).name)
+            dosyadaki = dosya_etiketi(args.pdf)
+            if dosyadaki is None:
+                raise ValueError(f"dosya adından etiket çözülemedi, --belge-no ve --revizyon ver: {args.pdf}")
+            belge_no, revizyon = dosyadaki[:-1], dosyadaki[-1]
         etiket = f"{belge_no}{revizyon}"
         istemci = YerelModelIstemcisi(
             model=args.model, arka_uc=args.arka_uc, adres=args.adres, baglam=args.baglam,
@@ -194,9 +220,13 @@ def main(argv: list[str] | None = None) -> int:
         )
         goldlar = None if args.gold_yok else varsayilan_goldlar(etiket)
         rapor = uc_mod_calistir(args.pdf, istemci, args.cikti, model_adi=args.model, goldlar=goldlar,
-                                belge_no=belge_no, revizyon=revizyon, bolunme=args.bolunme)
+                                belge_no=belge_no, revizyon=revizyon, bolunme=args.bolunme, ocr=motor,
+                                ham_klasor=args.ham_klasor)
     except (TestKumesiKilitli, ValueError) as hata:  # OcrGerekli de ValueError'dır
         print(f"uc_mod: {hata}", file=sys.stderr)
+        return 2
+    except OcrKullanilamaz as hata:
+        print(f"uc_mod: OCR yapılamadı: {hata}", file=sys.stderr)
         return 2
 
     modlar = rapor["modlar"]

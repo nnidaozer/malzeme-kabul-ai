@@ -20,8 +20,10 @@ model farklı okudu: ..."; iki okuma da sınır dışındaysa uygun değil kalı
 yazılır (ileride güven skoru girdisi).
 
 Dil modeli yanıt vermezse ya da şemaya uymayan yanıt dönerse hat kural
-okumasına düşer ve bunu karar kaydına yazar (`hat.yedek`); karar yine
-kurallarla verilir.
+okumasına düşer ve bunu karar kaydına yazar (`hat.yedek`). Kural okuması
+yalnız bilgi için okunur ve kayda girer; karar onunla verilmez: `kanit` ek
+denetimi ve kesin kararlı kontrol satırları insan incelemeli olur, parti
+"inceleme" kararıyla bekletilir (eksik bilgi hiçbir zaman "uygun"a yol açmaz).
 
 Karar dayanağı: `sertifika_hatti` kabul dokümanı sürümünü ve malzemeyi
 (tip/sınıf) bir kez, okumadan önce okur ve ikisini de hem okuma
@@ -127,7 +129,11 @@ class SertifikaOkumasi:
         if self.mod != "hibrit":
             return None
         if self.yedek:
-            return KararSatiri(karar="uygun", gerekce=f"dil modeli kullanılamadı, kural okuması: {self.yedek}", **ortak)
+            return KararSatiri(
+                karar="insan_incelemeli",
+                gerekce=f"dil modeli yanıt vermedi ({self.yedek}); kural okuması yalnız bilgi için",
+                **ortak,
+            )
         if self.kanitsiz:
             return KararSatiri(karar="insan_incelemeli", gerekce="belgede bulunamayan okumalar: " + "; ".join(self.kanitsiz), **ortak)
         if not self.sertifika.satirlar:
@@ -266,6 +272,7 @@ def sertifika_hatti(
         pdf_sayfasi=",".join(map(str, okuma.sayfalar)) or None,
         ek_denetimler=ek, hat_bilgisi=okuma.hat_bilgisi(),
         incelemeye_alinacak=okuma.incelemeye_alinacak() or None, karsi_okuma=okuma.kural_sertifikasi,
+        bekletme_nedeni="dil modeli yanıt vermedi" if okuma.mod == "hibrit" and okuma.yedek else None,
         surum=surum, malzeme_kaydi=malzeme,
     )
     return karar, okuma
