@@ -375,6 +375,10 @@ standart için hibrit yalnız deney olarak tanımlıdır (`deney/hibrit_standart
   düzeyidir. (`deney/karar_olcumu.py`, `deney/karar_olc.py`)
 - Alan bazında F1 ve belge başına süre önceki gibi ölçülür
   (`deney/degerlendirme.py`).
+- **Güven skoru** (`kural/guven_skoru.py`; eğitim ve risk–kapsam eğrisi
+  `deney/guven_egitimi.py`, `deney/risk_kapsam.py`): anlaşmazlık, kanıt, yön
+  çelişkisi ve şema hatasından lojistik regresyon. Kabul/red vermez; yalnız
+  "uygun"u insan incelemesine gönderebilir. Ayrıntı: docs/guven_skoru.md.
 - Gerçek CoA'lardan ölçüme yalnız **tam** olanlar girer: ürünün en az iki lotu
   ve sertifikadan ayrı bir şartnamesi var. Eksik olanlar nedeniyle birlikte
   `data/coa_kumesi.csv`'de ayrı listelenir (`deney/coa_kumesi.py`,
