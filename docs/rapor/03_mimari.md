@@ -159,7 +159,11 @@ Karar her iki modda aynı karar motoruyla verilir (`kural/karar_motoru.py`,
    geçti/kaldı sonucuna çevrilir.
 5. Birim pint ile hedef birime çevrilir; çevrilemeyen birim insana gider.
 6. Okunan aralık sınırın tamamen içindeyse **uygun**, tamamen dışındaysa
-   **uygun değil**, ikisi de değilse **insan incelemeli**. Yuvarlama yapılmaz.
+   **uygun değil**, ikisi de değilse **insan incelemeli**. Yuvarlama yapılmaz;
+   sınıra çok yakın değerler (bağıl 1e-6, sıfır sınırda mutlak 1e-12) insan
+   incelemesine gider. Birim dönüşümü yoksa ve sayı metni float'a kayıpsız sığıyorsa tam
+   eşitlikte dahil/hariç kuralı
+   karar verir (`docs/sinir_yakinligi.md`).
 
 Parti kuralı: bir test uygun değilse parti reddedilir (karantina); uygun değil
 yoksa ve bir test insan incelemeliyse parti bekletilir; yalnız boş olmayan ve

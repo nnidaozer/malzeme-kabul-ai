@@ -121,7 +121,12 @@ belirsizlik hiçbir zaman kabule dönüşmez.
 
 - Okunan değer bir aralık olarak temsil edilir ("320" → [320, 320], "<1" → 1'den küçük, alt ucu açık); aralık sınırın
   tamamen içindeyse uygun, tamamen dışındaysa uygun değil, kısmen örtüşüyorsa
-  insan incelemeli. Yuvarlama yapılmaz.
+  insan incelemeli. Yuvarlama yapılmaz: standarttaki ve sertifikadaki değerler
+  olduğu gibi karşılaştırılır. Birime çevrilmiş değerin bir ucu bir sınıra
+  bağıl 1e-6 (sıfır sınırda mutlak 1e-12) kadar yakınsa karar insan
+  incelemelidir; birim dönüşümü yoksa ve sayı metni float'a kayıpsız sığıyorsa tam
+  eşitlikte dahil/hariç kuralı
+  geçerlidir (`docs/sinir_yakinligi.md`).
 - Birim pint ile çevrilir; çevrilemeyen birim insana gider.
 - Geçti/kaldı sonucu beyaz listeyle okunur: yalnız bilinen olumlu ifadeler
   ("Pass", "Conforms", "Uygun" …) birebir eşleşirse geçti; "Not passed",

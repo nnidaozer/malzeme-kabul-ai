@@ -241,6 +241,15 @@ göre katalogdan (en son onaylı sürüm) gelir, tip/sınıf katalogdan alınır
 revizyonu denetlenir; parti kararı parti durumuna yazılır: kabul → serbest,
 red → karantina, inceleme → bekliyor. Komut satırı: `scripts/karar_ver.py`.
 
+Sınır karşılaştırması: yuvarlama yapılmaz; standarttaki ve sertifikadaki
+değerler olduğu gibi karşılaştırılır (`birimi_cevir` pint sonucunu aynen
+döndürür). Birime çevrilmiş değerin bir ucu bir sınıra
+`karar_motoru.SINIR_YAKINLIK_BAGIL` (1e-6) / `SINIR_YAKINLIK_MUTLAK` (1e-12)
+bandında yakınsa karar insan incelemelidir ("sınıra çok yakın"); birim
+dönüşümü yoksa ve sayı metni float'a kayıpsız sığıyorsa tam eşitlikte
+dahil/hariç kuralı geçerlidir. Ayrıntı:
+`docs/sinir_yakinligi.md`.
+
 Karar güvenliği (K1-K8): kabul yalnız boş olmayan ve tamamı "uygun" karar
 listesiyle verilir; uygulanan kabul testi yoksa belge incelemeye gider.
 Geçti/kaldı sonucu beyaz listeyle okunur: metin bilinen bir olumlu ifadeye
