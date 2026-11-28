@@ -28,10 +28,13 @@ iki rol:
 - `mp`: standart yükle (kural çıkarıcıyla taslak; yalnız bölünmede geliştirme
   kümesindeki standartlar), taslağı tabloda düzelt ve onayla (her düzeltme ve
   onay denetim kaydına), revizyon farkı (hazır raporlar ya da iki PDF) ve yeni
-  revizyonu yükleyip M&P incelemelerini kapatma, depo.
+  revizyonu yükleyip M&P incelemelerini kapatma, depo (karantinadaki partiyi
+  gerekçeyle serbest bırakma formu yalnız burada, `ekran_verisi.karantinadan_cikar`).
 - `giris_kalite`: malzeme kodu ve lot seç (yeni lot ekle), CoC yükle (PDF:
   kural ya da hibrit mod; JSON: ham hücreler), karar ve madde referansları,
-  parti kararı, gerekçeli düzeltme; depo.
+  parti kararı, gerekçeli düzeltme (karantinadaki partiyi karantinadan
+  yalnız M&P gerekçeyle çıkarır; `karari_duzelt(..., rol=...)` bunu işlemin
+  içinde denetler); depo.
 
 Depo ekranı partileri, durumlarını, M&P işaretini ve raf ömrü uyarılarını
 gösterir. Çalıştırma: `streamlit run src/malzeme_kabul/arayuz/uygulama.py`
@@ -198,7 +201,8 @@ revizyonuna bağlı malzeme kodlarını ve partilerini `mp_inceleme` sütunuyla
 "M&P incelemesi bekliyor" işaretler (parti durumu değişmez) ve olayı
 `revizyon_olaylari` tablosuna yazar. M&P `mp_incelemesini_kapat` ile
 `gerek_yok` ya da `yeni_revizyona_gec` (yeni revizyonun onaylı dokümanı
-gerekir) der; kapatma denetim kaydına `onay` olarak yazılır. Komut satırı:
+gerekir; geçerli sürüm demo onaylıysa `Katalog.malzeme_revizyonu_ata` geçişi
+reddeder ve hiçbir şey değişmez, yalnız gerçek M&P onaylı sürüme geçilir) der; kapatma denetim kaydına `onay` olarak yazılır. Komut satırı:
 `scripts/revizyon_yukle.py`.
 
 ## 5. Sonuç kaynağı ve parti kuralı
@@ -248,7 +252,14 @@ tedarikçi yoksa `tedarikci` insan incelemelidir. Lot verilince `parti_no`
 kısıtlayıcı yöne değiştirir (serbest < bekliyor < karantina); tek istisna hiç
 karar verilmemiş yeni partidir (`partiler.durum_kaynagi` boş). Karantinadaki ya
 da karar verilmiş bekleyen partiyi makine serbest bırakmaz; `parti_durumu` ek
-denetimi nedenini yazar, serbest bırakma `karari_duzelt` ile yapılır. Eski
+denetimi nedenini yazar, serbest bırakma `karari_duzelt` ile yapılır.
+Karantinadan çıkarmak (karantinanın kaynağı makine ya da insan) yalnız M&P'nin
+işidir ve gerekçe ister; giriş kalite karantinadaki partiyi yalnız karantinada
+tutan düzeltme yapabilir. Rol `katalog.veritabani.ROLLER`'dan denetlenir
+(`arayuz.kimlik.ROLLER` aynı sözlüktür; hat arayüze bağlanmaz). Bağlantıda
+kullanıcı tablosu (`kullanicilar`) varsa kullanıcı orada aynı rolle kayıtlı
+olmalıdır; hat tabloyu doğrudan sorgular. M&P karantinadan çıkarmayı depo
+ekranındaki formdan yapar. Eski
 veritabanlarında sütun eklenirken mevcut partiler `bilinmiyor` (karar
 verilmiş) sayılır. Bu göç (sütun ekleme + doldurma) tek bir işlemdir; düşerse
 sütun da geri alınır ve sonraki açılış yeniden dener. `durum_kaynagi` CHECK

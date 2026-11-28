@@ -214,7 +214,7 @@ def test_karantinadaki_parti_uygun_coc_ile_karantinada_kalir_ve_nedeni_gorunur(k
 
 def test_insan_karantinaya_aldiysa_makinenin_kabul_karari_serbest_birakmaz(katalog):
     defter = DenetimKaydi(katalog.baglanti)
-    karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "karantina", "numune şüpheli")
+    karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "karantina", "numune şüpheli", rol="mp")
     k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1", defter=defter, kullanici="gk1")
     assert katalog.parti("AST-N", "L1").durum == "karantina"
     assert k.parti_durumu == "karantina" and k.parti_karari != "kabul"
@@ -224,7 +224,7 @@ def test_insan_karantinaya_aldiysa_makinenin_kabul_karari_serbest_birakmaz(katal
 def test_insan_beklettiyse_makinenin_kabul_karari_serbest_birakmaz(katalog):
     # Yeni parti de "bekliyor"dur; fark, insanın bu durumu bilerek vermiş olmasıdır.
     defter = DenetimKaydi(katalog.baglanti)
-    karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "bekliyor", "iç laboratuvar sonucu bekleniyor")
+    karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "bekliyor", "iç laboratuvar sonucu bekleniyor", rol="mp")
     k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(), lot_no="L1", defter=defter, kullanici="gk1")
     assert katalog.parti("AST-N", "L1").durum == "bekliyor"
     assert k.parti_durumu == "bekliyor" and k.parti_karari != "kabul"
@@ -233,7 +233,7 @@ def test_insan_beklettiyse_makinenin_kabul_karari_serbest_birakmaz(katalog):
 
 def test_insan_serbest_biraktiysa_makine_karantinaya_alabilir(katalog):
     defter = DenetimKaydi(katalog.baglanti)
-    karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun")
+    karari_duzelt(katalog, defter, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun", rol="mp")
     k = malzeme_koduyla_kontrol(katalog, "AST-N", _ser(voc="400"), lot_no="L1", defter=defter, kullanici="gk1")
     assert k.parti_karari == "red" and k.parti_durumu == "karantina"
     assert katalog.parti("AST-N", "L1").durum == "karantina"

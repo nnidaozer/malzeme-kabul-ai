@@ -29,10 +29,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, Mapping
 
-from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN
+from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN, ROLLER
 
 Rol = Literal["mp", "giris_kalite"]
-ROLLER: dict[str, str] = {"mp": "M&P mühendisi", "giris_kalite": "Giriş kalite"}
+# ROLLER katalog.veritabani'nda tanımlıdır (hat/katalog_karari.karari_duzelt de onu kullanır).
 TUR = 200_000
 
 EKRANLAR: dict[str, str] = {

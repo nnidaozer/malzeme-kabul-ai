@@ -303,3 +303,30 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   bu ortamın doğrudan internet çıkışı yok. CI'a `ag-testi` işi eklendi.
 - Yerelde Docker Hub hız sınırına takıldığım için taban imajı aynalı kaynaktan
   çektim; Dockerfile değişmedi, standart `python:3.11-slim` kullanılıyor.
+
+## Nida'nın 28 Kasım cevapları
+
+- **Demo onaylı sürüme geçilmez.** `mp_incelemesini_kapat(...,
+  "yeni_revizyona_gec")` yeni revizyonun geçerli (en son onaylı) kabul
+  dokümanı demo onaylıysa `KatalogHatasi` verir ("demo"); revizyon, işaret ve
+  kayıt geri alınır. Yalnız gerçek M&P onaylı sürüme geçilir. Reddi
+  `Katalog.malzeme_revizyonu_ata` yapar (kendi işleminde; dış işlemde
+  yalnız kendini geri alır), böylece başka bir yoldan da demo sürüme
+  bağlanılamaz.
+- **Karantinadan serbest bırakmayı yalnız M&P yapar, gerekçeyle.**
+  `karari_duzelt` artık zorunlu, yalnız anahtar kelimeli `rol` alır
+  (`"mp"` ya da `"giris_kalite"`; bilinmeyen rol hiçbir şey yazılmadan
+  reddedilir). Parti karantinadaysa (kaynağı makine ya da insan) ve
+  karantinadan çıkacaksa rol `"mp"` değilse `KatalogHatasi` ("M&P"); denetim
+  önceki durumu okuyan işlemin içindedir. Gerekçe her durumda zorunludur.
+  Kullanıcı tablosu (`kullanicilar`) varsa rol oradaki kayıtla
+  doğrulanır: kayıtsız kullanıcı ya da tutmayan rol hiçbir şey yazılmadan
+  reddedilir (tablo yoksa verilen rol kullanılır). M&P karantinadan
+  çıkarmayı depo ekranındaki "Karantinadaki partiyi serbest bırak"
+  formundan yapar (`ekran_verisi.karantinadan_cikar`, yalnız `mp` rolüne
+  görünür). Rol düzeltme kaydına (`rol`) yazılır; arayüz `rol=kullanici.rol` verir ve
+  hatayı `st.error` ile gösterir. Roller `katalog.veritabani.ROLLER`'da
+  tanımlı, `arayuz.kimlik.ROLLER` aynı sözlüktür (hat arayüze bağlanmaz).
+- **Kural ve model farklı okudu ama ikisi de sınır dışı:** satır uygun değil
+  kalır ve anlaşmazlık kaydedilir. Bu zaten uygulanmıştı
+  (`kural.okuma_karsilastirma.anlasmazlik_karari`); artık testle korunuyor.

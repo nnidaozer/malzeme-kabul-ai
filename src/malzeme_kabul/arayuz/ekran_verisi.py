@@ -32,10 +32,10 @@ from pathlib import Path
 
 from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
 from malzeme_kabul.cikarim.kural_cikarici import cikar
-from malzeme_kabul.hat.katalog_karari import KatalogKarari, malzeme_koduyla_kontrol
+from malzeme_kabul.hat.katalog_karari import KatalogKarari, karari_duzelt, malzeme_koduyla_kontrol
 from malzeme_kabul.hat.raf_omru_raporu import raf_raporu
 from malzeme_kabul.katalog.veritabani import DEMO_ETIKETI, DokumanSurumu, Katalog, KatalogHatasi, Parti, Taslak
-from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
+from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi, Kayit
 from malzeme_kabul.revizyon.revizyon_karsilastirici import (
     guncelleme_onerileri,
     markdown_raporu,
@@ -298,6 +298,21 @@ def depo_tablosu(katalog: Katalog, bugun: date | None = None, uyari_esigi_gun: i
     ]
 
 
+def karantina_partileri(katalog: Katalog) -> list[Parti]:
+    """Katalogdaki karantinadaki partiler (malzeme kodu, lot sırasıyla); depo ekranındaki M&P formu için."""
+    return [p for p in katalog.partiler() if p.durum == "karantina"]
+
+
+def karantinadan_cikar(katalog: Katalog, defter: DenetimKaydi, kullanici, malzeme_kodu: str, lot_no: str,
+                       yeni_durum: str, neden: str) -> Kayit:
+    """Oturumdaki kullanıcının (`Kullanici`) karantinadaki partiyi gerekçeyle çıkarması.
+
+    Rol oturumdaki kullanıcıdan gelir (`rol=kullanici.rol`); yetki, gerekçe ve
+    kullanıcı tablosu denetimi `karari_duzelt`'tedir (yalnız M&P çıkarabilir).
+    """
+    return karari_duzelt(katalog, defter, kullanici.ad, malzeme_kodu, lot_no, yeni_durum, neden, rol=kullanici.rol)
+
+
 __all__ = [
     "DEMO_ETIKETI",
     "ETIKETLER",
@@ -307,6 +322,8 @@ __all__ = [
     "depo_tablosu",
     "hazir_revizyon_raporlari",
     "json_sertifika_karari",
+    "karantina_partileri",
+    "karantinadan_cikar",
     "karar_basligi",
     "karar_tablosu",
     "parti_hazirla",
