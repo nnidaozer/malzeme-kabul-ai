@@ -150,11 +150,139 @@ kırpar ve sistem mesajı kaybolabilir. 3B modelde 8K bağlamın ek belleği bir
 yüz MB'tır, 7,7 GB RAM'e sığar. Yanıt yarım kalırsa rapor bunu "JSON
 çözülemedi" olarak gösterir.
 
+## Dizüstü ölçümü (tek komut)
+
+`deney/dizustu_olcum.py`, qwen2.5 1.5B ve 3B modellerini geliştirme kümesindeki
+gold'lu standartlarda (data/gold_taslak ya da data/gold_codex altında gold'u
+olanlar; şu an MIL-PRF-23377K, MIL-PRF-81733D, MIL-PRF-85285E) üç modda (kural,
+dil modeli, hibrit) çalıştırır. Belge ve sayfa başına süreyi ve F1'i ölçer,
+ağın kapalı olduğunu da gösterir.
+
+1. İnternet varken bir kez:
+
+   ```bash
+   ollama pull qwen2.5:1.5b-instruct-q4_K_M
+   ollama pull qwen2.5:3b-instruct-q4_K_M
+   pip install -r requirements-dev.lock && pip install -e . --no-deps
+   ```
+
+   Model adı yedekleri: istenen tam ad Ollama'da yoksa eş adlar sırayla
+   aranır (`qwen2.5:1.5b`, `qwen2.5:1.5b-instruct` ve `qwen2.5:3b`,
+   `qwen2.5:3b-instruct`). Yani `ollama pull qwen2.5:3b` ile indirilmiş model de
+   kabul edilir. Hangi adın kullanıldığı raporda `model_eslesmeleri`ne yazılır;
+   satırlarda ve klasör adlarında istenen ad kalır. Ne tam ad ne yedek varsa
+   model atlanır ve `ollama pull` önerilir.
+
+2. Wi-Fi'yi kapat ya da Ethernet'i çıkar (uçak modu). Ardından bir terminalde
+   `ipconfig /flushdns` çalıştır: Windows'un DNS önbelleğinde kalan pypi.org ve
+   github.com kayıtları ağ kapalıyken de çözülür ve betik ağı yanlışlıkla açık
+   sayıp 3 koduyla durur. Ağ denetimi WPAD/PAC ile otomatik ayarlanan vekilleri
+   görmez (yalnız ortam değişkenleri ve sistem vekil ayarı); bu bir sınırdır.
+   Ağ kapalıyken her denetim zaman aşımlarıyla 10-20 saniye sürebilir; bu süre
+   ölçülen sürelere girmez.
+3. Ollama'nın çalıştığından emin ol: görev çubuğunda simgesi görünmeli ya da
+   bir terminalde `ollama serve` çalışıyor olmalı.
+4. Çalıştır:
+
+   ```bash
+   python deney/dizustu_olcum.py
+   ```
+
+   Windows'ta `python` komutu bulunamazsa ya da Microsoft Store'u açarsa
+   `python` yerine `py` yaz: `py deney/dizustu_olcum.py`.
+
+Çıktılar `deney/sonuclar/dizustu/` altına yazılır: `dizustu_olcum.md` (tablo),
+`dizustu_olcum.csv` (model × belge × mod satırları) ve `dizustu_olcum.json`
+(tam rapor: sistem bilgisi, Ollama sürümü, model eşleşmeleri, yükleme
+süreleri, ağ denemeleri, satırlar, atlanan modeller, hatalar). Her modelin
+uc_mod çıktıları ve sayfa başına ara kaydı model klasöründe tutulur (ör.
+`qwen2.5_3b-instruct-q4_K_M/`; model adındaki `<>:"/\|?*` karakterleri `_`
+olur).
+
+Kopan çalışma ve `--sifirdan`: Çalışma koparsa aynı komutu yeniden çalıştır;
+tamamlanan sayfalar ara kayıttan (`MODEL_KLASORU/ETIKET_ara/`) okunur, modele
+yeniden gönderilmez. Bu sayfalar satırlarda `devam_edilen_sayfa` sütununa
+yazılır ve raporda `devam_edildi: true` olur. Devam edilen çalışma ağ kanıtı
+sayılmaz (`ag_kapali_calisti: false`): ara kayıttaki sayfalar ağın açık olduğu
+bir sırada üretilmiş olabilir. Ağ kanıtı için ağ kapalıyken
+`python deney/dizustu_olcum.py --sifirdan` ile baştan ölç; bu seçenek yalnız
+ölçülen her model × belgenin `ETIKET_ara/` klasörünü siler, öteki dosyalara
+dokunmaz.
+
+Isınma ve `yukleme_s`: Her model, belgelerden önce (belge ve test kümesi
+denetimlerinden sonra) kısa bir istekle bir kez ısıtılır; böylece modelin
+belleğe yüklenme süresi ilk belgenin süresine karışmaz. Bu süre raporda
+`yukleme_s`e yazılır. Isınma başarısız olursa (zaman aşımı, bağlantı, bozuk
+yanıt) hata `hatalar`a belgesiz yazılır ve o modelin belgeleri ölçülmez; öteki
+model ölçülmeye devam eder.
+
+Başarısız sayfa (`basarisiz_sayfa`): Dil modeli isteği hata veren (HTTP 500,
+zaman aşımı, bağlantı kopması) sayfaların sayısıdır; dil modeli ve hibrit
+satırlarına yazılır, kural satırında 0'dır. Bu genellikle RAM yetmezliği ya da
+zaman aşımı belirtisidir (Ollama bellek yetmeyince "model requires more system
+memory" ile 500 döner). Başarısız sayfalı ölçüm `hatalar`a "istek başarısız"
+ve sayfa sayısıyla yazılır, tamamlanmış sayılmaz ve md tablosunda "geçersiz"
+işaretlenir. 3B modelde bu görülürse önce tarayıcı gibi diğer uygulamaları
+kapatıp yeniden dene (başarısız sayfalar ara kayda girmez, yeniden istenir).
+`--sifirdan` olmadan yeniden denersen başarılı sayfalar ara kayıttan okunur ve
+`ag_kapali_calisti` false kalır; ağ kanıtı için `--sifirdan` ile baştan ölç.
+Modelin bozuk JSON yanıtı da bu sayaca girer; yani sayı her zaman bellek
+sorunu demek değildir, `dizustu_olcum.json` içindeki sayfa hatalarına bak.
+
+Seçenekler:
+
+- `--modeller M1 M2 ...`: Ollama etiketleri (varsayılan iki qwen2.5 modeli).
+  Ne tam adı ne yedek adı Ollama'da olan model atlanır, raporda `ollama pull`
+  önerisi yazılır.
+- `--belgeler PDF1 PDF2 ...`: ölçülecek PDF'ler (varsayılan yukarıdaki
+  gold'lu geliştirme belgeleri). Test kümesindeki ya da kilitli klasördeki
+  belge hiçbir model çağrılmadan reddedilir.
+- `--sifirdan`: ölçülen belgelerin ara kaydını silip baştan ölçer (yukarıda).
+- `--ag-acik-izin`: ağ açıkken de ölçer; bu durumda rapor internetsiz
+  çalışmayı kanıtlamaz (`ag_kapali_calisti: false`).
+- `--baglam N`: bağlam penceresi (varsayılan 8192; yukarıdaki nedenle düşürme).
+- `--adres`, `--cikti`, `--bolunme`: Ollama adresi (yalnız localhost), çıktı
+  klasörü, bölünme dosyası.
+
+Çıkış kodları: 0 en az bir dil modeli ölçümü başarısız sayfasız tamamlandı;
+1 hiçbiri tamamlanmadı (modeller yok, hepsi hatalı ya da sayfa istekleri
+başarısız); 2 test kümesindeki / kilitli / OCR gerektiren belge, data/gold
+altına çıktı ya da geçersiz girdi; 3 ağ açık (izin yok); 4 Ollama'ya
+ulaşılamadı.
+
+Süre tahmini verilmez: ölçülmedi. GPU olmadan, yalnız işlemcide 3B model
+belge başına uzun sürebilir (sayfa başına dakikalar). `sayfa_basi_s`, modun
+süresinin belgenin bütün sayfa sayısına bölümüdür; payda metinsiz (modele
+gönderilmeyen) sayfaları da içerdiği için modele giden sayfa başına gerçek
+süre bundan uzun olabilir. Önce kısa bir deneme yap:
+
+```bash
+python deney/dizustu_olcum.py --modeller qwen2.5:1.5b-instruct-q4_K_M --belgeler data/raw/MIL-PRF-85285E.pdf
+```
+
+Ağ kanıtı: ölçümden önce, her model × belge ölçümünden sonra (`ag_ara`) ve en
+sonda `scripts/ag_kapali_mi.py`'deki denemeler (DNS: pypi.org, github.com; TCP:
+1.1.1.1:443, 8.8.8.8:53, 140.82.112.3:443; HTTPS: https://pypi.org/simple/)
+yapılır ve rapora yazılır. HTTPS denemesinde sunucudan gelen HTTP hatası (ör.
+403, 407) ya da TLS/SSL hatası da dışarıdaki bir uca ulaşıldığını gösterir ve
+ağ açık sayılır. Vekil denetimi: sistemde vekil (proxy) ayarı varsa aynı HTTPS
+isteği sistem vekili üzerinden de denenir ("HTTPS vekil üzerinden ...") ve
+vekil ayarı raporda `vekil`e yazılır; böylece yalnız vekille dışarı çıkılabilen
+ağ da yakalanır. Konteyner denetimi (`scripts/ag_testi.sh`) varsayılanı
+kullanır ve vekil denemesi yapmaz. Rapor `ag_kapali_calisti: true` yazar ancak
+bütün denetimlerde hiçbir deneme dışarı çıkamadıysa, ara kayıttan devam
+edilmediyse ve en az bir dil modeli ölçümü başarısız sayfasız tamamlandıysa.
+Ollama isteği yalnız localhost'a gider ve vekil ayarları yok sayılır.
+
 ## Bilinen sınırlar
 
 - Bu ortamda gerçek model çalıştırılamadı (model indirme erişimi yok). İstemci,
   şema ve akış sahte yerel sunucuyla test edildi; gerçek model çıktısı ilk
   kez Colab'da görülecek.
+- `deney/dizustu_olcum.py` de bu bulut ortamında gerçek modelle
+  çalıştırılamadı (model indirme erişimi yok); sahte istemci, sahte ağ
+  denetimi ve sahte Ollama durumuyla test edildi. Gerçek süre ve F1 ilk kez
+  dizüstünde görülecek.
 - Birimin pint adını ("seconds" → "s") model yazıyor. Bu değer dönüşümü değil,
   ama model birimi kendiliğinden çevirebilir (ör. °F → °C). Ölçümde birim
   alanındaki hatalar ayrıca izlenmeli; gerekirse model ham birimi aktarır,

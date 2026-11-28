@@ -8,9 +8,13 @@ testler Docker'sız çalışır.
 
 from __future__ import annotations
 
+import email.message
 import re
 import socket
+import ssl
 import threading
+import urllib.error
+import urllib.request
 
 import pytest
 
@@ -99,6 +103,185 @@ def test_tek_cikis_bile_yakalanir(monkeypatch, capsys):
     monkeypatch.setattr(betik.urllib.request.OpenerDirector, "open", kapali)
     assert betik.main() == 1
     assert "AÇIK   TCP 8.8.8.8:53" in capsys.readouterr().out
+
+
+# --- ag_kapali_mi.py: sunucu yanıtı ve vekil (gözden geçirme düzeltmesi) -----------------
+
+
+class _Yanit:
+    status = 200
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+
+def _dns_tcp_kapali(monkeypatch, betik):
+    def kapali(*a, **k):
+        raise OSError("ağ yok")
+
+    monkeypatch.setattr(betik.socket, "gethostbyname", kapali)
+    monkeypatch.setattr(betik.socket, "create_connection", kapali)
+
+
+def _acici_sahtesi(monkeypatch, davranis):
+    """OpenerDirector.open sahtesi: her çağrıda (url, vekil ayarı) kaydeder ve davranis(vekiller) çalıştırır.
+
+    `vekiller`, açıcıdaki ProxyHandler'ların ayarlarının birleşimidir ({} = vekilsiz).
+    urlopen'ın önbellekteki açıcısı sıfırlanır; gerçek ağa çıkılmaz.
+    """
+    kayit: list[tuple[str, dict]] = []
+
+    def open_(self, url, *a, **k):
+        vekiller: dict = {}
+        for h in self.handlers:
+            if isinstance(h, urllib.request.ProxyHandler):
+                vekiller.update(h.proxies)
+        kayit.append((getattr(url, "full_url", url), vekiller))
+        return davranis(vekiller)
+
+    monkeypatch.setattr(urllib.request.OpenerDirector, "open", open_)
+    monkeypatch.setattr(urllib.request, "_opener", None)
+    return kayit
+
+
+def _https(sonuc, ad):
+    return [b for d, b, _ in sonuc if d == ad]
+
+
+@pytest.mark.parametrize("kod", [403, 407])
+def test_https_denemesinde_http_hatasi_sunucuya_ulasildi_basarili_sayilir(monkeypatch, kod):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+
+    def http_hatasi(vekiller):
+        raise urllib.error.HTTPError(betik.URL, kod, "Forbidden", email.message.Message(), None)
+
+    _acici_sahtesi(monkeypatch, http_hatasi)
+    assert _https(betik.denemeler(), f"HTTPS {betik.URL}") == [True]
+
+
+def test_https_denemesinde_ssl_hatasi_sunucuya_ulasildi_basarili_sayilir(monkeypatch):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+
+    def ssl_hatasi(vekiller):
+        raise ssl.SSLError("sertifika doğrulanamadı")
+
+    _acici_sahtesi(monkeypatch, ssl_hatasi)
+    assert _https(betik.denemeler(), f"HTTPS {betik.URL}") == [True]
+
+
+def test_https_denemesinde_urlerror_icine_sarili_sertifika_hatasi_basarili_sayilir(monkeypatch):
+    """urllib gerçek sertifika hatasını URLError(reason=SSLCertVerificationError) olarak sarar."""
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+
+    def sarili_ssl(vekiller):
+        raise urllib.error.URLError(ssl.SSLCertVerificationError(1, "certificate verify failed"))
+
+    _acici_sahtesi(monkeypatch, sarili_ssl)
+    assert _https(betik.denemeler(), f"HTTPS {betik.URL}") == [True]
+
+
+def test_https_denemesinde_beklenmeyen_hata_basarili_sayilmaz(monkeypatch):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+
+    def beklenmeyen(vekiller):
+        raise RuntimeError("beklenmeyen")
+
+    _acici_sahtesi(monkeypatch, beklenmeyen)
+    assert _https(betik.denemeler(), f"HTTPS {betik.URL}") == [False]
+
+
+def test_https_denemesinde_http_hatasi_main_ag_acik_der(monkeypatch, capsys):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+
+    def http_hatasi(vekiller):
+        raise urllib.error.HTTPError(betik.URL, 403, "Forbidden", email.message.Message(), None)
+
+    _acici_sahtesi(monkeypatch, http_hatasi)
+    assert betik.main() == 1
+    assert "AĞ AÇIK" in capsys.readouterr().out
+
+
+def test_https_denemesinde_baglanti_hatasi_basarili_sayilmaz(monkeypatch):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+
+    def baglanti_yok(vekiller):
+        raise urllib.error.URLError(ConnectionRefusedError(111, "Connection refused"))
+
+    _acici_sahtesi(monkeypatch, baglanti_yok)
+    assert _https(betik.denemeler(), f"HTTPS {betik.URL}") == [False]
+
+
+def test_denemeler_imzasi_zaman_asimi_3_ve_vekil_dahil_false():
+    import inspect
+
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    parametreler = inspect.signature(betik.denemeler).parameters
+    assert parametreler["zaman_asimi"].default == 3.0
+    assert parametreler["vekil_dahil"].default is False
+
+
+VEKIL = {"https": "http://vekil.ornek:8080"}
+
+
+def _url_hatasi(vekiller):
+    raise urllib.error.URLError("ağ yok")
+
+
+def test_vekil_dahil_ve_vekil_ayari_varsa_vekil_uzerinden_ek_deneme_yapilir(monkeypatch):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+    monkeypatch.setattr(urllib.request, "getproxies", lambda: dict(VEKIL))
+    kayit = _acici_sahtesi(monkeypatch, _url_hatasi)
+    sonuc = betik.denemeler(vekil_dahil=True)
+    assert _https(sonuc, f"HTTPS vekil üzerinden {betik.URL}") == [False]
+    assert _https(sonuc, f"HTTPS {betik.URL}") == [False]
+    # Doğrudan deneme vekilsiz (ProxyHandler({})), vekil denemesi sistem vekil ayarlarıyla açılır.
+    assert sorted(v.get("https", "") for _, v in kayit) == ["", VEKIL["https"]]
+
+
+def test_vekil_uzerinden_disari_cikilirsa_vekil_denemesi_basarili(monkeypatch):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+    monkeypatch.setattr(urllib.request, "getproxies", lambda: dict(VEKIL))
+
+    def yalniz_vekille(vekiller):
+        if vekiller:
+            return _Yanit()
+        raise urllib.error.URLError("ağ yok")
+
+    _acici_sahtesi(monkeypatch, yalniz_vekille)
+    sonuc = betik.denemeler(vekil_dahil=True)
+    assert _https(sonuc, f"HTTPS vekil üzerinden {betik.URL}") == [True]
+    assert _https(sonuc, f"HTTPS {betik.URL}") == [False]
+
+
+def test_vekil_ayari_bossa_vekil_denemesi_eklenmez(monkeypatch):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+    monkeypatch.setattr(urllib.request, "getproxies", lambda: {})
+    _acici_sahtesi(monkeypatch, _url_hatasi)
+    adlar = [d for d, _, _ in betik.denemeler(vekil_dahil=True)]
+    assert not any("vekil" in a for a in adlar)
+    assert f"HTTPS {betik.URL}" in adlar
+
+
+def test_vekil_dahil_verilmezse_vekil_ayari_olsa_da_vekil_denemesi_yapilmaz(monkeypatch):
+    betik = betik_yukle("scripts/ag_kapali_mi.py")
+    _dns_tcp_kapali(monkeypatch, betik)
+    monkeypatch.setattr(urllib.request, "getproxies", lambda: dict(VEKIL))
+    kayit = _acici_sahtesi(monkeypatch, _url_hatasi)
+    adlar = [d for d, _, _ in betik.denemeler()]
+    assert not any("vekil" in a for a in adlar)
+    assert all(v == {} for _, v in kayit)
 
 
 # --- yerel_kapi.py -----------------------------------------------------------------------
