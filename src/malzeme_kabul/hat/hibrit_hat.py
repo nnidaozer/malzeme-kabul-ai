@@ -25,6 +25,13 @@ yalnız bilgi için okunur ve kayda girer; karar onunla verilmez: `kanit` ek
 denetimi ve kesin kararlı kontrol satırları insan incelemeli olur, parti
 "inceleme" kararıyla bekletilir (eksik bilgi hiçbir zaman "uygun"a yol açmaz).
 
+Karar dayanağı: `sertifika_hatti` kabul dokümanı sürümünü ve malzemeyi
+(tip/sınıf) bir kez, okumadan önce okur ve ikisini de hem okuma
+karşılaştırmasına hem `malzeme_koduyla_kontrol`'e verir. Model çağrısı
+sürerken katalogda yeni sürüm onaylanırsa karar okunan sürümle verilir ve
+parti durumunu yazan işlemde fark görülür: `dokuman_dayanagi` ek denetimi
+insan incelemeli olur, parti serbest kalmaz.
+
 Standart tarafı: `standart_okumalarini_dogrula` dil modelinin standarttan
 okuduğu `HamOkuma`'ları kanıt doğrulayıcı ve sınır yönü kuralından
 (`kural.yon_dogrulama`) geçirir: kanıtsız okumalar reddedilir, yönü metinle
@@ -254,9 +261,9 @@ def sertifika_hatti(
     if secilen == "hibrit" and istemci is None:
         istemci = ortamdan_istemci()
     belge = pdf_oku(pdf_yolu)
-    dokuman = katalog.gecerli_dokuman(malzeme_kodu).dokuman
+    surum = katalog.gecerli_dokuman(malzeme_kodu)  # bir kez okunur: karşılaştırma ve karar aynı dayanakla
     malzeme = katalog.malzeme(malzeme_kodu)
-    okuma = sertifikayi_oku(belge, secilen, istemci, dokuman, malzeme.tip, malzeme.sinif)
+    okuma = sertifikayi_oku(belge, secilen, istemci, surum.dokuman, malzeme.tip, malzeme.sinif)
     ek = [d for d in (okuma.kanit_denetimi(), okuma.okuma_uyumu_denetimi()) if d is not None]
     karar = malzeme_koduyla_kontrol(
         katalog, malzeme_kodu, okuma.sertifika, lot_no=lot_no, ayar=ayar, defter=defter, kullanici=kullanici,
@@ -266,6 +273,7 @@ def sertifika_hatti(
         ek_denetimler=ek, hat_bilgisi=okuma.hat_bilgisi(),
         incelemeye_alinacak=okuma.incelemeye_alinacak() or None, karsi_okuma=okuma.kural_sertifikasi,
         bekletme_nedeni="dil modeli yanıt vermedi" if okuma.mod == "hibrit" and okuma.yedek else None,
+        surum=surum, malzeme_kaydi=malzeme,
     )
     return karar, okuma
 
