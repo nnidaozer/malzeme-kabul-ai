@@ -9,9 +9,18 @@ localhost'a bağlanır. Çıktılar (KLASOR altında):
 Kullanım:
   python deney/dil_modeli_cikar.py data/raw/MIL-PRF-23377K.pdf --model qwen2.5:7b
   python deney/dil_modeli_cikar.py BELGE.pdf --model yerel --arka-uc llamacpp --sayfalar 5-14
+  python deney/dil_modeli_cikar.py data/raw/MIL-S-81733C.pdf --model qwen2.5:7b --ocr   # taranmış
+
+`--ocr` taranmış ve hazır OCR katmanlı sayfaları yerel Tesseract ile okur
+(docs/ocr.md); taranmış (ocr_gerekli) belge bu bayrak olmadan reddedilir.
 
 Yalnız data/bolunme.yaml'daki geliştirme kümesi çalıştırılır; test kümesi
 kilitliyken (test_kumesi_acik: false) ya da seçim beklenirken betik 2 koduyla çıkar.
+Belge `Bolunme.belgeyi_denetle` ile denetlenir: kilitli klasör (resolve, harf
+farkı), içerik özeti (--ham-klasor altındaki test belgelerinin kopyası ya da
+bağı), dosya adından çözülen etiket ve --belge-no/--revizyon ile verilen etiket
+(uyuşmazsa 2). --cikti gold klasörü altındaysa hiçbir şey yazılmadan 2 döner.
+OCR hatası (OcrKullanilamaz) da 2 koduyla raporlanır.
 """
 
 from __future__ import annotations
@@ -26,12 +35,11 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from malzeme_kabul.belge.adlandirma import belge_no_ve_revizyon
-
+from malzeme_kabul.belge.ocr import OcrKullanilamaz, TesseractMotoru, tesseract_var_mi
 from malzeme_kabul.belge.pdf_okuyucu import pdf_oku
 from malzeme_kabul.cikarim.yerel_model import ARKA_UCLAR, YerelModelIstemcisi
 
-from deney.bolunme import VARSAYILAN_YOL, betik_korumasi
+from deney.bolunme import VARSAYILAN_YOL, TestKumesiKilitli, bolunme_oku, gold_altinda_mi
 from deney.yalniz_dil_modeli import belgeden_cikar
 
 KOK = Path(__file__).resolve().parents[1]
@@ -67,20 +75,46 @@ def main(argv: list[str] | None = None) -> int:
     ayr.add_argument("--dusunme-kapali", action="store_true", help="Qwen3 gibi modellerde düşünme kipini kapatır")
     ayr.add_argument("--cikti", default=str(KOK / "data" / "cikti" / "dil_modeli"))
     ayr.add_argument("--bolunme", default=str(VARSAYILAN_YOL), help="Geliştirme/test bölünmesi (data/bolunme.yaml)")
+    ayr.add_argument("--ham-klasor",
+                     help="İçerik kilidi için data/raw'a ek olarak taranan ham belge klasörü")
+    ayr.add_argument("--ocr", action="store_true",
+                     help="Taranmış sayfaları yerel Tesseract ile oku (docs/ocr.md)")
     args = ayr.parse_args(argv)
+    if args.ham_klasor is not None and not Path(args.ham_klasor).is_dir():
+        print(f"dil_modeli_cikar: ham klasör yok ya da klasör değil: {args.ham_klasor}", file=sys.stderr)
+        return 2
 
-    if args.belge_no and args.revizyon:
+    if gold_altinda_mi(args.cikti):
+        print(f"dil_modeli_cikar: çıktı gold klasörüne yazılamaz: {args.cikti}", file=sys.stderr)
+        return 2
+    verilen = f"{args.belge_no}{args.revizyon}" if args.belge_no and args.revizyon else None
+    try:
+        etiket = bolunme_oku(args.bolunme).belgeyi_denetle(args.pdf, verilen, ocr=args.ocr,
+                                                            ham_klasor=args.ham_klasor)
+    except (TestKumesiKilitli, ValueError) as hata:  # OcrGerekli de ValueError'dır
+        print(f"dil_modeli_cikar: {hata}", file=sys.stderr)
+        return 2
+    if verilen is not None:
         belge_no, revizyon = args.belge_no, args.revizyon
     else:
-        belge_no, revizyon = belge_no_ve_revizyon(args.pdf)
-    if (kod := betik_korumasi(f"{belge_no}{revizyon}", args.bolunme, "dil_modeli_cikar")) is not None:
-        return kod
+        belge_no, revizyon = etiket[:-1], etiket[-1]
+    motor = None
+    if args.ocr:
+        if not tesseract_var_mi():
+            print("dil_modeli_cikar: --ocr için tesseract bulunamadı; kurulum: docs/ocr.md", file=sys.stderr)
+            return 2
+        motor = TesseractMotoru()
+    try:
+        belge = pdf_oku(args.pdf, ocr=motor)
+    except OcrKullanilamaz as hata:
+        print(f"dil_modeli_cikar: OCR yapılamadı: {hata}", file=sys.stderr)
+        return 2
 
     istemci = YerelModelIstemcisi(
         model=args.model, arka_uc=args.arka_uc, adres=args.adres, baglam=args.baglam,
         dusunme=False if args.dusunme_kapali else None,
     )
-    dokuman, rapor = belgeden_cikar(pdf_oku(args.pdf), belge_no, revizyon, istemci, sayfalar=args.sayfalar)
+    dokuman, rapor = belgeden_cikar(belge, belge_no, revizyon, istemci, sayfalar=args.sayfalar)
 
     klasor = Path(args.cikti)
     klasor.mkdir(parents=True, exist_ok=True)

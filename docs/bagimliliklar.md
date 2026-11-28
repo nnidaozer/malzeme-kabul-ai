@@ -6,7 +6,8 @@ söyler. Kurulumda gelen tam sürümler ise iki kilit dosyasında sabittir
 
 - `requirements.lock`: çalışma zamanı paketleri ve onların bağımlılıkları.
 - `requirements-dev.lock`: bunlara ek olarak test paketleri (pytest,
-  reportlab, pillow).
+  reportlab). pillow ve pypdfium2 artık çalışma zamanı bağımlılığıdır
+  (OCR katmanı sayfayı resme çevirir, docs/ocr.md).
 - `requirements-arayuz.lock`: geliştirme kilidinin aynısı + Streamlit ve
   bağımlılıkları (ekranlar ve Docker imajı). CI'da ayrı `arayuz` işi bu
   kilitten kurup bütün testleri Streamlit ekran testleriyle çalıştırır;
@@ -52,3 +53,11 @@ pip freeze --exclude malzeme-kabul > govde-arayuz.txt  # -> requirements-arayuz.
 `pytest` çalıştır. `tests/test_bagimlilik_kilidi.py` her satırın `ad==sürüm`
 olduğunu, `pyproject.toml` içindeki her paketin kilitte ve aralık içinde
 olduğunu ve CI'ın kilitten kurup pip-audit çalıştırdığını denetler.
+
+## Python dışı bağımlılık: Tesseract
+
+OCR katmanı (`src/malzeme_kabul/belge/ocr.py`) yerel `tesseract` ikili
+dosyasını alt süreç olarak çalıştırır; Python paketi (pytesseract) yoktur ve
+kilitlere girmez. Docker imajında ve CI'da `apt-get install tesseract-ocr
+tesseract-ocr-eng` ile kurulur (Ubuntu 24.04'te 5.3.4). Ölçüm raporu
+kullanılan sürümü yazar.

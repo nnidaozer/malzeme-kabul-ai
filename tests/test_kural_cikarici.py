@@ -205,3 +205,46 @@ def test_betik_json_markdown_ve_word_uretir(tmp_path):
     assert len(d.testler) == 27
     assert (tmp_path / "MIL-PRF-23377K_kabul_dokumani.md").read_text(encoding="utf-8").startswith("# Kabul")
     assert (tmp_path / "MIL-PRF-23377K_kabul_dokumani.docx").stat().st_size > 0
+
+
+# --- Önceden okunmuş (OCR'lı) belge (docs/ocr.md, tasarım 4) ---------------------
+
+
+def _iki_testli_pdf(yol: Path) -> Path:
+    """Kural çıkarıcının viscosity ve lead_content bulduğu küçük belge."""
+    return pdf_yaz(yol, [
+        {"metin": ["MIL-PRF-23377K", "3.6.3 Viscosity. The maximum viscosity shall be", "40 seconds through a cup.",
+                   "3.6.9 Lead content. The lead content shall be not greater than 1 ppm."]},
+        {"metin": ["MIL-PRF-23377K", "TABLE II. Tests"],
+         "tablo": [["Requirement", "Req para", "Test method", "Test para"],
+                   ["Viscosity", "3.6.3", "4.6.3", "ASTM D1200"],
+                   ["Lead content", "3.6.9", "4.6.9", "ASTM D3335"]]},
+    ])
+
+
+def test_onceden_okunmus_belge_verilirse_pdf_yeniden_okunmaz(tmp_path, monkeypatch):
+    import malzeme_kabul.cikarim.kural_cikarici as kural_cikarici
+
+    yol = _iki_testli_pdf(tmp_path / "MIL-PRF-23377K.pdf")
+    belge = pdf_oku(yol)
+    beklenen = cikar(yol, "MIL-PRF-23377", "K")
+    assert sorted(t.id for t in beklenen.testler) == ["lead_content", "viscosity"]
+
+    def okunmamali(*a, **k):
+        raise AssertionError("pdf_oku çağrılmamalıydı")
+
+    monkeypatch.setattr(kural_cikarici, "pdf_oku", okunmamali)
+    dokuman = cikar(tmp_path / "yok.pdf", "MIL-PRF-23377", "K", belge=belge)
+    assert sorted(t.id for t in dokuman.testler) == ["lead_content", "viscosity"]
+    viskozite = {t.id: t for t in dokuman.testler}["viscosity"]
+    assert (viskozite.sinir.ust, viskozite.sinir.birim) == (40, "s")
+    assert viskozite.kaynak.madde == "3.6.3" and viskozite.kaynak.sayfa == 1
+
+
+def test_verilen_belgenin_metni_kullanilir_dosyadaki_degil(tmp_path):
+    """OCR'lı belge dosyanın kendi metninden farklıdır; çıkarıcı verilen belgeyi okur."""
+    yol = _iki_testli_pdf(tmp_path / "MIL-PRF-23377K.pdf")
+    belge = pdf_oku(yol)
+    belge.sayfalar[0].metin = belge.sayfalar[0].metin.replace("40 seconds", "55 seconds")
+    dokuman = cikar(yol, "MIL-PRF-23377", "K", belge=belge)
+    assert {t.id: t for t in dokuman.testler}["viscosity"].sinir.ust == 55

@@ -287,9 +287,14 @@ def _standart_bilgisi(belge: Belge, belge_no: str, revizyon: str) -> StandartBil
     return StandartBilgisi(belge_no=belge_no, revizyon=revizyon, baslik=baslik, tarih=tarih)
 
 
-def cikar(pdf_yolu: str | Path, belge_no: str, revizyon: str) -> KabulDokumani:
-    """PDF'ten kural tabanlı olarak kabul dokümanı çıkarır."""
-    belge = pdf_oku(pdf_yolu)
+def cikar(pdf_yolu: str | Path, belge_no: str, revizyon: str, belge: Belge | None = None) -> KabulDokumani:
+    """PDF'ten kural tabanlı olarak kabul dokümanı çıkarır.
+
+    `belge` verilirse (ör. taranmış sayfaları OCR'dan geçmiş okuma) PDF yeniden
+    okunmaz, verilen belgenin metni kullanılır.
+    """
+    if belge is None:
+        belge = pdf_oku(pdf_yolu)
     paragraflar = paragraflara_bol(belge, belge_no=f"{belge_no}{revizyon}")
 
     def kaynak(madde: str, sayfa: int | None = None, alinti: str | None = None) -> Kaynak:
