@@ -77,18 +77,17 @@ def yeni_revizyon_yukle(
     """Yeni revizyonu kataloğa ekler; etkilenen malzeme ve partileri işaretler."""
     if not kullanici or not kullanici.strip():
         raise KatalogHatasi("kullanıcı boş olamaz")
-    katalog.standart_ekle(belge_no, yeni_revizyon, baslik, tarih)
     etki = RevizyonEtkisi(belge_no, yeni_revizyon)
     neden = f"{MP_ISARETI}: {etki.yeni_etiket} yayımlandı"
-    for m in katalog.malzemeler():
-        if m.belge_no != belge_no or not daha_eski_mi(m.revizyon, yeni_revizyon):
-            continue
-        katalog.mp_inceleme_ata(m.kod, f"{neden} (malzeme {m.standart_etiketi})")
-        etki.etkilenen_malzemeler.append(m.kod)
-        etki.etkilenen_partiler += [f"{p.malzeme_kodu}/{p.lot_no}" for p in katalog.partiler(m.kod)]
-    b = katalog.baglanti
-    b.execute(_OLAYLAR)  # tek ifade; executescript açık bir dış işlemi sessizce bitirirdi
-    with katalog.islem():
+    with katalog.islem() as b:
+        katalog.standart_ekle(belge_no, yeni_revizyon, baslik, tarih)
+        for m in katalog.malzemeler():
+            if m.belge_no != belge_no or not daha_eski_mi(m.revizyon, yeni_revizyon):
+                continue
+            katalog.mp_inceleme_ata(m.kod, f"{neden} (malzeme {m.standart_etiketi})")
+            etki.etkilenen_malzemeler.append(m.kod)
+            etki.etkilenen_partiler += [f"{p.malzeme_kodu}/{p.lot_no}" for p in katalog.partiler(m.kod)]
+        b.execute(_OLAYLAR)  # tek ifade; executescript açık işlemi sessizce bitirirdi
         b.execute(
             "INSERT INTO revizyon_olaylari (belge_no, yeni_revizyon, zaman, kullanici, etkilenen_malzemeler,"
             " etkilenen_partiler, fark_ozeti) VALUES (?, ?, ?, ?, ?, ?, ?)",

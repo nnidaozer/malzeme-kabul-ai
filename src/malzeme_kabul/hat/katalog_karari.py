@@ -235,6 +235,7 @@ def malzeme_koduyla_kontrol(
     hat_bilgisi: dict | None = None,
     incelemeye_alinacak: dict[str, str] | None = None,
     karsi_okuma: Sertifika | None = None,
+    bekletme_nedeni: str | None = None,
 ) -> KatalogKarari:
     """Sertifikayı malzeme kodunun onaylı kabul dokümanıyla karşılaştırır.
 
@@ -252,6 +253,12 @@ def malzeme_koduyla_kontrol(
     okuma da uygun değilse satır uygun değil kalır
     (`okuma_karsilastirma.anlasmazlik_karari`). Kontrol satırlarında olmayan
     test için insan incelemeli bir ek denetim satırı eklenir.
+
+    `bekletme_nedeni` verilirse (ör. hibritte dil modeli yanıt vermedi) kontrol
+    satırlarından (revizyon, satırlar, tip/sınıf) uygun ya da uygun değil
+    olanlar insan incelemeli olur; gerekçeye neden, "yalnız kural okumasıyla
+    karar verilmez" ve kuralın kendi kararı eklenir. Eksik bilgi uygun
+    sonucuna yol açmaz: parti kararı inceleme olur.
     """
     if defter is not None and not (isinstance(kullanici, str) and kullanici.strip()):
         raise KatalogHatasi("denetim kaydı için kullanıcı gerekli")
@@ -273,6 +280,8 @@ def malzeme_koduyla_kontrol(
             KararSatiri(test_id=t, test_adi=adlar.get(t, t), karar="insan_incelemeli", gerekce=g)
             for t, g in eksik.items()
         )
+    if bekletme_nedeni:
+        kontrol = _bekletmeye_al(kontrol, bekletme_nedeni)
     ek.append(_tedarikci_denetimi(katalog, malzeme_kodu, sertifika))
     # Parti okuması, geçiş kararı, durum yazımı ve kayıt tek IMMEDIATE işlemdir (K2 yarışı):
     # okunan durum, yazılana kadar başka bir bağlantı tarafından değiştirilemez.
@@ -466,6 +475,22 @@ def _incelemeye_al(
     yeni = yeni.model_copy(update={"belge_karari": parti_karari(_satir_kararlari(yeni))})
     bulunan = {kontrol.revizyon.test_id} | {s.test_id for s in kontrol.satirlar}
     return yeni, {t: g for t, g in nedenler.items() if t not in bulunan}
+
+
+def _bekletmeye_al(kontrol: KontrolSonucu, neden: str) -> KontrolSonucu:
+    """Kesin kararlı (uygun / uygun değil) kontrol satırlarını insan incelemesine alır."""
+
+    def beklet(s: KararSatiri) -> KararSatiri:
+        if s.karar not in ("uygun", "uygun_degil"):
+            return s
+        gerekce = f"{s.gerekce}; {neden}: yalnız kural okumasıyla karar verilmez (kural okumasına göre: {s.karar})"
+        return s.model_copy(update={"karar": "insan_incelemeli", "gerekce": gerekce})
+
+    guncel: dict = {"revizyon": beklet(kontrol.revizyon), "satirlar": [beklet(s) for s in kontrol.satirlar]}
+    if kontrol.tip_sinif is not None:
+        guncel["tip_sinif"] = beklet(kontrol.tip_sinif)
+    yeni = kontrol.model_copy(update=guncel)
+    return yeni.model_copy(update={"belge_karari": parti_karari(_satir_kararlari(yeni))})
 
 
 def _satir_kararlari(kontrol: KontrolSonucu) -> list[Karar]:

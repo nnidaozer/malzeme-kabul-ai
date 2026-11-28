@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from malzeme_kabul.arayuz import ekran_verisi as ev
-from malzeme_kabul.arayuz.kimlik import KimlikHatasi, giris, kullanici_ekle, kullanicilar, yetkili_mi
+from malzeme_kabul.arayuz.kimlik import EKRANLAR, YETKILER, KimlikHatasi, giris, kullanici_ekle, kullanicilar, yetkili_mi
 from malzeme_kabul.katalog.ornek_veri import ornek_yukle
 from malzeme_kabul.katalog.veritabani import Katalog, KatalogHatasi
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
@@ -37,12 +37,25 @@ def test_giris_ve_roller():
     kullanici_ekle(b, "nida", "uzun-parola-1", "mp")
     kullanici_ekle(b, "ali", "uzun-parola-2", "giris_kalite")
     mp = giris(b, "nida", "uzun-parola-1")
-    assert mp.rol == "mp" and mp.ekranlar == ("standart", "taslak", "revizyon", "depo")
+    assert mp.rol == "mp" and "pano" in mp.ekranlar
+    assert tuple(e for e in mp.ekranlar if e != "pano") == ("standart", "taslak", "revizyon", "depo")
     assert giris(b, "nida", "yanlis-parola") is None and giris(b, "yok", "uzun-parola-1") is None
     gk = giris(b, "ali", "uzun-parola-2")
     assert yetkili_mi(gk, "giris") and yetkili_mi(gk, "depo") and not yetkili_mi(gk, "taslak")
     assert not yetkili_mi(mp, "giris") and not yetkili_mi(None, "depo")
     assert [k.ad for k in kullanicilar(b)] == ["ali", "nida"]
+
+
+def test_pano_ekrani_duzeltme_panosu_adini_tasir():
+    assert EKRANLAR["pano"] == "Düzeltme panosu"
+
+
+def test_mp_rolu_pano_ekranina_yetkilidir():
+    assert "pano" in YETKILER["mp"]
+
+
+def test_giris_kalite_rolu_pano_ekranina_yetkili_degildir():
+    assert "pano" not in YETKILER["giris_kalite"]
 
 
 def test_parola_duz_saklanmaz():
@@ -409,8 +422,10 @@ def test_ekran_giris_kalite_rolu_yalniz_kendi_ekranlarini_gorur(uygulama):
 
 def test_ekran_mp_rolu_ve_depo(uygulama):
     at, _ = uygulama("mp", "mp-ornek-parola")
-    assert at.sidebar.radio[0].options == ["Standart yükle", "Taslağı düzelt ve onayla",
-                                           "Revizyon farkı ve M&P incelemesi", "Depo: partiler ve raf ömrü"]
+    secenekler = at.sidebar.radio[0].options
+    assert "Düzeltme panosu" in secenekler
+    assert [s for s in secenekler if s != "Düzeltme panosu"] == [
+        "Standart yükle", "Taslağı düzelt ve onayla", "Revizyon farkı ve M&P incelemesi", "Depo: partiler ve raf ömrü"]
     at.sidebar.radio[0].set_value("depo").run()
     assert not at.exception and at.dataframe and "raf ömrü uyarısı" in at.warning[0].value
 
@@ -434,6 +449,20 @@ def test_ekran_giris_kalite_demo_isareti_gorunur(uygulama):
     metinler = [e.value for e in [*at.warning, *at.caption, *at.header, *at.subheader, *at.markdown]]
     assert any("DEMO ONAYI" in m for m in metinler)
     assert any("DEMO ONAYI" in w.value for w in at.warning)
+
+
+def test_ekran_mp_pano_basligi_ve_duzeltme_orani_metrigi_gorunur(uygulama, tmp_path, monkeypatch):
+    monkeypatch.setenv("MALZEME_KABUL_ETIKET_ADAYI", str(tmp_path / "etiket_adaylari"))
+    at, _ = uygulama("mp", "mp-ornek-parola")
+    at.sidebar.radio[0].set_value("pano").run()
+    assert not at.exception
+    assert at.header[0].value == "Düzeltme panosu"
+    assert any("düzeltme oranı" in m.label.lower() for m in at.metric)
+
+
+def test_ekran_giris_kalite_pano_secenegini_gormez(uygulama):
+    at, _ = uygulama("gk", "gk-ornek-parola")
+    assert "Düzeltme panosu" not in at.sidebar.radio[0].options
 
 
 # --- Nida kararı: düzeltme formu giriş yapan kullanıcının rolünü iletir ------------------------------

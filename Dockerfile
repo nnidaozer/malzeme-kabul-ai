@@ -17,6 +17,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     STREAMLIT_SERVER_ADDRESS=0.0.0.0 \
     STREAMLIT_SERVER_PORT=8501
 
+# Yerel OCR (docs/ocr.md): taranmış sayfalar Tesseract ikili dosyasıyla okunur; ağ kullanılmaz.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /uygulama
 COPY requirements-arayuz.lock ./
 RUN pip install -r requirements-arayuz.lock

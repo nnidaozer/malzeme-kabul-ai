@@ -11,6 +11,7 @@ import builtins
 import csv
 import json
 import os
+import shutil
 from pathlib import Path
 
 import pytest
@@ -431,3 +432,290 @@ def test_varsayilan_goldlar_hic_yoksa_bos_doner(tmp_path):
 def test_varsayilan_goldlar_data_gold_klasorunu_kullanmaz(tmp_path):
     _gold_klasoru(tmp_path, "gold")
     assert _uc_mod().varsayilan_goldlar(ETIKET, kok=tmp_path) == {}
+
+
+# --- OCR (docs/ocr.md, tasarım 4) ----------------------------------------------------
+
+
+def _ocr_bolunme(tmp_path) -> Path:
+    """MIL-PRF-23377K geliştirmede ve taranmış (ocr_gerekli) sayılıyor."""
+    yol = tmp_path / "bolunme_ocr.yaml"
+    yol.write_text("gelistirme:\n  - MIL-PRF-23377K\nocr_gerekli:\n  - MIL-PRF-23377K\n", encoding="utf-8")
+    return yol
+
+
+def _taranmis_sayfali_pdf(klasor: Path) -> Path:
+    """_pdf'in iki sayfası ve ardından yalnız resimden oluşan (taranmış) 3. sayfa."""
+    return pdf_yaz(klasor / f"{ETIKET}.pdf", [
+        {"metin": ["MIL-PRF-23377K", "3.6.3 Viscosity. The maximum viscosity shall be", "40 seconds through a cup.",
+                   "3.6.9 Lead content. The lead content shall be not greater than 1 ppm.",
+                   f"3.6.10 Odor. {KOKU_METNI}"]},
+        {"metin": ["MIL-PRF-23377K", "TABLE II. Tests"],
+         "tablo": [["Requirement", "Req para", "Test method", "Test para"],
+                   ["Viscosity", "3.6.3", "4.6.3", "ASTM D1200"],
+                   ["Lead content", "3.6.9", "4.6.9", "ASTM D3335"]]},
+        {"gorsel": True},
+    ])
+
+
+class SahteOcrMotoru:
+    def __init__(self):
+        self.sayfalar: list[int] = []
+
+    def sayfa_oku(self, pdf_yolu, sayfa_no):
+        from malzeme_kabul.belge.ocr import OcrKelime, OcrSonucu
+
+        self.sayfalar.append(sayfa_no)
+        return OcrSonucu("MIL-PRF-23377K\n3.6.11 Color. The color shall be white.",
+                         (OcrKelime("Color.", 90.0), OcrKelime("white.", 80.0)))
+
+
+@pytest.fixture
+def taranmis_pdf(tmp_path):
+    klasor = tmp_path / "girdi"
+    klasor.mkdir()
+    return _taranmis_sayfali_pdf(klasor)
+
+
+def test_ocr_verilince_taranmis_gelistirme_belgesi_reddedilmez(tmp_path, taranmis_pdf):
+    motor = SahteOcrMotoru()
+    cikti = tmp_path / "cikti"
+    rapor = _uc_mod().uc_mod_calistir(taranmis_pdf, SahteIstemci(), cikti, model_adi="qwen3:8b",
+                                      bolunme=_ocr_bolunme(tmp_path), ocr=motor)
+    assert (cikti / f"{ETIKET}_hibrit.json").is_file()
+    assert motor.sayfalar and set(motor.sayfalar) == {3}  # yalnız taranmış sayfa OCR'a gider
+    assert rapor["sayfa_sayisi"] == 3
+
+
+def test_ocr_verilmezse_taranmis_belge_model_cagrilmadan_reddedilir(tmp_path, taranmis_pdf):
+    from deney.bolunme import OcrGerekli
+
+    cikti = tmp_path / "cikti"
+    with pytest.raises(OcrGerekli):
+        _uc_mod().uc_mod_calistir(taranmis_pdf, CagrilmamaliIstemci(), cikti, model_adi="qwen3:8b",
+                                  bolunme=_ocr_bolunme(tmp_path))
+    assert not cikti.exists() or list(cikti.iterdir()) == []
+
+
+def test_ocr_raporu_ocr_bayragi_ve_ocr_sayfalarini_icerir(tmp_path, taranmis_pdf):
+    cikti = tmp_path / "cikti"
+    donen = _uc_mod().uc_mod_calistir(taranmis_pdf, SahteIstemci(), cikti, model_adi="qwen3:8b",
+                                      bolunme=_ocr_bolunme(tmp_path), ocr=SahteOcrMotoru())
+    rapor = json.loads((cikti / f"{ETIKET}_uc_mod_rapor.json").read_text(encoding="utf-8"))
+    assert rapor["ocr"] is True
+    assert rapor["ocr_sayfalari"] == [3]
+    assert donen == rapor
+
+
+def test_ocr_verilse_de_test_kumesindeki_belge_reddedilir(tmp_path):
+    from deney.bolunme import TestKumesiKilitli
+
+    klasor = tmp_path / "girdi"
+    klasor.mkdir()
+    kilitli = _pdf(klasor, ad="MIL-PRF-87937E.pdf")
+    motor = SahteOcrMotoru()
+    with pytest.raises(TestKumesiKilitli):
+        _uc_mod().uc_mod_calistir(kilitli, CagrilmamaliIstemci(), tmp_path / "cikti", model_adi="qwen3:8b",
+                                  ocr=motor)
+    assert motor.sayfalar == []
+
+
+def test_main_ocr_bayragi_tesseract_yoksa_2_doner_ve_mesaj_yazar(tmp_path, taranmis_pdf, sahte_yerel_model,
+                                                                  monkeypatch, capsys):
+    bos = tmp_path / "bos_path"
+    bos.mkdir()
+    monkeypatch.setenv("PATH", str(bos))  # tesseract bulunamaz
+    kod = _uc_mod().main([str(taranmis_pdf), "--model", "qwen3:8b", "--cikti", str(tmp_path / "cikti"),
+                          "--gold-yok", "--bolunme", str(_ocr_bolunme(tmp_path)), "--ocr"])
+    assert kod == 2
+    assert "tesseract" in capsys.readouterr().err.lower()
+    assert sahte_yerel_model == []
+
+
+@pytest.mark.skipif(not shutil.which("tesseract"), reason="tesseract kurulu değil")
+def test_main_ocr_bayragiyla_taranmis_belgeyi_isler(tmp_path, taranmis_pdf, sahte_yerel_model):
+    cikti = tmp_path / "cikti"
+    kod = _uc_mod().main([str(taranmis_pdf), "--model", "qwen3:8b", "--cikti", str(cikti),
+                          "--gold-yok", "--bolunme", str(_ocr_bolunme(tmp_path)), "--ocr"])
+    assert kod == 0
+    rapor = json.loads((cikti / f"{ETIKET}_uc_mod_rapor.json").read_text(encoding="utf-8"))
+    assert rapor["ocr"] is True and rapor["ocr_sayfalari"] == [3]
+
+
+# --- Etiket taklidi ve OCR hatası (gözden geçirme düzeltmeleri) ---------------------------
+
+TAKLIT_BOLUNMESI = """test_kumesi_acik: false
+test_durumu: secildi
+tohum: 1
+
+gelistirme:
+  - MIL-PRF-11111A
+  - MIL-PRF-44444D
+
+yeni_standartlar:
+  - MIL-PRF-33333C
+
+test:
+  - MIL-PRF-33333C
+"""
+
+
+@pytest.fixture
+def taklit_bolunmesi(tmp_path) -> Path:
+    yol = tmp_path / "bolunme_taklit.yaml"
+    yol.write_text(TAKLIT_BOLUNMESI, encoding="utf-8")
+    return yol
+
+
+def _adli_pdf(tmp_path, ad: str) -> Path:
+    klasor = tmp_path / "girdi"
+    klasor.mkdir(exist_ok=True)
+    return _pdf(klasor, ad=ad)
+
+
+def test_verilen_etiket_test_kumesindeki_dosya_adini_gizleyemez(tmp_path, taklit_bolunmesi):
+    from deney.bolunme import TestKumesiKilitli
+
+    pdf = _adli_pdf(tmp_path, "MIL-PRF-33333C.pdf")  # dosya adı test kümesinde
+    motor = SahteOcrMotoru()
+    cikti = tmp_path / "cikti"
+    with pytest.raises(TestKumesiKilitli):
+        _uc_mod().uc_mod_calistir(pdf, CagrilmamaliIstemci(), cikti, model_adi="qwen3:8b",
+                                  belge_no="MIL-PRF-11111", revizyon="A", bolunme=taklit_bolunmesi, ocr=motor)
+    assert motor.sayfalar == []
+    assert not cikti.exists() or list(cikti.iterdir()) == []
+
+
+def test_dosya_adi_etiketi_verilen_etiketten_farkliysa_reddedilir(tmp_path, taklit_bolunmesi):
+    pdf = _adli_pdf(tmp_path, "MIL-PRF-44444D.pdf")  # ikisi de geliştirmede ama farklı
+    cikti = tmp_path / "cikti"
+    with pytest.raises(ValueError) as hata:
+        _uc_mod().uc_mod_calistir(pdf, CagrilmamaliIstemci(), cikti, model_adi="qwen3:8b",
+                                  belge_no="MIL-PRF-11111", revizyon="A", bolunme=taklit_bolunmesi)
+    assert "MIL-PRF-44444D" in str(hata.value) and "MIL-PRF-11111A" in str(hata.value)
+    assert not cikti.exists() or list(cikti.iterdir()) == []
+
+
+def test_dosya_adi_etiketi_verilenle_ayniysa_kabul_edilir(tmp_path, taklit_bolunmesi):
+    pdf = _adli_pdf(tmp_path, "MIL-PRF-11111A.pdf")
+    rapor = _uc_mod().uc_mod_calistir(pdf, SahteIstemci(), tmp_path / "cikti", model_adi="qwen3:8b",
+                                      belge_no="MIL-PRF-11111", revizyon="A", bolunme=taklit_bolunmesi)
+    assert rapor["belge"] == "MIL-PRF-11111A"
+
+
+def test_main_verilen_etiketle_test_kumesindeki_dosya_icin_2_doner(tmp_path, taklit_bolunmesi, sahte_yerel_model):
+    pdf = _adli_pdf(tmp_path, "MIL-PRF-33333C.pdf")
+    kod = _uc_mod().main([str(pdf), "--model", "qwen3:8b", "--belge-no", "MIL-PRF-11111", "--revizyon", "A",
+                          "--cikti", str(tmp_path / "cikti"), "--gold-yok", "--bolunme", str(taklit_bolunmesi)])
+    assert kod == 2
+    assert sahte_yerel_model == []
+
+
+def test_main_etiket_uyusmazliginda_2_doner_ve_iki_etiketi_yazar(tmp_path, taklit_bolunmesi, sahte_yerel_model,
+                                                                 capsys):
+    pdf = _adli_pdf(tmp_path, "MIL-PRF-44444D.pdf")
+    kod = _uc_mod().main([str(pdf), "--model", "qwen3:8b", "--belge-no", "MIL-PRF-11111", "--revizyon", "A",
+                          "--cikti", str(tmp_path / "cikti"), "--gold-yok", "--bolunme", str(taklit_bolunmesi)])
+    assert kod == 2
+    hata = capsys.readouterr().err
+    assert "MIL-PRF-44444D" in hata and "MIL-PRF-11111A" in hata
+    assert sahte_yerel_model == []
+
+
+class _BozukTesseract:
+    """Her sayfada OcrKullanilamaz atan motor (ör. tesseract dil paketi yok)."""
+
+    def __init__(self, *a, **k):
+        pass
+
+    def sayfa_oku(self, pdf_yolu, sayfa_no):
+        from malzeme_kabul.belge.ocr import OcrKullanilamaz
+
+        raise OcrKullanilamaz("tesseract hata koduyla bitti (1): Failed loading language 'eng'")
+
+
+def test_main_ocr_motoru_hata_verirse_2_doner_yigin_izi_vermez(tmp_path, taranmis_pdf, sahte_yerel_model,
+                                                               monkeypatch, capsys):
+    uc_mod = _uc_mod()
+    monkeypatch.setattr(uc_mod, "TesseractMotoru", _BozukTesseract)
+    monkeypatch.setattr(uc_mod, "tesseract_var_mi", lambda *a, **k: True)
+    kod = uc_mod.main([str(taranmis_pdf), "--model", "qwen3:8b", "--cikti", str(tmp_path / "cikti"),
+                       "--gold-yok", "--bolunme", str(_ocr_bolunme(tmp_path)), "--ocr"])
+    assert kod == 2
+    hata = capsys.readouterr().err
+    assert "Failed loading language" in hata
+    assert "Traceback" not in hata
+    assert sahte_yerel_model == []
+
+
+# --- İçerik kilidi, kilitli klasör ve ham klasör (ikinci gözden geçirme turu) -------------
+
+
+@pytest.fixture
+def ham_klasor(tmp_path) -> Path:
+    """Geçici ham klasör: test kümesindeki MIL-PRF-33333C'nin sahte PDF'i."""
+    kok = tmp_path / "ham"
+    kok.mkdir()
+    pdf_yaz(kok / "MIL-PRF-33333C.pdf", [{"metin": ["3.1 Test kumesi belgesi otuz uc bin uc yuz otuz uc."]}])
+    return kok
+
+
+def _adsiz_kopya(tmp_path, ham_klasor) -> Path:
+    klasor = tmp_path / "girdi"
+    klasor.mkdir(exist_ok=True)
+    hedef = klasor / "x.pdf"
+    shutil.copyfile(ham_klasor / "MIL-PRF-33333C.pdf", hedef)
+    return hedef
+
+
+def test_test_belgesinin_adsiz_kopyasi_verilen_etiketle_reddedilir(tmp_path, taklit_bolunmesi, ham_klasor):
+    from deney.bolunme import TestKumesiKilitli
+
+    kopya = _adsiz_kopya(tmp_path, ham_klasor)
+    motor = SahteOcrMotoru()
+    cikti = tmp_path / "cikti"
+    with pytest.raises(TestKumesiKilitli):
+        _uc_mod().uc_mod_calistir(kopya, CagrilmamaliIstemci(), cikti, model_adi="qwen3:8b",
+                                  belge_no="MIL-PRF-11111", revizyon="A", bolunme=taklit_bolunmesi,
+                                  ocr=motor, ham_klasor=ham_klasor)
+    assert motor.sayfalar == []
+    assert not cikti.exists() or list(cikti.iterdir()) == []
+
+
+def test_adsiz_yeni_belge_verilen_etiketle_islenir(tmp_path, taklit_bolunmesi, ham_klasor):
+    klasor = tmp_path / "girdi"
+    klasor.mkdir()
+    yol = _pdf(klasor, ad="x.pdf")  # içeriği test kümesinde yok
+    rapor = _uc_mod().uc_mod_calistir(yol, SahteIstemci(), tmp_path / "cikti", model_adi="qwen3:8b",
+                                      belge_no="MIL-PRF-11111", revizyon="A", bolunme=taklit_bolunmesi,
+                                      ham_klasor=ham_klasor)
+    assert rapor["belge"] == "MIL-PRF-11111A"
+
+
+def test_kilitli_klasordeki_belge_reddedilir_model_cagrilmaz(tmp_path):
+    from deney.bolunme import TestKumesiKilitli
+
+    bolunme = tmp_path / "bolunme_kilitli.yaml"
+    bolunme.write_text(f"gelistirme:\n  - {ETIKET}\nkilitli_klasorler:\n  - kilitli_klasor\n", encoding="utf-8")
+    klasor = tmp_path / "kilitli_klasor"
+    klasor.mkdir()
+    yol = _pdf(klasor)  # adı geliştirme kümesinde, klasör kilitli
+    motor = SahteOcrMotoru()
+    cikti = tmp_path / "cikti"
+    with pytest.raises(TestKumesiKilitli):
+        _uc_mod().uc_mod_calistir(yol, CagrilmamaliIstemci(), cikti, model_adi="qwen3:8b", bolunme=bolunme,
+                                  ocr=motor)
+    assert motor.sayfalar == []
+    assert not cikti.exists() or list(cikti.iterdir()) == []
+
+
+def test_main_ham_klasor_secenegiyle_adsiz_kopya_icin_2_doner(tmp_path, taklit_bolunmesi, ham_klasor,
+                                                             sahte_yerel_model):
+    kopya = _adsiz_kopya(tmp_path, ham_klasor)
+    cikti = tmp_path / "cikti"
+    kod = _uc_mod().main([str(kopya), "--model", "qwen3:8b", "--belge-no", "MIL-PRF-11111", "--revizyon", "A",
+                          "--cikti", str(cikti), "--gold-yok", "--bolunme", str(taklit_bolunmesi),
+                          "--ham-klasor", str(ham_klasor)])
+    assert kod == 2
+    assert sahte_yerel_model == []
+    assert not cikti.exists() or list(cikti.iterdir()) == []
