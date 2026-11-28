@@ -1,0 +1,354 @@
+{
+  "model": "qwen3:8b",
+  "belge": "MIL-PRF-23377K",
+  "sayfa_sayisi": 19,
+  "modlar": {
+    "kural": {
+      "test_sayisi": 27,
+      "sure_s": 2.032,
+      "insan_incelemeli_sinir": 0
+    },
+    "dil_modeli": {
+      "test_sayisi": 55,
+      "sure_s": 579.122,
+      "insan_incelemeli_sinir": 1
+    },
+    "hibrit": {
+      "test_sayisi": 57,
+      "sure_s": 581.182,
+      "insan_incelemeli_sinir": 8
+    }
+  },
+  "anlasmazlik_sayisi": 10,
+  "anlasmazlikli_test_sayisi": 10,
+  "dil_modeli_raporu": {
+    "sayfalar": [
+      {
+        "sayfa": 1,
+        "sure_s": 2.707,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 2,
+        "sure_s": 2.547,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 3,
+        "sure_s": 8.053,
+        "test_sayisi": 1,
+        "hatalar": []
+      },
+      {
+        "sayfa": 4,
+        "sure_s": 2.594,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 5,
+        "sure_s": 13.618,
+        "test_sayisi": 1,
+        "hatalar": []
+      },
+      {
+        "sayfa": 6,
+        "sure_s": 78.064,
+        "test_sayisi": 9,
+        "hatalar": [
+          "test 6 (fineness_of_grind): sinir.birim: Value error, pint bu birimi tanımıyor: 'Hegman scale'"
+        ]
+      },
+      {
+        "sayfa": 7,
+        "sure_s": 81.006,
+        "test_sayisi": 11,
+        "hatalar": []
+      },
+      {
+        "sayfa": 8,
+        "sure_s": 57.416,
+        "test_sayisi": 7,
+        "hatalar": []
+      },
+      {
+        "sayfa": 9,
+        "sure_s": 10.71,
+        "test_sayisi": 1,
+        "hatalar": []
+      },
+      {
+        "sayfa": 10,
+        "sure_s": 28.078,
+        "test_sayisi": 3,
+        "hatalar": []
+      },
+      {
+        "sayfa": 11,
+        "sure_s": 91.694,
+        "test_sayisi": 15,
+        "hatalar": []
+      },
+      {
+        "sayfa": 12,
+        "sure_s": 90.654,
+        "test_sayisi": 17,
+        "hatalar": []
+      },
+      {
+        "sayfa": 13,
+        "sure_s": 33.195,
+        "test_sayisi": 5,
+        "hatalar": []
+      },
+      {
+        "sayfa": 14,
+        "sure_s": 48.516,
+        "test_sayisi": 4,
+        "hatalar": []
+      },
+      {
+        "sayfa": 15,
+        "sure_s": 8.997,
+        "test_sayisi": 1,
+        "hatalar": []
+      },
+      {
+        "sayfa": 16,
+        "sure_s": 3.053,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 17,
+        "sure_s": 2.962,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 18,
+        "sure_s": 3.116,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 19,
+        "sure_s": 12.142,
+        "test_sayisi": 1,
+        "hatalar": []
+      }
+    ],
+    "tekrar_edenler": [
+      "pigment",
+      "pigment",
+      "color",
+      "viscosity",
+      "condition_in_container",
+      "storage_stability",
+      "accelerated_storage_stability",
+      "odor",
+      "viscosity",
+      "lifting",
+      "adhesion",
+      "flexibility",
+      "application",
+      "strippability",
+      "lifting",
+      "adhesion",
+      "flexibility",
+      "infrared_reflectance",
+      "water_resistance",
+      "fluid_resistance",
+      "strippability"
+    ],
+    "yon_celiskileri": [
+      {
+        "id": "drying_time",
+        "sayfa": 7,
+        "metin_yonu": "en_cok",
+        "model_yonu": "aralik",
+        "orijinal_metin": "The admixed primer coatings shall be tack free within 5 hours and shall dry hard within 8 hours (see table II)."
+      }
+    ],
+    "toplam_sure_s": 579.383,
+    "test_sayisi": 55,
+    "devam_edilen_sayfalar": []
+  },
+  "hibrit_raporu": {
+    "kural_test_sayisi": 27,
+    "eklenen": [
+      "composition",
+      "pigment",
+      "voc_content",
+      "resistivity",
+      "thinner_compatibility",
+      "color",
+      "salt_spray",
+      "filiform",
+      "solvent_resistance",
+      "strippability_dm",
+      "primer_coating_test_samples",
+      "visual_inspection_of_filled_containers",
+      "test_panels",
+      "air_dry_time",
+      "topcoat_air_dry_time",
+      "topcoat_thickness",
+      "topcoat_thickness_mils",
+      "topcoat_application",
+      "pot life",
+      "surface appearance",
+      "drying time",
+      "infrared reflectance",
+      "water resistance",
+      "solvent resistance",
+      "fluid resistance",
+      "mixing and dilution",
+      "corrosion_resistance_salt_spray",
+      "corrosion_resistance_filiform",
+      "solvent_resistance_cure_dm",
+      "thinning"
+    ],
+    "kuralla_eslesen": [
+      "condition_in_container",
+      "storage_stability",
+      "accelerated_storage_stability",
+      "odor",
+      "pot_life",
+      "surface_appearance",
+      "drying_time",
+      "lifting",
+      "adhesion",
+      "flexibility",
+      "infrared_reflectance",
+      "water_resistance",
+      "fluid_resistance",
+      "mixing_and_dilution",
+      "application",
+      "lead_and_cadmium_content",
+      "chromium_content",
+      "voc_solvent_content",
+      "fineness_of_grind",
+      "color_type_i",
+      "color_type_ii",
+      "salt-spray corrosion resistance",
+      "filiform corrosion resistance",
+      "toxicity"
+    ],
+    "kanitsiz": [
+      [
+        "viscosity",
+        "özgün metin sayfa 3 metninde yok"
+      ]
+    ],
+    "sayi_atildi": [
+      "thinning"
+    ],
+    "anlasmazliklar": [
+      {
+        "test_id": "storage_stability",
+        "model_id": "storage_stability",
+        "alan": "kriter_turu",
+        "kural": "metinsel",
+        "model": "sayisal",
+        "kural_madde": "3.5.3",
+        "model_madde": "3.5.3"
+      },
+      {
+        "test_id": "accelerated_storage_stability",
+        "model_id": "accelerated_storage_stability",
+        "alan": "kriter_turu",
+        "kural": "metinsel",
+        "model": "sayisal",
+        "kural_madde": "3.5.4",
+        "model_madde": "3.5.4"
+      },
+      {
+        "test_id": "drying_time",
+        "model_id": "drying_time",
+        "alan": "yon",
+        "kural": "en_cok",
+        "model": "aralik",
+        "kural_madde": "3.7.2",
+        "model_madde": "3.7.2"
+      },
+      {
+        "test_id": "adhesion",
+        "model_id": "adhesion",
+        "alan": "birim",
+        "kural": "-",
+        "model": "A",
+        "kural_madde": "3.7.4",
+        "model_madde": "3.7.4"
+      },
+      {
+        "test_id": "application",
+        "model_id": "application",
+        "alan": "kriter_turu",
+        "kural": "sayisal",
+        "model": "metinsel",
+        "kural_madde": "3.9.2",
+        "model_madde": "3.9.2"
+      },
+      {
+        "test_id": "lead_and_cadmium_content",
+        "model_id": "lead_and_cadmium_content",
+        "alan": "kriter_turu",
+        "kural": "sayisal",
+        "model": "metinsel",
+        "kural_madde": "3.4",
+        "model_madde": "3.4"
+      },
+      {
+        "test_id": "chromium_content_class_n_only",
+        "model_id": "chromium_content",
+        "alan": "kriter_turu",
+        "kural": "sayisal",
+        "model": "metinsel",
+        "kural_madde": "3.4.1.3",
+        "model_madde": "3.4.1.3"
+      },
+      {
+        "test_id": "voc_solvent_content",
+        "model_id": "voc_solvent_content",
+        "alan": "kriter_turu",
+        "kural": "sayisal",
+        "model": "metinsel",
+        "kural_madde": "3.4.2",
+        "model_madde": "3.4.2"
+      },
+      {
+        "test_id": "fineness_of_grind",
+        "model_id": "fineness_of_grind",
+        "alan": "kriter_turu",
+        "kural": "sayisal",
+        "model": "metinsel",
+        "kural_madde": "3.5.1",
+        "model_madde": "3.5.1"
+      },
+      {
+        "test_id": "filiform_corrosion_resistance",
+        "model_id": "filiform corrosion resistance",
+        "alan": "kriter_turu",
+        "kural": "sayisal",
+        "model": "metinsel",
+        "kural_madde": "3.8.2.2",
+        "model_madde": "3.8.2.2"
+      }
+    ],
+    "anlasmazlik_sayisi": 10,
+    "anlasmazlikli_test_sayisi": 10,
+    "isaretlenemeyen": [
+      "storage_stability",
+      "accelerated_storage_stability"
+    ]
+  },
+  "olcum": {
+    "gold_taslak": {
+      "kural": 0.8923,
+      "dil_modeli": 0.3693,
+      "hibrit": 0.735
+    }
+  }
+}

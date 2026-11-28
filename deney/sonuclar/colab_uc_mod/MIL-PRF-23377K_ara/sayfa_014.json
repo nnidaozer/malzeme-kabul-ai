@@ -1,0 +1,132 @@
+{
+  "sayfa": 14,
+  "sure_s": 48.516,
+  "testler": [
+    {
+      "id": "corrosion_resistance_salt_spray",
+      "test_adi": "Corrosion resistance.",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Six test panels designated A (see table I) shall be prepared with primer coating (see 4.4.1). Three of the primer coated panels shall be topcoated (see 4.4.2). Two intersecting lines shall be scribed diagonally across the coated surface of each panel, exposing the bare substrate. The test panels shall then be placed in a 5 percent salt-spray cabinet for 2,000 hours in accordance with ASTM B117. After removal, the test panels shall be examined for conformance to 3.8.2.1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.8.1",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "corrosion_resistance_filiform",
+      "test_adi": "Corrosion resistance.",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall be applied to test panels designated D (see table I) in accordance with 4.4.1 and topcoated in accordance with 4.4.2. Two intersecting lines shall be scribed diagonally across the coated surface of the test panels, exposing the bare substrate. The test panels shall then be placed vertically in a desiccator containing approximately one inch of 12 Normal (N) HCl for 1 hour at room temperature (see 4.5), only the HCl fumes shall come in contact with the sample. Within 5 minutes of removal from the desiccator, the test panels shall be placed in a humidity cabinet maintained at 40 ±2° C (104 ±3° F) and relative humidity of 80 ±5 percent for 1,000 hours. The test panels shall then be examined for conformance to 3.8.2.2. Filiform corrosion appears as threadlike filaments initiating from the exposed substrate and spreading underneath the coating film. (A description of filiform growth can be found in ASTM D2803.)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.8.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "solvent_resistance_cure",
+      "test_adi": "Solvent resistance (cure).",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall be applied to test panels designated A (see table I) in accordance with 4.4.1. A cotton, terrycloth rag shall be soaked in MEK solvent (see 6.10) and rubbed back and forth 25 times (50 passes) over the coating with firm finger pressure in accordance with ASTM D5402 method A. The coating shall then be examined for conformance to 3.8.3."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.9",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid_resistance",
+      "test_adi": "Fluid resistance.",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall be applied to test panels designated A (see table I) in accordance with 4.4.1. The test panels shall then be separately immersed to half their length for 24 hours in glass covered beakers containing the following liquids: a. Lubricating oil conforming to MIL-PRF-23699, maintained at 121 ±3° C (250 ±5° F); b. Hydraulic fluid conforming to MIL-PRF-83282, maintained at 65.5 ±3° C (150 ±5° F). After removal from the test fluids, cool the test panels to room temperature (see 4.5) and examine for conformance to 3.8.4."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.5.10",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

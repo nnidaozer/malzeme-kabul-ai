@@ -1,0 +1,132 @@
+{
+  "sayfa": 13,
+  "sure_s": 31.674,
+  "testler": [
+    {
+      "id": "panel_preparation",
+      "test_adi": "Panel preparation",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "the panels shall be treated with conversion coating to produce coatings conforming to MIL-DTL-5541, class 1A."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.5.1",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "primer_coating",
+      "test_adi": "Primer coating",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 0.6,
+        "ust": 0.9,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "yon": "aralik",
+        "orijinal_metin": "dry-film thickness of 0.6 to 0.9 mil (15 to 23 μm)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.5.2.1",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "topcoat",
+      "test_adi": "Topcoat",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 2.3,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "mil",
+        "yon": "aralik",
+        "orijinal_metin": "dry-film thickness of 1.7 to 2.3 mil (43 to 58 µm)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.5.2.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "air_drying",
+      "test_adi": "Air drying",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 14.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "day",
+        "yon": "en_az",
+        "orijinal_metin": "air-dried for no less than 14 days at room temperature"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.5.2.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

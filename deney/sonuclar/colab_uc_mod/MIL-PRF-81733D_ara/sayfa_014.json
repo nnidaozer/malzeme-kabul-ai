@@ -1,0 +1,103 @@
+{
+  "sayfa": 14,
+  "sure_s": 37.695,
+  "testler": [
+    {
+      "id": "flow_measurement",
+      "test_adi": "flow measurement",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 30.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "minute",
+        "yon": null,
+        "orijinal_metin": "The flow measurement shall be taken directly from the fixture exactly 30 minutes after the sealing compound has been applied to the cavity and shall meet the requirement of 3.3.1.4."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "application_time",
+      "test_adi": "application time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 30.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "minute",
+        "yon": null,
+        "orijinal_metin": "At the end of the specified application time (see 3.3.1.5.2), measured from the beginning of the mixing period, the viscosity of the sealing compound shall be determined."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.2.1",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "application_time_type_ii_and_iv",
+      "test_adi": "application time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 30.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "minute",
+        "yon": null,
+        "orijinal_metin": "At the end of the specified application time, measured from the beginning of the mixing period, the sealing compound shall be extruded through a Semco 440 nozzle, or equivalent, with an orifice of 0.125 ± 0.005 inch at 90 ± 5 psig air pressure onto a dish for 1 minute."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.4.2.2",
+        "sayfa": 14,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 1 (initial_viscosity): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

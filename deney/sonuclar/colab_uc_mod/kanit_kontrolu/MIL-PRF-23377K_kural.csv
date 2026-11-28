@@ -1,0 +1,30 @@
+durum,kayit,alan,deger,madde,sayfa,madde_sayfada
+bulundu,lead_and_cadmium_content,test.sinir.ust,1,3.4,5,evet
+bulundu,chromium_content_class_n_only,test.sinir.ust,5,3.4.1.3,6,evet
+bulundu,voc_solvent_content,test.sinir.ust,340,3.4.2,6,evet
+bulundu,fineness_of_grind,test.sinir.alt,5,3.5.1,6,evet
+bulundu,viscosity,test.sinir.ust,40,3.6.3,7,evet
+bulundu,pot_life,test.sinir.ust,70,3.6.4,7,evet
+bulundu,drying_time,test.sinir.ust,5,3.7.2,7,evet
+bulundu,adhesion,test.sinir.alt,4,3.7.4,7,evet
+bulundu,flexibility,test.sinir.alt,10,3.7.5,7,evet
+bulundu,infrared_reflectance_type_ii_only,test.sinir.ust,10,3.7.6,7,evet
+bulundu,filiform_corrosion_resistance,test.sinir.ust,6.35,3.8.2.2,8,evet
+bulundu,application,test.sinir.alt,15,3.9.2,8,evet
+bulundu,application,test.sinir.ust,23,3.9.2,8,evet
+bulundu,strippability,test.sinir.alt,90,3.12,9,evet
+bulundu,genel,raf_omru.sure,1,3.5.3,6,evet
+bulundu,genel,raf_omru.kosul.alt,1.7,3.5.3,6,evet
+bulundu,genel,raf_omru.kosul.ust,46,3.5.3,6,evet
+bulundu,depolama:Depolama sıcaklığı,kosul.sinir.alt,1.7,3.5.3,6,evet
+bulundu,depolama:Depolama sıcaklığı,kosul.sinir.ust,46,3.5.3,6,evet
+bulundu,kullanim:Kap ömrü (karışımın kullanım süresi),kosul.sinir.ust,4,3.11,9,evet
+bulundu,kullanim:Bekleme (indüksiyon) süresi,kosul.sinir.alt,30,3.11,9,evet
+bulundu,panel_A,numune.kuru_film_kalinligi.alt,15,TABLE I,10,evet
+bulundu,panel_A,numune.kuru_film_kalinligi.ust,23,TABLE I,10,evet
+bulundu,panel_B,numune.kuru_film_kalinligi.alt,15,TABLE I,10,evet
+bulundu,panel_B,numune.kuru_film_kalinligi.ust,23,TABLE I,10,evet
+bulundu,panel_C,numune.kuru_film_kalinligi.alt,15,TABLE I,10,evet
+bulundu,panel_C,numune.kuru_film_kalinligi.ust,23,TABLE I,10,evet
+bulundu,panel_D,numune.kuru_film_kalinligi.alt,15,TABLE I,10,evet
+bulundu,panel_D,numune.kuru_film_kalinligi.ust,23,TABLE I,10,evet

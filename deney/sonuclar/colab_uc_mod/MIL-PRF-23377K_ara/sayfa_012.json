@@ -1,0 +1,535 @@
+{
+  "sayfa": 12,
+  "sure_s": 90.654,
+  "testler": [
+    {
+      "id": "viscosity",
+      "test_adi": "Viscosity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Viscosity"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.3",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "pot life",
+      "test_adi": "Pot life",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Pot life"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.4",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "surface appearance",
+      "test_adi": "Surface appearance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Surface appearance"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "drying time",
+      "test_adi": "Drying time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Drying time"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.2",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "lifting",
+      "test_adi": "Lifting",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Lifting"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.3",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "adhesion",
+      "test_adi": "Adhesion",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Adhesion"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.4",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "flexibility",
+      "test_adi": "Flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Flexibility"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.5",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "infrared reflectance",
+      "test_adi": "Infrared reflectance (type II only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Infrared reflectance (type II only)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.6",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "water resistance",
+      "test_adi": "Water resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Water resistance"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "salt-spray corrosion resistance",
+      "test_adi": "Salt-spray corrosion resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Salt-spray corrosion resistance"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "filiform corrosion resistance",
+      "test_adi": "Filiform corrosion resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Filiform corrosion resistance"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.2",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "solvent resistance",
+      "test_adi": "Solvent resistance (cure)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Solvent resistance (cure)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.3",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid resistance",
+      "test_adi": "Fluid resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Fluid resistance"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.4",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "mixing and dilution",
+      "test_adi": "Mixing and dilution",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Mixing and dilution"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.1",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "application",
+      "test_adi": "Application",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Application"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.2",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "toxicity",
+      "test_adi": "Toxicity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Toxicity"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.3",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "strippability",
+      "test_adi": "Strippability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Strippability"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.12",
+        "sayfa": 12,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

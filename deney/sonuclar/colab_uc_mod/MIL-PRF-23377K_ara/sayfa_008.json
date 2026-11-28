@@ -1,0 +1,225 @@
+{
+  "sayfa": 8,
+  "sure_s": 57.416,
+  "testler": [
+    {
+      "id": "water_resistance",
+      "test_adi": "Water resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The topcoated primer coatings shall withstand immersion in distilled water maintained at 49 ±3° C (120 ±5° F) for 4 days without exhibiting any evidence of wrinkling, blistering, or any other coating deficiency (see 4.5.7)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "salt_spray",
+      "test_adi": "Corrosion resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings, with and without a topcoat, shall not exhibit blistering, lifting of either coating, nor substrate pitting after exposure to a 5 percent salt spray for 2,000 hours. There shall be no white corrosion or pitting in the scribe (see 4.5.8.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "filiform",
+      "test_adi": "Corrosion resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The topcoated primer coatings shall not exhibit filiform corrosion extending beyond 6.35 millimeters (mm) (0.25 inch) from the scribe, and the majority of the filaments shall be less than 3.175 mm (0.125 inch) in length (see 4.5.8.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.2.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "solvent_resistance",
+      "test_adi": "Solvent resistance (cure)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall withstand 50 passes (25 back and forth rubs) by a cloth rag soaked in methyl ethyl ketone (MEK). Rubbing through to bare substrate constitutes failure of the primer coatings to properly cure (see 4.5.9)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid_resistance",
+      "test_adi": "Fluid resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The primer coatings shall withstand immersion for 24 hours in synthetic lubricating oil conforming to MIL-PRF-23699, and synthetic hydraulic fluid conforming to MIL-PRF-83282. Four hours after removal from the respective fluid, the coatings shall not exhibit any softening, blistering, loss of adhesion, nor any other coating deficiency. Discoloration of the coatings is acceptable and shall not be cause for rejection (see 4.5.10)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.8.4",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "mixing_and_dilution",
+      "test_adi": "Mixing and dilution",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The components of the primer coatings, including thinner if required (see 6.11), shall homogeneously blend when mixed by a paint shaker in the volume mixing ratio specified by the manufacturer. Within one hour of mixing, the admixed coatings shall not separate into visually distinct layers (see 4.5.11.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "application",
+      "test_adi": "Application",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The admixed primer coatings shall be capable of being applied by conventional, airless, high volume/low pressure (HVLP) or electrostatic spray equipment. Application shall yield a uniform film with no runs or sags at a dry-film thickness of 15 to 23 microns (µm) (0.6 to 0.9 mil) (see 4.5.11.2)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.9.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

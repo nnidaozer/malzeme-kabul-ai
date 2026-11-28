@@ -1,0 +1,349 @@
+{
+  "sayfa": 7,
+  "sure_s": 81.006,
+  "testler": [
+    {
+      "id": "color",
+      "test_adi": "Color",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The color of the admixed type I primer coatings shall be the natural color of the corrosion inhibiting pigments used. Tinting to a different shade is permitted."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.1.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "color",
+      "test_adi": "Color",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The color of the admixed type II primer coatings shall be dark green, black, or gray."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.1.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "odor",
+      "test_adi": "Odor",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The odor of the admixed coatings, wet or dry, shall be characteristic of the solvents used (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "viscosity",
+      "test_adi": "Viscosity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 40.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "s",
+        "yon": "en_cok",
+        "orijinal_metin": "The maximum viscosity of the unthinned, admixed primer coatings shall be 40 seconds through a #4 Ford cup (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "pot_life",
+      "test_adi": "Pot life",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 70.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "s",
+        "yon": "en_cok",
+        "orijinal_metin": "The maximum viscosity of the unthinned primer coatings (see 3.6.3) shall be 70 seconds through a #4 Ford cup (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.6.4",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "surface_appearance",
+      "test_adi": "Surface appearance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The admixed primer coatings, applied to a vertical surface, shall not sag, run, or streak. The dried film shall have a smooth, uniform surface free of grit, seeds, craters, blisters, and other irregularities (see 4.4.1). No orange peel (wavy appearance) shall be evident when viewed from six feet away."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.1",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "drying_time",
+      "test_adi": "Drying time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 5.0,
+        "ust": 8.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "yon": "aralik",
+        "orijinal_metin": "The admixed primer coatings shall be tack free within 5 hours and shall dry hard within 8 hours (see table II)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.2",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "lifting",
+      "test_adi": "Lifting",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "There shall be no evidence of lifting or any other film irregularity after topcoating the admixed primer coatings that have air dried for 5 hours (see 4.5.3)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.3",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "adhesion",
+      "test_adi": "Adhesion",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 4.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "A",
+        "yon": "en_az",
+        "orijinal_metin": "The coatings shall have a rating of no less than a 4A when examined in accordance with ASTM D3359 (see 4.5.4)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.4",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "flexibility",
+      "test_adi": "Flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 10.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "The primer coatings shall exhibit an elongation of not less than 10 percent when tested in accordance with 4.5.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.5",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "infrared_reflectance",
+      "test_adi": "Infrared reflectance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 10.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_cok",
+        "orijinal_metin": "The total reflectance (specular and diffuse) of the type II primer coatings, relative to barium sulfate, shall be not greater than ten percent throughout the range of 700 to 2,600 nanometers (nm) (see 4.5.6)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.7.6",
+        "sayfa": 7,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

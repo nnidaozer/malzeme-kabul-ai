@@ -1,0 +1,274 @@
+{
+  "sayfa": 8,
+  "sure_s": 84.767,
+  "testler": [
+    {
+      "id": "moisture_content",
+      "test_adi": "Moisture content (class H only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 2.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_cok",
+        "orijinal_metin": "Component A shall contain no more than 2.0 percent by weight of water when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.5.5",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "class H"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fineness_of_grind",
+      "test_adi": "Fineness of grind",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 7.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "unit",
+        "yon": "en_az",
+        "orijinal_metin": "The fineness of grind (measured on the Hegman scale) of the admixed coating shall be a minimum of 7 for gloss colors and a minimum of 5 for camouflage (flat or lusterless) colors when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "gloss colors"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "coarse_particles",
+      "test_adi": "Coarse particles",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.5,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_cok",
+        "orijinal_metin": "Coarse particles retained on a No. 325 sieve shall be no more than 0.5 percent by weight of the admixed coating when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "admixed coating"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "odor",
+      "test_adi": "Odor",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The odor of the coating, as packaged components, as an admixed coating, and as a film after application, shall be characteristic of the solvents used when tested as specified in 4.6. The air-dried coating shall retain no residual odor 48 hours after application."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.6.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "coating"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "drying_time",
+      "test_adi": "Drying time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 6.0,
+        "ust": 12.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "hour",
+        "yon": "aralik",
+        "orijinal_metin": "When applied by spray techniques and tested as specified in 4.6, the coating shall be set-to-touch within six hours and dry-hard within twelve hours."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "coating"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "surface_appearance",
+      "test_adi": "Surface appearance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The coating shall dry to a uniform, smooth surface, free from runs, sags, bubbles, streaks, hazing, seeding, dusting, floating, mottling, or other defects (see 4.6.3). No orange peel (wavy appearance) shall be evident when viewed from six feet away."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "coating"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "color",
+      "test_adi": "Color",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 0.0,
+        "ust": 1.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "unit",
+        "yon": "aralik",
+        "orijinal_metin": "The applied coating, prepared in accordance to 4.5 through 4.5.2 shall be tested in accordance with ASTM D2244 using CIELAB color coordinates with a 10° observer and D65 illuminant. The applied coating dry film shall have a color difference (ΔE) of less than 1 when compared to the specified color chip in FED-STD-595."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "coating"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "infrared_reflectance",
+      "test_adi": "Infrared reflectance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 8.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "unit",
+        "yon": "en_cok",
+        "orijinal_metin": "The total infrared reflectance (specular and diffuse) of the coating (FED-STD-595, color number 34095), relative to barium sulfate shall be not greater than 8 throughout the range of 700 to 2,600 nanometers (nm) (see 4.6.4)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.4",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "coating"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 4 (viscosity_and_pot_life): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

@@ -1,0 +1,256 @@
+{
+  "sayfa": 17,
+  "sure_s": 54.592,
+  "testler": [
+    {
+      "id": "aluminum_corrosion_test_assemblies",
+      "test_adi": "Aluminum Corrosion Test Assemblies",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Approximately 0.005 inch of Type IV sealing compound shall be applied to one side of each panel by spatula. After 1 to 2 hours, the coated sides of the panels shall be mated."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE VIII",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "threaded_fasteners",
+      "test_adi": "Threaded Fasteners",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Threaded fasteners conforming to MIL-S-7839 shall be dipped into Type I sealing compound, inserted into the freshly mated panels, and torqued to 40 inch pounds."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE VIII",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "type_ii_sealing_compound",
+      "test_adi": "Type II Sealing Compound",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Type II sealing compound shall be applied by gun to the butt joint. The fastener head, backs (nuts), and all edges shall be completely covered with compound by using a spatula."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE VIII",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "type_iii_sealing_compound",
+      "test_adi": "Type III Sealing Compound",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Type III sealing compound shall be sprayed over the entire assembly to a thickness of from 0.005 to 0.007 inch."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE VIII",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "curing",
+      "test_adi": "Curing",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The assembly shall be cured as specified in 4.7 (use the longest cure time based on material used)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE VIII",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "scribing",
+      "test_adi": "Scribing",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "After curing, one half of the front side of each assembly shall be scribed as shown on figure 2. Assemblies are now ready to be tested."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE VIII",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "stress_cycling",
+      "test_adi": "Stress Cycling",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Assemblies prepared as specified in 4.8.9.1 shall be installed vertically in the jaws of a machine capable of cycling between 0 and 5,000 pounds for 250 cycles with a loading rate of 10 inches per minute."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.9.3.1",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "temperature_and_soak",
+      "test_adi": "Temperature and Soak",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "For Class 1 materials, the assembly shall be subjected to 250 cycles at a temperature of -65° ± 2° F ( -54° ± 1° C) after a 30-minute soak at"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.9.3.1",
+        "sayfa": 17,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

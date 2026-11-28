@@ -1,0 +1,39 @@
+{
+  "sayfa": 19,
+  "sure_s": 12.142,
+  "testler": [
+    {
+      "id": "thinning",
+      "test_adi": "Thinning",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 340.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/L",
+        "yon": "en_cok",
+        "orijinal_metin": "Do not add thinner to the primer coating if that addition will raise the VOC content to greater than 340 g/L (2.8 lb/gal)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "6.11",
+        "sayfa": 19,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

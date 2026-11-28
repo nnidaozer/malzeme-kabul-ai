@@ -28,6 +28,13 @@ Kurallar:
   verilmedi), `makine`, `insan` ya da `bilinmiyor` (sütundan önceki
   veritabanlarındaki partiler). Hangi geçişe izin verildiğine bu modül değil,
   karar hattı (`hat.katalog_karari`) bakar.
+- İç muayene sonuçları (`ic_muayene_sonuclari`): partiye, geçerli kabul
+  dokümanındaki bir muayene şartı için `uygun` ya da `uygun_degil` girilir.
+  Yeniden giriş yeni satırdır (geçmiş korunur); en son giriş geçerlidir.
+  Her satır girildiği andaki geçerli doküman sürümü etiketini
+  (`dokuman_surumu`), şartın `model_dump_json()` SHA-256 özetini
+  (`sart_ozeti`) ve varsa girenin rolünü (`rol`) taşır. Tetikleyiciler
+  UPDATE ve DELETE'i reddeder (`dokuman_surumleri` gibi değiştirilemez).
 
 Bu modül karar vermez; yalnız saklar ve getirir.
 """
@@ -148,6 +155,33 @@ CREATE TABLE IF NOT EXISTS taslaklar (
     durum       TEXT NOT NULL DEFAULT 'taslak' CHECK (durum IN ('taslak', 'onaylandi')),
     surum       INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS ic_muayene_sonuclari (
+    id            INTEGER PRIMARY KEY,
+    malzeme_kodu  TEXT NOT NULL,
+    lot_no        TEXT NOT NULL,
+    test_id       TEXT NOT NULL,
+    sonuc         TEXT NOT NULL CHECK (sonuc IN ('uygun', 'uygun_degil')),
+    kullanici     TEXT NOT NULL,
+    zaman         TEXT NOT NULL,
+    not_          TEXT,
+    dokuman_surumu TEXT NOT NULL,
+    sart_ozeti    TEXT NOT NULL,
+    rol           TEXT,
+    FOREIGN KEY (malzeme_kodu, lot_no) REFERENCES partiler (malzeme_kodu, lot_no)
+);
+
+CREATE TRIGGER IF NOT EXISTS ic_muayene_sonucu_degistirilemez
+BEFORE UPDATE ON ic_muayene_sonuclari
+BEGIN
+    SELECT RAISE(ABORT, 'iç muayene sonucu değiştirilemez; yeni sonuç girin');
+END;
+
+CREATE TRIGGER IF NOT EXISTS ic_muayene_sonucu_silinemez
+BEFORE DELETE ON ic_muayene_sonuclari
+BEGIN
+    SELECT RAISE(ABORT, 'iç muayene sonucu silinemez');
+END;
 """
 
 # Eski veritabanlarına sonradan eklenen sütunlar: (tablo, sütun, tanım).
@@ -233,6 +267,23 @@ class Parti:
     def karar_verildi(self) -> bool:
         """Partiye daha önce (makine ya da insan) karar verildi mi? Bilinmiyorsa verildi sayılır."""
         return self.durum_kaynagi is not None
+
+
+IC_MUAYENE_SONUCLARI: tuple[str, ...] = ("uygun", "uygun_degil")
+
+
+@dataclass(frozen=True)
+class IcMuayeneSonucu:
+    """Bir partinin bir muayene şartı için girilen (en son) iç muayene sonucu."""
+
+    test_id: str
+    sonuc: str  # "uygun" | "uygun_degil"
+    kullanici: str
+    zaman: str
+    not_: str | None = None
+    dokuman_surumu: str | None = None  # girildiği andaki geçerli sürüm etiketi ("MIL-PRF-23377K v1")
+    sart_ozeti: str | None = None  # şartın model_dump_json() SHA-256 özeti
+    rol: str | None = None  # 'mp' | 'giris_kalite'; doğrudan katalog girişinde None
 
 
 def icerik_ozeti(icerik: str) -> str:
@@ -668,9 +719,82 @@ class Katalog:
             )
         return self.parti(malzeme_kodu, lot_no)
 
+    # --- iç muayene sonuçları ---------------------------------------------
+
+    def ic_muayene_sonucu_gir(
+        self,
+        malzeme_kodu: str,
+        lot_no: str,
+        test_id: str,
+        sonuc: str,
+        kullanici: str,
+        not_: str | None = None,
+        *,
+        rol: str,
+    ) -> IcMuayeneSonucu:
+        """Partiye bir muayene şartının iç muayene sonucunu yazar (yeni satır; en son giriş geçerli).
+
+        Satıra o anki geçerli doküman sürümünün etiketi ve şartın içerik özeti
+        (`icerik_ozeti(sart.model_dump_json())`) yazılır; karar bu ikisini geçerli
+        sürüm ve şartla karşılaştırır. Bilinmeyen sonuç ya da rol, boş kullanıcı,
+        katalogda olmayan parti ya da geçerli kabul dokümanında muayene şartı
+        olmayan `test_id` KatalogHatasi verir; hiçbir şey yazılmaz. Parti
+        durumunu değiştirmez. `rol` zorunludur ve `ROLLER` içinde olmalıdır;
+        bağlantıda kullanıcı tablosu (`kullanicilar`) varsa kullanıcı orada aynı
+        rolle kayıtlı olmalıdır. Böylece rolsüz ya da doğrulanmamış bir giriş
+        hiçbir yoldan partiyi kabul ettiremez. Denetim kaydıyla birlikte yazmak
+        için `hat.katalog_karari.ic_muayene_gir` kullanılır.
+        """
+        if not isinstance(sonuc, str) or sonuc not in IC_MUAYENE_SONUCLARI:
+            raise KatalogHatasi(f"bilinmeyen iç muayene sonucu: {sonuc!r} ({', '.join(IC_MUAYENE_SONUCLARI)})")
+        if not isinstance(kullanici, str) or not kullanici.strip():
+            raise KatalogHatasi("iç muayene sonucu için kullanıcı gerekli")
+        if not isinstance(rol, str) or rol not in ROLLER:
+            raise KatalogHatasi(f"bilinmeyen rol: {rol!r} ({', '.join(ROLLER)})")
+        with self.islem() as b:
+            if b.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'kullanicilar'").fetchone():
+                kayit = b.execute("SELECT rol FROM kullanicilar WHERE ad = ?", (kullanici,)).fetchone()
+                if kayit is None or kayit[0] != rol:
+                    raise KatalogHatasi(f"kullanıcı {kullanici!r} kullanıcı tablosunda {rol!r} rolüyle kayıtlı değil")
+            self.parti(malzeme_kodu, lot_no)
+            surum = self.gecerli_dokuman(malzeme_kodu)
+            sart = next((t for t in surum.dokuman.testler if t.muayene_sarti and t.id == test_id), None)
+            if sart is None:
+                raise KatalogHatasi(
+                    f"{test_id!r} {malzeme_kodu} için geçerli kabul dokümanında muayene şartı değil"
+                )
+            ozet = icerik_ozeti(sart.model_dump_json())
+            zaman = _simdi()
+            b.execute(
+                "INSERT INTO ic_muayene_sonuclari"
+                " (malzeme_kodu, lot_no, test_id, sonuc, kullanici, zaman, not_, dokuman_surumu, sart_ozeti, rol)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (malzeme_kodu, lot_no, test_id, sonuc, kullanici, zaman, not_, surum.etiket, ozet, rol),
+            )
+        return IcMuayeneSonucu(test_id, sonuc, kullanici, zaman, not_, surum.etiket, ozet, rol)
+
+    def ic_muayene_sonuclari(self, malzeme_kodu: str, lot_no: str) -> dict[str, IcMuayeneSonucu]:
+        """Partinin her muayene şartı için en son girilen sonuç ({test_id: sonuç}); giriş yoksa boş.
+
+        Sürüm/özet süzmesi yapılmaz: hangi sonucun kullanılacağına karar hattı bakar.
+        """
+        satirlar = self.baglanti.execute(
+            "SELECT * FROM ic_muayene_sonuclari WHERE malzeme_kodu = ? AND lot_no = ? ORDER BY id",
+            (malzeme_kodu, lot_no),
+        )
+        return {
+            s["test_id"]: IcMuayeneSonucu(
+                s["test_id"], s["sonuc"], s["kullanici"], s["zaman"], s["not_"],
+                s["dokuman_surumu"], s["sart_ozeti"], s["rol"],
+            )
+            for s in satirlar
+        }
+
 
 __all__ = [
     "DokumanSurumu",
+    "IC_MUAYENE_SONUCLARI",
+    "IcMuayeneSonucu",
     "Katalog",
     "KatalogHatasi",
     "Malzeme",

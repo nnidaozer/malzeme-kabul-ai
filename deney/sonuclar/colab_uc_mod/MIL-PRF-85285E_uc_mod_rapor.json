@@ -1,0 +1,407 @@
+{
+  "model": "qwen3:8b",
+  "belge": "MIL-PRF-85285E",
+  "sayfa_sayisi": 24,
+  "modlar": {
+    "kural": {
+      "test_sayisi": 0,
+      "sure_s": 1.914,
+      "insan_incelemeli_sinir": 0
+    },
+    "dil_modeli": {
+      "test_sayisi": 80,
+      "sure_s": 965.754,
+      "insan_incelemeli_sinir": 2
+    },
+    "hibrit": {
+      "test_sayisi": 67,
+      "sure_s": 967.684,
+      "insan_incelemeli_sinir": 0
+    }
+  },
+  "anlasmazlik_sayisi": 0,
+  "anlasmazlikli_test_sayisi": 0,
+  "dil_modeli_raporu": {
+    "sayfalar": [
+      {
+        "sayfa": 1,
+        "sure_s": 45.233,
+        "test_sayisi": 0,
+        "hatalar": [
+          "test 0 (volatile_organic_compound_content): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=420.0); emin değilsen 'belirsiz' yaz",
+          "test 1 (volatile_organic_hazardous_air_pollutants_content): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=0.0); emin değilsen 'belirsiz' yaz",
+          "test 2 (volatile_organic_compound_content_type_ii): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=340.0); emin değilsen 'belirsiz' yaz",
+          "test 3 (volatile_organic_compound_content_type_iii): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=50.0); emin değilsen 'belirsiz' yaz",
+          "test 4 (volatile_organic_compound_content_type_iv): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=420.0); emin değilsen 'belirsiz' yaz"
+        ]
+      },
+      {
+        "sayfa": 2,
+        "sure_s": 2.842,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 3,
+        "sure_s": 2.826,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 4,
+        "sure_s": 83.626,
+        "test_sayisi": 12,
+        "hatalar": []
+      },
+      {
+        "sayfa": 5,
+        "sure_s": 3.013,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 6,
+        "sure_s": 34.933,
+        "test_sayisi": 2,
+        "hatalar": [
+          "test 2 (vohaps): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+        ]
+      },
+      {
+        "sayfa": 7,
+        "sure_s": 65.755,
+        "test_sayisi": 8,
+        "hatalar": []
+      },
+      {
+        "sayfa": 8,
+        "sure_s": 84.767,
+        "test_sayisi": 8,
+        "hatalar": [
+          "test 4 (viscosity_and_pot_life): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+        ]
+      },
+      {
+        "sayfa": 9,
+        "sure_s": 65.07,
+        "test_sayisi": 5,
+        "hatalar": [
+          "test 1 (opacity): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.9, üst=0.95); emin değilsen 'belirsiz' yaz",
+          "test 6 (weather_resistance): sinir.birim: Value error, pint bu birimi tanımıyor: 'G.U.'"
+        ]
+      },
+      {
+        "sayfa": 10,
+        "sure_s": 85.156,
+        "test_sayisi": 8,
+        "hatalar": [
+          "test 4 (solvent_resistance): sinir.birim: Value error, pint bu birimi tanımıyor: 'double rub'",
+          "test 7 (application): sinir: Value error, yön 'aralik' alt/üst sınırla uyuşmuyor (alt=1.7, üst=None); emin değilsen 'belirsiz' yaz"
+        ]
+      },
+      {
+        "sayfa": 11,
+        "sure_s": 10.365,
+        "test_sayisi": 0,
+        "hatalar": [
+          "test 0 (voc_content): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=100.0); emin değilsen 'belirsiz' yaz"
+        ]
+      },
+      {
+        "sayfa": 12,
+        "sure_s": 2.987,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 13,
+        "sure_s": 31.674,
+        "test_sayisi": 4,
+        "hatalar": []
+      },
+      {
+        "sayfa": 14,
+        "sure_s": 142.604,
+        "test_sayisi": 25,
+        "hatalar": []
+      },
+      {
+        "sayfa": 15,
+        "sure_s": 44.615,
+        "test_sayisi": 8,
+        "hatalar": []
+      },
+      {
+        "sayfa": 16,
+        "sure_s": 59.65,
+        "test_sayisi": 6,
+        "hatalar": []
+      },
+      {
+        "sayfa": 17,
+        "sure_s": 132.944,
+        "test_sayisi": 17,
+        "hatalar": [
+          "test 13 (weather_resistance_7): sinir.birim: Value error, pint bu birimi tanımıyor: 'watt/meter2'"
+        ]
+      },
+      {
+        "sayfa": 18,
+        "sure_s": 21.318,
+        "test_sayisi": 2,
+        "hatalar": []
+      },
+      {
+        "sayfa": 19,
+        "sure_s": 3.238,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 20,
+        "sure_s": 3.025,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 21,
+        "sure_s": 19.797,
+        "test_sayisi": 2,
+        "hatalar": []
+      },
+      {
+        "sayfa": 22,
+        "sure_s": 15.248,
+        "test_sayisi": 2,
+        "hatalar": []
+      },
+      {
+        "sayfa": 23,
+        "sure_s": 2.694,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 24,
+        "sure_s": 2.374,
+        "test_sayisi": 0,
+        "hatalar": []
+      }
+    ],
+    "tekrar_edenler": [
+      "odor",
+      "adhesion",
+      "moisture_content",
+      "fineness_of_grind",
+      "coarse_particles",
+      "odor",
+      "drying_time",
+      "surface_appearance",
+      "color",
+      "infrared_reflectance",
+      "gloss",
+      "impact_flexibility",
+      "low_temperature_flexibility",
+      "fluid_resistance",
+      "humidity_resistance",
+      "heat_resistance",
+      "tape_resistance",
+      "cleanability",
+      "strippability",
+      "adhesion",
+      "impact_flexibility",
+      "low_temperature_flexibility",
+      "fluid_resistance",
+      "weather_resistance",
+      "heat_resistance",
+      "solvent_resistance",
+      "tape_resistance",
+      "cleanability",
+      "strippability"
+    ],
+    "yon_celiskileri": [
+      {
+        "id": "drying_time",
+        "sayfa": 8,
+        "metin_yonu": "en_cok",
+        "model_yonu": "aralik",
+        "orijinal_metin": "When applied by spray techniques and tested as specified in 4.6, the coating shall be set-to-touch within six hours and dry-hard within twelve hours."
+      },
+      {
+        "id": "color",
+        "sayfa": 8,
+        "metin_yonu": "en_cok",
+        "model_yonu": "aralik",
+        "orijinal_metin": "The applied coating, prepared in accordance to 4.5 through 4.5.2 shall be tested in accordance with ASTM D2244 using CIELAB color coordinates with a 10° observer and D65 illuminant. The applied coating dry film shall have a color difference (ΔE) of less than 1 when compared to the specified color chip in FED-STD-595."
+      }
+    ],
+    "toplam_sure_s": 966.024,
+    "test_sayisi": 80,
+    "devam_edilen_sayfalar": []
+  },
+  "hibrit_raporu": {
+    "kural_test_sayisi": 0,
+    "eklenen": [
+      "composition",
+      "solvent_content",
+      "vohap_limit",
+      "vohap_limit_2",
+      "vohap_limit_3",
+      "vohap_limit_4",
+      "vohap_limit_5",
+      "vohap_limit_6",
+      "vohap_limit_7",
+      "vohap_limit_8",
+      "moisture_content",
+      "fineness_of_grind",
+      "coarse_particles",
+      "drying_time",
+      "surface_appearance",
+      "infrared_reflectance",
+      "gloss",
+      "impact_flexibility",
+      "low_temperature_flexibility",
+      "fluid_resistance",
+      "g_u_60",
+      "g_u_85",
+      "humidity_resistance",
+      "heat_resistance",
+      "tape_resistance",
+      "mixing",
+      "cleanability",
+      "strippability",
+      "panel_preparation",
+      "primer_coating",
+      "topcoat",
+      "air_drying",
+      "toxicity",
+      "lead_and_cadmium_content",
+      "chromium_content",
+      "voc_content",
+      "vohap_content",
+      "condition_in_container_component_a",
+      "condition_in_container_component_b",
+      "condition_in_container_component_c",
+      "storage_stability",
+      "accelerated_storage_stability",
+      "freeze_thaw_stability",
+      "viscosity_and_pot_life",
+      "opacity_hiding_power",
+      "adhesion_tape_test",
+      "weather_resistance",
+      "solvent_resistance",
+      "contrast_ratio",
+      "flexibility",
+      "immersion_time",
+      "fluid_temperature",
+      "immersion_duration",
+      "fluid_temperature_2",
+      "immersion_duration_2",
+      "fluid_temperature_3",
+      "immersion_duration_3",
+      "weather_resistance_2",
+      "weather_resistance_3",
+      "weather_resistance_4",
+      "weather_resistance_5",
+      "weather_resistance_6",
+      "weather_resistance_8",
+      "moisture",
+      "moisture_detection",
+      "renk_kodu",
+      "renk_listesi"
+    ],
+    "kuralla_eslesen": [],
+    "kanitsiz": [
+      [
+        "viscosity",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "fineness_of_dispersion",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "odor",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "water_in_solvents",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "drying_and_curing",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "freeze_thaw_resistance",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "color_tolerances",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "water_resistance",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "lead_cadmium_cobalt",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "adhesion",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "chromium",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "standard_environment",
+        "özgün metin sayfa 4 metninde yok"
+      ],
+      [
+        "color",
+        "özgün metin sayfa 8 metninde yok"
+      ]
+    ],
+    "sayi_atildi": [
+      "composition",
+      "vohap_limit",
+      "vohap_limit_2",
+      "vohap_limit_3",
+      "vohap_limit_4",
+      "vohap_limit_5",
+      "vohap_limit_7",
+      "vohap_limit_8",
+      "moisture_content",
+      "coarse_particles",
+      "impact_flexibility",
+      "heat_resistance",
+      "immersion_duration",
+      "fluid_temperature_2",
+      "immersion_duration_2",
+      "fluid_temperature_3",
+      "immersion_duration_3",
+      "weather_resistance_4",
+      "weather_resistance_5",
+      "weather_resistance_6"
+    ],
+    "anlasmazliklar": [],
+    "anlasmazlik_sayisi": 0,
+    "anlasmazlikli_test_sayisi": 0,
+    "isaretlenemeyen": []
+  },
+  "olcum": {
+    "gold_taslak": {
+      "kural": 0.0,
+      "dil_modeli": 0.2276,
+      "hibrit": 0.2213
+    },
+    "gold_codex": {
+      "kural": 0.0,
+      "dil_modeli": 0.1642,
+      "hibrit": 0.1605
+    }
+  }
+}

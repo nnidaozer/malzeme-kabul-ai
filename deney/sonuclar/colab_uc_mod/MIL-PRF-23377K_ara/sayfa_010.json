@@ -1,0 +1,101 @@
+{
+  "sayfa": 10,
+  "sure_s": 28.078,
+  "testler": [
+    {
+      "id": "primer_coating_test_samples",
+      "test_adi": "Primer coating test samples",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Samples for tests shall consist of one complete unopened kit selected at random from each batch (see 6.6). Containers shall only be opened when being tested."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.3.1",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "visual_inspection_of_filled_containers",
+      "test_adi": "Visual inspection of filled containers",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Samples shall be selected at random from each lot (see 6.6) in accordance with ASQ-Z1.4, inspection level S-2. The lot size for this inspection shall be the number of kits fully prepared for delivery. The selected samples shall be examined for container fill, and completion of item identification (see 3.10), warning statements (see 3.10.1), and the precaution sheet (see 3.11). There shall be no defects (see 6.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.3.2",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "test_panels",
+      "test_adi": "Test panels",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Test panels shall be prepared under laboratory conditions (see 4.5). Test panels shall be constructed of aluminum alloy. Alloy composition and pretreatments of test panels shall be in accordance with table I. Unless otherwise specified in the test method, the primer coatings shall be applied in accordance with 4.4.1 and the topcoat, when required, shall be applied in accordance with 4.4.2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "4.4",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

@@ -1,0 +1,13 @@
+{
+  "sayfa": 1,
+  "sure_s": 45.233,
+  "testler": [],
+  "hatalar": [
+    "test 0 (volatile_organic_compound_content): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=420.0); emin değilsen 'belirsiz' yaz",
+    "test 1 (volatile_organic_hazardous_air_pollutants_content): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=0.0); emin değilsen 'belirsiz' yaz",
+    "test 2 (volatile_organic_compound_content_type_ii): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=340.0); emin değilsen 'belirsiz' yaz",
+    "test 3 (volatile_organic_compound_content_type_iii): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=50.0); emin değilsen 'belirsiz' yaz",
+    "test 4 (volatile_organic_compound_content_type_iv): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.0, üst=420.0); emin değilsen 'belirsiz' yaz"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}
