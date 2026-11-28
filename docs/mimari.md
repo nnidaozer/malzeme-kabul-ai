@@ -240,6 +240,12 @@ göre katalogdan (en son onaylı sürüm) gelir, tip/sınıf katalogdan alınır
 (sertifikadaki atıf yalnız çelişki denetimi), onaylı tedarikçi ve sipariş
 revizyonu denetlenir; parti kararı parti durumuna yazılır: kabul → serbest,
 red → karantina, inceleme → bekliyor. Komut satırı: `scripts/karar_ver.py`.
+Karar dayanağı: çağıran sürümü ve malzemeyi önceden okuduysa (`surum`,
+`malzeme_kaydi`; hibrit hat bunları bir kez okur ve hem okuma
+karşılaştırmasına hem karara verir) karar onlarla verilir. Parti durumunu
+yazan işlemde (kilit altında) geçerli sürüm ve malzeme yeniden okunur;
+farklıysa `dokuman_dayanagi` ek denetimi insan incelemeli olur. Karar ve
+kayıt kullanılan sürümü taşır.
 
 İç muayene (test türü `muayene`; etiketleme, ambalaj gibi): sonuçları CoC'den
 değil, giriş kalitenin muayenesinden gelir. Sonuç partiye
