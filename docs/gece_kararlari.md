@@ -207,9 +207,11 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
   doğrulayıcı modelin okuduğu hücre metnini aynen (yalnız boşluk/harf büyüklüğü
   serbest) söylediği sayfada ve aynı satırda arar.
 - **Sayfa numarasını model değil hat yazar** (modele hangi sayfa gönderildiyse).
-- **Model yanıt vermezse kural okumasına düşülür,** karar durdurulmaz. Kayıtta
+- ~~**Model yanıt vermezse kural okumasına düşülür,** karar durdurulmaz. Kayıtta
   `yedek` nedeniyle görünür. Alternatif (hepsini insana göndermek) model
-  sunucusu kapalıyken bütün partileri bekletirdi.
+  sunucusu kapalıyken bütün partileri bekletirdi.~~ Nida 28 Kasım'da tersini
+  seçti: model yanıt vermezse parti `bekliyor` olur (aşağıda, "Eksik bilgi
+  'uygun'a yol açmaz: dil modeli yanıtı").
 - **Kural tabanlı sertifika okuyucu eklendi** (yalnız-kural modu için gerekli):
   tablo başlıklarını İngilizce/Türkçe adlarla eşler; 150 sentetik sertifikada
   JSON ile birebir aynı okuyor. Gerçek CoC'lerde denenmedi.
@@ -330,3 +332,19 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
 - **Kural ve model farklı okudu ama ikisi de sınır dışı:** satır uygun değil
   kalır ve anlaşmazlık kaydedilir. Bu zaten uygulanmıştı
   (`kural.okuma_karsilastirma.anlasmazlik_karari`); artık testle korunuyor.
+
+## Eksik bilgi "uygun"a yol açmaz: dil modeli yanıtı (28 Kasım)
+
+Nida'nın 28 Kasım kararı: hibrit modda dil modeli yanıt vermemişse parti `bekliyor` olur; eksik
+bilgi hiçbir zaman "uygun" sonucuna yol açmaz, bazı partilerin insana kalması kabul.
+
+1. **Kural okuması yine yapılır ama yalnız bilgi içindir.** Satırlar ve `hat.yedek` kayda girer;
+   kontrol satırlarının uygun ve uygun değil kararları insan incelemeli olur, gerekçeye kuralın
+   kendi kararı eklenir ("kural okumasına göre: uygun_degil"). `kanit` ek denetimi insan
+   incelemeli ("dil modeli yanıt vermedi").
+2. **Kural okuması sınır dışı bulsa da parti `karantina` değil `bekliyor` olur.** İstek "parti
+   bekliyor olsun" idi; ikisi de serbest değildir ve insan gerekçede kuralın red okumasını görür.
+   Zaten karantinadaki parti karantinada kalır (makine daha serbest duruma geçiremez).
+3. **Arayüz: `malzeme_koduyla_kontrol(..., bekletme_nedeni=...)`.** Hat yedekte bunu doldurur;
+   başka bir okuma eksikliği için de kullanılabilir. Model sunucusu kapalıyken hibrit moddaki
+   bütün partiler bekler; bu kabul edilen bedeldir (kural moduna geçmek ayrı bir karardır).

@@ -145,8 +145,9 @@ ile gösterilir (README, "Ağsız Docker").
 `MALZEME_KABUL_MODELI` ortam değişkeniyle başlatılıp (ör.
 `MALZEME_KABUL_MODELI=qwen2.5:3b python scripts/demo.py`) adım 3'te okuma
 modu **hibrit** seçilebilir; karar yine kurallardan gelir. Değişken yoksa
-hibrit mod hata verir; model yanıt vermezse ekran "Dil modeli kullanılamadı,
-kural okumasıyla karar verildi" der. Videoda **kural** modu kullanılır.
+hibrit mod hata verir; model yanıt vermezse ekran "Dil modeli yanıt vermedi;
+parti insan incelemesine (bekliyor) alındı" der ve kural okuması yalnız bilgi
+için gösterilir. Videoda **kural** modu kullanılır.
 
 **Baştan almak.** `python scripts/demo.py --sifirla` demo veritabanını ve
 parolaları yeniden kurar.
