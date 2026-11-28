@@ -145,7 +145,9 @@ onaylanır; onaylı doküman Markdown ve Word olarak da dışa verilir
      okuma sessizce karara girmez: şart insan incelemeli olur; iki okuma da
      sınır dışındaysa "uygun değil" kalır ve anlaşmazlık kaydedilir.
   3. **Yedek**: model yanıt vermezse ya da şemaya uymazsa kural okumasına
-     düşülür ve bu kayda yazılır.
+     düşülür ve bu kayda yazılır; ama karar bu okumayla verilmez: satırlar
+     insan incelemeli olur ve parti bekletilir (eksik bilgi "uygun"a yol
+     açmaz).
 
 Karar her iki modda aynı karar motoruyla verilir (`kural/karar_motoru.py`,
 `hat/katalog_karari.py`). Adımlar:

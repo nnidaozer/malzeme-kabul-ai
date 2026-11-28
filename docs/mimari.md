@@ -357,7 +357,12 @@ ayarı hatalarını stderr'e yazıp sıfır olmayan kodla çıkar, karar yazmaz.
   dönerse (`cikarim/yerel_model.YEDEK_HATALARI`: OSError, ValueError,
   `ModelYanitHatasi`; yalnız `sohbet` çağrısından gelen KeyError, TypeError,
   IndexError ve HTTPException `ModelYanitHatasi`'na sarılır) kural okumasına
-  düşülür ve kayda yazılır.
+  düşülür ve kayda yazılır (`hat.yedek`). Kural okuması yalnız bilgi içindir;
+  karar onunla verilmez: `kanit` denetimi insan incelemeli olur ("dil modeli
+  yanıt vermedi"), `malzeme_koduyla_kontrol(bekletme_nedeni=...)` uygun ya da
+  uygun değil kontrol satırlarını insan incelemesine alır (gerekçede "kural
+  okumasına göre: ..."), parti kararı inceleme, yeni parti bekliyor kalır.
+  Eksik bilgi hiçbir zaman uygun sonucuna yol açmaz.
 - Okuma anlaşmazlığı: hibritte model başarılıysa sertifika `kural_ile_oku` ile
   de okunur ve `kural/okuma_karsilastirma.sertifika_okumalarini_karsilastir`
   iki okumayı karşılaştırır: standart atfı (belge no, revizyon, tip, sınıf)
@@ -436,12 +441,24 @@ standart için hibrit yalnız deney olarak tanımlıdır (`deney/hibrit_standart
   - **Kilitli klasörler:** `kilitli_klasorler` altındaki klasörlerin belgeleri
     (şimdilik `data/raw/gercek_coc_havacilik/`: gerçek havacılık CoC'si ve test
     raporu) doğrudan test kümesindedir ve aynı kilitle açılmaz;
-    `scripts/pdf_tur_kontrol.py` bunları açmadan "kilitli" diye listeler. Seçim `python deney/bolunme.py --sec` ile yapılır ve dosyaya
+    `scripts/pdf_tur_kontrol.py` bunları açmadan "kilitli" diye listeler.
+  - **Belge denetimi** (`Bolunme.belgeyi_denetle`; `deney/uc_mod.py`,
+    `deney/dil_modeli_cikar.py`, `deney/ocr_olcumu.py`): sıra yol kilidi
+    (yol `resolve()` edilir, klasör adları `casefold` ile karşılaştırılır;
+    göreli yol, sembolik bağ ve harf farkı kilidi atlatamaz), içerik kilidi
+    (belgenin SHA-256 özeti `data/raw` altındaki test kümesi ve kilitli klasör
+    PDF'lerinin özetleriyle karşılaştırılır; yeniden adlandırılmış ya da
+    kopyalanmış test belgesi yakalanır, içerik çıkarılmaz), dosya adından
+    çözülen etiket, verilen etiket; uyuşmazlıkta hata. Gold koruması tek
+    yerdedir (`gold_altinda_mi`). Seçim `python deney/bolunme.py --sec` ile yapılır ve dosyaya
     yazılır; dosya okunurken seçimin tohumla uyuştuğu denetlenir.
   - **Taranmış belgeler:** bütün sayfaları taranmış standartlar (`ocr_gerekli`:
-    MIL-A-46146B, MIL-S-81733C) kümelerinden çıkarılmaz; OCR eklenene kadar
-    çıkarıcı ve ölçüm betikleri bunları "OCR gerekli" diye reddeder
-    (`OcrGerekli`). Sonuçlar raporlanırken taranmış ve metin tabanlı belgeler
+    MIL-A-46146B, MIL-S-81733C) kümelerinden çıkarılmaz; çıkarıcı ve ölçüm
+    betikleri bunları OCR'sız "OCR gerekli" diye reddeder (`OcrGerekli`),
+    `--ocr` ile yerel Tesseract katmanından (`belge/ocr.py`, docs/ocr.md)
+    geçirerek okur (`kullanima_izin_ver(etiket, ocr=True)`). Test kümesi kilidi
+    OCR'dan önce denetlenir; MIL-A-46146B kilit açılana kadar OCR'la da
+    okunmaz. Sonuçlar raporlanırken taranmış ve metin tabanlı belgeler
     ayrı gösterilir (`Bolunme.turlere_ayir`, `python deney/bolunme.py --turler`).
     Liste `data/raw/pdf_turleri.csv`'deki "taranmış" belgelerle aynı tutulur.
   - Yeni standartlar gelene ve seçim yapılana kadar test kümesi **bekliyor**
@@ -479,7 +496,8 @@ Eski JSON dosyaları (yeni alanlar olmadan) aynen okunur.
 ```
 src/malzeme_kabul/
   sozlesme/   şemalar: kabul dokümanı (sema), sertifika, dil modeli okuması (okuma)
-  belge/      PDF okuma, PDF türü, dosya adlandırma
+  belge/      PDF okuma, PDF türü, yerel OCR (Tesseract alt süreci; taranmış ve hazır OCR katmanlı
+              sayfalar, Sayfa.kaynak="ocr" ve ocr_guveni), dosya adlandırma
   cikarim/    kural tabanlı çıkarıcı, yerel dil modeli istemcisi (yalnız localhost)
   kural/      birimler, karar motoru (kabul/red yalnız burada)
   revizyon/   revizyon farkları ve güncelleme önerileri

@@ -177,3 +177,61 @@ def test_src_dis_servis_kullanmaz():
         if hatalar:
             bulunan[goreli] = hatalar
     assert not bulunan, f"Dış servis kuralı ihlali (CLAUDE.md, kural 4): {bulunan}"
+
+
+# --- Alt süreç yalnız OCR katmanında (docs/ocr.md) ------------------------------------
+
+# Dış program çalıştırma yalnız yerel Tesseract'ı çağıran OCR katmanında serbest.
+ALT_SUREC_ISTISNALARI: set[str] = {"malzeme_kabul/belge/ocr.py"}
+ALT_SUREC_MODULLERI = {"subprocess", "asyncio.subprocess", "pty"}
+ALT_SUREC_CAGRILARI = {"os.system", "os.popen", "os.spawnl", "os.spawnv", "os.execv", "os.execl",
+                       "os.posix_spawn", "asyncio.create_subprocess_exec", "asyncio.create_subprocess_shell"}
+
+
+def alt_surec_ihlalleri(kaynak: str) -> list[str]:
+    """subprocess içe aktarımı ve os.system / os.popen gibi dış program çağrıları."""
+    sonuc = [f"alt süreç modülü: {m}" for m in sorted(ice_aktarilan_moduller(kaynak))
+             if eslesir_mi(m, ALT_SUREC_MODULLERI) or m in ALT_SUREC_CAGRILARI]
+    for dugum in ast.walk(ast.parse(kaynak)):
+        if isinstance(dugum, ast.Attribute) and ast.unparse(dugum) in ALT_SUREC_CAGRILARI:
+            sonuc.append(f"dış program çağrısı: {ast.unparse(dugum)}")
+    return sonuc
+
+
+@pytest.mark.parametrize(
+    "kaynak",
+    [
+        "import subprocess",
+        "from subprocess import run",
+        "import os\nos.system('ls')",
+        "import os\nos.popen('ls')",
+        "from os import system",
+        "from os import popen",
+        "__import__('subprocess')",
+        "def f():\n    import subprocess as sp",
+    ],
+)
+def test_alt_surec_kullanimi_yakalanir(kaynak):
+    assert alt_surec_ihlalleri(kaynak)
+
+
+@pytest.mark.parametrize("kaynak", ["import os\nos.path.join('a', 'b')", "import shutil\nshutil.which('x')",
+                                    "from os import environ"])
+def test_alt_surec_olmayan_os_kullanimi_serbest(kaynak):
+    assert alt_surec_ihlalleri(kaynak) == []
+
+
+def test_alt_surec_istisnasi_var():
+    assert all((SRC / y).is_file() for y in ALT_SUREC_ISTISNALARI)
+
+
+def test_src_alt_sureci_yalniz_ocr_katmaninda_kullanir():
+    bulunan = {}
+    for dosya in src_dosyalari():
+        goreli = dosya.relative_to(SRC).as_posix()
+        if goreli in ALT_SUREC_ISTISNALARI:
+            continue
+        hatalar = alt_surec_ihlalleri(dosya.read_text(encoding="utf-8"))
+        if hatalar:
+            bulunan[goreli] = hatalar
+    assert not bulunan, f"src/ altında alt süreç yalnız malzeme_kabul/belge/ocr.py içinde kullanılabilir: {bulunan}"
