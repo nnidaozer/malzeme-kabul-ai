@@ -227,6 +227,18 @@ göre katalogdan (en son onaylı sürüm) gelir, tip/sınıf katalogdan alınır
 revizyonu denetlenir; parti kararı parti durumuna yazılır: kabul → serbest,
 red → karantina, inceleme → bekliyor. Komut satırı: `scripts/karar_ver.py`.
 
+İç muayene (test türü `muayene`; etiketleme, ambalaj gibi): sonuçları CoC'den
+değil, giriş kalitenin muayenesinden gelir. Sonuç partiye
+`hat/katalog_karari.ic_muayene_gir` ile girilir (rol 'mp' ya da
+'giris_kalite'; `uygun` / `uygun_degil`); katalogda `ic_muayene_sonuclari`
+tablosuna yeni satır olarak yazılır (geçmiş korunur, en son giriş geçerli) ve
+aynı işlemde "karar" kaydı düşer; parti durumu değişmez. Karar verilirken
+geçerli kabul dokümanındaki her muayene şartı için (tip/sınıfa uygulanmadığı
+kesin olanlar hariç) bir ek denetim satırı eklenir: lot verilmemişse ya da
+sonuç girilmemişse insan incelemeli ("iç muayene sonucu girilmedi"), yani
+parti bekler; girilmişse girilen karar. Eksik bilgi hiçbir zaman kabule yol
+açmaz (Nida onaylı karar).
+
 Karar güvenliği (K1-K8): kabul yalnız boş olmayan ve tamamı "uygun" karar
 listesiyle verilir; uygulanan kabul testi yoksa belge incelemeye gider.
 Geçti/kaldı sonucu beyaz listeyle okunur: metin bilinen bir olumlu ifadeye

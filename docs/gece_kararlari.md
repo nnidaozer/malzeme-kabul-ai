@@ -330,3 +330,23 @@ etiketleme kılavuzuna K8–K10 olarak, bağımsız etiketleme istemine Kapsam 8
 - **Kural ve model farklı okudu ama ikisi de sınır dışı:** satır uygun değil
   kalır ve anlaşmazlık kaydedilir. Bu zaten uygulanmıştı
   (`kural.okuma_karsilastirma.anlasmazlik_karari`); artık testle korunuyor.
+
+## Eksik bilgi "uygun"a yol açmaz: iç muayene (28 Kasım)
+
+Nida'nın 28 Kasım kararı: iç muayene sonucu girilmemişse parti `bekliyor` kalır; eksik bilgi
+hiçbir zaman "uygun" sonucuna yol açmaz, bazı partilerin insana kalması kabul.
+
+1. **Her uygulanan `muayene` şartı bir ek denetim satırıdır** (`test_id` = şartın id'si).
+   Sonuç girilmemişse ya da lot verilmemişse satır insan incelemeli ("iç muayene sonucu
+   girilmedi"), parti kararı en iyi ihtimalle `inceleme` → `bekliyor`. Tip/sınıfı bilinmeyen
+   malzemede sınıfa bağlı muayene şartı da aranır (güvenli taraf).
+2. **Sonuç girişi ayrı tabloda** (`ic_muayene_sonuclari`), silinmez; aynı şart için yeniden
+   girilirse son giriş geçerli. Yalnız geçerli kabul dokümanının muayene şartlarına sonuç girilir.
+3. **Giriş `ic_muayene_gir(..., rol=...)` ile, denetim kaydıyla tek işlem.** Kayıt türü
+   `karar` (içerik `ic_muayene`); yeni kayıt türü açılmadı, çünkü tür listesi "karar, onay,
+   düzeltme" ile sınırlı tutuluyor. Giriş parti durumunu kendisi değiştirmez; yeni durum bir
+   sonraki makine kararında hesaplanır.
+4. **`uygun_degil` girilen muayene partiyi `red` → `karantina` yapar** (parti kuralı aynı).
+5. **Ekranda giriş formu henüz yok.** Örnek kabul dokümanlarında (23377K, 81733D, 85285E
+   çıktıları) muayene şartı olmadığı için demo akışı değişmiyor; M&P taslağa muayene şartı
+   eklediğinde giriş kalite ekranına form gerekecek (ayrı iş).

@@ -28,6 +28,9 @@ Kurallar:
   verilmedi), `makine`, `insan` ya da `bilinmiyor` (sütundan önceki
   veritabanlarındaki partiler). Hangi geçişe izin verildiğine bu modül değil,
   karar hattı (`hat.katalog_karari`) bakar.
+- İç muayene sonuçları (`ic_muayene_sonuclari`): partiye, geçerli kabul
+  dokümanındaki bir muayene şartı için `uygun` ya da `uygun_degil` girilir.
+  Yeniden giriş yeni satırdır (geçmiş korunur); en son giriş geçerlidir.
 
 Bu modül karar vermez; yalnız saklar ve getirir.
 """
@@ -148,6 +151,18 @@ CREATE TABLE IF NOT EXISTS taslaklar (
     durum       TEXT NOT NULL DEFAULT 'taslak' CHECK (durum IN ('taslak', 'onaylandi')),
     surum       INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS ic_muayene_sonuclari (
+    id            INTEGER PRIMARY KEY,
+    malzeme_kodu  TEXT NOT NULL,
+    lot_no        TEXT NOT NULL,
+    test_id       TEXT NOT NULL,
+    sonuc         TEXT NOT NULL CHECK (sonuc IN ('uygun', 'uygun_degil')),
+    kullanici     TEXT NOT NULL,
+    zaman         TEXT NOT NULL,
+    not_          TEXT,
+    FOREIGN KEY (malzeme_kodu, lot_no) REFERENCES partiler (malzeme_kodu, lot_no)
+);
 """
 
 # Eski veritabanlarına sonradan eklenen sütunlar: (tablo, sütun, tanım).
@@ -233,6 +248,20 @@ class Parti:
     def karar_verildi(self) -> bool:
         """Partiye daha önce (makine ya da insan) karar verildi mi? Bilinmiyorsa verildi sayılır."""
         return self.durum_kaynagi is not None
+
+
+IC_MUAYENE_SONUCLARI: tuple[str, ...] = ("uygun", "uygun_degil")
+
+
+@dataclass(frozen=True)
+class IcMuayeneSonucu:
+    """Bir partinin bir muayene şartı için girilen (en son) iç muayene sonucu."""
+
+    test_id: str
+    sonuc: str  # "uygun" | "uygun_degil"
+    kullanici: str
+    zaman: str
+    not_: str | None = None
 
 
 def icerik_ozeti(icerik: str) -> str:
@@ -668,9 +697,58 @@ class Katalog:
             )
         return self.parti(malzeme_kodu, lot_no)
 
+    # --- iç muayene sonuçları ---------------------------------------------
+
+    def ic_muayene_sonucu_gir(
+        self,
+        malzeme_kodu: str,
+        lot_no: str,
+        test_id: str,
+        sonuc: str,
+        kullanici: str,
+        not_: str | None = None,
+    ) -> IcMuayeneSonucu:
+        """Partiye bir muayene şartının iç muayene sonucunu yazar (yeni satır; en son giriş geçerli).
+
+        Bilinmeyen sonuç, boş kullanıcı, katalogda olmayan parti ya da geçerli
+        kabul dokümanında muayene şartı olmayan `test_id` KatalogHatasi verir;
+        hiçbir şey yazılmaz. Parti durumunu değiştirmez.
+        """
+        if not isinstance(sonuc, str) or sonuc not in IC_MUAYENE_SONUCLARI:
+            raise KatalogHatasi(f"bilinmeyen iç muayene sonucu: {sonuc!r} ({', '.join(IC_MUAYENE_SONUCLARI)})")
+        if not isinstance(kullanici, str) or not kullanici.strip():
+            raise KatalogHatasi("iç muayene sonucu için kullanıcı gerekli")
+        with self.islem() as b:
+            self.parti(malzeme_kodu, lot_no)
+            dokuman = self.gecerli_dokuman(malzeme_kodu).dokuman
+            if test_id not in {t.id for t in dokuman.testler if t.muayene_sarti}:
+                raise KatalogHatasi(
+                    f"{test_id!r} {malzeme_kodu} için geçerli kabul dokümanında muayene şartı değil"
+                )
+            zaman = _simdi()
+            b.execute(
+                "INSERT INTO ic_muayene_sonuclari (malzeme_kodu, lot_no, test_id, sonuc, kullanici, zaman, not_)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (malzeme_kodu, lot_no, test_id, sonuc, kullanici, zaman, not_),
+            )
+        return IcMuayeneSonucu(test_id, sonuc, kullanici, zaman, not_)
+
+    def ic_muayene_sonuclari(self, malzeme_kodu: str, lot_no: str) -> dict[str, IcMuayeneSonucu]:
+        """Partinin her muayene şartı için en son girilen sonuç ({test_id: sonuç}); giriş yoksa boş."""
+        satirlar = self.baglanti.execute(
+            "SELECT * FROM ic_muayene_sonuclari WHERE malzeme_kodu = ? AND lot_no = ? ORDER BY id",
+            (malzeme_kodu, lot_no),
+        )
+        return {
+            s["test_id"]: IcMuayeneSonucu(s["test_id"], s["sonuc"], s["kullanici"], s["zaman"], s["not_"])
+            for s in satirlar
+        }
+
 
 __all__ = [
     "DokumanSurumu",
+    "IC_MUAYENE_SONUCLARI",
+    "IcMuayeneSonucu",
     "Katalog",
     "KatalogHatasi",
     "Malzeme",
