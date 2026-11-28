@@ -18,7 +18,12 @@ modeli kullanılmaz (CLAUDE.md, kural 1):
    `birimler.pint_ifadesi`). Çevrilemeyen birim insana bırakılır.
 6. Karşılaştırma: okunan değer aralığı sınırın tamamen içindeyse uygun,
    tamamen dışındaysa uygun değil, ikisi de değilse ("<8 saat" ile "en çok 5
-   saat") insan incelemeli. Yuvarlama yapılmaz. Yönü belirsiz şartlarda
+   saat") insan incelemeli. Yuvarlama yapılmaz: standarttaki ve sertifikadaki
+   değerler olduğu gibi karşılaştırılır. Okunan (çevrilmiş) değerin bir ucu bir
+   sınıra `SINIR_YAKINLIK_BAGIL` / `SINIR_YAKINLIK_MUTLAK` bandında yakınsa
+   karar insan incelemelidir ("sınıra çok yakın"); istisna: birim dönüşümü
+   yoksa, değer sınıra tam eşitse ve sertifikadaki sayı metni float'a kayıpsız
+   sığıyorsa dahil/hariç kuralı karar verir (docs/sinir_yakinligi.md). Yönü belirsiz şartlarda
    ("en az" mı "tam" mı belli değil, `Sinir.yon == "belirsiz"`) karşılaştırma
    yapılmaz; karar insan incelemelidir.
 7. Sonuç kaynağı: kabul dokümanında sonucu iç laboratuvardan gelen testler
@@ -51,9 +56,11 @@ kabule dönüşmez.
 
 from __future__ import annotations
 
+import math
 import re
 import unicodedata
 from dataclasses import dataclass
+from decimal import Decimal
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
@@ -197,7 +204,9 @@ class Sonuc:
 
     tur "sayi" ise değer [alt, ust] aralığıdır (tek değerde alt == ust);
     "<1" gibi ifadelerde bir uç açıktır. `birim_ek`, sonuç hücresine yazılmış
-    birimdir ("4 h").
+    birimdir ("4 h"). `sayi_metni`, sayının sertifikadaki yazılışıdır ("<"/">"
+    öneki ve birim olmadan; "ND (<0.5 ppm)" için "0.5"); float'a kayıpsız
+    sığıp sığmadığı tam eşitlik istisnasında denetlenir.
     """
 
     tur: Literal["sayi", "gecti", "kaldi", "belirsiz"]
@@ -206,6 +215,7 @@ class Sonuc:
     alt_dahil: bool = True
     ust_dahil: bool = True
     birim_ek: str | None = None
+    sayi_metni: str | None = None
 
 
 _SAYI = re.compile(
@@ -248,16 +258,17 @@ def sonucu_ayristir(metin: str) -> Sonuc:
         return sonucu_ayristir(m.group(0)) if m else Sonuc("belirsiz")
     m = _SAYI.match(ham)
     if m:
-        sayi = float(m.group("sayi").replace(",", "."))
+        sayi_metni = m.group("sayi")
+        sayi = float(sayi_metni.replace(",", "."))
         ek = (m.group("ek") or "").strip() or None
         if ek and _DERECE_HARFI.match(ek):
             ek = None
         op = m.group("op")
         if op in ("<", "≤", "<="):
-            return Sonuc("sayi", None, sayi, True, op != "<", ek)
+            return Sonuc("sayi", None, sayi, True, op != "<", ek, sayi_metni)
         if op in (">", "≥", ">="):
-            return Sonuc("sayi", sayi, None, op != ">", True, ek)
-        return Sonuc("sayi", sayi, sayi, True, True, ek)
+            return Sonuc("sayi", sayi, None, op != ">", True, ek, sayi_metni)
+        return Sonuc("sayi", sayi, sayi, True, True, ek, sayi_metni)
     normal = _normal(ham)
     if any(re.search(rf"\b{k}", normal) for k in _KALDI):
         return Sonuc("kaldi")
@@ -286,9 +297,14 @@ def _pint_birimi(birim: str) -> str:
     return BIRIM_ESANLAMLILARI.get(anahtar.lower(), BIRIM_ESANLAMLILARI.get(anahtar, anahtar))
 
 
-def _sayilastir(x: float) -> float:
-    """Kayan nokta artığını at (300 dk -> 5 saat tam çıksın); 12 anlamlı basamak."""
-    return float(f"{x:.12g}")
+# Sınıra yakınlık bandı (docs/sinir_yakinligi.md). Değerler yuvarlanmadan
+# karşılaştırılır; sınıra bu kadar yakın değerler insana gider. 1e-6 bağıl
+# tolerans pint dönüşümündeki kayan nokta hatasının (~1e-15) çok üstünde,
+# gerçek CoC ölçüm çözünürlüğünün çok altındadır; yalnız "sınırda" sayılabilecek
+# değerleri yakalar. Mutlak tolerans (sınır birimi cinsinden) sıfır sınır içindir.
+# Eşik proje sahibinin onayına açık bir karardır.
+SINIR_YAKINLIK_BAGIL = 1e-6
+SINIR_YAKINLIK_MUTLAK = 1e-12
 
 
 def birimi_cevir(deger: float, kaynak: str | None, hedef: str | None) -> float:
@@ -299,7 +315,7 @@ def birimi_cevir(deger: float, kaynak: str | None, hedef: str | None) -> float:
         raise ValueError(f"birim eksik: {kaynak!r} -> {hedef!r}")
     try:
         q = kayit().Quantity(deger, birimi_coz(_pint_birimi(kaynak)))
-        return _sayilastir(q.to(birimi_coz(_pint_birimi(hedef))).magnitude)
+        return q.to(birimi_coz(_pint_birimi(hedef))).magnitude
     except Exception as hata:  # pint: tanımsız birim, boyut uyumsuzluğu, sözdizimi
         raise ValueError(f"birim çevrilemedi: {kaynak!r} -> {hedef!r}") from hata
 
@@ -449,10 +465,32 @@ def _degerlendir(test: TestSarti, sonuc_metni: str, birim: str | None) -> tuple[
         ust = None if s.ust is None else birimi_cevir(s.ust, kaynak_birim, sinir.birim)
     except ValueError:
         return "insan_incelemeli", f"birim {kaynak_birim!r} şarttaki {sinir.birim!r} birimine çevrilemedi", None
-    cevrilmis = Sonuc("sayi", alt, ust, s.alt_dahil, s.ust_dahil)
-    karar = _icinde_mi(cevrilmis, sinir)
     deger = alt if alt is not None else ust
     okunan = f"{sonuc_metni} {kaynak_birim or ''}".strip()
+    donusum_yok = (not kaynak_birim and not sinir.birim) or (
+        bool(kaynak_birim) and bool(sinir.birim) and _pint_birimi(kaynak_birim) == _pint_birimi(sinir.birim)
+    )
+    # Tam eşitlik istisnası yalnız sertifikadaki sayı float'a kayıpsız sığıyorsa
+    # geçerlidir ("1.00000000000000001" float'ta 1.0 olur; gerçek değer sınırın üstünde).
+    kayipsiz = s.sayi_metni is not None and (
+        Decimal(s.sayi_metni.replace(",", ".")) == Decimal(repr(s.alt if s.alt is not None else s.ust))
+    )
+    for e in (alt, ust):
+        if e is None:
+            continue
+        for b in (sinir.alt, sinir.ust):
+            if b is None or (donusum_yok and kayipsiz and e == b):
+                continue
+            if math.isclose(e, b, rel_tol=SINIR_YAKINLIK_BAGIL, abs_tol=SINIR_YAKINLIK_MUTLAK):
+                hedef = f" {sinir.birim}" if sinir.birim else ""
+                return (
+                    "insan_incelemeli",
+                    f"{okunan} (= {e!r}{hedef}) sınıra çok yakın (şart {_sinir_metni(sinir)}, "
+                    f"sınır {b!r}); yuvarlanmadan karar verilemez",
+                    deger,
+                )
+    cevrilmis = Sonuc("sayi", alt, ust, s.alt_dahil, s.ust_dahil)
+    karar = _icinde_mi(cevrilmis, sinir)
     if kaynak_birim and sinir.birim and _pint_birimi(kaynak_birim) != _pint_birimi(sinir.birim):
         okunan += f" (= {deger:g} {sinir.birim})"
     gerekce = {
@@ -734,6 +772,8 @@ __all__ = [
     "kod_normallestir",
     "kontrol_et",
     "parti_karari",
+    "SINIR_YAKINLIK_BAGIL",
+    "SINIR_YAKINLIK_MUTLAK",
     "sonucu_ayristir",
     "uygulanan_testler",
     "eslestir",
