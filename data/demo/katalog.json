@@ -1,0 +1,20 @@
+{
+  "_aciklama": "Demo için örnek veri (scripts/demo.py). Malzeme kodları, tedarikçi ve lotlar kurgusaldır; MIL-PRF-23377J kabul dokümanı sistemin kural çıkarıcısının taslağıdır, M&P onayı değildir (DEMO ONAYI).",
+  "onaylayan": "ornek-veri",
+  "onay_notu": "Demo verisi: sistemin taslağı, M&P mühendisi onayı değildir.",
+  "dokumanlar": [
+    "data/demo/MIL-PRF-23377J_kabul_dokumani.json"
+  ],
+  "malzemeler": [
+    {"kod": "AST-003", "belge_no": "MIL-PRF-23377", "revizyon": "J", "tip": "I", "sinif": "N", "aciklama": "Epoksi astar, krom içermeyen (eski J revizyonu siparişi)"}
+  ],
+  "onayli_tedarikciler": [
+    {"malzeme_kodu": "AST-001", "tedarikci": "Ornek Aerospace Finishes Ltd. (kurgusal)"},
+    {"malzeme_kodu": "AST-003", "tedarikci": "Ornek Aerospace Finishes Ltd. (kurgusal)"}
+  ],
+  "partiler": [
+    {"lot_no": "B86447", "malzeme_kodu": "AST-001", "tedarikci": "Ornek Aerospace Finishes Ltd. (kurgusal)", "siparis_revizyonu": "K", "uretim_tarihi": "2026-04-09", "durum": "bekliyor"},
+    {"lot_no": "B80677", "malzeme_kodu": "AST-001", "tedarikci": "Ornek Aerospace Finishes Ltd. (kurgusal)", "siparis_revizyonu": "K", "uretim_tarihi": "2026-04-09", "durum": "bekliyor"},
+    {"lot_no": "J-2605-04", "malzeme_kodu": "AST-003", "tedarikci": "Ornek Aerospace Finishes Ltd. (kurgusal)", "siparis_revizyonu": "J", "uretim_tarihi": "2026-05-04", "durum": "serbest"}
+  ]
+}

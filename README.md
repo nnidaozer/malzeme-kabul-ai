@@ -51,6 +51,27 @@ Kullanılan standartlar (kaynaklar: [data/raw/KAYNAKLAR.md](data/raw/KAYNAKLAR.m
 
 ## Kurulum ve kullanım
 
+### Tek komutla demo
+
+```bash
+python scripts/demo.py      # Windows: py scripts\demo.py   (Python 3.11+)
+```
+
+Betik depo kökünde `.venv` sanal ortamını kurar, kilitli sürümleri
+(`requirements-arayuz.lock`) yükler, `data/calisma/demo/` altına demo
+veritabanını, demo dosyalarını ve `parolalar.txt`'yi (`mp` = M&P, `gk` = giriş
+kalite; parolalar ekrana yazılmaz) hazırlar ve uygulamayı yalnız
+`http://127.0.0.1:8501` adresinde açar. İlk çalıştırmada pip için ağ gerekir;
+sonraki çalıştırmalar ağsızdır. Seçenekler: `--sifirla` (demoyu baştan kurar,
+parolaları yeniler), `--yalniz-kur` (uygulamayı başlatmaz), `--port 8502`,
+`--kurulum-yok` (`.venv`/pip adımını atlar), `--klasor` (depo içinde yalnız
+`data/calisma/` altı).
+Parola dosyası POSIX'te yalnız sahibince okunur (0600); Windows'ta erişimini
+klasörün izinleri belirler. Örnek kabul dokümanları "DEMO ONAYI (M&P onayı
+değil)" işaretlidir. 2 dakikalık video senaryosu: `docs/demo_senaryosu.md`.
+
+### Geliştirme kurulumu
+
 ```bash
 pip install -r requirements-dev.lock && pip install -e . --no-deps   # sabit sürümler (docs/bagimliliklar.md)
 pytest

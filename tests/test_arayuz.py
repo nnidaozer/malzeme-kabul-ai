@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from malzeme_kabul.arayuz import ekran_verisi as ev
-from malzeme_kabul.arayuz.kimlik import KimlikHatasi, giris, kullanici_ekle, kullanicilar, yetkili_mi
+from malzeme_kabul.arayuz.kimlik import EKRANLAR, YETKILER, KimlikHatasi, giris, kullanici_ekle, kullanicilar, yetkili_mi
 from malzeme_kabul.katalog.ornek_veri import ornek_yukle
 from malzeme_kabul.katalog.veritabani import Katalog, KatalogHatasi
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
@@ -37,12 +37,25 @@ def test_giris_ve_roller():
     kullanici_ekle(b, "nida", "uzun-parola-1", "mp")
     kullanici_ekle(b, "ali", "uzun-parola-2", "giris_kalite")
     mp = giris(b, "nida", "uzun-parola-1")
-    assert mp.rol == "mp" and mp.ekranlar == ("standart", "taslak", "revizyon", "depo")
+    assert mp.rol == "mp" and "pano" in mp.ekranlar
+    assert tuple(e for e in mp.ekranlar if e != "pano") == ("standart", "taslak", "revizyon", "depo")
     assert giris(b, "nida", "yanlis-parola") is None and giris(b, "yok", "uzun-parola-1") is None
     gk = giris(b, "ali", "uzun-parola-2")
     assert yetkili_mi(gk, "giris") and yetkili_mi(gk, "depo") and not yetkili_mi(gk, "taslak")
     assert not yetkili_mi(mp, "giris") and not yetkili_mi(None, "depo")
     assert [k.ad for k in kullanicilar(b)] == ["ali", "nida"]
+
+
+def test_pano_ekrani_duzeltme_panosu_adini_tasir():
+    assert EKRANLAR["pano"] == "Düzeltme panosu"
+
+
+def test_mp_rolu_pano_ekranina_yetkilidir():
+    assert "pano" in YETKILER["mp"]
+
+
+def test_giris_kalite_rolu_pano_ekranina_yetkili_degildir():
+    assert "pano" not in YETKILER["giris_kalite"]
 
 
 def test_parola_duz_saklanmaz():
@@ -409,8 +422,10 @@ def test_ekran_giris_kalite_rolu_yalniz_kendi_ekranlarini_gorur(uygulama):
 
 def test_ekran_mp_rolu_ve_depo(uygulama):
     at, _ = uygulama("mp", "mp-ornek-parola")
-    assert at.sidebar.radio[0].options == ["Standart yükle", "Taslağı düzelt ve onayla",
-                                           "Revizyon farkı ve M&P incelemesi", "Depo: partiler ve raf ömrü"]
+    secenekler = at.sidebar.radio[0].options
+    assert "Düzeltme panosu" in secenekler
+    assert [s for s in secenekler if s != "Düzeltme panosu"] == [
+        "Standart yükle", "Taslağı düzelt ve onayla", "Revizyon farkı ve M&P incelemesi", "Depo: partiler ve raf ömrü"]
     at.sidebar.radio[0].set_value("depo").run()
     assert not at.exception and at.dataframe and "raf ömrü uyarısı" in at.warning[0].value
 
@@ -434,3 +449,295 @@ def test_ekran_giris_kalite_demo_isareti_gorunur(uygulama):
     metinler = [e.value for e in [*at.warning, *at.caption, *at.header, *at.subheader, *at.markdown]]
     assert any("DEMO ONAYI" in m for m in metinler)
     assert any("DEMO ONAYI" in w.value for w in at.warning)
+
+
+def test_ekran_mp_pano_basligi_ve_duzeltme_orani_metrigi_gorunur(uygulama, tmp_path, monkeypatch):
+    monkeypatch.setenv("MALZEME_KABUL_ETIKET_ADAYI", str(tmp_path / "etiket_adaylari"))
+    at, _ = uygulama("mp", "mp-ornek-parola")
+    at.sidebar.radio[0].set_value("pano").run()
+    assert not at.exception
+    assert at.header[0].value == "Düzeltme panosu"
+    assert any("düzeltme oranı" in m.label.lower() for m in at.metric)
+
+
+def test_ekran_giris_kalite_pano_secenegini_gormez(uygulama):
+    at, _ = uygulama("gk", "gk-ornek-parola")
+    assert "Düzeltme panosu" not in at.sidebar.radio[0].options
+
+
+# --- Nida kararı: düzeltme formu giriş yapan kullanıcının rolünü iletir ------------------------------
+
+
+def _karari_duzelt_cagrilari():
+    import ast
+
+    agac = ast.parse(UYGULAMA.read_text(encoding="utf-8"))
+    return [d for d in ast.walk(agac) if isinstance(d, ast.Call)
+            and (getattr(d.func, "id", None) == "karari_duzelt" or getattr(d.func, "attr", None) == "karari_duzelt")]
+
+
+def test_arayuz_karari_duzelt_cagrisinda_kullanicinin_rolunu_iletir():
+    import ast
+
+    cagrilar = _karari_duzelt_cagrilari()
+    assert cagrilar, "uygulama.py artık karari_duzelt çağırmıyor; testi güncelleyin"
+    for c in cagrilar:
+        rol = [k.value for k in c.keywords if k.arg == "rol"]
+        assert len(rol) == 1, f"satır {c.lineno}: karari_duzelt rol=... olmadan çağrılıyor"
+        assert isinstance(rol[0], ast.Attribute) and rol[0].attr == "rol", f"satır {c.lineno}"
+        assert isinstance(rol[0].value, ast.Name) and rol[0].value.id == "kullanici", (
+            f"satır {c.lineno}: rol sabit değil, giriş yapan kullanıcıdan (kullanici.rol) gelmeli")
+
+
+@pytest.fixture
+def sahte_st_uygulama(tmp_path, monkeypatch):
+    """Streamlit yerine MagicMock; uygulama.py içe aktarılır (tests/test_denetim_guvenligi.py ile aynı düzen)."""
+    import importlib
+    import sys
+
+    from tests.test_denetim_guvenligi import _sahte_streamlit
+
+    db = tmp_path / "k.sqlite"
+    Katalog(db).kapat()
+    monkeypatch.setenv("MALZEME_KABUL_DB", str(db))
+    monkeypatch.setenv("MALZEME_KABUL_YUKLEME", str(tmp_path / "yuklenen"))
+    st = _sahte_streamlit()
+    monkeypatch.setitem(sys.modules, "streamlit", st)
+    monkeypatch.delitem(sys.modules, "malzeme_kabul.arayuz.uygulama", raising=False)
+    modul = importlib.import_module("malzeme_kabul.arayuz.uygulama")
+    yield modul, st
+    sys.modules.pop("malzeme_kabul.arayuz.uygulama", None)
+
+
+@pytest.mark.parametrize("rol", ["giris_kalite", "mp"])
+def test_duzeltme_formu_giris_yapan_kullanicinin_rolunu_karari_duzelte_iletir(sahte_st_uygulama, monkeypatch, rol):
+    from types import SimpleNamespace
+    from unittest import mock
+
+    modul, st = sahte_st_uygulama
+    st.session_state["son_karar"] = ("AST-N", "L1")
+    st.selectbox.return_value = "serbest"
+    st.text_area.return_value = "tekrar test uygun"
+    st.button.return_value = True
+    cagri = mock.MagicMock(name="karari_duzelt")
+    monkeypatch.setattr(modul, "karari_duzelt", cagri)
+    modul.duzeltme_formu(mock.MagicMock(), mock.MagicMock(), SimpleNamespace(ad="kisi", rol=rol))
+    cagri.assert_called_once()
+    assert cagri.call_args.kwargs.get("rol") == rol
+    assert "kisi" in cagri.call_args.args
+
+
+def test_duzeltme_formu_karantina_rol_hatasini_kullaniciya_gosterir(sahte_st_uygulama, monkeypatch):
+    from types import SimpleNamespace
+    from unittest import mock
+
+    modul, st = sahte_st_uygulama
+    st.session_state["son_karar"] = ("AST-N", "L1")
+    st.selectbox.return_value = "serbest"
+    st.text_area.return_value = "tekrar test uygun"
+    st.button.return_value = True
+
+    def reddet(*_a, rol, **_k):
+        raise KatalogHatasi(f"karantinadan çıkarmayı yalnız M&P yapabilir (rol {rol!r})")
+
+    monkeypatch.setattr(modul, "karari_duzelt", reddet)
+    modul.duzeltme_formu(mock.MagicMock(), mock.MagicMock(), SimpleNamespace(ad="gk", rol="giris_kalite"))
+    st.error.assert_called_once()
+    assert "M&P" in st.error.call_args.args[0]
+    st.success.assert_not_called()
+
+
+# --- İnceleme düzeltmesi: M&P'nin karantinadaki partiyi serbest bırakma yolu -------------------------
+
+from malzeme_kabul.arayuz.kimlik import Kullanici  # noqa: E402
+
+KARANTINA_FORMU = "Karantinadaki partiyi serbest bırak"
+MP = Kullanici("mp", "mp")
+GK = Kullanici("gk", "giris_kalite")
+
+
+def _anahtar(x):
+    """karantina_partileri öğesi Parti ya da depo_tablosu gibi satır (dict) olabilir."""
+    if isinstance(x, dict):
+        return x.get("malzeme", x.get("malzeme_kodu")), x.get("lot", x.get("lot_no"))
+    return x.malzeme_kodu, x.lot_no
+
+
+def test_karantina_partileri_yalniz_karantinadaki_partileri_doner(katalog):
+    katalog.parti_ekle("K-2", "AST-001", "Örnek Tedarikçi A", "K", "2026-01-01", durum="karantina")
+    partiler = ev.karantina_partileri(katalog)
+    assert sorted(_anahtar(p) for p in partiler) == [("AST-001", "K-2"), ("AST-002", "A-2510-03")]
+
+
+def test_karantina_partileri_karantina_yoksa_bos_doner():
+    with Katalog() as k:
+        assert list(ev.karantina_partileri(k)) == []
+
+
+def _iz(katalog, d):
+    return [(p.malzeme_kodu, p.lot_no, p.durum) for p in katalog.partiler()], [(x.sira, x.tur) for x in d.kayitlar()]
+
+
+def test_karantinadan_cikar_mp_ile_serbest_birakir_ve_rolu_kaydeder(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    kayit = ev.karantinadan_cikar(katalog, d, MP, "AST-002", "A-2510-03", "serbest", "tekrar test uygun")
+    assert katalog.parti("AST-002", "A-2510-03").durum == "serbest"
+    assert kayit.tur == "duzeltme" and kayit.kullanici == "mp"
+    assert kayit.veri["rol"] == "mp" and kayit.veri["onceki_durum"] == "karantina"
+    assert [x.tur for x in d.kayitlar("duzeltme")] == ["duzeltme"]
+
+
+def test_karantinadan_cikar_giris_kaliteyi_m_p_hatasiyla_reddeder(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    once = _iz(katalog, d)
+    with pytest.raises(KatalogHatasi, match="M&P"):
+        ev.karantinadan_cikar(katalog, d, GK, "AST-002", "A-2510-03", "serbest", "tekrar test uygun")
+    assert _iz(katalog, d) == once
+
+
+def test_karantinadan_cikar_gerekcesiz_reddedilir(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    once = _iz(katalog, d)
+    with pytest.raises(KatalogHatasi, match="gerekçe"):
+        ev.karantinadan_cikar(katalog, d, MP, "AST-002", "A-2510-03", "serbest", " ")
+    assert _iz(katalog, d) == once
+
+
+def test_karantinadan_cikar_kullanici_nesnesi_ister_ad_metni_yetmez(katalog):
+    # Rol oturumdaki Kullanici'dan gelir; yalnız ad verilirse rol bilinmez, hiçbir şey yazılmaz.
+    assert callable(getattr(ev, "karantinadan_cikar", None)), "ekran_verisi.karantinadan_cikar yok"
+    d = DenetimKaydi(katalog.baglanti)
+    once = _iz(katalog, d)
+    with pytest.raises((KatalogHatasi, TypeError, AttributeError)):
+        ev.karantinadan_cikar(katalog, d, "mp", "AST-002", "A-2510-03", "serbest", "tekrar test uygun")
+    assert _iz(katalog, d) == once
+
+
+def test_karantinadan_cikar_karari_duzelte_kullanicinin_rolunu_iletir(katalog, monkeypatch):
+    from unittest import mock
+
+    import malzeme_kabul.arayuz.ekran_verisi as ev_modul
+
+    cagri = mock.MagicMock(name="karari_duzelt")
+    monkeypatch.setattr(ev_modul, "karari_duzelt", cagri, raising=False)
+    d = DenetimKaydi(katalog.baglanti)
+    ev.karantinadan_cikar(katalog, d, MP, "AST-002", "A-2510-03", "serbest", "tekrar test uygun")
+    cagri.assert_called_once()
+    assert cagri.call_args.kwargs.get("rol") == "mp"
+    assert "mp" in cagri.call_args.args  # kullanıcı adı
+
+
+# Arayüz: depo ekranındaki form yalnız M&P'ye görünür.
+
+
+def _mp_kosulu_mu(test) -> bool:
+    """`kullanici.rol == "mp"` (ya da ters sırası) mı?"""
+    import ast
+
+    if not (isinstance(test, ast.Compare) and len(test.ops) == 1 and isinstance(test.ops[0], ast.Eq)):
+        return False
+    iki = [test.left, test.comparators[0]]
+    rol = any(isinstance(x, ast.Attribute) and x.attr == "rol" and isinstance(x.value, ast.Name)
+              and x.value.id == "kullanici" for x in iki)
+    return rol and any(isinstance(x, ast.Constant) and x.value == "mp" for x in iki)
+
+
+def test_arayuz_karantinadan_cikar_yalniz_mp_kosulu_altinda_oturum_kullanicisiyla_cagrilir():
+    import ast
+
+    agac = ast.parse(UYGULAMA.read_text(encoding="utf-8"))
+    ustler = {}
+    for ust in ast.walk(agac):
+        for cocuk in ast.iter_child_nodes(ust):
+            ustler[cocuk] = ust
+    cagrilar = [d for d in ast.walk(agac) if isinstance(d, ast.Call) and isinstance(d.func, ast.Attribute)
+                and d.func.attr == "karantinadan_cikar" and getattr(d.func.value, "id", None) == "ev"]
+    assert cagrilar, "uygulama.py ev.karantinadan_cikar çağırmıyor"
+    for c in cagrilar:
+        kul = c.args[2] if len(c.args) > 2 else next((k.value for k in c.keywords if k.arg == "kullanici"), None)
+        assert isinstance(kul, ast.Name) and kul.id == "kullanici", (
+            f"satır {c.lineno}: oturum kullanıcısı (Kullanici nesnesi) geçirilmeli, ad ya da sabit değil")
+        dugum, korumali = c, False
+        while dugum in ustler:
+            dugum = ustler[dugum]
+            if isinstance(dugum, ast.If) and _mp_kosulu_mu(dugum.test):
+                korumali = True
+        assert korumali, f"satır {c.lineno}: çağrı `if kullanici.rol == \"mp\"` koşulunun içinde değil"
+
+
+def test_arayuz_karantina_formu_hatalari_yakalar():
+    import ast
+
+    agac = ast.parse(UYGULAMA.read_text(encoding="utf-8"))
+    for t in [d for d in ast.walk(agac) if isinstance(d, ast.Try)]:
+        if any(isinstance(c, ast.Call) and getattr(c.func, "attr", None) == "karantinadan_cikar"
+               for b in t.body for c in ast.walk(b)):
+            adlar = set()
+            for h in t.handlers:
+                tur = h.type
+                for x in (tur.elts if isinstance(tur, ast.Tuple) else [tur]):
+                    adlar.add(getattr(x, "id", getattr(x, "attr", None)))
+            assert {"KatalogHatasi", "ValueError"} <= adlar
+            return
+    pytest.fail("ev.karantinadan_cikar bir try bloğunda çağrılmıyor")
+
+
+def _metinler(st) -> list[str]:
+    """Sahte streamlit'e (ve alt nesnelerine: expander, form, sütun) geçirilen tüm metin argümanları."""
+    metin = []
+    for c in st.mock_calls:
+        _ad, args, kwargs = c
+        metin += [a for a in (*args, *kwargs.values()) if isinstance(a, str)]
+    return metin
+
+
+def _depo_hazirla(sahte_st_uygulama, monkeypatch, katalog, cikar):
+    modul, st = sahte_st_uygulama
+    st.number_input.return_value = 30
+    st.button.return_value = True
+    st.form_submit_button.return_value = True
+    st.selectbox.side_effect = lambda _etiket, secenekler=(), *a, **k: list(secenekler)[0] if list(secenekler) else None
+    st.radio.side_effect = lambda _etiket, secenekler=(), *a, **k: list(secenekler)[0] if list(secenekler) else None
+    st.text_area.return_value = "tekrar test uygun"
+    st.text_input.return_value = "tekrar test uygun"
+    monkeypatch.setattr(modul.ev, "karantinadan_cikar", cikar, raising=False)
+    return modul, st
+
+
+def test_depo_ekrani_mp_icin_karantina_formunu_gosterir_ve_oturum_kullanicisini_iletir(
+        sahte_st_uygulama, monkeypatch, katalog):
+    from unittest import mock
+
+    cikar = mock.MagicMock(name="karantinadan_cikar")
+    modul, st = _depo_hazirla(sahte_st_uygulama, monkeypatch, katalog, cikar)
+    d = DenetimKaydi(katalog.baglanti)
+    modul.depo_ekrani(katalog, d, MP)
+    assert any(KARANTINA_FORMU in m for m in _metinler(st)), "M&P için karantina formu görünmüyor"
+    cikar.assert_called_once()
+    args, kwargs = cikar.call_args
+    kul = args[2] if len(args) > 2 else kwargs.get("kullanici")
+    assert kul is MP
+    st.error.assert_not_called()
+
+
+def test_depo_ekrani_giris_kalite_icin_karantina_formunu_gostermez(sahte_st_uygulama, monkeypatch, katalog):
+    from unittest import mock
+
+    cikar = mock.MagicMock(name="karantinadan_cikar")
+    modul, st = _depo_hazirla(sahte_st_uygulama, monkeypatch, katalog, cikar)
+    modul.depo_ekrani(katalog, DenetimKaydi(katalog.baglanti), GK)
+    assert not any(KARANTINA_FORMU in m for m in _metinler(st))
+    cikar.assert_not_called()
+
+
+@pytest.mark.parametrize("hata", [KatalogHatasi("karantinadaki partiyi yalnız M&P çıkarabilir"),
+                                  ValueError("geçersiz parti durumu")])
+def test_depo_karantina_formu_hatayi_ekranda_gosterir(sahte_st_uygulama, monkeypatch, katalog, hata):
+    def cikar(*_a, **_k):
+        raise hata
+
+    modul, st = _depo_hazirla(sahte_st_uygulama, monkeypatch, katalog, cikar)
+    modul.depo_ekrani(katalog, DenetimKaydi(katalog.baglanti), MP)
+    st.error.assert_called_once()
+    assert str(hata) in st.error.call_args.args[0]
+    st.success.assert_not_called()

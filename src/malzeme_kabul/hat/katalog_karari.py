@@ -26,7 +26,8 @@ geçirebilir (serbest < bekliyor < karantina). Tek istisna hiç karar verilmemi�
 yeni partidir. Karantinadaki ya da daha önce karar verilmiş (makine ya da
 insan) bekleyen partiyi makine serbest bırakmaz; durum korunur ve
 `parti_durumu` ek denetimi insan incelemeli olur, gerekçesinde partinin neden
-o durumda kaldığı yazar. Serbest bırakmak `karari_duzelt` ile insanın işidir.
+o durumda kaldığı yazar. Serbest bırakmak `karari_duzelt` ile insanın işidir;
+karantinadan çıkarmayı yalnız M&P (rol 'mp') gerekçeyle yapar.
 
 Kabul dokümanı sürümü örnek verinin demo onayıyla onaylıysa karar
 `demo_onayi=True` taşır (ekranda ve kayıtta işaretlenir); karar mantığı değişmez.
@@ -49,6 +50,7 @@ from malzeme_kabul.katalog.veritabani import (
     KatalogHatasi,
     Parti,
     PartiDurumu,
+    ROLLER,
 )
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi, Kayit
 from malzeme_kabul.kural.karar_motoru import (
@@ -292,24 +294,53 @@ def karari_duzelt(
     lot_no: str,
     yeni_durum: PartiDurumu,
     neden: str,
+    *,
+    rol: str,
 ) -> Kayit:
     """İnsanın parti kararını düzeltmesi: parti durumu değişir, eski ve yeni durum gerekçesiyle kaydedilir.
 
-    Kullanıcı ve gerekçe hiçbir şey yazılmadan doğrulanır; durum ve kayıt tek işlemdir.
+    `rol` zorunludur ve `ROLLER` içinde olmalıdır ('mp', 'giris_kalite').
+    Kullanıcı, gerekçe ve rol hiçbir şey yazılmadan doğrulanır; durum ve kayıt
+    tek işlemdir. Bağlantıda kullanıcı tablosu varsa kullanıcı orada aynı rolle
+    kayıtlı olmalıdır (yoksa verilen rol kullanılır). Karantinadaki partiyi
+    karantinadan çıkarmak (kaynağı makine ya da insan) yalnız M&P'nin işidir ve
+    gerekçe ister.
     """
     if not isinstance(kullanici, str) or not kullanici.strip():
         raise KatalogHatasi("düzeltme için kullanıcı gerekli")
-    if not neden or not neden.strip():
+    if not isinstance(neden, str) or not neden.strip():
         raise KatalogHatasi("düzeltme için gerekçe gerekli")
+    if not isinstance(rol, str) or rol not in ROLLER:
+        raise KatalogHatasi(f"bilinmeyen rol: {rol!r} ({', '.join(ROLLER)})")
     _ayni_baglanti(katalog, defter)
     with katalog.islem():  # onceki_durum yazma işleminin içinde okunur (K2 yarışı)
+        _rolu_dogrula(katalog, kullanici, rol)
         onceki = katalog.parti(malzeme_kodu, lot_no).durum
+        if onceki == "karantina" and yeni_durum != "karantina" and rol != "mp":
+            raise KatalogHatasi("karantinadaki partiyi yalnız M&P gerekçeyle karantinadan çıkarabilir")
         surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
         katalog.parti_durumu_ata(malzeme_kodu, lot_no, yeni_durum, kaynak="insan")
         return defter.ekle(
-            "duzeltme", kullanici, {"onceki_durum": onceki, "yeni_durum": yeni_durum, "neden": neden},
+            "duzeltme", kullanici,
+            {"onceki_durum": onceki, "yeni_durum": yeni_durum, "neden": neden, "rol": rol},
             malzeme_kodu=malzeme_kodu, lot_no=lot_no, dokuman_surumu=surum,
         )
+
+
+def _rolu_dogrula(katalog: Katalog, kullanici: str, rol: str) -> None:
+    """Bağlantıda kullanıcı tablosu (`kullanicilar`, arayuz.kimlik) varsa kullanıcı orada aynı rolle kayıtlı olmalı.
+
+    Tablo yoksa (ör. yalnız komut satırı) verilen rol kullanılır. Tablo
+    doğrudan sorgulanır; hat arayüz katmanını içe aktarmaz.
+    """
+    b = katalog.baglanti
+    if b.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'kullanicilar'").fetchone() is None:
+        return
+    s = b.execute("SELECT rol FROM kullanicilar WHERE ad = ?", (kullanici,)).fetchone()
+    if s is None:
+        raise KatalogHatasi(f"kullanıcı {kullanici!r} kullanıcı tablosunda kayıtlı değil")
+    if s[0] != rol:
+        raise KatalogHatasi(f"kullanıcı {kullanici!r} kayıtta {s[0]!r} rolünde; verilen rol {rol!r} tutmuyor")
 
 
 def _ayni_baglanti(katalog: Katalog, defter: DenetimKaydi) -> None:

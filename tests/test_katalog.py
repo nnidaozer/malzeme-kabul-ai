@@ -757,3 +757,64 @@ def test_eski_karar_kayitlari_yenilerle_birlikte_zinciri_dogrular(eski_demo_kata
     capsys.readouterr()
     assert betik_yukle("scripts/denetim_dogrula.py").main(["--db", str(eski_demo_katalog_yolu)]) == 0
     assert "zincir sağlam: 3 kayıt" in capsys.readouterr().out
+
+
+# --- Nida kararı (katalog düzeyi koruma): demo onaylı sürüme revizyon bağlanmaz ----------------------
+
+
+@pytest.fixture
+def revizyonlu_katalog():
+    k = Katalog()
+    k.dokuman_onayla(dokuman("J"), "mp1")
+    k.malzeme_ekle("AST-J", "MIL-PRF-23377", "J", tip="I", sinif="N")
+    yield k
+    k.kapat()
+
+
+def test_malzeme_revizyonu_ata_demo_onayli_gecerli_surumu_reddeder(revizyonlu_katalog):
+    k = revizyonlu_katalog
+    k.dokuman_onayla(dokuman("K"), veritabani.ORNEK_ONAYLAYAN, demo_onayi=True)
+    with pytest.raises(KatalogHatasi, match="(?i)demo"):
+        k.malzeme_revizyonu_ata("AST-J", "K")
+    assert k.malzeme("AST-J").revizyon == "J"
+
+
+def test_malzeme_revizyonu_ata_gercek_onay_ustune_demo_gelirse_reddeder(revizyonlu_katalog):
+    k = revizyonlu_katalog
+    k.dokuman_onayla(dokuman("K"), "mp1")
+    k.dokuman_onayla(dokuman("K"), veritabani.ORNEK_ONAYLAYAN, demo_onayi=True)
+    with pytest.raises(KatalogHatasi, match="(?i)demo"):
+        k.malzeme_revizyonu_ata("AST-J", "K")
+    assert k.malzeme("AST-J").revizyon == "J"
+
+
+def test_malzeme_revizyonu_ata_demo_ustune_gercek_onay_gelirse_baglar(revizyonlu_katalog):
+    k = revizyonlu_katalog
+    k.dokuman_onayla(dokuman("K"), veritabani.ORNEK_ONAYLAYAN, demo_onayi=True)
+    k.dokuman_onayla(dokuman("K"), "mp1")
+    assert k.malzeme_revizyonu_ata("AST-J", "K").revizyon == "K"
+
+
+def test_malzeme_revizyonu_ata_gercek_onayli_surume_baglar(revizyonlu_katalog):
+    k = revizyonlu_katalog
+    k.dokuman_onayla(dokuman("K"), "mp1")
+    assert k.malzeme_revizyonu_ata("AST-J", "K").revizyon == "K"
+
+
+def test_malzeme_revizyonu_ata_onayli_surum_yoksa_eskisi_gibi_reddeder(revizyonlu_katalog):
+    k = revizyonlu_katalog
+    with pytest.raises(KatalogHatasi, match="onaylı kabul dokümanı yok"):
+        k.malzeme_revizyonu_ata("AST-J", "K")
+    assert k.malzeme("AST-J").revizyon == "J"
+
+
+def test_malzeme_revizyonu_ata_demo_reddi_dis_islemde_yalniz_kendini_geri_alir(revizyonlu_katalog):
+    k = revizyonlu_katalog
+    k.dokuman_onayla(dokuman("K"), veritabani.ORNEK_ONAYLAYAN, demo_onayi=True)
+    with k.islem():
+        k.tedarikci_onayla("AST-J", "Ted Dis")
+        with pytest.raises(KatalogHatasi, match="(?i)demo"):
+            k.malzeme_revizyonu_ata("AST-J", "K")
+        assert k.malzeme("AST-J").revizyon == "J"
+    assert k.malzeme("AST-J").revizyon == "J"
+    assert "Ted Dis" in k.onayli_tedarikciler("AST-J")  # dış işlem sürdü ve bitti

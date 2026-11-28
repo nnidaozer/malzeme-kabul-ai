@@ -845,3 +845,46 @@ def test_okuma_karsilastirma_kural_katmaninda_ve_cikarimi_ice_aktarmaz():
     assert dosya.is_file()
     ic = {m for m in ice_aktarimlar(dosya) if m.startswith("malzeme_kabul.")}
     assert not {m for m in ic if m.startswith(("malzeme_kabul.cikarim", "malzeme_kabul.hat", "malzeme_kabul.arayuz"))}, ic
+
+
+# --- Nida kararı (koruma): iki okuma da sınır dışıysa uygun değil kalır, anlaşmazlık kaydedilir -------
+
+
+@pytest.mark.parametrize("kural_hucre, model_okumasi, beklenen_anlasmazlik", [
+    # VOC en çok 340 g/L. İki okuma da farklı ve ikisi de sınırın üstünde.
+    ("400", ("401", "g/L"), {("voc_solvent_content", "deger", "400", "401")}),
+    # Kural sınırın hemen üstünü (340.1), model daha yükseğini okur.
+    ("340.1", ("341", "g/L"), {("voc_solvent_content", "deger", "340.1", "341")}),
+    # Birim karışıklığı: model aynı satırdan lb/gal okur; 3.4 lb/gal ≈ 407 g/L, o da sınır dışı.
+    ("400", ("3.4", "lb/gal"), {("voc_solvent_content", "deger", "400", "3.4"),
+                                ("voc_solvent_content", "birim", "g/L", "lb/gal")}),
+])
+def test_iki_farkli_sinir_disi_okumada_sart_uygun_degil_parti_red_ve_anlasmazlik_karar_ve_kayitta(
+        katalog, tmp_path, kural_hucre, model_okumasi, beklenen_anlasmazlik):
+    from malzeme_kabul.hat.hibrit_hat import sertifika_hatti
+
+    voc = ["VOC solvent content", "ASTM D3960", "340 g/L max", kural_hucre, "g/L"]
+    tekrar = " ".join(model_okumasi)
+    pdf = tekrar_testli_pdf(tmp_path / "voc.pdf", s028_satirlari(VOC=voc), "VOC solvent content", tekrar)
+    model = SahteModel(model_sertifikasi(pdf, **{"VOC solvent content": model_okumasi}))
+    d = DenetimKaydi(katalog.baglanti)
+    katalog.parti_ekle(TEKRAR_LOT, "AST-001", ONAYLI_TEDARIKCILER[0], "K", "2025-12-10")
+
+    karar, okuma_ = sertifika_hatti(katalog, "AST-001", pdf, mod="hibrit", istemci=model, lot_no=TEKRAR_LOT,
+                                   defter=d, kullanici="gk1")
+
+    assert okuma_.kanitsiz == []
+    v = satir(karar, "voc_solvent_content")
+    assert v.karar == "uygun_degil" and FARKLI_OKUDU in v.gerekce
+    assert (karar.parti_karari, karar.parti_durumu) == ("red", "karantina")
+    assert katalog.parti("AST-001", TEKRAR_LOT).durum == "karantina"
+
+    hat_anl = {(a["test_id"], a["alan"], a["kural"], a["model"]) for a in karar.hat["anlasmazliklar"]}
+    assert hat_anl == beklenen_anlasmazlik
+    assert karar.hat["anlasmazlik_sayisi"] == len(beklenen_anlasmazlik)
+
+    kayit = d.kayitlar("karar")[-1]
+    assert kayit.lot_no == TEKRAR_LOT and kayit.veri["parti_karari"] == "red"
+    kayit_anl = {(a["test_id"], a["alan"], a["kural"], a["model"]) for a in kayit.veri["hat"]["anlasmazliklar"]}
+    assert kayit_anl == beklenen_anlasmazlik
+    assert d.zinciri_dogrula().gecerli

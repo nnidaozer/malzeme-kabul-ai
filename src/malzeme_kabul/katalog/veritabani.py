@@ -54,6 +54,9 @@ DURUM_KAYNAKLARI: tuple[str, ...] = ("makine", "insan")
 ORNEK_ONAYLAYAN = "ornek-veri"
 # Demo onaylı sürümün ekranda ve betik çıktısında görünen işareti (arayuz.ekran_verisi yeniden dışa verir).
 DEMO_ETIKETI = "DEMO ONAYI (M&P onayı değil)"
+# Kullanıcı rolleri ve ekran adları. Tek kaynak burasıdır: arayuz.kimlik.ROLLER bu sözlüğün
+# kendisidir; hat (karari_duzelt) arayuz'a bağlanmadan aynı rolleri denetler.
+ROLLER: dict[str, str] = {"mp": "M&P mühendisi", "giris_kalite": "Giriş kalite"}
 
 DEMO_SUTUNU = "demo_onayi"
 DEMO_SUTUN_TANIMI = "INTEGER NOT NULL DEFAULT 0 CHECK (demo_onayi IN (0, 1))"
@@ -504,11 +507,22 @@ class Katalog:
                 b.execute("UPDATE partiler SET mp_inceleme = ? WHERE malzeme_kodu = ?", (neden, malzeme_kodu))
 
     def malzeme_revizyonu_ata(self, malzeme_kodu: str, revizyon: str) -> Malzeme:
-        """Malzeme kodunu aynı standardın başka revizyonuna bağlar (M&P kararıyla)."""
-        m = self.malzeme(malzeme_kodu)
-        if not self.dokuman_surumleri(m.belge_no, revizyon):
-            raise KatalogHatasi(f"{m.belge_no}{revizyon} için onaylı kabul dokümanı yok; önce onaylanmalı")
+        """Malzeme kodunu aynı standardın başka revizyonuna bağlar (M&P kararıyla).
+
+        Yeni revizyonun geçerli (en son onaylı) sürümü demo onaylıysa reddeder:
+        yalnız gerçek M&P onaylı sürüme geçilir (Nida, 28 Kasım). Denetim ve
+        yazma kendi işlemindedir; dış işlem içinde çağrılırsa hata yalnız bu
+        adımı geri alır.
+        """
         with self.islem() as b:
+            m = self.malzeme(malzeme_kodu)
+            surumler = self.dokuman_surumleri(m.belge_no, revizyon)
+            if not surumler:
+                raise KatalogHatasi(f"{m.belge_no}{revizyon} için onaylı kabul dokümanı yok; önce onaylanmalı")
+            if surumler[-1].demo_onayi:
+                raise KatalogHatasi(
+                    f"{surumler[-1].etiket} demo onaylı; yalnız gerçek M&P onaylı sürüme geçilir"
+                )
             b.execute("UPDATE malzemeler SET revizyon = ? WHERE kod = ?", (revizyon, malzeme_kodu))
         return self.malzeme(malzeme_kodu)
 
@@ -666,6 +680,7 @@ __all__ = [
     "DurumKaynagi",
     "PARTI_DURUMLARI",
     "Parti",
+    "ROLLER",
     "Taslak",
     "PartiDurumu",
     "icerik_ozeti",

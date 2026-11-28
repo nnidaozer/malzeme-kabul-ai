@@ -5,8 +5,9 @@
     streamlit run src/malzeme_kabul/arayuz/uygulama.py
 
 Veritabanı `MALZEME_KABUL_DB` (varsayılan data/calisma/katalog.sqlite),
-yüklenen dosyalar `MALZEME_KABUL_YUKLEME` (varsayılan data/calisma/yuklenen)
-altına yazılır. İş kuralları `arayuz/ekran_verisi.py` ve alttaki katmanlardadır;
+yüklenen dosyalar `MALZEME_KABUL_YUKLEME` (varsayılan data/calisma/yuklenen),
+onaylanan taslakların etiket adayları `MALZEME_KABUL_ETIKET_ADAYI` (varsayılan
+data/calisma/etiket_adaylari; data/gold/ altına asla yazılmaz) altına yazılır. İş kuralları `arayuz/ekran_verisi.py` ve alttaki katmanlardadır;
 bu dosya yalnız gösterir.
 """
 
@@ -27,10 +28,12 @@ from malzeme_kabul.hat.katalog_karari import karari_duzelt
 from malzeme_kabul.hat.revizyon_etkisi import mp_bekleyenler, mp_incelemesini_kapat, yeni_revizyon_yukle
 from malzeme_kabul.katalog.veritabani import PARTI_DURUMLARI, Katalog, KatalogHatasi
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi, sema_eksikleri
+from malzeme_kabul.kayit.duzeltme_kaydi import duzeltme_panosu, etiket_adayi_yaz
 
 KOK = Path(__file__).resolve().parents[3]
 DB = Path(os.environ.get("MALZEME_KABUL_DB", KOK / "data" / "calisma" / "katalog.sqlite"))
 YUKLEME = Path(os.environ.get("MALZEME_KABUL_YUKLEME", KOK / "data" / "calisma" / "yuklenen"))
+ETIKET_ADAYI = Path(os.environ.get("MALZEME_KABUL_ETIKET_ADAYI", KOK / "data" / "calisma" / "etiket_adaylari"))
 
 
 def baglan(katalog: Katalog) -> tuple[DenetimKaydi, list[str]]:
@@ -44,6 +47,18 @@ def baglan(katalog: Katalog) -> tuple[DenetimKaydi, list[str]]:
 
 
 MESGUL = "Veritabanı şu an başka bir işlemle meşgul; kaydedilmedi, yeniden deneyin"
+
+
+def etiket_adayi_kaydet(katalog: Katalog, taslak_id: int, klasor: Path) -> tuple[list[Path], str | None]:
+    """Onaydan sonra etiket adayını yazar; yazılamazsa onayı bozmadan uyarı metni döner.
+
+    Başarıda (yollar, None), hatada ([], uyarı metni) döner. OSError, ValueError
+    (gold klasörü dahil) ve sqlite3.Error yakalanır; uyarı istisna metnini içerir.
+    """
+    try:
+        return list(etiket_adayi_yaz(katalog, taslak_id, klasor)), None
+    except (OSError, ValueError, sqlite3.Error) as hata:  # KatalogHatasi bir ValueError
+        return [], f"Onay kayıtlı; etiket adayı yazılamadı: {hata}"
 
 
 def dosyayi_kaydet(yuklenen) -> Path:
@@ -104,9 +119,11 @@ def taslak_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
     )
     satirlar = tablo.to_dict("records") if hasattr(tablo, "to_dict") else list(tablo)
     sol, sag = st.columns(2)
+    gerekce = sol.text_input("Düzeltme gerekçesi (isteğe bağlı)", key=f"gerekce_{secim.id}")
     if sol.button("Düzeltmeleri kaydet"):
         try:
-            farklar = ev.taslak_duzelt(katalog, defter, secim.id, ev.tablodan_dokuman(secim.dokuman, satirlar), kullanici.ad)
+            farklar = ev.taslak_duzelt(katalog, defter, secim.id, ev.tablodan_dokuman(secim.dokuman, satirlar), kullanici.ad,
+                                       gerekce=(gerekce or "").strip() or None)
             st.success(f"{len(farklar)} değişiklik kaydedildi." if farklar else "Değişiklik yok.")
             for f in farklar:
                 st.write(f"- {f}")
@@ -119,6 +136,12 @@ def taslak_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
         try:
             s = ev.taslak_onayla(katalog, defter, secim.id, kullanici.ad, not_ or None)
             st.success(f"{s.etiket} onaylandı.")
+            # Etiket adayı onaydan sonra yazılır; yazılamazsa onay geri alınmaz, uyarı gösterilir.
+            yollar, uyari = etiket_adayi_kaydet(katalog, secim.id, ETIKET_ADAYI)
+            if uyari:
+                st.warning(uyari)
+            else:
+                st.caption("Etiket adayı yazıldı: " + ", ".join(str(y) for y in yollar))
         except (KatalogHatasi, ValueError) as hata:
             st.error(str(hata))
         except sqlite3.OperationalError as hata:
@@ -258,12 +281,12 @@ def duzeltme_formu(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
     son = st.session_state.get("son_karar")
     if not son or not son[1]:
         return
-    with st.expander("Parti kararını düzelt (gerekçe zorunlu)"):
+    with st.expander("Parti kararını düzelt (gerekçe zorunlu; karantinadan çıkarmayı yalnız M&P yapar)"):
         durum = st.selectbox("Yeni durum", PARTI_DURUMLARI)
         neden = st.text_area("Gerekçe")
         if st.button("Düzeltmeyi kaydet"):
             try:
-                karari_duzelt(katalog, defter, kullanici.ad, son[0], son[1], durum, neden)
+                karari_duzelt(katalog, defter, kullanici.ad, son[0], son[1], durum, neden, rol=kullanici.rol)
                 st.success("Düzeltme kaydedildi.")
             except (KatalogHatasi, ValueError) as hata:
                 st.error(str(hata))
@@ -288,6 +311,55 @@ def depo_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
     if demo:
         st.info(f"{len(demo)} partinin kabul dokümanı demo onaylı ({ev.DEMO_ETIKETI}).")
     st.dataframe(tablo, width="stretch")
+    if kullanici.rol == "mp":  # karantinadan çıkarmayı yalnız M&P yapar (karari_duzelt de denetler)
+        with st.expander("Karantinadaki partiyi serbest bırak (yalnız M&P, gerekçe zorunlu)"):
+            partiler = ev.karantina_partileri(katalog)
+            if not partiler:
+                st.caption("Karantinada parti yok.")
+                return
+            secim = st.selectbox("Karantinadaki lot", [(p.malzeme_kodu, p.lot_no) for p in partiler],
+                                 format_func=lambda x: f"{x[0]} / {x[1]}", key="karantina_lot")
+            durum = st.selectbox("Yeni durum", ("serbest", "bekliyor"), key="karantina_durum")
+            neden = st.text_area("Gerekçe", key="karantina_neden")
+            if st.button("Karantinadan çıkar", key="karantina_kaydet"):
+                try:
+                    ev.karantinadan_cikar(katalog, defter, kullanici, secim[0], secim[1], durum, neden)
+                    st.success("Parti karantinadan çıkarıldı; düzeltme kaydedildi.")
+                except (KatalogHatasi, ValueError) as hata:
+                    st.error(str(hata))
+                except sqlite3.OperationalError as hata:
+                    st.error(f"{MESGUL} ({hata}).")
+
+
+# --- düzeltme panosu -------------------------------------------------------------------------------
+
+
+def pano_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
+    st.header("Düzeltme panosu")
+    st.caption("Onaylanan taslaklarda mühendisin düzelttiği alanların oranı (taban: sistemin ürettiği taslak). "
+               "Onay bekleyen düzeltmeler orana girmez.")
+    p = duzeltme_panosu(katalog.baglanti)
+    a, b, c, d = st.columns(4)
+    a.metric("Düzeltme oranı", f"{p.oran:.1%}")
+    b.metric("Toplam alan", p.toplam_alan)
+    c.metric("Düzeltilen alan", p.duzeltilen_alan)
+    d.metric("Onay bekleyen düzeltme", p.onay_bekleyen_duzeltme)
+    if p.tabani_bilinmeyen_taslak:
+        st.caption(f"Tabanı bilinmeyen {p.tabani_bilinmeyen_taslak} onaylı taslak orana girmez "
+                   "(yalnız yaklaşım kırılımında 'bilinmiyor' olarak görünür).")
+    if not p.toplam_alan:
+        st.info("Henüz onaylanmış ve düzeltme kaydı olan taslak yok.")
+        return
+    st.subheader("Alan bazında düzeltme oranı")
+    st.bar_chart({"alan": [s["alan"] for s in p.alan_bazinda], "oran": [s["oran"] for s in p.alan_bazinda]},
+                 x="alan", y="oran")
+    for baslik, tablo in (("Belge bazında", p.belge_bazinda), ("Alan bazında", p.alan_bazinda),
+                          ("Kayıt türü bazında", p.kayit_turu_bazinda), ("Yaklaşım bazında", p.yaklasim_bazinda),
+                          ("Mühendis bazında", p.muhendis_bazinda)):
+        st.subheader(baslik)
+        st.dataframe(tablo, width="stretch")
+    st.subheader("Gün bazında")
+    st.dataframe([{"gün": g, "oran": o} for g, o in p.gun_bazinda.items()], width="stretch")
 
 
 EKRAN_FONKSIYONLARI = {
@@ -296,6 +368,7 @@ EKRAN_FONKSIYONLARI = {
     "revizyon": revizyon_ekrani,
     "giris": giris_kalite_ekrani,
     "depo": depo_ekrani,
+    "pano": pano_ekrani,
 }
 
 

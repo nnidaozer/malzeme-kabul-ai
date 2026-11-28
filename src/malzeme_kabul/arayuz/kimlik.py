@@ -7,7 +7,7 @@ Parola düz metin saklanmaz: PBKDF2-HMAC-SHA256 (200 000 tur, kullanıcı başı
 Ekran yetkileri:
 
 - `mp` (M&P mühendisi): standart yükle, taslağı düzelt ve onayla, revizyon
-  farkı ve M&P incelemesi, depo.
+  farkı ve M&P incelemesi, depo, düzeltme panosu.
 - `giris_kalite`: CoC yükle ve karar al, depo.
 
 İlk kurulum (Docker): `ortamdan_kullanicilar` veritabanında hiç kullanıcı yoksa
@@ -29,10 +29,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, Mapping
 
-from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN
+from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN, ROLLER
 
 Rol = Literal["mp", "giris_kalite"]
-ROLLER: dict[str, str] = {"mp": "M&P mühendisi", "giris_kalite": "Giriş kalite"}
+# ROLLER katalog.veritabani'nda tanımlıdır (hat/katalog_karari.karari_duzelt de onu kullanır).
 TUR = 200_000
 
 EKRANLAR: dict[str, str] = {
@@ -41,9 +41,10 @@ EKRANLAR: dict[str, str] = {
     "revizyon": "Revizyon farkı ve M&P incelemesi",
     "giris": "Giriş kalite: CoC kontrolü",
     "depo": "Depo: partiler ve raf ömrü",
+    "pano": "Düzeltme panosu",
 }
 YETKILER: dict[str, tuple[str, ...]] = {
-    "mp": ("standart", "taslak", "revizyon", "depo"),
+    "mp": ("standart", "taslak", "revizyon", "depo", "pano"),
     "giris_kalite": ("giris", "depo"),
 }
 

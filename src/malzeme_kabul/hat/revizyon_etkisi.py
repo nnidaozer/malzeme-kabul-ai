@@ -11,7 +11,9 @@ M&P mühendisi farkı inceleyip işareti kapatır (`mp_incelemesini_kapat`):
 - `gerek_yok`: yeni revizyon bu malzemeyi etkilemiyor; malzeme eski
   revizyonda kalır.
 - `yeni_revizyona_gec`: malzeme yeni revizyona bağlanır; yeni revizyonun
-  onaylı kabul dokümanı önceden bulunmalıdır.
+  onaylı kabul dokümanı önceden bulunmalıdır. Geçerli (en son onaylı) sürüm
+  demo onaylıysa geçiş reddedilir ve hiçbir şey değişmez; yalnız gerçek M&P
+  onaylı sürüme geçilir.
 
 Kapatma denetim kaydına `onay` olarak yazılır.
 
@@ -75,18 +77,17 @@ def yeni_revizyon_yukle(
     """Yeni revizyonu kataloğa ekler; etkilenen malzeme ve partileri işaretler."""
     if not kullanici or not kullanici.strip():
         raise KatalogHatasi("kullanıcı boş olamaz")
-    katalog.standart_ekle(belge_no, yeni_revizyon, baslik, tarih)
     etki = RevizyonEtkisi(belge_no, yeni_revizyon)
     neden = f"{MP_ISARETI}: {etki.yeni_etiket} yayımlandı"
-    for m in katalog.malzemeler():
-        if m.belge_no != belge_no or not daha_eski_mi(m.revizyon, yeni_revizyon):
-            continue
-        katalog.mp_inceleme_ata(m.kod, f"{neden} (malzeme {m.standart_etiketi})")
-        etki.etkilenen_malzemeler.append(m.kod)
-        etki.etkilenen_partiler += [f"{p.malzeme_kodu}/{p.lot_no}" for p in katalog.partiler(m.kod)]
-    b = katalog.baglanti
-    b.execute(_OLAYLAR)  # tek ifade; executescript açık bir dış işlemi sessizce bitirirdi
-    with katalog.islem():
+    with katalog.islem() as b:
+        katalog.standart_ekle(belge_no, yeni_revizyon, baslik, tarih)
+        for m in katalog.malzemeler():
+            if m.belge_no != belge_no or not daha_eski_mi(m.revizyon, yeni_revizyon):
+                continue
+            katalog.mp_inceleme_ata(m.kod, f"{neden} (malzeme {m.standart_etiketi})")
+            etki.etkilenen_malzemeler.append(m.kod)
+            etki.etkilenen_partiler += [f"{p.malzeme_kodu}/{p.lot_no}" for p in katalog.partiler(m.kod)]
+        b.execute(_OLAYLAR)  # tek ifade; executescript açık işlemi sessizce bitirirdi
         b.execute(
             "INSERT INTO revizyon_olaylari (belge_no, yeni_revizyon, zaman, kullanici, etkilenen_malzemeler,"
             " etkilenen_partiler, fark_ozeti) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -127,6 +128,7 @@ def mp_incelemesini_kapat(
         raise KatalogHatasi("yeni revizyona geçmek için revizyon harfi gerekli")
     with katalog.islem():
         if karar == "yeni_revizyona_gec":
+            # Demo onaylı sürüme geçişi malzeme_revizyonu_ata reddeder (Nida kararı).
             m2 = katalog.malzeme_revizyonu_ata(malzeme_kodu, yeni_revizyon)
             icerik = {"karar": karar, "eski": m.standart_etiketi, "yeni": m2.standart_etiketi, "not": not_}
             surum = katalog.gecerli_dokuman(malzeme_kodu).etiket

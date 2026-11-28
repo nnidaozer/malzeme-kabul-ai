@@ -65,3 +65,31 @@ def test_sozlesme_yalniz_sozlesme_ve_birimlere_baglidir(dosya):
 def test_yalniz_dil_modeli_cikarimi_urunde_yok():
     for ad in ("belgeden_cikar", "cikarim_semasi", "yaniti_coz", "CikarimYaniti"):
         assert not hasattr(yerel_model, ad), f"{ad} deney/yalniz_dil_modeli.py içinde olmalı"
+
+
+# --- Parti durumunu yalnız karar hattı yazar -------------------------------------------------------
+
+PARTI_DURUMU_YAZABILEN = {"hat/katalog_karari.py"}
+
+
+def test_parti_durumu_ata_src_icinde_yalniz_hat_katalog_kararindan_cagrilir():
+    """Parti durumu (serbest / karantina) yalnız `hat.katalog_karari` üzerinden değişir.
+
+    Böylece rol ve gerekçe denetimi (`karari_duzelt`) ve makine kuralı atlanamaz.
+    Doğrudan çağrı, getattr ile ad üzerinden erişim de sayılır.
+    """
+    ihlaller = []
+    for dosya in katman_dosyalari():
+        goreli = dosya.relative_to(PAKET).as_posix()
+        for d in ast.walk(ast.parse(dosya.read_text(encoding="utf-8"))):
+            cagri = isinstance(d, ast.Attribute) and d.attr == "parti_durumu_ata" and isinstance(d.ctx, ast.Load)
+            ad = isinstance(d, ast.Constant) and d.value == "parti_durumu_ata"
+            if (cagri or ad) and goreli not in PARTI_DURUMU_YAZABILEN:
+                ihlaller.append(f"{goreli}:{d.lineno}")
+    assert not ihlaller, "parti_durumu_ata hat/katalog_karari.py dışında kullanılıyor:\n" + "\n".join(ihlaller)
+
+
+def test_parti_durumu_ata_denetimi_bos_gecmez():
+    """Düzenek denetimi: izinli dosyada gerçekten çağrı bulunur (arama adı yanlışsa yukarıdaki test boşa geçerdi)."""
+    agac = ast.parse((PAKET / "hat/katalog_karari.py").read_text(encoding="utf-8"))
+    assert any(isinstance(d, ast.Attribute) and d.attr == "parti_durumu_ata" for d in ast.walk(agac))

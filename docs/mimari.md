@@ -28,10 +28,13 @@ iki rol:
 - `mp`: standart yükle (kural çıkarıcıyla taslak; yalnız bölünmede geliştirme
   kümesindeki standartlar), taslağı tabloda düzelt ve onayla (her düzeltme ve
   onay denetim kaydına), revizyon farkı (hazır raporlar ya da iki PDF) ve yeni
-  revizyonu yükleyip M&P incelemelerini kapatma, depo.
+  revizyonu yükleyip M&P incelemelerini kapatma, depo (karantinadaki partiyi
+  gerekçeyle serbest bırakma formu yalnız burada, `ekran_verisi.karantinadan_cikar`).
 - `giris_kalite`: malzeme kodu ve lot seç (yeni lot ekle), CoC yükle (PDF:
   kural ya da hibrit mod; JSON: ham hücreler), karar ve madde referansları,
-  parti kararı, gerekçeli düzeltme; depo.
+  parti kararı, gerekçeli düzeltme (karantinadaki partiyi karantinadan
+  yalnız M&P gerekçeyle çıkarır; `karari_duzelt(..., rol=...)` bunu işlemin
+  içinde denetler); depo.
 
 Depo ekranı partileri, durumlarını, M&P işaretini ve raf ömrü uyarılarını
 gösterir. Çalıştırma: `streamlit run src/malzeme_kabul/arayuz/uygulama.py`
@@ -39,6 +42,12 @@ gösterir. Çalıştırma: `streamlit run src/malzeme_kabul/arayuz/uygulama.py`
 --ornek-kullanicilar`; gerçek hesap: `scripts/kullanici_ekle.py`). Streamlit
 `requirements-arayuz.lock` ile kurulur. Kabul dokümanı ayrıca Markdown/Word
 olarak üretilebilir (`arayuz/dokuman_uretici.py`).
+Düzeltme döngüsü: M&P rolünün "Düzeltme panosu" ekranı, onaylanan
+taslaklarda mühendisin düzelttiği alanların oranını (belge, alan, kayıt türü,
+yaklaşım, mühendis ve gün kırılımlarıyla) gösterir; taslak ekranında isteğe
+bağlı düzeltme gerekçesi girilir ve onaydan sonra etiket adayı
+`data/calisma/etiket_adaylari/` altına yazılır (gold klasörüne değil; tasarım
+`docs/muhendis_duzeltmeleri_tasarimi.md`).
 
 ## 2. Malzeme kataloğu
 
@@ -129,6 +138,14 @@ Kayıtları şu fonksiyonlar yazar:
 - `hat/revizyon_etkisi`: `mp_incelemesini_kapat` (onay)
 - `scripts/katalog_kur.py --ornek`: örnek onaylar
 
+Mühendis düzeltmeleri ayrıca `kayit/duzeltme_kaydi.py` deposuna alan düzeyinde
+olay olarak yazılır (`duzeltme_tabanlari`, `duzeltme_olaylari`; ikisi de yalnız
+eklenir, tetikleyiciler UPDATE/DELETE/üzerine yazmayı reddeder):
+`standart_yukle` tabanı, `taslak_duzelt` `degistir`/`ekle`/`sil` olaylarını,
+`taslak_onayla` net değişmemiş alanlar için `onayla` olaylarını durum
+değişikliği ve denetim kaydıyla tek işlemde yazar. Alan adları F1 ölçümüyle
+aynıdır (`sozlesme/alanlar.py`). Etiket adayı: `scripts/etiket_adaylari.py`.
+
 Durum değişikliği ile kaydı tek işlemdir (`Katalog.islem` iç içe çağrıda
 SAVEPOINT olur; `DenetimKaydi.ekle` açık işleme SAVEPOINT ile katılır): kayıt
 yazılamazsa durum da değişmez. Bunun için defter katalogla aynı bağlantıyı
@@ -198,7 +215,8 @@ revizyonuna bağlı malzeme kodlarını ve partilerini `mp_inceleme` sütunuyla
 "M&P incelemesi bekliyor" işaretler (parti durumu değişmez) ve olayı
 `revizyon_olaylari` tablosuna yazar. M&P `mp_incelemesini_kapat` ile
 `gerek_yok` ya da `yeni_revizyona_gec` (yeni revizyonun onaylı dokümanı
-gerekir) der; kapatma denetim kaydına `onay` olarak yazılır. Komut satırı:
+gerekir; geçerli sürüm demo onaylıysa `Katalog.malzeme_revizyonu_ata` geçişi
+reddeder ve hiçbir şey değişmez, yalnız gerçek M&P onaylı sürüme geçilir) der; kapatma denetim kaydına `onay` olarak yazılır. Komut satırı:
 `scripts/revizyon_yukle.py`.
 
 ## 5. Sonuç kaynağı ve parti kuralı
@@ -248,7 +266,14 @@ tedarikçi yoksa `tedarikci` insan incelemelidir. Lot verilince `parti_no`
 kısıtlayıcı yöne değiştirir (serbest < bekliyor < karantina); tek istisna hiç
 karar verilmemiş yeni partidir (`partiler.durum_kaynagi` boş). Karantinadaki ya
 da karar verilmiş bekleyen partiyi makine serbest bırakmaz; `parti_durumu` ek
-denetimi nedenini yazar, serbest bırakma `karari_duzelt` ile yapılır. Eski
+denetimi nedenini yazar, serbest bırakma `karari_duzelt` ile yapılır.
+Karantinadan çıkarmak (karantinanın kaynağı makine ya da insan) yalnız M&P'nin
+işidir ve gerekçe ister; giriş kalite karantinadaki partiyi yalnız karantinada
+tutan düzeltme yapabilir. Rol `katalog.veritabani.ROLLER`'dan denetlenir
+(`arayuz.kimlik.ROLLER` aynı sözlüktür; hat arayüze bağlanmaz). Bağlantıda
+kullanıcı tablosu (`kullanicilar`) varsa kullanıcı orada aynı rolle kayıtlı
+olmalıdır; hat tabloyu doğrudan sorgular. M&P karantinadan çıkarmayı depo
+ekranındaki formdan yapar. Eski
 veritabanlarında sütun eklenirken mevcut partiler `bilinmiyor` (karar
 verilmiş) sayılır. Bu göç (sütun ekleme + doldurma) tek bir işlemdir; düşerse
 sütun da geri alınır ve sonraki açılış yeniden dener. `durum_kaynagi` CHECK
@@ -375,6 +400,10 @@ standart için hibrit yalnız deney olarak tanımlıdır (`deney/hibrit_standart
   düzeyidir. (`deney/karar_olcumu.py`, `deney/karar_olc.py`)
 - Alan bazında F1 ve belge başına süre önceki gibi ölçülür
   (`deney/degerlendirme.py`).
+- **Güven skoru** (`kural/guven_skoru.py`; eğitim ve risk–kapsam eğrisi
+  `deney/guven_egitimi.py`, `deney/risk_kapsam.py`): anlaşmazlık, kanıt, yön
+  çelişkisi ve şema hatasından lojistik regresyon. Kabul/red vermez; yalnız
+  "uygun"u insan incelemesine gönderebilir. Ayrıntı: docs/guven_skoru.md.
 - Gerçek CoA'lardan ölçüme yalnız **tam** olanlar girer: ürünün en az iki lotu
   ve sertifikadan ayrı bir şartnamesi var. Eksik olanlar nedeniyle birlikte
   `data/coa_kumesi.csv`'de ayrı listelenir (`deney/coa_kumesi.py`,
@@ -459,7 +488,7 @@ src/malzeme_kabul/
   kural/      birimler, karar motoru (kabul/red yalnız burada)
   revizyon/   revizyon farkları ve güncelleme önerileri
   katalog/    SQLite katalog, doküman sürümleri, onaylı tedarikçiler, partiler
-  kayit/      zincirli denetim kaydı (karar, onay, düzeltme)
+  kayit/      zincirli denetim kaydı (karar, onay, düzeltme), mühendis düzeltme olayları ve düzeltme panosu
   hat/        belge → okuma → kanıt → kural → karar → kayıt hattı (kural / hibrit), katalogla karar, revizyon etkisi, raf ömrü raporu
   arayuz/     Streamlit ekranları (uygulama.py), ekran verisi, kimlik, kabul dokümanı çıktısı (Markdown/Word); sözleşme: docs/arayuz_sozlesmesi.md
 deney/        yalnız dil modeli deneyi, ölçüm (F1, FAR), sentetik sertifika, gold taslak araçları
