@@ -353,3 +353,36 @@ bilgi hiçbir zaman "uygun" sonucuna yol açmaz, bazı partilerin insana kalmas�
 4. **Tedarikçi ve parti no ek denetimleri yedekte değiştirilmedi.** Başlık bilgisini kural
    okumasından alıp "uygun" görünebilirler; `kanit` satırı her durumda insan incelemeli olduğu
    için parti kararına etkileri yok.
+
+## Eksik bilgi "uygun"a yol açmaz: iç muayene (28 Kasım)
+
+Nida'nın 28 Kasım kararı: iç muayene sonucu girilmemişse parti `bekliyor` kalır; eksik bilgi
+hiçbir zaman "uygun" sonucuna yol açmaz, bazı partilerin insana kalması kabul.
+
+1. **Her uygulanan `muayene` şartı bir ek denetim satırıdır** (`test_id` = şartın id'si).
+   Sonuç girilmemişse ya da lot verilmemişse satır insan incelemeli ("iç muayene sonucu
+   girilmedi"), parti kararı en iyi ihtimalle `inceleme` → `bekliyor`. Tip/sınıfı bilinmeyen
+   malzemede sınıfa bağlı muayene şartı da aranır (güvenli taraf).
+2. **Sonuç girişi ayrı tabloda** (`ic_muayene_sonuclari`), silinmez; aynı şart için yeniden
+   girilirse son giriş geçerli. Yalnız geçerli kabul dokümanının muayene şartlarına sonuç girilir.
+   Sonuç girildiği andaki doküman sürümüne (`dokuman_surumu`) ve şartın içerik özetine
+   (`sart_ozeti`, `model_dump_json()` SHA-256) bağlıdır: yeni sürüm onaylanınca, şart
+   değişince ya da malzeme başka revizyona geçince eski sonuç hiçbir yönde kullanılmaz,
+   satır insan incelemeli ("önceki doküman sürümüne girildi"). Rol, kullanıcı tablosu
+   varsa onunla doğrulanır (hiçbir şey yazılmadan) ve satıra yazılır. Rol katalog
+   yönteminde de zorunludur: rolsüz ya da doğrulanmamış bir giriş hiçbir yoldan partiyi
+   kabul ettiremez; rolsüz bir satır kararda insan incelemeli sayılır.
+   Tablo değiştirilemez: tetikleyiciler UPDATE ve DELETE'i reddeder.
+3. **Giriş `ic_muayene_gir(..., rol=...)` ile, denetim kaydıyla tek işlem.** Kayıt türü
+   `karar` (içerik `ic_muayene`); yeni kayıt türü açılmadı, çünkü tür listesi "karar, onay,
+   düzeltme" ile sınırlı tutuluyor. Giriş parti durumunu kendisi değiştirmez; yeni durum bir
+   sonraki makine kararında hesaplanır.
+4. **`uygun_degil` girilen muayene partiyi `red` → `karantina` yapar** (parti kuralı aynı).
+5. **Ekranda giriş formu henüz yok.** Örnek kabul dokümanlarında (23377K, 81733D, 85285E
+   çıktıları) muayene şartı olmadığı için demo akışı değişmiyor; M&P taslağa muayene şartı
+   eklediğinde giriş kalite ekranına form gerekecek (ayrı iş).
+6. **Sonuç ilk karardan sonra girilirse partiyi insan serbest bırakır.** Karar verilmiş bekleyen
+   partiyi makine serbest bırakmaz (mevcut parti durumu kuralı); muayene sonuçları girilip
+   yeniden kontrol edilince satırlar uygun görünür ama parti `bekliyor` kalır ve `karari_duzelt`
+   ile serbest bırakılır. Muayene çoğunlukla CoC kontrolünden sonra yapıldığı için bu sık olacak;
+   istenirse "muayene tamamlanınca makine serbest bırakabilir" ayrı bir karar olarak açılabilir.
