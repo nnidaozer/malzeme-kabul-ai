@@ -30,11 +30,12 @@ GIRILMEDI = "iç muayene sonucu girilmedi"
 KAYIT_HATALARI = (sqlite3.DatabaseError, DenetimHatasi, KatalogHatasi)
 
 
-def muayene_sarti(id_: str, ad: str, madde: str = "5.3", uyg=()) -> TestSarti:
+def muayene_sarti(id_: str, ad: str, madde: str = "5.3", uyg=(), sayfa: int | None = None,
+                  metin: str | None = None, revizyon: str = "K") -> TestSarti:
     return TestSarti(
         id=id_, test_adi=ad,
-        sinir=Sinir(kriter_turu="metinsel", orijinal_metin=f"{ad} 5.3'e uygun olmalı"),
-        kaynak=Kaynak(belge_no="MIL-PRF-23377", revizyon="K", madde=madde),
+        sinir=Sinir(kriter_turu="metinsel", orijinal_metin=metin or f"{ad} 5.3'e uygun olmalı"),
+        kaynak=Kaynak(belge_no="MIL-PRF-23377", revizyon=revizyon, madde=madde, sayfa=sayfa),
         test_turleri={"muayene"}, uygulanabilirlik=list(uyg),
     )
 
@@ -45,9 +46,9 @@ def muayeneli_dokuman(*muayeneler: TestSarti) -> KabulDokumani:
     return temel.model_copy(update={"testler": [*temel.testler, *muayeneler]})
 
 
-ETIKETLEME = muayene_sarti("etiketleme", "Etiketleme", "5.3")
-AMBALAJ = muayene_sarti("ambalaj", "Ambalaj", "5.2")
-C2_KAP_ISARETI = muayene_sarti("kap_isareti_c2", "Kap işareti (Class C2)", "5.3.1", ["Class C2"])
+ETIKETLEME = muayene_sarti("etiketleme", "Etiketleme", "5.3", sayfa=31)
+AMBALAJ = muayene_sarti("ambalaj", "Ambalaj", "5.2", sayfa=30)
+C2_KAP_ISARETI = muayene_sarti("kap_isareti_c2", "Kap işareti (Class C2)", "5.3.1", ["Class C2"], sayfa=31)
 UYGULANAN = ("etiketleme", "ambalaj")  # AST-N (Type I Class N) için
 
 
@@ -247,8 +248,23 @@ def test_her_uygulanan_muayene_sarti_icin_ek_denetim_satiri_eklenir(katalog, def
     sonuc = karar_ver(katalog, defter)
     satirlar = muayene_satirlari(sonuc)
     assert set(satirlar) == set(UYGULANAN)
-    assert (satirlar["etiketleme"].test_adi, satirlar["etiketleme"].madde) == ("Etiketleme", "5.3")
-    assert (satirlar["ambalaj"].test_adi, satirlar["ambalaj"].madde) == ("Ambalaj", "5.2")
+    assert satirlar["etiketleme"].test_adi == "Etiketleme"
+    assert satirlar["ambalaj"].test_adi == "Ambalaj"
+
+
+def test_muayene_satiri_maddesi_kontrol_satirlariyla_ayni_bicimde_kaynak_etiketi(katalog, defter):
+    # Kontrol satırlarında madde = kaynak.etiket ("MIL-PRF-23377K, 5.3"); muayene satırı da öyle.
+    sonuc = karar_ver(katalog, defter)
+    satirlar = muayene_satirlari(sonuc)
+    assert satirlar["etiketleme"].madde == "MIL-PRF-23377K, 5.3"
+    assert satirlar["ambalaj"].madde == "MIL-PRF-23377K, 5.2"
+    voc = next(s for s in sonuc.kontrol.satirlar if s.test_id == "voc")
+    assert voc.madde.startswith("MIL-PRF-23377K, ")  # aynı biçim
+
+
+def test_muayene_satiri_sayfasi_sartin_kaynak_sayfasi(katalog, defter):
+    satirlar = muayene_satirlari(karar_ver(katalog, defter))
+    assert (satirlar["etiketleme"].sayfa, satirlar["ambalaj"].sayfa) == (31, 30)
 
 
 def test_sonuc_girilmemisse_muayene_satiri_insan_incelemeli(katalog, defter):
@@ -346,11 +362,22 @@ def test_uygulanmayan_sinifa_ait_muayene_sarti_satir_uretmez(katalog, defter):
 
 def test_sinifi_bilinmeyen_malzemede_sinifa_bagli_muayene_sarti_aranir(katalog):
     # uygulanir_mi None (bilinmiyor) → şart uygulanmıyor sayılmaz (is not False).
+    # Lotlu çağrı: etiketleme ve ambalaj uygun girilmiş, yalnız kap_isareti_c2 girilmemiş.
     katalog.malzeme_ekle("AST-X", "MIL-PRF-23377", "K")  # tip/sınıf yok
-    sonuc = malzeme_koduyla_kontrol(katalog, "AST-X", sertifika(atif="MIL-PRF-23377K"))
-    satirlar = {s.test_id: s for s in sonuc.ek_denetimler}
-    assert satirlar["kap_isareti_c2"].karar == "insan_incelemeli"
-    assert sonuc.parti_karari != "kabul"
+    katalog.tedarikci_onayla("AST-X", "Ted A")
+    katalog.parti_ekle("L1", "AST-X", "Ted A", "K", "2026-06-01")
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-X", "L1", t, "uygun", "gk1")
+    sonuc = malzeme_koduyla_kontrol(
+        katalog, "AST-X", sertifika(atif="MIL-PRF-23377K").model_copy(update={"parti_no": "L1"}),
+        lot_no="L1", defter=DenetimKaydi(katalog.baglanti), kullanici="gk1",
+    )
+    satirlar = muayene_satirlari(sonuc)
+    assert set(satirlar) == {"etiketleme", "ambalaj", "kap_isareti_c2"}
+    assert satirlar["etiketleme"].karar == satirlar["ambalaj"].karar == "uygun"
+    assert satirlar["kap_isareti_c2"].karar == "insan_incelemeli" and GIRILMEDI in satirlar["kap_isareti_c2"].gerekce
+    assert (sonuc.parti_karari, sonuc.parti_durumu) == ("inceleme", "bekliyor")
+    assert katalog.parti("AST-X", "L1").durum == "bekliyor"
 
 
 def test_muayene_satirlari_karar_kaydina_girer(katalog, defter):
@@ -412,5 +439,238 @@ def test_kural_modu_sertifika_hatti_muayene_satirini_tasir():
     etiket = [s for s in karar.ek_denetimler if s.test_id == "etiketleme"]
     assert len(etiket) == 1
     assert etiket[0].karar == "insan_incelemeli" and GIRILMEDI in etiket[0].gerekce
-    assert etiket[0].madde == "5.3"
+    assert etiket[0].madde == "MIL-PRF-23377K, 5.3"
     assert karar.parti_karari != "kabul"
+
+
+# --- E. tip/sınıf normalleştirmesi: muayene şartı kontrol_et ile aynı kodla seçilir ----------------
+# kontrol_et katalogdaki tip/sınıfı kod_normallestir ile çevirir ('1' → 'I', 'Class C2' → 'C2');
+# muayene şartları da aynı biçimle seçilmeli, yoksa uygulanan şart sessizce düşer.
+
+SINIF_1_ISARETI = muayene_sarti("isaret_sinif_1", "Kap işareti (Class 1)", "5.3.2", ["Class 1"], sayfa=31)
+
+
+def _sinifli_katalog(sinif: str, *sartlar: TestSarti) -> Katalog:
+    k = Katalog()
+    k.dokuman_onayla(muayeneli_dokuman(*sartlar), "mp1")
+    k.malzeme_ekle("AST-S", "MIL-PRF-23377", "K", tip="I", sinif=sinif)
+    k.tedarikci_onayla("AST-S", "Ted A")
+    k.parti_ekle("L1", "AST-S", "Ted A", "K", "2026-06-01")
+    return k
+
+
+def _sinifli_karar(k: Katalog, atif: str):
+    ser = sertifika(atif=atif).model_copy(update={"parti_no": "L1"})
+    return malzeme_koduyla_kontrol(k, "AST-S", ser, lot_no="L1", defter=DenetimKaydi(k.baglanti), kullanici="gk1")
+
+
+def test_sinifi_1_yazilmis_malzemede_class_1_muayene_sarti_satir_uretir_ve_kabul_cikmaz():
+    with _sinifli_katalog("1", ETIKETLEME, SINIF_1_ISARETI) as k:
+        k.ic_muayene_sonucu_gir("AST-S", "L1", "etiketleme", "uygun", "gk1")
+        sonuc = _sinifli_karar(k, "MIL-PRF-23377K Type I Class 1")
+        satirlar = {s.test_id: s for s in sonuc.ek_denetimler}
+        assert "isaret_sinif_1" in satirlar
+        assert satirlar["isaret_sinif_1"].karar == "insan_incelemeli" and GIRILMEDI in satirlar["isaret_sinif_1"].gerekce
+        assert sonuc.parti_karari != "kabul"
+        assert k.parti("AST-S", "L1").durum != "serbest"
+
+
+@pytest.mark.parametrize("sinif", ["Class C2", "C2", "class c2", "C 2"])
+def test_sinifi_c2_yazilmis_malzemede_class_c2_muayene_sarti_satir_uretir_ve_kabul_cikmaz(sinif):
+    with _sinifli_katalog(sinif, ETIKETLEME, AMBALAJ, C2_KAP_ISARETI) as k:
+        for t in UYGULANAN:
+            k.ic_muayene_sonucu_gir("AST-S", "L1", t, "uygun", "gk1")
+        sonuc = _sinifli_karar(k, "MIL-PRF-23377K Type I Class C2")
+        satirlar = {s.test_id: s for s in sonuc.ek_denetimler}
+        assert "kap_isareti_c2" in satirlar
+        assert satirlar["kap_isareti_c2"].karar == "insan_incelemeli" and GIRILMEDI in satirlar["kap_isareti_c2"].gerekce
+        assert (sonuc.parti_karari, sonuc.parti_durumu) == ("inceleme", "bekliyor")
+        assert k.parti("AST-S", "L1").durum == "bekliyor"
+
+
+@pytest.mark.parametrize("sinif", ["N", "Class N", "n"])
+def test_normallestirilmis_sinifa_uygulanmayan_muayene_sarti_yine_satir_uretmez(sinif):
+    with _sinifli_katalog(sinif, ETIKETLEME, C2_KAP_ISARETI) as k:
+        sonuc = _sinifli_karar(k, "MIL-PRF-23377K Type I Class N")
+        assert "kap_isareti_c2" not in {s.test_id for s in sonuc.ek_denetimler}
+
+
+# --- F. sonuç doküman sürümüne ve şart içeriğine bağlıdır -----------------------------------------
+
+ONCEKI_SURUM = "önceki doküman sürümüne girildi"
+
+
+def test_sonuc_girildigi_andaki_gecerli_dokuman_surumunu_tasir(katalog):
+    katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun", "gk1")
+    katalog.dokuman_onayla(muayeneli_dokuman(ETIKETLEME, AMBALAJ, C2_KAP_ISARETI), "mp2")
+    katalog.ic_muayene_sonucu_gir("AST-N", "L1", "ambalaj", "uygun", "gk1")
+    sonuclar = katalog.ic_muayene_sonuclari("AST-N", "L1")
+    assert sonuclar["etiketleme"].dokuman_surumu == "MIL-PRF-23377K v1"
+    assert sonuclar["ambalaj"].dokuman_surumu == "MIL-PRF-23377K v2"
+
+
+def test_sonuc_sart_ozeti_tasir_ve_sart_degisince_ozet_farkli_olur(katalog):
+    ilk = katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun", "gk1")
+    assert isinstance(ilk.sart_ozeti, str) and ilk.sart_ozeti
+    assert katalog.ic_muayene_sonuclari("AST-N", "L1")["etiketleme"].sart_ozeti == ilk.sart_ozeti
+    # Aynı şart, aynı içerik → aynı özet (ikinci giriş, sürüm değişmeden).
+    ayni = katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun", "gk1")
+    assert ayni.sart_ozeti == ilk.sart_ozeti
+    degisik = muayene_sarti("etiketleme", "Etiketleme", "5.3", sayfa=31, metin="Etiketleme 5.3 ve 5.3.3'e uygun olmalı")
+    katalog.dokuman_onayla(muayeneli_dokuman(degisik, AMBALAJ, C2_KAP_ISARETI), "mp2")
+    yeni = katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun", "gk1")
+    assert yeni.sart_ozeti and yeni.sart_ozeti != ilk.sart_ozeti
+
+
+def test_onceki_surume_girilen_sonuc_ayni_sartli_yeni_surumde_kabul_ettirmez(katalog, defter):
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-N", "L1", t, "uygun", "gk1")
+    katalog.dokuman_onayla(muayeneli_dokuman(ETIKETLEME, AMBALAJ, C2_KAP_ISARETI), "mp2")  # v2, aynı şartlar
+    sonuc = karar_ver(katalog, defter)
+    satirlar = muayene_satirlari(sonuc)
+    for t in UYGULANAN:
+        assert satirlar[t].karar == "insan_incelemeli" and ONCEKI_SURUM in satirlar[t].gerekce
+    assert (sonuc.parti_karari, sonuc.parti_durumu) == ("inceleme", "bekliyor")
+    assert katalog.parti("AST-N", "L1").durum == "bekliyor"
+
+
+def test_yeni_surum_icin_yeniden_girilince_parti_kabul_olur(katalog, defter):
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-N", "L1", t, "uygun", "gk1")
+    katalog.dokuman_onayla(muayeneli_dokuman(ETIKETLEME, AMBALAJ, C2_KAP_ISARETI), "mp2")
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-N", "L1", t, "uygun", "gk2")
+    sonuc = karar_ver(katalog, defter)
+    assert {s.karar for s in muayene_satirlari(sonuc).values()} == {"uygun"}
+    assert (sonuc.parti_karari, sonuc.parti_durumu) == ("kabul", "serbest")
+
+
+def test_onceki_surumde_uygun_degil_girilen_sonuc_da_yeni_surumde_kullanilmaz(katalog, defter):
+    # Bayat sonuç hiçbir yönde karar vermez: satır insan incelemeli, gerekçede önceki sürüm.
+    katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun_degil", "gk1")
+    katalog.dokuman_onayla(muayeneli_dokuman(ETIKETLEME, AMBALAJ, C2_KAP_ISARETI), "mp2")
+    etiket = muayene_satirlari(karar_ver(katalog, defter))["etiketleme"]
+    assert etiket.karar == "insan_incelemeli" and ONCEKI_SURUM in etiket.gerekce
+
+
+def test_sart_siniri_degisen_yeni_surumde_eski_sonuc_kabul_ettirmez(katalog, defter):
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-N", "L1", t, "uygun", "gk1")
+    degisik = muayene_sarti("etiketleme", "Etiketleme", "5.3", sayfa=31, metin="Etiketleme 5.3 ve 5.3.3'e uygun olmalı")
+    katalog.dokuman_onayla(muayeneli_dokuman(degisik, AMBALAJ, C2_KAP_ISARETI), "mp2")
+    sonuc = karar_ver(katalog, defter)
+    etiket = muayene_satirlari(sonuc)["etiketleme"]
+    assert etiket.karar == "insan_incelemeli" and ONCEKI_SURUM in etiket.gerekce
+    assert (sonuc.parti_karari, sonuc.parti_durumu) == ("inceleme", "bekliyor")
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-N", "L1", t, "uygun", "gk2")
+    # Yeni sürüme girilen sonuçlar geçerli; ama karar verilmiş bekleyen partiyi makine serbest
+    # bırakmaz (docs/mimari.md, parti durumu kuralı), bunu insan karari_duzelt ile yapar.
+    ikinci = karar_ver(katalog, defter)
+    assert all(s.karar == "uygun" for s in muayene_satirlari(ikinci).values())
+    assert (ikinci.parti_karari, ikinci.parti_durumu) == ("inceleme", "bekliyor")
+
+
+def test_sart_ozeti_tutmayan_sonuc_ayni_surum_etiketinde_de_kullanilmaz(katalog, defter):
+    # Sürüm etiketi tutsa bile şart özeti tutmuyorsa sonuç kullanılmaz (ör. kayıt elle bozulmuş).
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-N", "L1", t, "uygun", "gk1")
+    # Değiştirilemezlik tetikleyicileri bu senaryoyu kurmak için kaldırılır.
+    for (ad,) in katalog.baglanti.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' AND tbl_name = 'ic_muayene_sonuclari'"
+    ).fetchall():
+        katalog.baglanti.execute(f"DROP TRIGGER {ad}")
+    katalog.baglanti.execute("UPDATE ic_muayene_sonuclari SET sart_ozeti = 'baska' WHERE test_id = 'etiketleme'")
+    sonuc = karar_ver(katalog, defter)
+    etiket = muayene_satirlari(sonuc)["etiketleme"]
+    assert etiket.karar == "insan_incelemeli" and ONCEKI_SURUM in etiket.gerekce
+    assert sonuc.parti_karari == "inceleme"
+
+
+def test_malzeme_baska_revizyona_gecince_eski_revizyona_girilen_sonuc_kullanilmaz(katalog, defter):
+    for t in UYGULANAN:
+        katalog.ic_muayene_sonucu_gir("AST-N", "L1", t, "uygun", "gk1")
+    temel = muayeneli_dokuman(
+        muayene_sarti("etiketleme", "Etiketleme", "5.3", sayfa=31, revizyon="L"),
+        muayene_sarti("ambalaj", "Ambalaj", "5.2", sayfa=30, revizyon="L"),
+    )
+    rev_l = temel.model_copy(update={
+        "standart": temel.standart.model_copy(update={"revizyon": "L"}),
+        "testler": [t if t.muayene_sarti else t.model_copy(update={"kaynak": t.kaynak.model_copy(update={"revizyon": "L"})})
+                    for t in temel.testler],
+    })
+    katalog.dokuman_onayla(rev_l, "mp1")
+    katalog.malzeme_revizyonu_ata("AST-N", "L")
+    sonuc = karar_ver(katalog, defter)
+    satirlar = muayene_satirlari(sonuc)
+    for t in UYGULANAN:
+        assert satirlar[t].karar == "insan_incelemeli" and ONCEKI_SURUM in satirlar[t].gerekce
+    assert sonuc.parti_karari != "kabul"
+    assert katalog.parti("AST-N", "L1").durum == "bekliyor"
+
+
+# --- G. ic_muayene_gir rolü kullanıcı tablosuyla doğrular ------------------------------------------
+
+from malzeme_kabul.arayuz import kimlik  # noqa: E402
+
+PAROLA = "deneme-parolasi-123"
+
+
+@pytest.fixture
+def kimlikli(katalog, defter):
+    """Katalog bağlantısında kimlik tablosu: 'gk' giriş kalite, 'mp' M&P."""
+    kimlik.kullanici_ekle(katalog.baglanti, "gk", PAROLA, "giris_kalite")
+    kimlik.kullanici_ekle(katalog.baglanti, "mp", PAROLA, "mp")
+    return katalog, defter
+
+
+@pytest.mark.parametrize("rol", ["mp", "giris_kalite"])
+def test_ic_muayene_gir_kimlik_tablosu_varken_kayitsiz_kullaniciyi_yazmadan_reddeder(kimlikli, rol):
+    k, d = kimlikli
+    with pytest.raises(KatalogHatasi):
+        kk.ic_muayene_gir(k, d, "yabanci", "AST-N", "L1", "etiketleme", "uygun", rol=rol)
+    assert satir_sayisi(k) == 0 and d.kayitlar() == []
+
+
+@pytest.mark.parametrize("kullanici, sahte_rol", [("gk", "mp"), ("mp", "giris_kalite")])
+def test_ic_muayene_gir_kayitli_rolle_tutmayan_rolu_yazmadan_reddeder(kimlikli, kullanici, sahte_rol):
+    k, d = kimlikli
+    with pytest.raises(KatalogHatasi):
+        kk.ic_muayene_gir(k, d, kullanici, "AST-N", "L1", "etiketleme", "uygun", rol=sahte_rol)
+    assert satir_sayisi(k) == 0 and d.kayitlar() == []
+
+
+@pytest.mark.parametrize("kullanici, rol", [("gk", "giris_kalite"), ("mp", "mp")])
+def test_ic_muayene_gir_kayitli_kullanici_kendi_roluyle_girer(kimlikli, kullanici, rol):
+    k, d = kimlikli
+    kk.ic_muayene_gir(k, d, kullanici, "AST-N", "L1", "etiketleme", "uygun", rol=rol)
+    assert k.ic_muayene_sonuclari("AST-N", "L1")["etiketleme"].kullanici == kullanici
+
+
+def test_ic_muayene_gir_rolu_sonuc_satirina_yazar(katalog, defter):
+    kk.ic_muayene_gir(katalog, defter, "gk1", "AST-N", "L1", "etiketleme", "uygun", rol="giris_kalite")
+    kk.ic_muayene_gir(katalog, defter, "mp1", "AST-N", "L1", "ambalaj", "uygun", rol="mp")
+    sonuclar = katalog.ic_muayene_sonuclari("AST-N", "L1")
+    assert (sonuclar["etiketleme"].rol, sonuclar["ambalaj"].rol) == ("giris_kalite", "mp")
+
+
+def test_rolsuz_dogrudan_katalog_girisinde_rol_bos_kalir(katalog):
+    katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun", "gk1")
+    assert katalog.ic_muayene_sonuclari("AST-N", "L1")["etiketleme"].rol is None
+
+
+# --- H. ic_muayene_sonuclari değiştirilemez ---------------------------------------------------------
+
+
+def test_ic_muayene_sonucu_guncellenemez(katalog):
+    katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun_degil", "gk1")
+    with pytest.raises(sqlite3.DatabaseError):
+        katalog.baglanti.execute("UPDATE ic_muayene_sonuclari SET sonuc = 'uygun'")
+    assert katalog.ic_muayene_sonuclari("AST-N", "L1")["etiketleme"].sonuc == "uygun_degil"
+
+
+def test_ic_muayene_sonucu_silinemez(katalog):
+    katalog.ic_muayene_sonucu_gir("AST-N", "L1", "etiketleme", "uygun_degil", "gk1")
+    with pytest.raises(sqlite3.DatabaseError):
+        katalog.baglanti.execute("DELETE FROM ic_muayene_sonuclari")
+    assert satir_sayisi(katalog) == 1

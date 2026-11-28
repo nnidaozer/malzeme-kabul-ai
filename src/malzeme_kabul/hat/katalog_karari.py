@@ -19,15 +19,20 @@ denetim de kesin kuraldır ve emin olunmayanı insana bırakır:
 - `parti_tedarikcisi` (lot verilmişse): sertifikadaki tedarikçi partinin
   katalogdaki tedarikçisi değilse (başka bir onaylı firma olsa bile) insan
   incelemeli.
-- muayene satırları (`test_id` = şart id, `madde` = şartın kaynak maddesi):
-  geçerli kabul dokümanındaki her muayene şartı için (malzemenin tip/sınıfına
-  uygulanmadığı kesin olanlar hariç; bilinmiyorsa aranır) bir satır. Lot
-  verilmemişse ya da o parti için iç muayene sonucu girilmemişse insan
-  incelemeli ("iç muayene sonucu girilmedi"); girilmişse girilen en son karar
-  (gerekçede kullanıcı ve zaman). Eksik muayene hiçbir zaman kabule yol açmaz.
+- muayene satırları (`test_id` = şart id, `madde` = `kaynak.etiket` ve
+  `sayfa` = şartın kaynak sayfası, kontrol satırlarıyla aynı biçim): geçerli
+  kabul dokümanındaki her muayene şartı için (malzemenin tip/sınıfına,
+  `kod_normallestir` ile, uygulanmadığı kesin olanlar hariç; bilinmiyorsa
+  aranır) bir satır. Lot verilmemişse ya da o parti için iç muayene sonucu
+  girilmemişse insan incelemeli ("iç muayene sonucu girilmedi"). En son
+  giriş başka bir doküman sürümüne girilmişse ya da şart özeti geçerli şartla
+  tutmuyorsa yine insan incelemeli ("önceki doküman sürümüne girildi");
+  tutuyorsa girilen karar (gerekçede kullanıcı ve zaman). Geçerli sürüm ve
+  sonuçlar aynı işlemde okunur. Eksik ya da bayat muayene hiçbir zaman kabule
+  yol açmaz.
 
 İç muayene sonucu `ic_muayene_gir` ile girilir (rol 'mp' ya da
-'giris_kalite'); sonuç ve onun "karar" kaydı tek işlemdir, parti durumu
+'giris_kalite', kullanıcı tablosu varsa onunla doğrulanır); sonuç ve onun "karar" kaydı tek işlemdir, parti durumu
 değişmez. Durum bir sonraki `malzeme_koduyla_kontrol` çağrısında yeniden
 hesaplanır.
 
@@ -61,6 +66,7 @@ from malzeme_kabul.katalog.veritabani import (
     Katalog,
     KatalogHatasi,
     Parti,
+    icerik_ozeti,
     PartiDurumu,
     ROLLER,
 )
@@ -71,6 +77,7 @@ from malzeme_kabul.kural.karar_motoru import (
     KararAyarlari,
     KararSatiri,
     KontrolSonucu,
+    kod_normallestir,
     kontrol_et,
     parti_karari,
     uygulanir_mi,
@@ -147,20 +154,33 @@ def _parti_denetimleri(parti: Parti, sertifika: Sertifika) -> list[KararSatiri]:
 
 
 IC_MUAYENE_GIRILMEDI = "iç muayene sonucu girilmedi"
+IC_MUAYENE_ONCEKI_SURUM = "önceki doküman sürümüne girildi"
 
 
 def _muayene_denetimleri(
-    dokuman: KabulDokumani, tip: str | None, sinif: str | None, sonuclar: dict[str, IcMuayeneSonucu]
+    surum: DokumanSurumu, tip: str | None, sinif: str | None, sonuclar: dict[str, IcMuayeneSonucu]
 ) -> list[KararSatiri]:
-    """Uygulanan her muayene şartı için bir satır: girilen iç muayene sonucu, yoksa insan incelemeli."""
+    """Uygulanan her muayene şartı için bir satır: girilen iç muayene sonucu, yoksa insan incelemeli.
+
+    Tip/sınıf `kontrol_et` ile aynı biçimde normalleştirilir (`kod_normallestir`).
+    Sonuç yalnız etiketi `surum.etiket` ile ve şart özeti geçerli şartla tutuyorsa
+    kullanılır; tutmuyorsa (hangi yönde olursa olsun) satır insan incelemelidir.
+    """
+    tip, sinif = kod_normallestir(tip), kod_normallestir(sinif)
     satirlar = []
-    for t in dokuman.testler:
+    for t in surum.dokuman.testler:
         if not t.muayene_sarti or uygulanir_mi(t.uygulanabilirlik, tip, sinif) is False:
             continue
-        ortak = {"test_id": t.id, "test_adi": t.test_adi, "madde": t.kaynak.madde}
+        ortak = {"test_id": t.id, "test_adi": t.test_adi, "madde": t.kaynak.etiket, "sayfa": t.kaynak.sayfa}
         s = sonuclar.get(t.id)
         if s is None:
             satirlar.append(KararSatiri(karar="insan_incelemeli", gerekce=IC_MUAYENE_GIRILMEDI, **ortak))
+        elif s.dokuman_surumu != surum.etiket or s.sart_ozeti != icerik_ozeti(t.model_dump_json()):
+            gerekce = (
+                f"iç muayene sonucu ({s.sonuc}, {s.kullanici}, {s.zaman}) {IC_MUAYENE_ONCEKI_SURUM}"
+                f" ({s.dokuman_surumu}; geçerli {surum.etiket}); yeni sürüm için yeniden girilmeli"
+            )
+            satirlar.append(KararSatiri(karar="insan_incelemeli", gerekce=gerekce, **ortak))
         else:
             gerekce = f"iç muayene: {s.sonuc} ({s.kullanici}, {s.zaman})" + (f"; {s.not_}" if s.not_ else "")
             satirlar.append(KararSatiri(karar=s.sonuc, gerekce=gerekce, **ortak))
@@ -272,9 +292,12 @@ def malzeme_koduyla_kontrol(
             else:
                 ek.append(KararSatiri(karar="uygun", gerekce=f"sipariş revizyonu {parti.siparis_revizyonu}", **ortak))
             ek.extend(_parti_denetimleri(parti, sertifika))
-        # Muayene sonuçları parti okumasıyla aynı işlemde okunur; lot yoksa hiçbir sonuç kullanılmaz.
+        # Muayene satırlarının geçerli sürümü ve sonuçlar aynı işlemde okunur (sonucun bağlandığı
+        # sürüm, karşılaştırıldığı sürümle aynı anda görülür); lot yoksa hiçbir sonuç kullanılmaz.
+        muayene_malzemesi = katalog.malzeme(malzeme_kodu)
+        muayene_surumu = katalog.gecerli_dokuman(malzeme_kodu)
         sonuclar = katalog.ic_muayene_sonuclari(malzeme_kodu, lot_no) if lot_no is not None else {}
-        ek.extend(_muayene_denetimleri(surum.dokuman, malzeme.tip, malzeme.sinif, sonuclar))
+        ek.extend(_muayene_denetimleri(muayene_surumu, muayene_malzemesi.tip, muayene_malzemesi.sinif, sonuclar))
 
         karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
         durum = PARTI_DURUMU[karar]
@@ -378,15 +401,19 @@ def ic_muayene_gir(
 ) -> Kayit:
     """Partiye iç muayene sonucu girer ve "karar" kaydı düşer (tek işlem).
 
-    `rol` zorunludur ve `ROLLER` içinde olmalıdır. Katalog sonucu reddederse
-    (`Katalog.ic_muayene_sonucu_gir`) ya da kayıt yazılamazsa hiçbir şey
-    yazılmaz. Parti durumunu değiştirmez.
+    `rol` zorunludur ve `ROLLER` içinde olmalıdır; bağlantıda kullanıcı tablosu
+    varsa kullanıcı orada aynı rolle kayıtlı olmalıdır (`_rolu_dogrula`, karari_duzelt
+    ile aynı). Rol ve bağlantı hiçbir şey yazılmadan doğrulanır. Katalog sonucu
+    reddederse (`Katalog.ic_muayene_sonucu_gir`) ya da kayıt yazılamazsa hiçbir
+    şey yazılmaz. Sonuç satırı rolü, girildiği andaki doküman sürümünü ve şart
+    özetini taşır. Parti durumunu değiştirmez.
     """
     if not isinstance(rol, str) or rol not in ROLLER:
         raise KatalogHatasi(f"bilinmeyen rol: {rol!r} ({', '.join(ROLLER)})")
     _ayni_baglanti(katalog, defter)
     with katalog.islem():
-        katalog.ic_muayene_sonucu_gir(malzeme_kodu, lot_no, test_id, sonuc, kullanici, not_)
+        _rolu_dogrula(katalog, kullanici, rol)
+        katalog.ic_muayene_sonucu_gir(malzeme_kodu, lot_no, test_id, sonuc, kullanici, not_, rol=rol)
         surum = katalog.gecerli_dokuman(malzeme_kodu).etiket
         return defter.ekle(
             "karar", kullanici,

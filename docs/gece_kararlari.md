@@ -342,6 +342,12 @@ hiçbir zaman "uygun" sonucuna yol açmaz, bazı partilerin insana kalması kabu
    malzemede sınıfa bağlı muayene şartı da aranır (güvenli taraf).
 2. **Sonuç girişi ayrı tabloda** (`ic_muayene_sonuclari`), silinmez; aynı şart için yeniden
    girilirse son giriş geçerli. Yalnız geçerli kabul dokümanının muayene şartlarına sonuç girilir.
+   Sonuç girildiği andaki doküman sürümüne (`dokuman_surumu`) ve şartın içerik özetine
+   (`sart_ozeti`, `model_dump_json()` SHA-256) bağlıdır: yeni sürüm onaylanınca, şart
+   değişince ya da malzeme başka revizyona geçince eski sonuç hiçbir yönde kullanılmaz,
+   satır insan incelemeli ("önceki doküman sürümüne girildi"). Rol, kullanıcı tablosu
+   varsa onunla doğrulanır (`_rolu_dogrula`, hiçbir şey yazılmadan) ve satıra yazılır.
+   Tablo değiştirilemez: tetikleyiciler UPDATE ve DELETE'i reddeder.
 3. **Giriş `ic_muayene_gir(..., rol=...)` ile, denetim kaydıyla tek işlem.** Kayıt türü
    `karar` (içerik `ic_muayene`); yeni kayıt türü açılmadı, çünkü tür listesi "karar, onay,
    düzeltme" ile sınırlı tutuluyor. Giriş parti durumunu kendisi değiştirmez; yeni durum bir
