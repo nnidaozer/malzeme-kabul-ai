@@ -11,7 +11,7 @@ from malzeme_kabul.hat.revizyon_etkisi import (
     mp_incelemesini_kapat,
     yeni_revizyon_yukle,
 )
-from malzeme_kabul.katalog.veritabani import Katalog, KatalogHatasi
+from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN, Katalog, KatalogHatasi
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 from malzeme_kabul.sozlesme.sema import KabulDokumani, StandartBilgisi
 from tests.conftest import KOK, betik_yukle
@@ -86,6 +86,89 @@ def test_yeni_revizyona_gecis_onayli_dokuman_ister(katalog):
     katalog.dokuman_onayla(dok(rev="K"), "mp1")
     kayit = mp_incelemesini_kapat(katalog, d, "AST-J", "mp1", "yeni_revizyona_gec", yeni_revizyon="K")
     assert katalog.malzeme("AST-J").revizyon == "K" and kayit.dokuman_surumu == "MIL-PRF-23377K v1"
+    assert d.zinciri_dogrula().gecerli
+
+
+# --- Nida kararı: demo onaylı sürüme geçilmez, yalnız gerçek M&P onayı ------------------------
+
+
+def _durum(katalog, d):
+    """Geçiş reddedildiğinde değişmemesi gereken her şey: revizyon, işaretler ve denetim kayıtları."""
+    m = katalog.malzeme("AST-J")
+    return (m.revizyon, m.mp_inceleme, [p.mp_inceleme for p in katalog.partiler("AST-J")],
+            [(x.sira, x.tur, x.veri) for x in d.kayitlar()])
+
+
+def test_yeni_revizyona_gecis_demo_onayli_dokumanla_reddedilir_ve_hicbir_sey_degismez(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    yeni_revizyon_yukle(katalog, "MIL-PRF-23377", "K", "mp1")
+    katalog.dokuman_onayla(dok(rev="K"), ORNEK_ONAYLAYAN, demo_onayi=True)
+    assert katalog.dokuman_surumleri("MIL-PRF-23377", "K")[-1].demo_onayi
+    once = _durum(katalog, d)
+    with pytest.raises(KatalogHatasi, match="(?i)demo"):
+        mp_incelemesini_kapat(katalog, d, "AST-J", "mp1", "yeni_revizyona_gec", yeni_revizyon="K")
+    assert _durum(katalog, d) == once
+    assert katalog.malzeme("AST-J").revizyon == "J" and mp_bekleyenler(katalog) == ["AST-J"]
+    assert d.kayitlar("onay") == []
+
+
+def test_gercek_v1_ustune_demo_v2_gecerliyse_gecis_reddedilir(katalog):
+    # Geçerli sürüm en son onaylı sürümdür; o demo ise önceki gerçek onay geçişe yetmez.
+    d = DenetimKaydi(katalog.baglanti)
+    yeni_revizyon_yukle(katalog, "MIL-PRF-23377", "K", "mp1")
+    katalog.dokuman_onayla(dok(rev="K"), "mp1")
+    katalog.dokuman_onayla(dok(rev="K"), ORNEK_ONAYLAYAN, demo_onayi=True)
+    once = _durum(katalog, d)
+    with pytest.raises(KatalogHatasi, match="(?i)demo"):
+        mp_incelemesini_kapat(katalog, d, "AST-J", "mp1", "yeni_revizyona_gec", yeni_revizyon="K")
+    assert _durum(katalog, d) == once
+
+
+def test_yeni_revizyona_gecis_gercek_mp_onayli_dokumanla_yapilir(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    yeni_revizyon_yukle(katalog, "MIL-PRF-23377", "K", "mp1")
+    katalog.dokuman_onayla(dok(rev="K"), "mp1")
+    kayit = mp_incelemesini_kapat(katalog, d, "AST-J", "mp1", "yeni_revizyona_gec", yeni_revizyon="K")
+    assert katalog.malzeme("AST-J").revizyon == "K" and mp_bekleyenler(katalog) == []
+    assert kayit.tur == "onay" and kayit.dokuman_surumu == "MIL-PRF-23377K v1"
+    assert d.zinciri_dogrula().gecerli
+
+
+def test_demo_v1_ustune_gercek_v2_varsa_gecerli_surum_v2_oldugu_icin_gecis_yapilir(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    yeni_revizyon_yukle(katalog, "MIL-PRF-23377", "K", "mp1")
+    katalog.dokuman_onayla(dok(rev="K"), ORNEK_ONAYLAYAN, demo_onayi=True)
+    katalog.dokuman_onayla(dok(rev="K"), "mp1")
+    kayit = mp_incelemesini_kapat(katalog, d, "AST-J", "mp1", "yeni_revizyona_gec", yeni_revizyon="K")
+    assert katalog.malzeme("AST-J").revizyon == "K"
+    assert kayit.dokuman_surumu == "MIL-PRF-23377K v2"
+    assert not katalog.gecerli_dokuman("AST-J").demo_onayi
+
+
+def test_gerek_yok_kapatmasi_yeni_revizyonun_demo_onayindan_etkilenmez(katalog):
+    d = DenetimKaydi(katalog.baglanti)
+    yeni_revizyon_yukle(katalog, "MIL-PRF-23377", "K", "mp1")
+    katalog.dokuman_onayla(dok(rev="K"), ORNEK_ONAYLAYAN, demo_onayi=True)
+    kayit = mp_incelemesini_kapat(katalog, d, "AST-J", "mp1", "gerek_yok", "fark bu malzemeyi etkilemiyor")
+    assert kayit.veri["karar"] == "gerek_yok"
+    assert katalog.malzeme("AST-J").revizyon == "J" and mp_bekleyenler(katalog) == []
+
+
+def test_demo_reddi_dis_islem_icinde_savepoint_ile_geri_alinir_dis_islem_surer(katalog):
+    # Dışta açık bir katalog.islem() varken mp_incelemesini_kapat SAVEPOINT yolundan çalışır;
+    # demo reddi yalnız kendi yazdıklarını geri almalı, dış işlemin yazdığı kalmalı.
+    d = DenetimKaydi(katalog.baglanti)
+    yeni_revizyon_yukle(katalog, "MIL-PRF-23377", "K", "mp1")
+    katalog.dokuman_onayla(dok(rev="K"), ORNEK_ONAYLAYAN, demo_onayi=True)
+    once = _durum(katalog, d)
+    with katalog.islem():
+        katalog.tedarikci_onayla("AST-J", "Ted Dis")
+        with pytest.raises(KatalogHatasi, match="(?i)demo"):
+            mp_incelemesini_kapat(katalog, d, "AST-J", "mp1", "yeni_revizyona_gec", yeni_revizyon="K")
+        assert _durum(katalog, d) == once
+        assert katalog.baglanti.in_transaction  # dış işlem açık kaldı
+    assert _durum(katalog, d) == once
+    assert "Ted Dis" in katalog.onayli_tedarikciler("AST-J")
     assert d.zinciri_dogrula().gecerli
 
 

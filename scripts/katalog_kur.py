@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 from malzeme_kabul.arayuz.kimlik import KimlikHatasi, kullanici_ekle
-from malzeme_kabul.katalog.ornek_veri import ornek_yukle
+from malzeme_kabul.katalog.ornek_veri import YuklemeOzeti, ornek_yukle
 from malzeme_kabul.katalog.veritabani import ORNEK_ONAYLAYAN, Katalog
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
 
@@ -27,6 +27,20 @@ VARSAYILAN_DB = KOK / "data" / "calisma" / "katalog.sqlite"
 ORNEK = KOK / "data" / "ornek" / "katalog.json"
 # Yalnız deneme için; gerçek kullanımda scripts/kullanici_ekle.py ile kişisel hesap açın.
 ORNEK_KULLANICILAR = [("mp", "mp-ornek-parola", "mp"), ("gk", "gk-ornek-parola", "giris_kalite")]
+
+
+def ornek_kur(katalog: Katalog, defter: DenetimKaydi, dosya: str | Path, kok: str | Path) -> YuklemeOzeti:
+    """Örnek veriyi yükler ve her yeni doküman sürümü için demo onay kaydı yazar.
+
+    Örnek veri ve onay kayıtları tek işlemdir: biri düşerse hiçbiri yazılmaz.
+    """
+    with katalog.islem():
+        ozet = ornek_yukle(katalog, dosya, kok)
+        for etiket in ozet.dokuman_surumleri:
+            defter.ekle("onay", ORNEK_ONAYLAYAN,
+                        {"dokuman_surumu": etiket, "not": "örnek veri, M&P onayı değil", "demo_onayi": True},
+                        dokuman_surumu=etiket)
+    return ozet
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -46,13 +60,7 @@ def main(argv: list[str] | None = None) -> int:
 
     with Katalog(args.db) as katalog:
         if args.ornek:
-            defter = DenetimKaydi(katalog.baglanti)
-            with katalog.islem():  # örnek veri ve onay kayıtları tek işlem: biri düşerse hiçbiri yazılmaz
-                ozet = ornek_yukle(katalog, args.ornek_dosyasi, KOK)
-                for etiket in ozet.dokuman_surumleri:
-                    defter.ekle("onay", ORNEK_ONAYLAYAN,
-                                {"dokuman_surumu": etiket, "not": "örnek veri, M&P onayı değil", "demo_onayi": True},
-                                dokuman_surumu=etiket)
+            ozet = ornek_kur(katalog, DenetimKaydi(katalog.baglanti), args.ornek_dosyasi, KOK)
             print(f"yeni doküman sürümleri: {', '.join(ozet.dokuman_surumleri) or '-'}")
             if ozet.atlanan_dokumanlar:
                 print(f"atlanan örnek dokümanlar (demo onayı yazılmadı): {', '.join(ozet.atlanan_dokumanlar)}")

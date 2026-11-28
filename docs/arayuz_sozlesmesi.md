@@ -56,7 +56,7 @@ kısımlarını koda karşı denetlediği, hangilerini denetlemediği en sondaki
 | `taslak`: Taslağı düzelt ve onayla | `mp` | `Katalog.taslaklar(yalniz_acik=True)`, `ekran_verisi.test_tablosu`, `TABLO_SUTUNLARI`, `tablodan_dokuman`, `taslak_duzelt`, `taslak_onayla`, `uygulama.etiket_adayi_kaydet` (içinde `duzeltme_kaydi.etiket_adayi_yaz`) |
 | `revizyon`: Revizyon farkı ve M&P incelemesi | `mp` | `ekran_verisi.hazir_revizyon_raporlari`, `revizyon_izinli_mi`, `revizyon_raporu`, `revizyon_etkisi.yeni_revizyon_yukle`, `mp_bekleyenler`, `Katalog.malzeme`, `mp_incelemesini_kapat` |
 | `giris`: Giriş kalite: CoC kontrolü | `giris_kalite` | `Katalog.malzemeler`, `gecerli_dokuman`, `partiler`, `onayli_tedarikciler`, `ekran_verisi.parti_hazirla`, `json_sertifika_karari`, `hibrit_hat.sertifika_hatti`, `karar_tablosu`, `PARTI_ETIKETI`, `surum_etiketi`, `karar_basligi`, `DEMO_ETIKETI`; düzeltme formu: `PARTI_DURUMLARI`, `katalog_karari.karari_duzelt` |
-| `depo`: Depo: partiler ve raf ömrü | `mp`, `giris_kalite` | `ekran_verisi.depo_tablosu`, `RAF_ETIKETI`, `DEMO_ETIKETI` |
+| `depo`: Depo: partiler ve raf ömrü | `mp`, `giris_kalite` | `ekran_verisi.depo_tablosu`, `RAF_ETIKETI`, `DEMO_ETIKETI`; yalnız `mp` için karantina formu: `ekran_verisi.karantina_partileri`, `karantinadan_cikar` |
 | `pano`: Düzeltme panosu | `mp` | `duzeltme_kaydi.duzeltme_panosu` |
 | kenar çubuğu (her ekran) | herkes | `kimlik.yetkili_mi`, `kimlik.EKRANLAR`, `denetim_kaydi.sema_eksikleri` (defter kurulmadan önce), `DenetimKaydi.zinciri_dogrula` |
 
@@ -280,8 +280,11 @@ yazmaz. Deneme sınırı ya da kilitleme yoktur.
 
 **Çıktı**: `bool`. Kullanıcı varsa ve rolü ekranı içeriyorsa `True`.
 Radyo düğmesi zaten yalnız yetkili ekranları gösterir; arayüz yine de her
-ekranı açmadan önce bunu çağırır. Rol denetimi yalnız arayüzde yapılır; alt
-katman fonksiyonları rol denetlemez.
+ekranı açmadan önce bunu çağırır. Ekran yetkisi arayüzde denetlenir. Tek
+istisna parti düzeltmesidir: `hat.katalog_karari.karari_duzelt` rolü kendisi
+de denetler (bilinen rol, kullanıcı tablosu varsa kayıtlı rolle aynı,
+karantinadan çıkış yalnız `mp`). Öteki alt katman fonksiyonları rol
+denetlemez.
 
 **Yan etkiler**: yok.
 
@@ -741,6 +744,9 @@ altındadır.
   - bekleyen inceleme yok
   - `yeni_revizyona_gec` için revizyon harfi verilmemiş ya da o revizyonun
     onaylı kabul dokümanı yok
+  - `yeni_revizyona_gec`te yeni revizyonun geçerli (en son onaylı) sürümü
+    demo onaylı (ileti "demo" içerir; yalnız gerçek M&P onaylı sürüme
+    geçilir; hiçbir şey değişmez)
   - karar bilinmiyor
 - `DenetimHatasi` (bir `ValueError` alt sınıfı): kullanıcı boş ya da kayıt
   zamanı geçersiz. Arayüz yakalar (`ValueError` olarak). Oturumdaki
@@ -1148,9 +1154,11 @@ denetimi, ek denetimler, test satırları. Anahtarlar:
 `tuple[str, ...]`: `("serbest", "karantina", "bekliyor")`. Düzeltme
 formunun seçenekleridir.
 
-### `malzeme_kabul.hat.katalog_karari.karari_duzelt(katalog, defter, kullanici, malzeme_kodu, lot_no, yeni_durum, neden)`
+### `malzeme_kabul.hat.katalog_karari.karari_duzelt(katalog, defter, kullanici, malzeme_kodu, lot_no, yeni_durum, neden, rol)`
 
-İnsanın parti kararını düzeltmesi.
+İnsanın parti kararını düzeltmesi. Karantinadaki partiyi karantinadan
+çıkarmak (karantinanın kaynağı makine ya da insan olsun) yalnız M&P'nin
+işidir ve gerekçe ister (Nida'nın 28 Kasım kararı).
 
 **Girdiler**
 
@@ -1161,6 +1169,10 @@ formunun seçenekleridir.
 - `lot_no` (`str`, zorunlu): katalogdaki lot.
 - `yeni_durum` (`"serbest" | "karantina" | "bekliyor"`, zorunlu).
 - `neden` (`str`, zorunlu, boş olamaz): gerekçe.
+- `rol` (`str`, zorunlu, yalnız anahtar kelimeyle: `rol=...`): düzeltmeyi
+  yapanın rolü, `katalog.veritabani.ROLLER` anahtarlarından biri (`"mp"`,
+  `"giris_kalite"`; `kimlik.ROLLER` aynı sözlüktür). Arayüz giriş yapan
+  kullanıcının rolünü verir (`rol=kullanici.rol`). Verilmezse `TypeError`.
 
 **Çıktı**: `Kayit` (dondurulmuş dataclass). Alanlar:
 
@@ -1173,10 +1185,14 @@ formunun seçenekleridir.
 
 **Hatalar**
 
-- `KatalogHatasi`: kullanıcı boş, gerekçe boş (ikisi de hiçbir şey
-  yazılmadan denetlenir), defter katalogla aynı bağlantıyı paylaşmıyor,
-  parti bilinmiyor, durum geçersiz ya da onaylı doküman yok. Hiçbir
-  durumda parti durumu değişmez. Arayüz yakalar.
+- `KatalogHatasi`: kullanıcı boş, gerekçe boş ya da rol bilinmiyor (üçü
+  de hiçbir şey yazılmadan denetlenir), bağlantıda `kullanicilar` tablosu
+  var ama kullanıcı orada yok ya da kayıtlı rolü `rol`'den farklı, defter katalogla aynı bağlantıyı
+  paylaşmıyor, parti bilinmiyor, durum geçersiz, onaylı doküman yok ya da
+  parti karantinada, `yeni_durum` karantina değil ve `rol` `"mp"` değil
+  (ileti "M&P" içerir; kilit altında okunan önceki duruma göre). Hiçbir
+  durumda parti durumu değişmez. Arayüz yakalar ve `st.error` ile
+  gösterir.
 - `DenetimHatasi` (bir `ValueError` alt sınıfı): denetim kaydı adımı
   reddetti (ör. kayıt zamanı geçersiz). Arayüz yakalar (`ValueError`
   olarak).
@@ -1187,16 +1203,60 @@ formunun seçenekleridir.
 şunları yapar:
 
 1. Partinin önceki durumunu okur (kilit altında; başka bir bağlantı araya
-   giremez).
+   giremez). Önce, bağlantıda `kullanicilar` tablosu varsa kullanıcının
+   orada `rol` ile kayıtlı olduğu denetlenir (tablo doğrudan sorgulanır;
+   tablo yoksa verilen rol kullanılır). Önceki durum karantinaysa ve parti karantinadan çıkacaksa rol
+   `"mp"` olmalıdır; değilse `KatalogHatasi`. Karantina → karantina
+   düzeltmesi (gerekçe ekleme) her rol için serbesttir.
 2. Geçerli doküman sürümünü okur.
 3. Parti durumunu günceller (`kaynak="insan"`).
 4. Denetim kaydına bir `duzeltme` kaydı ekler. İçerik: `onceki_durum`,
-   `yeni_durum`, `neden`; `dokuman_surumu` 2. adımda okunan sürümdür.
+   `yeni_durum`, `neden`, `rol`; `dokuman_surumu` 2. adımda okunan sürümdür.
 
 Herhangi bir adım hata verirse hepsi geri alınır: durum değişmez, kayıt
 yazılmaz.
 
 ## Depo ekranı
+
+### `malzeme_kabul.arayuz.ekran_verisi.karantina_partileri(katalog)`
+
+**Girdiler**
+
+- `katalog` (`Katalog`, zorunlu).
+
+**Çıktı**: `list[Parti]`: durumu `"karantina"` olan partiler, malzeme kodu
+ve lot sırasıyla. Karantinada parti yoksa boş liste. Depo ekranındaki M&P
+formu lot seçimini buradan alır.
+
+**Yan etkiler**: yok.
+
+### `malzeme_kabul.arayuz.ekran_verisi.karantinadan_cikar(katalog, defter, kullanici, malzeme_kodu, lot_no, yeni_durum, neden)`
+
+M&P'nin karantinadaki partiyi gerekçeyle serbest bırakması (ya da
+bekletmeye alması). `hat.katalog_karari.karari_duzelt`'i
+`kullanici.ad` ve `rol=kullanici.rol` ile çağırır; bütün denetim orada.
+
+**Girdiler**
+
+- `katalog` (`Katalog`, zorunlu).
+- `defter` (`DenetimKaydi`, zorunlu): katalogla aynı bağlantı.
+- `kullanici` (`Kullanici`, zorunlu): oturumdaki kullanıcı nesnesi; ad
+  metni yetmez (rol ondan alınır; metin verilirse `AttributeError`, hiçbir
+  şey yazılmaz).
+- `malzeme_kodu` (`str`, zorunlu).
+- `lot_no` (`str`, zorunlu).
+- `yeni_durum` (`str`, zorunlu): ekran `"serbest"` ya da `"bekliyor"` verir.
+- `neden` (`str`, zorunlu, boş olamaz): gerekçe.
+
+**Çıktı**: `Kayit`: eklenen `duzeltme` kaydı (`karari_duzelt` ile aynı).
+
+**Hatalar**: `karari_duzelt` ile aynı (`KatalogHatasi`: rol `mp` değil
+("M&P"), kullanıcı tablosundaki rolle tutmuyor, gerekçe boş vb.;
+`DenetimHatasi`; `sqlite3.OperationalError`). Arayüz `KatalogHatasi` ve
+`ValueError`'ı yakalar ve `st.error` ile gösterir.
+
+**Yan etkiler**: `karari_duzelt` ile aynı (tek işlem; hata olursa hiçbir şey
+yazılmaz). Arayüz bu fonksiyonu yalnız `kullanici.rol == "mp"` iken çağırır.
 
 ### `malzeme_kabul.arayuz.ekran_verisi.depo_tablosu(katalog, bugun, uyari_esigi_gun)`
 
@@ -1435,7 +1495,8 @@ gelince ilgili bölümler de güncellenecek.
    bekleyen yeni partidir. Karantinadaki ya da daha önce karar verilmiş
    bekleyen partiyi makine serbest bırakmaz; durum korunur ve `parti_durumu`
    ek denetimi "insan incelemeli" olur. Serbest bırakma `karari_duzelt` ile
-   insanın işidir.
+   insanın işidir; karantinadan çıkarmayı yalnız M&P (`rol="mp"`) gerekçeyle
+   yapar (`karari_duzelt` rolü işlemin içinde denetler).
 3. **Lot ve tedarikçi karşılaştırması (düzeltildi).** Lot verildiğinde
    sertifikadaki `parti_no` katalogdaki lotla (`parti_no` ek denetimi),
    sertifikadaki tedarikçi de partinin tedarikçisiyle (`parti_tedarikcisi`
@@ -1523,8 +1584,13 @@ gelince ilgili bölümler de güncellenecek.
     - Ekran: `DEMO_ETIKETI`, `surum_etiketi`, `karar_basligi`, depo
       tablosunun `kabul dokümanı` sütunu; giriş kalite ve depo ekranlarında
       uyarı/bilgi kutusu.
-    - Açık kalan: `mp_incelemesini_kapat` ile demo sürümlü bir revizyona
-      geçişin kabul edilip edilmeyeceği sorulacak.
+    - Demo sürüme geçiş (karar verildi ve uygulandı, Nida 28 Kasım):
+      demo onaylı sürüme geçilmez, yalnız gerçek M&P onayına.
+      `Katalog.malzeme_revizyonu_ata` yeni revizyonun geçerli (en son
+      onaylı) sürümü demo onaylıysa `KatalogHatasi` ("demo") verir; kendi
+      işlemindedir (dış işlemde SAVEPOINT, yalnız kendini geri alır).
+      `mp_incelemesini_kapat(..., "yeni_revizyona_gec")` bu yolla reddedilir
+      ve hiçbir şey değişmez.
 11. **Docker varsayılan parolası (düzeltildi).** Compose artık deneme
     kullanıcısı açmıyor. Parolalar ortam değişkeninden (Docker'da secrets
     dosyası) okunuyor; parola yoksa ya da zayıfsa uygulama başlamıyor (bkz.
@@ -1546,8 +1612,12 @@ gelince ilgili bölümler de güncellenecek.
 15. **Bağlantı sızıntısı (düzeltildi).** Her Streamlit çalıştırması kendi
     `Katalog`'unu `with` bloğuyla açar ve kapatır (`st.rerun` istisnasında
     ve defter kurulamadığında da). Bağlantı oturumlar arasında paylaşılmaz.
-16. **Rol denetimi yalnız arayüzde.** `ekran_verisi` ve `hat`
-    fonksiyonları kullanıcının rolünü denetlemiyor.
+16. **Rol denetimi yalnız arayüzde (parti düzeltmesi için düzeltildi).**
+    `hat.katalog_karari.karari_duzelt` artık rolü kendisi denetler: `rol`
+    zorunlu ve bilinen bir rol olmalı; bağlantıda `kullanicilar` tablosu
+    varsa kullanıcı orada aynı rolle kayıtlı olmalı (yoksa verilen rol
+    kullanılır); karantinadan çıkışı yalnız `mp` yapar. Öteki `ekran_verisi`
+    ve `hat` fonksiyonları kullanıcının rolünü hâlâ denetlemiyor.
 17. **Kenar çubuğundaki "sağlam".** Bu ifade yalnız zincirin kendi içinde
     tutarlı olduğunu gösterir; dışarıda saklanan bir özetle
     karşılaştırılmaz (bkz. `zinciri_dogrula`).

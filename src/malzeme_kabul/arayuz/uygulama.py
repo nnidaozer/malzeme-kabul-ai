@@ -281,12 +281,12 @@ def duzeltme_formu(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
     son = st.session_state.get("son_karar")
     if not son or not son[1]:
         return
-    with st.expander("Parti kararını düzelt (gerekçe zorunlu)"):
+    with st.expander("Parti kararını düzelt (gerekçe zorunlu; karantinadan çıkarmayı yalnız M&P yapar)"):
         durum = st.selectbox("Yeni durum", PARTI_DURUMLARI)
         neden = st.text_area("Gerekçe")
         if st.button("Düzeltmeyi kaydet"):
             try:
-                karari_duzelt(katalog, defter, kullanici.ad, son[0], son[1], durum, neden)
+                karari_duzelt(katalog, defter, kullanici.ad, son[0], son[1], durum, neden, rol=kullanici.rol)
                 st.success("Düzeltme kaydedildi.")
             except (KatalogHatasi, ValueError) as hata:
                 st.error(str(hata))
@@ -311,6 +311,24 @@ def depo_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> None:
     if demo:
         st.info(f"{len(demo)} partinin kabul dokümanı demo onaylı ({ev.DEMO_ETIKETI}).")
     st.dataframe(tablo, width="stretch")
+    if kullanici.rol == "mp":  # karantinadan çıkarmayı yalnız M&P yapar (karari_duzelt de denetler)
+        with st.expander("Karantinadaki partiyi serbest bırak (yalnız M&P, gerekçe zorunlu)"):
+            partiler = ev.karantina_partileri(katalog)
+            if not partiler:
+                st.caption("Karantinada parti yok.")
+                return
+            secim = st.selectbox("Karantinadaki lot", [(p.malzeme_kodu, p.lot_no) for p in partiler],
+                                 format_func=lambda x: f"{x[0]} / {x[1]}", key="karantina_lot")
+            durum = st.selectbox("Yeni durum", ("serbest", "bekliyor"), key="karantina_durum")
+            neden = st.text_area("Gerekçe", key="karantina_neden")
+            if st.button("Karantinadan çıkar", key="karantina_kaydet"):
+                try:
+                    ev.karantinadan_cikar(katalog, defter, kullanici, secim[0], secim[1], durum, neden)
+                    st.success("Parti karantinadan çıkarıldı; düzeltme kaydedildi.")
+                except (KatalogHatasi, ValueError) as hata:
+                    st.error(str(hata))
+                except sqlite3.OperationalError as hata:
+                    st.error(f"{MESGUL} ({hata}).")
 
 
 # --- düzeltme panosu -------------------------------------------------------------------------------
