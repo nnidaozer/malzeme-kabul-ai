@@ -348,3 +348,8 @@ bilgi hiçbir zaman "uygun" sonucuna yol açmaz, bazı partilerin insana kalmas�
 3. **Arayüz: `malzeme_koduyla_kontrol(..., bekletme_nedeni=...)`.** Hat yedekte bunu doldurur;
    başka bir okuma eksikliği için de kullanılabilir. Model sunucusu kapalıyken hibrit moddaki
    bütün partiler bekler; bu kabul edilen bedeldir (kural moduna geçmek ayrı bir karardır).
+   Daha önce serbest bırakılmış bir parti kesinti sırasında yeniden kontrol edilirse o da
+   `bekliyor`'a çekilir (makine her zaman daha kısıtlayıcı duruma geçebilir).
+4. **Tedarikçi ve parti no ek denetimleri yedekte değiştirilmedi.** Başlık bilgisini kural
+   okumasından alıp "uygun" görünebilirler; `kanit` satırı her durumda insan incelemeli olduğu
+   için parti kararına etkileri yok.

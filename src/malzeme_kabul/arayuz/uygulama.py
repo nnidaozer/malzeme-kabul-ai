@@ -248,8 +248,8 @@ def giris_kalite_ekrani(katalog: Katalog, defter: DenetimKaydi, kullanici) -> No
         st.warning(f"{ev.DEMO_ETIKETI}: karar demo onaylı kabul dokümanıyla ({karar.dokuman_surumu}) verildi.")
     if karar.hat and karar.hat.get("yedek"):
         st.warning(
-            "Dil modeli yanıt vermedi; parti insan incelemesine (bekliyor) alındı. "
-            f"Kural okuması yalnız bilgi için gösteriliyor: {karar.hat['yedek']}"
+            f"Dil modeli yanıt vermedi ({karar.hat['yedek']}); karar insan incelemesine bırakıldı, "
+            f"parti {karar.parti_durumu}. Kural okuması yalnız bilgi için gösteriliyor."
         )
     st.dataframe(ev.karar_tablosu(karar), width="stretch")
     if karar.kontrol.eslesmeyen_satirlar:

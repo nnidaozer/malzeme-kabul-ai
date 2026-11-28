@@ -928,9 +928,14 @@ Hibrit mod şöyle çalışır:
 - Dil modeli yanıt vermezse (`OSError`), şemaya uymayan bir yanıt dönerse
   (`ValueError`) ya da sunucu yanıtı beklenmedik ya da yarımsa
   (`ModelYanitHatasi`), hat kural okumasına düşer ve nedeni
-  `hat["yedek"]`'e yazar. Arayüz bu durumda uyarı gösterir. Yedekte `kanit`
-  denetimi **"uygun"** olur, çünkü karar kural okumasıyla verilir. Karar
-  her durumda kurallarla verilir.
+  `hat["yedek"]`'e yazar. Arayüz bu durumda uyarı gösterir. Kural okuması
+  yedekte yalnız bilgi içindir: `kanit` denetimi **"insan incelemeli"** olur
+  ("dil modeli yanıt vermedi"), kontrol satırlarının uygun ve uygun değil
+  kararları insan incelemeli yapılır (gerekçede "kural okumasına göre: ..."),
+  parti kararı `inceleme`, yeni ya da serbest parti `bekliyor` olur
+  (karantinadaki karantinada kalır). Bunu `malzeme_koduyla_kontrol`'ün
+  `bekletme_nedeni` parametresi yapar. Kabul/red kararını yine kurallar verir;
+  eksik bilgi hiçbir zaman "uygun"a yol açmaz.
 
 **Hatalar**
 
