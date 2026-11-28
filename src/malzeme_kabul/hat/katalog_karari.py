@@ -32,6 +32,15 @@ karantinadan çıkarmayı yalnız M&P (rol 'mp') gerekçeyle yapar.
 Kabul dokümanı sürümü örnek verinin demo onayıyla onaylıysa karar
 `demo_onayi=True` taşır (ekranda ve kayıtta işaretlenir); karar mantığı değişmez.
 
+Karar dayanağı: çağıran (ör. hibrit hat) kabul dokümanı sürümünü ve malzeme
+kaydını önceden okuduysa (`surum`, `malzeme_kaydi`) karar bunlarla verilir;
+okuma karşılaştırması ile parti kararı böylece aynı sürüme dayanır. Parti
+durumunu yazan işlemin içinde (kilit altında) geçerli sürüm (etiket, özet) ve
+malzeme (belge no, revizyon, tip, sınıf) yeniden okunur; kullanılandan
+farklıysa (arada M&P yeni sürüm onayladıysa ya da malzemeyi değiştirdiyse)
+`dokuman_dayanagi` ek denetimi insan incelemeli olur. Karar ve kayıt
+kullanılan sürümü taşır.
+
 Denetim kaydı (`kayit.denetim_kaydi`) verilirse her karar, onay ve düzeltme
 zincire yazılır: kullanıcı, zaman, doküman sürümü, PDF sayfası, model ve
 istem sürümü. Durum değişikliği ile onun kaydı tek işlemdir (`Katalog.islem`):
@@ -48,6 +57,7 @@ from malzeme_kabul.katalog.veritabani import (
     DokumanSurumu,
     Katalog,
     KatalogHatasi,
+    Malzeme,
     Parti,
     PartiDurumu,
     ROLLER,
@@ -165,6 +175,32 @@ def _parti_durumu_satiri(parti: Parti, istenen: PartiDurumu) -> KararSatiri:
     )
 
 
+def _dayanak_denetimi(
+    katalog: Katalog, malzeme_kodu: str, surum: DokumanSurumu, malzeme: Malzeme
+) -> KararSatiri | None:
+    """Kararın dayandığı sürüm ve malzeme katalogdakiyle aynı mı? Farklıysa insan incelemeli satır döner.
+
+    İşlemin (kilidin) içinde çağrılır; aynıysa None.
+    """
+    simdiki_surum = katalog.gecerli_dokuman(malzeme_kodu)
+    simdiki = katalog.malzeme(malzeme_kodu)
+    ayni = (
+        (surum.etiket, surum.ozet) == (simdiki_surum.etiket, simdiki_surum.ozet)
+        and (malzeme.belge_no, malzeme.revizyon, malzeme.tip, malzeme.sinif)
+        == (simdiki.belge_no, simdiki.revizyon, simdiki.tip, simdiki.sinif)
+    )
+    if ayni:
+        return None
+    gerekce = f"karar {surum.etiket} ile verildi, katalogda şimdi geçerli olan {simdiki_surum.etiket}"
+    if (malzeme.tip, malzeme.sinif) != (simdiki.tip, simdiki.sinif):
+        gerekce += (
+            f"; kullanılan tip/sınıf {malzeme.tip or '-'}/{malzeme.sinif or '-'}, "
+            f"katalogda {simdiki.tip or '-'}/{simdiki.sinif or '-'}"
+        )
+    return KararSatiri(test_id="dokuman_dayanagi", test_adi="Karar dayanağı", karar="insan_incelemeli",
+                       gerekce=gerekce)
+
+
 def malzeme_koduyla_kontrol(
     katalog: Katalog,
     malzeme_kodu: str,
@@ -181,6 +217,9 @@ def malzeme_koduyla_kontrol(
     hat_bilgisi: dict | None = None,
     incelemeye_alinacak: dict[str, str] | None = None,
     karsi_okuma: Sertifika | None = None,
+    *,
+    surum: DokumanSurumu | None = None,
+    malzeme_kaydi: Malzeme | None = None,
 ) -> KatalogKarari:
     """Sertifikayı malzeme kodunun onaylı kabul dokümanıyla karşılaştırır.
 
@@ -198,13 +237,19 @@ def malzeme_koduyla_kontrol(
     okuma da uygun değilse satır uygun değil kalır
     (`okuma_karsilastirma.anlasmazlik_karari`). Kontrol satırlarında olmayan
     test için insan incelemeli bir ek denetim satırı eklenir.
+
+    `surum` ve `malzeme_kaydi` verilirse karar bunlarla verilir (verilmeyen
+    katalogdan okunur). Parti durumunu yazan işlemin içinde katalogdaki
+    geçerli sürüm ve malzeme yeniden okunur; kullanılandan farklıysa
+    `dokuman_dayanagi` ek denetimi insan incelemeli olur.
     """
     if defter is not None and not (isinstance(kullanici, str) and kullanici.strip()):
         raise KatalogHatasi("denetim kaydı için kullanıcı gerekli")
     if defter is not None:
         _ayni_baglanti(katalog, defter)
-    malzeme = katalog.malzeme(malzeme_kodu)
-    surum = katalog.gecerli_dokuman(malzeme_kodu)
+    malzeme = malzeme_kaydi if malzeme_kaydi is not None else katalog.malzeme(malzeme_kodu)
+    if surum is None:
+        surum = katalog.gecerli_dokuman(malzeme_kodu)
     kontrol = kontrol_et(surum.dokuman, sertifika, ayar, tip=malzeme.tip, sinif=malzeme.sinif, katalogdan=True)
 
     ek: list[KararSatiri] = list(ek_denetimler or [])
@@ -238,6 +283,9 @@ def malzeme_koduyla_kontrol(
             else:
                 ek.append(KararSatiri(karar="uygun", gerekce=f"sipariş revizyonu {parti.siparis_revizyonu}", **ortak))
             ek.extend(_parti_denetimleri(parti, sertifika))
+        dayanak = _dayanak_denetimi(katalog, malzeme_kodu, surum, malzeme)  # kilit altında yeniden okuma
+        if dayanak is not None:
+            ek.append(dayanak)
 
         karar = parti_karari(_satir_kararlari(kontrol) + [s.karar for s in ek])
         durum = PARTI_DURUMU[karar]

@@ -1052,6 +1052,11 @@ Hibrit mod şöyle çalışır:
   `hat["yedek"]`'e yazar. Arayüz bu durumda uyarı gösterir. Yedekte `kanit`
   denetimi **"uygun"** olur, çünkü karar kural okumasıyla verilir. Karar
   her durumda kurallarla verilir.
+- Kabul dokümanı sürümü ve malzeme (tip/sınıf) okumadan önce bir kez
+  okunur; okuma karşılaştırması ve karar aynı sürümle yapılır. Model
+  çağrısı sürerken yeni sürüm onaylanırsa ya da malzeme değişirse
+  `dokuman_dayanagi` ("Karar dayanağı") ek denetimi insan incelemeli olur;
+  `dokuman_surumu` kararın dayandığı sürümdür.
 
 **Hatalar**
 
@@ -1528,6 +1533,11 @@ gelince ilgili bölümler de güncellenecek.
      `mp_incelemesini_kapat`. Kayıt yazılamazsa durum da değişmez. Defter
      katalogla aynı bağlantıyı paylaşmazsa `KatalogHatasi` verilir; parti
      durumu yazan karar defter olmadan verilmez.
+   - Sürüm bütünlüğü (düzeltildi): `sertifika_hatti` sürümü ve malzemeyi
+     bir kez okuyup karşılaştırmaya ve karara verir; `malzeme_koduyla_kontrol`
+     parti durumunu yazan işlemde geçerli sürümü ve malzemeyi yeniden okur,
+     farklıysa `dokuman_dayanagi` insan incelemeli olur. Karar ve kaydın
+     `dokuman_surumu` alanı kullanılan sürümdür.
    - REPLACE açığı (denetim kaydında kapandı): `denetim_kaydi` üzerindeki
      BEFORE INSERT tetikleyicisi (`denetim_kaydi_uzerine_yazilamaz`) var
      olan bir sıra ya da özetle eklemeyi çakışma çözümünden önce reddeder.
