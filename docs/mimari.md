@@ -170,8 +170,16 @@ son özet dışarıda saklanmalıdır (`--son-ozet`).
 
 ## 3a. Raf ömrü
 
-Partinin son kullanma tarihi = üretim tarihi + onaylı kabul dokümanındaki raf
-ömrü (`kural/raf_omru.py`). Yıl ve ay takvimle eklenir, gün/hafta gün olarak.
+Partinin son kullanma tarihi = üretim tarihi + lotun **sipariş revizyonunun**
+(`partiler.siparis_revizyonu`, kırpılıp büyük harfe çevrilerek) en son onaylı
+kabul dokümanı sürümündeki raf ömrü (`kural/raf_omru.py`). Demo işareti ve
+ömür uzatma testleri de aynı sürümden gelir. Malzeme kodu sonradan yeni
+revizyona taşınsa da (`malzeme_revizyonu_ata`, `mp_incelemesini_kapat`) eski
+lot kendi sipariş revizyonunun süresini korur. Sipariş revizyonu için onaylı
+doküman yoksa süre hesaplanmaz, durum `bilinmiyor` olur ve not sipariş
+revizyonunu anar ("sipariş revizyonu J (...) için onaylı kabul dokümanı
+yok"); malzemenin güncel revizyonuna **asla düşülmez** (proje sahibi kararı,
+Codex bulgusu "Raf ömrü sipariş revizyonundan kopuyor"). Yıl ve ay takvimle eklenir, gün/hafta gün olarak.
 Raf ömrü kaydı tip/sınıfa uygulanan kayıtlar arasından seçilir
 (`raf_omru_sec`); partinin kap türü (`partiler.kap_turu`) `None`, boş ya da
 yalnız boşluksa bilinmiyor sayılır:

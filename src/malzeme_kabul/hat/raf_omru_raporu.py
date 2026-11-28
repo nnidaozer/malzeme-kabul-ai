@@ -1,8 +1,12 @@
 """Depodaki partilerin raf ömrü raporu (katalog + kural/raf_omru).
 
-Her parti için malzemenin onaylı kabul dokümanındaki raf ömrüyle son
-kullanma tarihi hesaplanır, 30 gün (ya da verilen eşik) kala uyarı verilir ve
-o tip/sınıfa uygulanan ömür uzatma testleri listelenir.
+Her parti için lotun sipariş revizyonunun (`Parti.siparis_revizyonu`, büyük
+harfe çevrilip kırpılarak) en son onaylı kabul dokümanı sürümündeki raf
+ömrüyle son kullanma tarihi hesaplanır, 30 gün (ya da verilen eşik) kala uyarı
+verilir ve o tip/sınıfa uygulanan ömür uzatma testleri listelenir. Malzeme
+kodu sonradan başka revizyona taşınsa da lot kendi sipariş revizyonunun
+süresini korur. O revizyon için onaylı doküman yoksa süre hesaplanmaz (durum
+"bilinmiyor"); malzemenin güncel revizyonuna asla düşülmez.
 """
 
 from __future__ import annotations
@@ -34,11 +38,18 @@ def raf_raporu(
     for parti in katalog.partiler():
         m = katalog.malzeme(parti.malzeme_kodu)
         tip, sinif = kod_normallestir(m.tip), kod_normallestir(m.sinif)
+        revizyon = parti.siparis_revizyonu.strip().upper()
         try:
-            surum = katalog.gecerli_dokuman(parti.malzeme_kodu)
-        except KatalogHatasi as hata:
+            surumler = katalog.dokuman_surumleri(m.belge_no, revizyon)
+        except KatalogHatasi as hata:  # ör. içerik özeti tutmuyor
             satirlar.append(RafSatiri(parti, None, RafDurumBilgisi("bilinmiyor", None, None, None, [str(hata)]), []))
             continue
+        if not surumler:
+            not_ = (f"{parti.malzeme_kodu}: sipariş revizyonu {revizyon} ({m.belge_no}{revizyon}) "
+                    "için onaylı kabul dokümanı yok")
+            satirlar.append(RafSatiri(parti, None, RafDurumBilgisi("bilinmiyor", None, None, None, [not_]), []))
+            continue
+        surum = surumler[-1]
         raf = raf_durumu(surum.dokuman, parti.uretim_tarihi, bugun, parti.kap_turu, tip, sinif, uyari_esigi_gun)
         uzatma = omur_uzatma_testleri(surum.dokuman, tip, sinif) if raf.uyari else []
         satirlar.append(RafSatiri(parti, surum.etiket, raf, uzatma, surum.demo_onayi))
