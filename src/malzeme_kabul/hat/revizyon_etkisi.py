@@ -11,7 +11,9 @@ M&P mühendisi farkı inceleyip işareti kapatır (`mp_incelemesini_kapat`):
 - `gerek_yok`: yeni revizyon bu malzemeyi etkilemiyor; malzeme eski
   revizyonda kalır.
 - `yeni_revizyona_gec`: malzeme yeni revizyona bağlanır; yeni revizyonun
-  onaylı kabul dokümanı önceden bulunmalıdır.
+  onaylı kabul dokümanı önceden bulunmalıdır. Geçerli (en son onaylı) sürüm
+  demo onaylıysa geçiş reddedilir ve hiçbir şey değişmez; yalnız gerçek M&P
+  onaylı sürüme geçilir.
 
 Kapatma denetim kaydına `onay` olarak yazılır.
 
@@ -127,6 +129,7 @@ def mp_incelemesini_kapat(
         raise KatalogHatasi("yeni revizyona geçmek için revizyon harfi gerekli")
     with katalog.islem():
         if karar == "yeni_revizyona_gec":
+            # Demo onaylı sürüme geçişi malzeme_revizyonu_ata reddeder (Nida kararı).
             m2 = katalog.malzeme_revizyonu_ata(malzeme_kodu, yeni_revizyon)
             icerik = {"karar": karar, "eski": m.standart_etiketi, "yeni": m2.standart_etiketi, "not": not_}
             surum = katalog.gecerli_dokuman(malzeme_kodu).etiket

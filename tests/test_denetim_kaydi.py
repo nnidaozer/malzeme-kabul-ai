@@ -159,14 +159,15 @@ def test_onay_karar_ve_duzeltme_zincire_yazilir(katalog_ve_defter):
     k, d = katalog_ve_defter
     malzeme_koduyla_kontrol(k, "AST-N", sertifika(voc="400"), lot_no="L1", defter=d, kullanici="gk1",
                             model="qwen3:8b", istem_surumu="okuma-v1", pdf_sayfasi="1-2")
-    karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun")
+    karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun", rol="mp")
     kayitlar = d.kayitlar()
     assert [x.tur for x in kayitlar] == ["onay", "karar", "duzeltme"]
     onay, karar, duz = kayitlar
     assert onay.dokuman_surumu == "MIL-PRF-23377K v1" and onay.veri["not"] == "ilk onay"
     assert (karar.kullanici, karar.model, karar.istem_surumu, karar.pdf_sayfasi) == ("gk1", "qwen3:8b", "okuma-v1", "1-2")
     assert karar.veri["parti_karari"] == "red" and karar.veri["kontrol"]["satirlar"][0]["madde"] == "MIL-PRF-23377K, 3.5.1"
-    assert duz.veri == {"onceki_durum": "karantina", "yeni_durum": "serbest", "neden": "tekrar test uygun"}
+    assert duz.veri == {"onceki_durum": "karantina", "yeni_durum": "serbest", "neden": "tekrar test uygun",
+                       "rol": "mp"}
     assert k.parti("AST-N", "L1").durum == "serbest"
     assert d.zinciri_dogrula().gecerli
 
@@ -180,7 +181,127 @@ def test_kayitli_karar_kullanici_ister(katalog_ve_defter):
 def test_duzeltme_gerekce_ister(katalog_ve_defter):
     k, d = katalog_ve_defter
     with pytest.raises(KatalogHatasi, match="gerekçe"):
-        karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", " ")
+        karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", " ", rol="mp")
+
+
+# --- Nida kararı: karantinadan serbest bırakmayı yalnız M&P, gerekçeyle yapar ---------------------
+
+
+def _karantinaya_al(k, d, lot="L1"):
+    karari_duzelt(k, d, "mp1", "AST-N", lot, "karantina", "numune şüpheli", rol="mp")
+    assert k.parti("AST-N", lot).durum == "karantina"
+
+
+def _iz(k, d, lot="L1"):
+    return k.parti("AST-N", lot).durum, [(x.sira, x.tur) for x in d.kayitlar()]
+
+
+def test_karari_duzelt_rolu_zorunlu_anahtar_kelime_argumani_olarak_ister():
+    import inspect
+
+    p = inspect.signature(karari_duzelt).parameters["rol"]
+    assert p.kind is inspect.Parameter.KEYWORD_ONLY
+    assert p.default is inspect.Parameter.empty
+
+
+def test_karari_duzelt_rolsuz_cagrilirsa_hicbir_sey_yazmaz(katalog_ve_defter):
+    k, d = katalog_ve_defter
+    once = _iz(k, d)
+    with pytest.raises(TypeError):
+        karari_duzelt(k, d, "gk1", "AST-N", "L1", "serbest", "tekrar test uygun")
+    assert _iz(k, d) == once
+
+
+@pytest.mark.parametrize("yeni_durum", ["serbest", "bekliyor"])
+def test_giris_kalite_karantinadaki_partiyi_karantinadan_cikaramaz(katalog_ve_defter, yeni_durum):
+    k, d = katalog_ve_defter
+    _karantinaya_al(k, d)
+    once = _iz(k, d)
+    with pytest.raises(KatalogHatasi, match="M&P"):
+        karari_duzelt(k, d, "gk1", "AST-N", "L1", yeni_durum, "tekrar test uygun", rol="giris_kalite")
+    assert _iz(k, d) == once
+    assert d.zinciri_dogrula().gecerli
+
+
+def test_giris_kalite_makinenin_karantinaya_aldigi_partiyi_serbest_birakamaz(katalog_ve_defter):
+    # Karantinanın kaynağı (makine ya da insan) fark etmez; çıkış yalnız M&P'nindir.
+    k, d = katalog_ve_defter
+    malzeme_koduyla_kontrol(k, "AST-N", sertifika(voc="400"), lot_no="L1", defter=d, kullanici="gk1")
+    assert k.parti("AST-N", "L1").durum == "karantina"
+    once = _iz(k, d)
+    with pytest.raises(KatalogHatasi, match="M&P"):
+        karari_duzelt(k, d, "gk1", "AST-N", "L1", "serbest", "tekrar test uygun", rol="giris_kalite")
+    assert _iz(k, d) == once
+
+
+@pytest.mark.parametrize("yeni_durum", ["serbest", "bekliyor"])
+def test_mp_karantinadaki_partiyi_gerekceyle_karantinadan_cikarir(katalog_ve_defter, yeni_durum):
+    k, d = katalog_ve_defter
+    _karantinaya_al(k, d)
+    kayit = karari_duzelt(k, d, "mp1", "AST-N", "L1", yeni_durum, "tekrar test uygun", rol="mp")
+    assert k.parti("AST-N", "L1").durum == yeni_durum
+    assert kayit.tur == "duzeltme" and kayit.kullanici == "mp1"
+    assert kayit.veri["onceki_durum"] == "karantina" and kayit.veri["yeni_durum"] == yeni_durum
+    assert kayit.veri["rol"] == "mp"
+
+
+@pytest.mark.parametrize("neden", ["", " ", "\t\n"])
+def test_mp_de_karantinadan_gerekcesiz_cikaramaz(katalog_ve_defter, neden):
+    k, d = katalog_ve_defter
+    _karantinaya_al(k, d)
+    once = _iz(k, d)
+    with pytest.raises(KatalogHatasi, match="gerekçe"):
+        karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", neden, rol="mp")
+    assert _iz(k, d) == once
+
+
+def test_giris_kalite_karantinadaki_partiyi_karantinada_tutan_duzeltme_yapabilir(katalog_ve_defter):
+    # Kısıt yalnız karantinadan çıkıştır; karantina → karantina (gerekçe ekleme) serbesttir.
+    k, d = katalog_ve_defter
+    _karantinaya_al(k, d)
+    kayit = karari_duzelt(k, d, "gk1", "AST-N", "L1", "karantina", "ek bulgu: ambalaj hasarlı", rol="giris_kalite")
+    assert k.parti("AST-N", "L1").durum == "karantina" and kayit.veri["rol"] == "giris_kalite"
+
+
+def test_giris_kalite_bekleyen_partiyi_serbest_birakabilir(katalog_ve_defter):
+    k, d = katalog_ve_defter
+    assert k.parti("AST-N", "L1").durum == "bekliyor"
+    kayit = karari_duzelt(k, d, "gk1", "AST-N", "L1", "serbest", "iç laboratuvar sonucu uygun", rol="giris_kalite")
+    assert k.parti("AST-N", "L1").durum == "serbest"
+    assert kayit.veri == {"onceki_durum": "bekliyor", "yeni_durum": "serbest",
+                          "neden": "iç laboratuvar sonucu uygun", "rol": "giris_kalite"}
+
+
+def test_giris_kalite_bekleyen_partiyi_karantinaya_alabilir(katalog_ve_defter):
+    k, d = katalog_ve_defter
+    kayit = karari_duzelt(k, d, "gk1", "AST-N", "L1", "karantina", "numune şüpheli", rol="giris_kalite")
+    assert k.parti("AST-N", "L1").durum == "karantina"
+    assert kayit.veri["onceki_durum"] == "bekliyor" and kayit.veri["rol"] == "giris_kalite"
+
+
+def test_giris_kalite_serbest_partiyi_karantinaya_alabilir(katalog_ve_defter):
+    k, d = katalog_ve_defter
+    karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun", rol="mp")
+    karari_duzelt(k, d, "gk1", "AST-N", "L1", "karantina", "depoda nem hasarı", rol="giris_kalite")
+    assert k.parti("AST-N", "L1").durum == "karantina"
+
+
+@pytest.mark.parametrize("rol", ["", " ", "admin", "MP", "M&P", "giris", None])
+def test_bilinmeyen_rol_reddedilir_ve_hicbir_sey_yazilmaz(katalog_ve_defter, rol):
+    k, d = katalog_ve_defter
+    once = _iz(k, d)
+    with pytest.raises(KatalogHatasi):
+        karari_duzelt(k, d, "gk1", "AST-N", "L1", "serbest", "tekrar test uygun", rol=rol)
+    assert _iz(k, d) == once
+
+
+def test_bilinmeyen_rol_karantinadaki_partide_de_reddedilir(katalog_ve_defter):
+    k, d = katalog_ve_defter
+    _karantinaya_al(k, d)
+    once = _iz(k, d)
+    with pytest.raises(KatalogHatasi):
+        karari_duzelt(k, d, "x", "AST-N", "L1", "karantina", "neden", rol="depo")
+    assert _iz(k, d) == once
 
 
 def test_betikler_denetim_kaydina_yazar(tmp_path, capsys):
@@ -266,3 +387,76 @@ def test_sema_eksikleri_ayni_adli_baska_tur_nesneyi_tablo_saymaz():
     b.execute("CREATE VIEW denetim_kaydi AS SELECT x FROM baska")
     assert "tablo denetim_kaydi" in sema_eksikleri(b)
     b.close()
+
+
+# --- Rol güveni: kimlik tablosu varsa verilen rol kayıtlı rolle tutmalı ---------------------------
+
+from malzeme_kabul.arayuz import kimlik  # noqa: E402
+
+PAROLA = "deneme-parolasi-123"
+
+
+@pytest.fixture
+def kimlikli(katalog_ve_defter):
+    """Katalog bağlantısında kimlik tablosu: 'gk' giriş kalite, 'mp' M&P. L1 bekliyor, L2 karantina."""
+    k, d = katalog_ve_defter
+    kimlik.kullanici_ekle(k.baglanti, "gk", PAROLA, "giris_kalite")
+    kimlik.kullanici_ekle(k.baglanti, "mp", PAROLA, "mp")
+    k.parti_ekle("L2", "AST-N", "Ted A", "K", "2026-06-01", durum="karantina")
+    return k, d
+
+
+def _tum_iz(k, d):
+    return [(p.lot_no, p.durum) for p in k.partiler("AST-N")], [(x.sira, x.tur) for x in d.kayitlar()]
+
+
+@pytest.mark.parametrize("kullanici, sahte_rol, lot, yeni_durum", [
+    ("gk", "mp", "L2", "serbest"),            # giriş kalite kendini M&P diye tanıtıp karantinadan çıkaramaz
+    ("gk", "mp", "L1", "serbest"),            # karantina dışı düzeltmede de rol tutmalı
+    ("mp", "giris_kalite", "L1", "karantina"),  # kayıttaki rol yanlış yazılmaz
+])
+def test_kayitli_rolle_tutmayan_rol_reddedilir_ve_hicbir_sey_yazilmaz(kimlikli, kullanici, sahte_rol, lot, yeni_durum):
+    k, d = kimlikli
+    once = _tum_iz(k, d)
+    with pytest.raises(KatalogHatasi):
+        karari_duzelt(k, d, kullanici, "AST-N", lot, yeni_durum, "tekrar test uygun", rol=sahte_rol)
+    assert _tum_iz(k, d) == once
+
+
+@pytest.mark.parametrize("rol", ["mp", "giris_kalite"])
+def test_kimlik_tablosu_varken_kayitsiz_kullanici_reddedilir(kimlikli, rol):
+    k, d = kimlikli
+    once = _tum_iz(k, d)
+    with pytest.raises(KatalogHatasi):
+        karari_duzelt(k, d, "yabanci", "AST-N", "L1", "serbest", "tekrar test uygun", rol=rol)
+    assert _tum_iz(k, d) == once
+
+
+def test_kayitli_mp_kendi_roluyle_karantinadan_cikarir(kimlikli):
+    k, d = kimlikli
+    kayit = karari_duzelt(k, d, "mp", "AST-N", "L2", "serbest", "tekrar test uygun", rol="mp")
+    assert k.parti("AST-N", "L2").durum == "serbest"
+    assert kayit.kullanici == "mp" and kayit.veri["rol"] == "mp"
+
+
+def test_kayitli_giris_kalite_kendi_roluyle_bekleyeni_serbest_birakir(kimlikli):
+    k, d = kimlikli
+    kayit = karari_duzelt(k, d, "gk", "AST-N", "L1", "serbest", "iç laboratuvar sonucu uygun", rol="giris_kalite")
+    assert k.parti("AST-N", "L1").durum == "serbest" and kayit.veri["rol"] == "giris_kalite"
+
+
+def test_kayitli_giris_kalite_kendi_roluyle_de_karantinadan_cikaramaz(kimlikli):
+    k, d = kimlikli
+    once = _tum_iz(k, d)
+    with pytest.raises(KatalogHatasi, match="M&P"):
+        karari_duzelt(k, d, "gk", "AST-N", "L2", "serbest", "tekrar test uygun", rol="giris_kalite")
+    assert _tum_iz(k, d) == once
+
+
+def test_kimlik_tablosu_yoksa_verilen_rol_kullanilir(katalog_ve_defter):
+    k, d = katalog_ve_defter
+    tablo = k.baglanti.execute("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'kullanicilar'").fetchone()
+    assert tablo is None
+    karari_duzelt(k, d, "mp1", "AST-N", "L1", "karantina", "numune şüpheli", rol="mp")
+    kayit = karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun", rol="mp")
+    assert k.parti("AST-N", "L1").durum == "serbest" and kayit.veri["rol"] == "mp"

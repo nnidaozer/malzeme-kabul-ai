@@ -90,7 +90,7 @@ def test_duzeltme_kaydi_yazilamazsa_parti_durumu_degismez(katalog_ve_defter):
     k, d = katalog_ve_defter
     _kayit_yazilamaz(k.baglanti)
     with pytest.raises(KAYIT_HATALARI):
-        karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun")
+        karari_duzelt(k, d, "mp1", "AST-N", "L1", "serbest", "tekrar test uygun", rol="mp")
     assert k.parti("AST-N", "L1").durum == "bekliyor"
 
 
@@ -98,7 +98,7 @@ def test_karari_duzelt_bos_kullaniciyi_yazmadan_once_reddeder(katalog_ve_defter)
     """B1: karari_duzelt kullanıcıyı hiçbir şey yazmadan önce doğrular (" " ile durum değişmez)."""
     k, d = katalog_ve_defter
     with pytest.raises((DenetimHatasi, KatalogHatasi), match="kullanıcı"):
-        karari_duzelt(k, d, " ", "AST-N", "L1", "serbest", "tekrar test uygun")
+        karari_duzelt(k, d, " ", "AST-N", "L1", "serbest", "tekrar test uygun", rol="mp")
     assert k.parti("AST-N", "L1").durum == "bekliyor"
     assert [x.tur for x in d.kayitlar()] == ["onay"]
 
@@ -522,7 +522,7 @@ def test_duzeltme_formu_denetim_hatasini_kullaniciya_gosterir(uygulama, monkeypa
         raise DenetimHatasi("kullanıcı boş olamaz")
 
     monkeypatch.setattr(uygulama.modul, "karari_duzelt", hatali)
-    uygulama.modul.duzeltme_formu(mock.MagicMock(), mock.MagicMock(), SimpleNamespace(ad="gk"))
+    uygulama.modul.duzeltme_formu(mock.MagicMock(), mock.MagicMock(), SimpleNamespace(ad="gk", rol="giris_kalite"))
     st.error.assert_called_once()
     assert "kullanıcı" in st.error.call_args.args[0]
     st.success.assert_not_called()
@@ -607,7 +607,7 @@ def _araya_insan_karari_sok(monkeypatch, b, kb, ka, da):
         sonuc = orijinal(self, malzeme_kodu, lot_no)
         if self is kb and not durum["tetiklendi"] and not self.baglanti.in_transaction:
             durum["tetiklendi"] = True
-            karari_duzelt(ka, da, "mp1", malzeme_kodu, lot_no, "karantina", "insan: lab sonucu şüpheli")
+            karari_duzelt(ka, da, "mp1", malzeme_kodu, lot_no, "karantina", "insan: lab sonucu şüpheli", rol="mp")
         return sonuc
 
     monkeypatch.setattr(Katalog, "parti", kanca)
@@ -630,7 +630,7 @@ def test_makine_karari_okumasiyla_yazmasi_arasindaki_insan_karantinasini_ezmez(i
     kanca = _araya_insan_karari_sok(monkeypatch, s.kb, s.kb, s.ka, s.da)
     malzeme_koduyla_kontrol(s.kb, "AST-N", _uygun_sertifika(), lot_no="L1", defter=s.db, kullanici="gk1")
     if not kanca["tetiklendi"]:  # yarış penceresi yok: insan kararı sonra gelir
-        karari_duzelt(s.ka, s.da, "mp1", "AST-N", "L1", "karantina", "insan: lab sonucu şüpheli")
+        karari_duzelt(s.ka, s.da, "mp1", "AST-N", "L1", "karantina", "insan: lab sonucu şüpheli", rol="mp")
     assert s.ka.parti("AST-N", "L1").durum == "karantina"
     kararlar = [x for x in s.da.kayitlar("karar") if x.lot_no == "L1"]
     assert len(kararlar) == 1
@@ -646,13 +646,66 @@ def test_karari_duzelt_onceki_durumu_yazma_isleminin_icinde_okur(iki_baglanti, m
     """Önemli 2: iki eşzamanlı düzeltmede sonra yazılan kaydın onceki_durum'u, ilk düzeltmenin yeni_durum'udur."""
     s = iki_baglanti
     kanca = _araya_insan_karari_sok(monkeypatch, s.kb, s.kb, s.ka, s.da)
-    karari_duzelt(s.kb, s.db, "gk2", "AST-N", "L1", "serbest", "yeniden test uygun")
+    karari_duzelt(s.kb, s.db, "mp2", "AST-N", "L1", "serbest", "yeniden test uygun", rol="mp")
     if not kanca["tetiklendi"]:
-        karari_duzelt(s.ka, s.da, "mp1", "AST-N", "L1", "karantina", "insan: lab sonucu şüpheli")
+        karari_duzelt(s.ka, s.da, "mp1", "AST-N", "L1", "karantina", "insan: lab sonucu şüpheli", rol="mp")
     ilk, son = sorted(s.da.kayitlar("duzeltme"), key=lambda x: x.sira)
     assert ilk.veri["onceki_durum"] == "bekliyor"
     assert son.veri["onceki_durum"] == ilk.veri["yeni_durum"]
     assert s.ka.parti("AST-N", "L1").durum == son.veri["yeni_durum"]
+
+
+def _islem_basinda_insan_karantinasi_sok(monkeypatch, kb, ka, da):
+    """B'nin ilk (dış) işlemi açılmadan hemen önce A'da M&P karantinasını yazıp bitirir.
+
+    B işlem dışında parti okuduysa o okuma bayatlar: B'nin kararı ancak işlemin
+    içinde yeniden okursa doğru durumu (karantina) görür. Aynı anda
+    `_araya_insan_karari_sok` gibi işlem dışı parti okumasından sonra da tetiklenir
+    (hangisi önce gelirse).
+    """
+    import contextlib
+
+    durum = {"tetiklendi": False}
+
+    def sok():
+        if not durum["tetiklendi"]:
+            durum["tetiklendi"] = True
+            karari_duzelt(ka, da, "mp1", "AST-N", "L1", "karantina", "M&P: lab sonucu şüpheli", rol="mp")
+
+    orijinal_islem = Katalog.islem
+    orijinal_parti = Katalog.parti
+
+    @contextlib.contextmanager
+    def islem_kancasi(self):
+        if self is kb and not self.baglanti.in_transaction:
+            sok()
+        with orijinal_islem(self) as b:
+            yield b
+
+    def parti_kancasi(self, malzeme_kodu, lot_no):
+        sonuc = orijinal_parti(self, malzeme_kodu, lot_no)
+        if self is kb and not self.baglanti.in_transaction:
+            sok()
+        return sonuc
+
+    monkeypatch.setattr(Katalog, "islem", islem_kancasi)
+    monkeypatch.setattr(Katalog, "parti", parti_kancasi)
+    return durum
+
+
+def test_giris_kalite_serbest_birakirken_araya_giren_mp_karantinasini_ezemez(iki_baglanti, monkeypatch):
+    """Önemli 2 (rol + yarış): giriş kalite bekliyor → serbest isterken araya M&P karantinası girerse
+    giriş kalite M&P hatasıyla reddedilir; parti karantinada kalır, B hiçbir kayıt yazmaz."""
+    s = iki_baglanti
+    assert s.ka.parti("AST-N", "L1").durum == "bekliyor"
+    kanca = _islem_basinda_insan_karantinasi_sok(monkeypatch, s.kb, s.ka, s.da)
+    with pytest.raises(KatalogHatasi, match="M&P"):
+        karari_duzelt(s.kb, s.db, "gk1", "AST-N", "L1", "serbest", "iç laboratuvar sonucu uygun", rol="giris_kalite")
+    assert kanca["tetiklendi"], "araya girme olmadı; test boşa geçti"
+    assert s.ka.parti("AST-N", "L1").durum == "karantina"
+    duzeltmeler = s.da.kayitlar("duzeltme")
+    assert [(x.kullanici, x.veri["yeni_durum"], x.veri["rol"]) for x in duzeltmeler] == [("mp1", "karantina", "mp")]
+    assert s.da.zinciri_dogrula().gecerli
 
 
 # --- Küçük: göç, gelecek zaman, açık işlem ------------------------------------------------------
@@ -898,7 +951,7 @@ def test_duzeltme_formu_veritabani_mesgulse_mesgul_mesaji_gosterir(uygulama, mon
     st.text_area.return_value = "tekrar test uygun"
     st.button.return_value = True
     monkeypatch.setattr(uygulama.modul, "karari_duzelt", _mesgul)
-    uygulama.modul.duzeltme_formu(mock.MagicMock(), mock.MagicMock(), SimpleNamespace(ad="gk"))
+    uygulama.modul.duzeltme_formu(mock.MagicMock(), mock.MagicMock(), SimpleNamespace(ad="gk", rol="giris_kalite"))
     _mesgul_gosterildi(uygulama)
 
 
