@@ -348,7 +348,12 @@ ayarı hatalarını stderr'e yazıp sıfır olmayan kodla çıkar, karar yazmaz.
   dönerse (`cikarim/yerel_model.YEDEK_HATALARI`: OSError, ValueError,
   `ModelYanitHatasi`; yalnız `sohbet` çağrısından gelen KeyError, TypeError,
   IndexError ve HTTPException `ModelYanitHatasi`'na sarılır) kural okumasına
-  düşülür ve kayda yazılır.
+  düşülür ve kayda yazılır (`hat.yedek`). Kural okuması yalnız bilgi içindir;
+  karar onunla verilmez: `kanit` denetimi insan incelemeli olur ("dil modeli
+  yanıt vermedi"), `malzeme_koduyla_kontrol(bekletme_nedeni=...)` uygun ya da
+  uygun değil kontrol satırlarını insan incelemesine alır (gerekçede "kural
+  okumasına göre: ..."), parti kararı inceleme, yeni parti bekliyor kalır.
+  Eksik bilgi hiçbir zaman uygun sonucuna yol açmaz.
 - Okuma anlaşmazlığı: hibritte model başarılıysa sertifika `kural_ile_oku` ile
   de okunur ve `kural/okuma_karsilastirma.sertifika_okumalarini_karsilastir`
   iki okumayı karşılaştırır: standart atfı (belge no, revizyon, tip, sınıf)
