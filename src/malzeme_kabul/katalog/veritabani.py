@@ -730,7 +730,7 @@ class Katalog:
         kullanici: str,
         not_: str | None = None,
         *,
-        rol: str | None = None,
+        rol: str,
     ) -> IcMuayeneSonucu:
         """Partiye bir muayene şartının iç muayene sonucunu yazar (yeni satır; en son giriş geçerli).
 
@@ -739,16 +739,23 @@ class Katalog:
         sürüm ve şartla karşılaştırır. Bilinmeyen sonuç ya da rol, boş kullanıcı,
         katalogda olmayan parti ya da geçerli kabul dokümanında muayene şartı
         olmayan `test_id` KatalogHatasi verir; hiçbir şey yazılmaz. Parti
-        durumunu değiştirmez. Rolün kullanıcı tablosuyla doğrulanması
-        `hat.katalog_karari.ic_muayene_gir`'in işidir.
+        durumunu değiştirmez. `rol` zorunludur ve `ROLLER` içinde olmalıdır;
+        bağlantıda kullanıcı tablosu (`kullanicilar`) varsa kullanıcı orada aynı
+        rolle kayıtlı olmalıdır. Böylece rolsüz ya da doğrulanmamış bir giriş
+        hiçbir yoldan partiyi kabul ettiremez. Denetim kaydıyla birlikte yazmak
+        için `hat.katalog_karari.ic_muayene_gir` kullanılır.
         """
         if not isinstance(sonuc, str) or sonuc not in IC_MUAYENE_SONUCLARI:
             raise KatalogHatasi(f"bilinmeyen iç muayene sonucu: {sonuc!r} ({', '.join(IC_MUAYENE_SONUCLARI)})")
         if not isinstance(kullanici, str) or not kullanici.strip():
             raise KatalogHatasi("iç muayene sonucu için kullanıcı gerekli")
-        if rol is not None and rol not in ROLLER:
+        if not isinstance(rol, str) or rol not in ROLLER:
             raise KatalogHatasi(f"bilinmeyen rol: {rol!r} ({', '.join(ROLLER)})")
         with self.islem() as b:
+            if b.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'kullanicilar'").fetchone():
+                kayit = b.execute("SELECT rol FROM kullanicilar WHERE ad = ?", (kullanici,)).fetchone()
+                if kayit is None or kayit[0] != rol:
+                    raise KatalogHatasi(f"kullanıcı {kullanici!r} kullanıcı tablosunda {rol!r} rolüyle kayıtlı değil")
             self.parti(malzeme_kodu, lot_no)
             surum = self.gecerli_dokuman(malzeme_kodu)
             sart = next((t for t in surum.dokuman.testler if t.muayene_sarti and t.id == test_id), None)

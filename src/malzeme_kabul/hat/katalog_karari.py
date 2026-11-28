@@ -185,6 +185,9 @@ def _muayene_denetimleri(
         s = sonuclar.get(t.id)
         if s is None:
             satirlar.append(KararSatiri(karar="insan_incelemeli", gerekce=IC_MUAYENE_GIRILMEDI, **ortak))
+        elif s.rol not in ROLLER:  # katalog rolsüz girişi reddeder; elle yazılmış satıra karşı ikinci kat
+            satirlar.append(KararSatiri(
+                karar="insan_incelemeli", gerekce=f"iç muayene sonucu rolsüz girilmiş ({s.kullanici})", **ortak))
         elif s.dokuman_surumu != surum.etiket or s.sart_ozeti != icerik_ozeti(t.model_dump_json()):
             gerekce = (
                 f"iç muayene sonucu ({s.sonuc}, {s.kullanici}, {s.zaman}) {IC_MUAYENE_ONCEKI_SURUM}"
