@@ -1,0 +1,289 @@
+{
+  "sayfa": 6,
+  "sure_s": 78.064,
+  "testler": [
+    {
+      "id": "pigment",
+      "test_adi": "Pigment",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "3.4.1.1 Class C1. Primer coatings containing barium chromate based corrosion inhibitors, along with extenders and other pigments, shall be identified as class C1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4.1.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "pigment",
+      "test_adi": "Pigment",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "3.4.1.2 Class C2. Primer coatings containing strontium chromate conforming to ASTM D1649 as the corrosion inhibitor, along with extenders and other pigments, shall be identified as class C2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4.1.2",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "pigment",
+      "test_adi": "Pigment",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "3.4.1.3 Class N. Primer coatings containing non-chromium corrosion inhibitors, along with extenders and other pigments, shall be identified as class N. Incidental hexavalent chromium content of class N primer coatings shall be not greater than 5 ppm (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4.1.3",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "voc_content",
+      "test_adi": "Volatile organic compound (VOC) content",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 340.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "g/L",
+        "yon": null,
+        "orijinal_metin": "The VOC content of admixed primer coatings shall be not greater than 340 g/L (2.8 lb/gal)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4.2",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "resistivity",
+      "test_adi": "Resistivity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The resistivity of the solvents shall permit application of the coatings by electrostatic spray application (see 4.5)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4.2",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "thinner_compatibility",
+      "test_adi": "Thinner compatibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "3.4.2.1 Thinner compatibility. The admixed primer coatings shall be compatible with thinner conforming to MIL-T-81772, type II (see 6.11)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.4.2.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "condition_in_container",
+      "test_adi": "Condition in container",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "3.5.2 Condition in container. Components A, B, and C (if applicable) shall be free of grit, seeds, lumps, abnormal thickening or livering, and shall not show pigment flotation nor excessive settling. They shall mix to a smooth, homogeneous, and pourable condition. In addition, the containers shall exhibit no deformation (see 4.5.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.2",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "storage_stability",
+      "test_adi": "Storage stability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 1.7,
+        "ust": 46.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "°C",
+        "yon": null,
+        "orijinal_metin": "3.5.3 Storage stability. The unopened coating components, as packaged by the manufacturer, shall meet all requirements of this specification after storage for a period of one year for metal containers and six months for plastic containers. The conditions for the storage shall be a daily ambient air temperature that is maintained at 1.7 to 46° C (35 to 115° F) (see 4.5 and 6.3.1)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.3",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "accelerated_storage_stability",
+      "test_adi": "Accelerated storage stability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 14.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "day",
+        "yon": null,
+        "orijinal_metin": "3.5.4 Accelerated storage stability. The primer coating, as packaged by the manufacturer, shall meet all requirements of this specification after storage for 14 days and admixing (see 4.5.2). The container shall not become deformed or the lid shall not become unsealed during the storage period."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-23377",
+        "revizyon": "K",
+        "madde": "3.5.4",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 6 (fineness_of_grind): sinir.birim: Value error, pint bu birimi tanımıyor: 'Hegman scale'"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

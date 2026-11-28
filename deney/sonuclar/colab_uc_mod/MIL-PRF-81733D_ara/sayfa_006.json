@@ -1,0 +1,73 @@
+{
+  "sayfa": 6,
+  "sure_s": 43.848,
+  "testler": [
+    {
+      "id": "kits",
+      "test_adi": "Kits",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The base compound and the curing agent shall be packaged in individual containers. The base compound shall be furnished in 1/2-pint, 1-pint, 1-quart, or 1-gallon multiple friction top metal containers as specified by the acquiring activity. The appropriate amount of curing agent shall be furnished in inert, nonmetallic jars having smooth, vertical inside walls with screw caps (to facilitate removal of the curing agent). The air in the unfilled space of the kit shall be replaced with an inert gas (nitrogen or carbon dioxide) immediately prior to closing the container. The ratio of the quantity contained in the base compound container to the quantity contained in the accompanying curing agent container shall be the same as the manufacturer’s recommended mixing ratio of the base compound and curing agent. Each curing agent container shall be packaged with one base compound container with a separator between the two containers in a manner which will prevent accidental separation but permit easy separation for mixing purposes."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.2.2.1",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "sectional_type_kits",
+      "test_adi": "Sectional-type kits (Types I, II, and IV)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The base compound and curing agent shall be furnished in sectional-type 2-1/2-ounce or 6-ounce nonmetal containers, conforming to MIL-S-38714, as specified by the acquiring activity. The total amount of base compound and curing agent in each sectional-type container shall be as described below."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.2.2.2",
+        "sayfa": 6,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 2 (kit_size_base_compound_and_curing_agent_volume_tolerance): sinir.birim: Value error, pint bu birimi tanımıyor: 'fluid ounce'",
+    "test 3 (kit_size_base_compound_and_curing_agent_volume_tolerance_2): sinir.birim: Value error, pint bu birimi tanımıyor: 'fluid ounce'"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

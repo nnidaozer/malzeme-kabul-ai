@@ -1,0 +1,16 @@
+durum,kayit,alan,deger,madde,sayfa,madde_sayfada
+bulundu,solvent_content,test.sinir.ust,420,3.4.1,6,evet
+bulundu,fineness_of_grind,test.sinir.alt,7,3.6.1,8,evet
+bulundu,drying_time,test.sinir.ust,6,3.7.1,8,evet
+bulundu,infrared_reflectance,test.sinir.ust,8,3.7.4,8,evet
+bulundu,humidity_resistance,test.sinir.alt,30,3.8.3,10,evet
+bulundu,cleanability,test.sinir.alt,75,3.9.3,10,evet
+bulundu,strippability,test.sinir.alt,90,3.9.4,10,evet
+bulundu,primer_coating,test.sinir.alt,0.6,4.5.2.1,13,evet
+bulundu,primer_coating,test.sinir.ust,0.9,4.5.2.1,13,evet
+bulundu,topcoat,test.sinir.alt,1.7,4.5.2.2,13,evet
+bulundu,topcoat,test.sinir.ust,2.3,4.5.2.2,13,evet
+bulundu,air_drying,test.sinir.alt,14,4.5.2.2,13,evet
+bulundu,flexibility,test.sinir.alt,14,4.6.7,16,evet
+bulundu,weather_resistance_2,test.sinir.alt,3000,4.6.9,17,evet
+bulundu,genel,raf_omru.sure,1,3.5.2,7,evet

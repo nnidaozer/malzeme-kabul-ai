@@ -1,0 +1,166 @@
+{
+  "sayfa": 9,
+  "sure_s": 65.07,
+  "testler": [
+    {
+      "id": "gloss",
+      "test_adi": "Gloss",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The specular gloss of the coating, when tested as specified in 4.6, shall be as shown in table III at a 60° angle of incidence."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.5",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "adhesion",
+      "test_adi": "Adhesion",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 4.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "A",
+        "yon": "en_az",
+        "orijinal_metin": "The coating shall have a rating of no less than 4A when examined in accordance with ASTM D3359 (see 4.6.6)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.7",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "impact_flexibility",
+      "test_adi": "Impact flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 40.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": false,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "The coating shall meet the following minimum requirements for ambient temperature impact flexibility: types I, III and IV, 40 percent; and type II, 5 percent; when tested in accordance with 4.6.7.1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.8.1",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "low_temperature_flexibility",
+      "test_adi": "Low-temperature flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The type I, type III, and type IV coatings, at a temperature of -51 ±3 °C (-60 ±5 °F), shall exhibit no cracking when bent, coated side away, over a 1.0 inch (in.) [25.4 millimeter (mm)] mandrel for gloss and semi-gloss colors, and over a 2.0 in. (50.8 mm) mandrel for camouflage colors, when tested in accordance with 4.6.7.2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.7.8.2",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid_resistance",
+      "test_adi": "Fluid resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "gecti_kaldi",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "When immersed in lubricating oil conforming to MIL-PRF-23699, hydraulic fluid conforming to MIL-PRF-83282, and JP-5 fuel conforming to MIL-DTL-5624, the coating shall not exhibit any blistering, softening, or other coating defects. Slight staining of the coating is acceptable (see 4.6.8)."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.1",
+        "sayfa": 9,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 1 (opacity): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=0.9, üst=0.95); emin değilsen 'belirsiz' yaz",
+    "test 6 (weather_resistance): sinir.birim: Value error, pint bu birimi tanımıyor: 'G.U.'"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

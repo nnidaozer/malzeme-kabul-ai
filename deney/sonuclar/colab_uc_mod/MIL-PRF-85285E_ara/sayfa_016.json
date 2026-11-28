@@ -1,0 +1,194 @@
+{
+  "sayfa": 16,
+  "sure_s": 59.65,
+  "testler": [
+    {
+      "id": "contrast_ratio",
+      "test_adi": "contrast_ratio",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The contrast ratio is calculated as follows: C = L  L ."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.6",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "adhesion",
+      "test_adi": "adhesion",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The coating shall be applied to the test panels in accordance with 4.5 through 4.5.2. The test panels shall be immersed in distilled water for no less than 24 hours at room temperature (see 4.2). Remove the test panels from the water and wipe dry with a soft cloth. Within 3 minutes after removal from the water make two parallel scribes with a stylus through the coating to the substrate. The scribes shall be ¾ of an inch apart and 2-inches long. The panels shall then be scribed to the substrate from opposing ends of the parallel scribes to form an “X”. Immediately apply a 1-inch wide strip of masking tape having an average adhesion of 60-ounces/inch widths (3M Company #250 or equivalent as approved by the qualifying activity. The tape shelf life is typically one year from date of manufacture) with the adhesive side down across the scribes. Press the tape against the surface of the coating by passing a 4½-pound rubber covered roller, approximately 3½ inches in diameter and 1¾ inches in width across the tape eight times. Remove the tape with one quick motion and examine for coating damage. Examine the coating for conformance to 3.7.7."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.6",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "flexibility",
+      "test_adi": "flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Test panels shall be aluminum alloy 2024 (0 temper) conforming to SAE AMS-QQ-A-250/4 and shall be anodized in accordance with MIL-A-8625, type I. Test panel dimensions shall be 0.020 by 3.0 by 6.0 in. (0.5 by 76.2 by 152.4 mm). Apply the topcoat, without a primer, in accordance with 4.5.2.2, and allow the test panels to air-dry for no less than 14 days before testing."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "impact_flexibility",
+      "test_adi": "impact_flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The flexibility of the coating shall then be tested in accordance with ASTM D6905, using a Gardco GE Universal Impact Tester, Model #172 (or equivalent as approved by the qualifying activity). Place the coated panel, film side downward, on the rubber pad at the bottom of the impacter guide. Drop the impacter on the panel through the impacter guide, ensuring that the impression of the entire rim of the impacter is made in the panel. Reverse the impacter ends and drop it through the guide on the panel adjacent to the first area of impact. Using 10 power magnification, examine for conformance to 3.7.8.1; record the percent elongation corresponding to the largest spherical impression at which no cracking occurs."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7.1",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "low_temperature_flexibility",
+      "test_adi": "low_temperature_flexibility",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The test shall be performed at a temperature of -51 ±3 °C (-60 ±5 °F) using a 1.0 in. mandrel for gloss and semi-gloss colors and a 2.0 in. mandrel for camouflage colors. After testing, examine the coating using the unaided eye, for conformance to 3.7.8.2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.7.2",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "fluid_resistance",
+      "test_adi": "fluid_resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The coating applied to test panels in accordance with 4.5 through 4.5.2 shall be immersed in the fluids, at the temperature, and for the minimum time specified in table V. The film shall be observed one hour after removal from the fluid and examined for conformance to 3.8.1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "4.6.8",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

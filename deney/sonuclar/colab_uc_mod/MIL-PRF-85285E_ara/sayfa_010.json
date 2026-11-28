@@ -1,0 +1,259 @@
+{
+  "sayfa": 10,
+  "sure_s": 85.156,
+  "testler": [
+    {
+      "id": "g_u_60",
+      "test_adi": "15 G.U. at 60°",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "(c) The camouflage colors shall have a change in G.U. of less than 3 at 60° and 85° from the unexposed initial values,"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.3",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "g_u_85",
+      "test_adi": "15 G.U. at 60°",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "85° from the unexposed initial values, and (d) the coating color difference (ΔE) shall have a value of less than 1.0 when compared to an unexposed sample of the same batch using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.3",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "humidity_resistance",
+      "test_adi": "Humidity resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 30.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "day",
+        "yon": "en_az",
+        "orijinal_metin": "The coating shall withstand exposure for no less than 30 days in a humidity cabinet maintained at 49 ±2 °C (120 ±3 °F) and 100 percent relative humidity (RH) without blistering, softening, exhibiting any loss of adhesion, nor other film defects when tested as specified in 4.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.3",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "heat_resistance",
+      "test_adi": "Heat resistance (color change)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.0,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "unit",
+        "yon": "en_cok",
+        "orijinal_metin": "The coating after exposure shall have a color difference (E) less than or equal to 1.0 when compared to an unexposed sample of the same batch and tested as specified in 4.6.10 using CIELAB color coordinates."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.4",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "tape_resistance",
+      "test_adi": "Tape resistance",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The coating shall not exhibit permanent marring caused by masking tape applied to the coated test panels, when tested in accordance with 4.6.12."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.8.6",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "mixing",
+      "test_adi": "Mixing",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The components of the coating, including thinner if applicable (see 3.5.1.3), shall homogeneously blend when mixed by a paint shaker in the volume mixing ratio specified by the manufacturer. Within one hour of mixing, the admixed coating shall not separate into visually distinct layers or exhibit foaming that persists one hour or more after mixing."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.1",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "cleanability",
+      "test_adi": "Cleanability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 75.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "The coating shall maintain a cleaning efficiency of not less than 75 percent for semi-gloss and camouflage colors and 90 percent for gloss colors, when cleaned in accordance with 4.6.13 through 4.6.13.5."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.3",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "strippability",
+      "test_adi": "Strippability",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 90.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "%",
+        "yon": "en_az",
+        "orijinal_metin": "Coatings shall be tested in accordance with Methods A and B of 4.6.14, and a minimum of 90 percent of the coating shall be stripped by one of the methods."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-85285",
+        "revizyon": "E",
+        "madde": "3.9.4",
+        "sayfa": 10,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [
+    "test 4 (solvent_resistance): sinir.birim: Value error, pint bu birimi tanımıyor: 'double rub'",
+    "test 7 (application): sinir: Value error, yön 'aralik' alt/üst sınırla uyuşmuyor (alt=1.7, üst=None); emin değilsen 'belirsiz' yaz"
+  ],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

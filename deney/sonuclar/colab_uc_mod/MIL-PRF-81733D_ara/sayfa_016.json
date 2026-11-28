@@ -1,0 +1,70 @@
+{
+  "sayfa": 16,
+  "sure_s": 16.671,
+  "testler": [
+    {
+      "id": "specific_gravity",
+      "test_adi": "specific gravity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The specific gravity shall be computed as follows: Weight in air Specific gravity = Weight in air - weight in water (Analytical balance) Specific gravity Weight in air = (Jolly balance) Weight in water"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "corrosion_testing",
+      "test_adi": "corrosion testing",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Corrosion testing shall consist of stressed aluminum assemblies (see 4.8.9.1) and mixed metal assemblies (see 4.8.9.2) undergoing exposure to a corrosive environment."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.9",
+        "sayfa": 16,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

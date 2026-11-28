@@ -1,0 +1,14 @@
+durum,kayit,alan,deger,madde,sayfa,madde_sayfada
+bulundu,flow,test.sinir.ust,0.75,3.3.1.4,7,evet
+bulundu,assembly_time,test.sinir.ust,0.005,3.3.1.7,8,evet
+bulundu,hardness,test.sinir.alt,35,3.3.2.1,8,evet
+bulundu,specific_gravity,test.sinir.ust,1.65,3.3.2.2,8,evet
+bulundu,specific_gravity_class_2,test.sinir.ust,1.65,3.3.2.2,8,evet
+bulundu,tensile_strength,test.sinir.alt,200,3.3.2.6,9,evet
+bulundu,elongation,test.sinir.alt,150,3.3.2.7,9,evet
+bulundu,repairability,test.sinir.alt,10,3.3.2.10,9,evet
+bulundu,air_content,test.sinir.ust,4,3.3.2.11,9,evet
+bulundu,aluminum_corrosion_test_assemblies,test.sinir.alt,1,TABLE VIII,17,evet
+bulundu,aluminum_corrosion_test_assemblies,test.sinir.ust,2,TABLE VIII,17,evet
+bulundu,adhesion_determination,test.sinir.ust,10,4.8.13.3,20,evet
+bulundu,testing_machine,test.sinir.ust,85,4.8.13.3,20,evet

@@ -1,0 +1,132 @@
+{
+  "sayfa": 15,
+  "sure_s": 37.035,
+  "testler": [
+    {
+      "id": "tack_free_time",
+      "test_adi": "Tack-free time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "At the end of the specified tack-free time, two 1- by 6-inch pieces of clean polyethylene film conforming to L-P-378, 0.004 ± 0.002 inch thick, shall be applied to the sealing compound and held in place at a pressure of 0.5 ounce per square inch for 2 minutes. The film shall be slowly and evenly withdrawn at right angles to the sealing compound surface and shall come away clean and free of sealing compound."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.5",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "assembly_time",
+      "test_adi": "Assembly time (Type IV only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The thickness of the sandwiched sealing compound shall be from 0.010 to 0.015 inch. The specimens shall be exposed to standard conditions for the following times: Type IV-4 - 8 hours, Type IV-12 - 24 hours, Type IV-24 - 48 hours, Type IV-40 - 120 hours, Type IV-48 - 168 hours. The fasteners shall then be tightened to a torque value of 40 inch pounds. The thickness of the assembly shall be measured at the fasteners using a micrometer. The thickness of the sealing compound shall be determined by subtracting the panel thicknesses from the overall thickness of the assembly. Conformance to 3.3.1.7 shall be noted."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.6",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "hardness",
+      "test_adi": "Hardness",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Instantaneous hardness (ASTM-D2240) shall be determined on an approximately 0.25-inch thick specimen using a Type A-2 Shore Durometer. Type III specimens shall be cut from a cured ASTM-D3182 standard sheet, or equivalent, and plied to the required thickness."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.7",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "specific_gravity",
+      "test_adi": "Specific gravity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Three specimens, measuring approximately 0.03 by 1 by 2 inches, shall be prepared and cured as specified in 4.7. The specimens shall be weighed in air and then in"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.8",
+        "sayfa": 15,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

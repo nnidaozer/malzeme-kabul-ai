@@ -1,0 +1,235 @@
+{
+  "sayfa": 8,
+  "sure_s": 62.754,
+  "testler": [
+    {
+      "id": "application_time",
+      "test_adi": "Application time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Minimum Time, Time, Time, Time, Type I hours Type II hours Type III hours Type IV hours -1/61 1/6 -42 4 -1/42 1/4 -1/4 1/4 -1 1 -12 12 -1/2 1/2 -1/2 1/2 -24 24 -2 2 -2 2 -40 40 -4 4 -48 48 1 Class 1 only. 2 Class 2 only."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE III",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "tack_free_time",
+      "test_adi": "Tack-free time",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Type Time, hours Type Time, hours Type Time, hours I Class 1 Class 2 II Class 1 Class 2 III Class 1 Class 2 -1/6 4 ¾ -1/4 - 4 -1/4 8 1 -1 8 8 -1/2 16 8 -1/2 16 2 -2 24 16 -2 24 12 -4 ¾ 24"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE IV",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "assembly_time",
+      "test_adi": "Assembly time (Type IV only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 0.005,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "inch",
+        "yon": "en_cok",
+        "orijinal_metin": "The sealant shall squeeze out to a thickness no greater than 0.005 inch at the bolts when tested as specified in 4.8.6."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.1.7",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "Type IV"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "hardness",
+      "test_adi": "Hardness",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": 35.0,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "unit",
+        "yon": "en_az",
+        "orijinal_metin": "The Shore A-2 hardness of the cured sealing compound shall be not less than 35 for Types I, II, and III or 30 for Type IV."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.1",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "Type I",
+        "Type II",
+        "Type III"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "specific_gravity",
+      "test_adi": "Specific gravity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.65,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "unit",
+        "yon": "en_cok",
+        "orijinal_metin": "The specific gravity of the cured sealing compound shall be not greater than 1.65 for Class 1 or 1.50 for Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "Class 1"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "specific_gravity_class_2",
+      "test_adi": "Specific gravity",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "sayisal",
+        "alt": null,
+        "ust": 1.5,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": "unit",
+        "yon": "en_cok",
+        "orijinal_metin": "The specific gravity of the cured sealing compound shall be not greater than 1.65 for Class 1 or 1.50 for Class 2."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.2",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [
+        "Class 2"
+      ],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "corrosion",
+      "test_adi": "Corrosion",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "The cured sealing compound shall not in itself induce corrosion and shall protect the substrate metal. There shall be no visible evidence of corrosion at the metal-sealant interface."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "3.3.2.3",
+        "sayfa": 8,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

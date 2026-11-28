@@ -1,0 +1,101 @@
+{
+  "sayfa": 13,
+  "sure_s": 38.029,
+  "testler": [
+    {
+      "id": "standard_cure_cycle",
+      "test_adi": "Standard cure cycle",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Type Cure Conditions\nClass 1, Types I and III 7 days at standard conditions or 24 hours at standard conditions plus 24 hours at 120° ± 2° F (49° ± 1° C)\nClass 1, Type II 14 days at standard conditions or 48 hours at standard conditions plus 24 hours at 120° ± 2° F (49° ± 1° C)\nClass 1, Type IV\n-12 hour application time 14 days at standard conditions or 24 hours at standard conditions plus 48 hours at 120° ± 2° F (49° ± 1° C)\n-24 hour application time 21 days at standard conditions or 24 hours at standard conditions plus 96 hours at 120° ± 2° F (49° ± 1° C)\n-40 hour application time 49 days at standard conditions or 24 hours at standard conditions plus 7 days at 120° ± 2° F (49° ± 1° C)\n-48 hour application time 56 days at standard conditions or 24 hours at standard conditions plus 9 days at 120° ± 2° F (49° ± 1° C)\nClass 2, All Types 14 days at standard conditions or 48 hours at standard conditions plus 24 ± 1 hours at 140° ± 2° F (60° ± 1° C)"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "TABLE VII",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "nonvolatile_content",
+      "test_adi": "Nonvolatile content",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "Five to 10 grams of the mixed sealing compound shall be transferred to a dish approximately 3.1 inches in diameter. The dish shall be tightly covered immediately and weighed to the nearest milligram. The cover shall then be removed and the sealing compound shall be heated for 72 ± 1 hours at 158° ± 2° F (70° ± 1° C). The compound shall be transferred to a desiccator and cooled to room temperature. The dish shall be covered again and weighed to the nearest milligram. The percent nonvolatile content shall be calculated as follows:\nFinal weight of compound\nPercent nonvolatile content = X 100\nInitial weight of compound"
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.2",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    },
+    {
+      "id": "flow_type_ii",
+      "test_adi": "Flow (Type II only)",
+      "kaynak_tablo_adi": null,
+      "test_metodu": null,
+      "metot_kaynagi": null,
+      "sinir": {
+        "kriter_turu": "metinsel",
+        "alt": null,
+        "ust": null,
+        "alt_dahil": true,
+        "ust_dahil": true,
+        "birim": null,
+        "yon": null,
+        "orijinal_metin": "A 250-gram lot of sealing compound shall be prepared for testing as specified in 4.5.2. The test shall be conducted by using a flow-test fixture as shown on figure 1. Depth of plunger tolerance is critical and shall be controlled as specified on figure 1."
+      },
+      "kaynak": {
+        "belge_no": "MIL-PRF-81733",
+        "revizyon": "D",
+        "madde": "4.8.3",
+        "sayfa": 13,
+        "alinti": null
+      },
+      "test_turleri": [
+        "kabul"
+      ],
+      "uygulanabilirlik": [],
+      "sonuc_kaynagi": "coc",
+      "numune_hazirlama_id": null,
+      "test_kosulu": null
+    }
+  ],
+  "hatalar": [],
+  "parmak_izi": "77861210faa945ebebc47d4b3951e6c1d107ed821ee44519123f93c3a4df9c1e"
+}

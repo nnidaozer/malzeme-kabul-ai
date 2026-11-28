@@ -1,0 +1,393 @@
+{
+  "model": "qwen3:8b",
+  "belge": "MIL-PRF-81733D",
+  "sayfa_sayisi": 34,
+  "modlar": {
+    "kural": {
+      "test_sayisi": 0,
+      "sure_s": 2.88,
+      "insan_incelemeli_sinir": 0
+    },
+    "dil_modeli": {
+      "test_sayisi": 54,
+      "sure_s": 819.698,
+      "insan_incelemeli_sinir": 2
+    },
+    "hibrit": {
+      "test_sayisi": 52,
+      "sure_s": 822.589,
+      "insan_incelemeli_sinir": 0
+    }
+  },
+  "anlasmazlik_sayisi": 0,
+  "anlasmazlikli_test_sayisi": 0,
+  "dil_modeli_raporu": {
+    "sayfalar": [
+      {
+        "sayfa": 1,
+        "sure_s": 2.832,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 2,
+        "sure_s": 2.696,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 3,
+        "sure_s": 2.826,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 4,
+        "sure_s": 2.791,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 5,
+        "sure_s": 13.687,
+        "test_sayisi": 0,
+        "hatalar": [
+          "test 0 (unit_of_issue): sinir.birim: Value error, pint bu birimi tanımıyor: 'fluid ounce'"
+        ]
+      },
+      {
+        "sayfa": 6,
+        "sure_s": 43.848,
+        "test_sayisi": 2,
+        "hatalar": [
+          "test 2 (kit_size_base_compound_and_curing_agent_volume_tolerance): sinir.birim: Value error, pint bu birimi tanımıyor: 'fluid ounce'",
+          "test 3 (kit_size_base_compound_and_curing_agent_volume_tolerance_2): sinir.birim: Value error, pint bu birimi tanımıyor: 'fluid ounce'"
+        ]
+      },
+      {
+        "sayfa": 7,
+        "sure_s": 42.642,
+        "test_sayisi": 3,
+        "hatalar": [
+          "test 2 (initial_viscosity): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli",
+          "test 3 (application_time): sinir: Value error, yön 'en_cok' alt/üst sınırla uyuşmuyor (alt=15.0, üst=None); emin değilsen 'belirsiz' yaz"
+        ]
+      },
+      {
+        "sayfa": 8,
+        "sure_s": 62.754,
+        "test_sayisi": 7,
+        "hatalar": []
+      },
+      {
+        "sayfa": 9,
+        "sure_s": 72.976,
+        "test_sayisi": 8,
+        "hatalar": [
+          "test 4 (peel_strength): sinir.birim: Value error, pint bu birimi tanımıyor: 'piw'"
+        ]
+      },
+      {
+        "sayfa": 10,
+        "sure_s": 28.668,
+        "test_sayisi": 5,
+        "hatalar": []
+      },
+      {
+        "sayfa": 11,
+        "sure_s": 90.672,
+        "test_sayisi": 16,
+        "hatalar": []
+      },
+      {
+        "sayfa": 12,
+        "sure_s": 62.981,
+        "test_sayisi": 10,
+        "hatalar": []
+      },
+      {
+        "sayfa": 13,
+        "sure_s": 38.029,
+        "test_sayisi": 3,
+        "hatalar": []
+      },
+      {
+        "sayfa": 14,
+        "sure_s": 37.695,
+        "test_sayisi": 3,
+        "hatalar": [
+          "test 1 (initial_viscosity): sinir: Value error, sayısal kriter için alt ya da üst sınırdan en az biri gerekli"
+        ]
+      },
+      {
+        "sayfa": 15,
+        "sure_s": 37.035,
+        "test_sayisi": 4,
+        "hatalar": []
+      },
+      {
+        "sayfa": 16,
+        "sure_s": 16.671,
+        "test_sayisi": 2,
+        "hatalar": []
+      },
+      {
+        "sayfa": 17,
+        "sure_s": 54.592,
+        "test_sayisi": 8,
+        "hatalar": []
+      },
+      {
+        "sayfa": 18,
+        "sure_s": 19.131,
+        "test_sayisi": 1,
+        "hatalar": []
+      },
+      {
+        "sayfa": 19,
+        "sure_s": 30.552,
+        "test_sayisi": 3,
+        "hatalar": []
+      },
+      {
+        "sayfa": 20,
+        "sure_s": 81.344,
+        "test_sayisi": 10,
+        "hatalar": [
+          "test 10 (minimum_cuts): sinir.birim: Value error, pint bu birimi tanımıyor: 'cuts'"
+        ]
+      },
+      {
+        "sayfa": 21,
+        "sure_s": 21.322,
+        "test_sayisi": 3,
+        "hatalar": []
+      },
+      {
+        "sayfa": 22,
+        "sure_s": 2.913,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 23,
+        "sure_s": 24.711,
+        "test_sayisi": 3,
+        "hatalar": []
+      },
+      {
+        "sayfa": 24,
+        "sure_s": 2.923,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 25,
+        "sure_s": 2.859,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 26,
+        "sure_s": 2.389,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 27,
+        "sure_s": 2.366,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 28,
+        "sure_s": 2.187,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 29,
+        "sure_s": 2.251,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 30,
+        "sure_s": 2.2,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 31,
+        "sure_s": 2.237,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 32,
+        "sure_s": 2.274,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 33,
+        "sure_s": 2.456,
+        "test_sayisi": 0,
+        "hatalar": []
+      },
+      {
+        "sayfa": 34,
+        "sure_s": 2.188,
+        "test_sayisi": 0,
+        "hatalar": []
+      }
+    ],
+    "tekrar_edenler": [
+      "tack_free_time",
+      "flow",
+      "application_life",
+      "tack_free_time",
+      "assembly_time",
+      "hardness",
+      "specific_gravity",
+      "corrosion",
+      "low_temperature_flexibility",
+      "thermal_stability",
+      "tensile_strength",
+      "elongation",
+      "repairability",
+      "air_content",
+      "long_term_storage",
+      "nonvolatile_content",
+      "flow",
+      "application_life",
+      "hardness",
+      "specific_gravity",
+      "thermal_stability",
+      "anchorage_wet_tape",
+      "unit_of_issue",
+      "warning_label",
+      "nonvolatile_content",
+      "application_time",
+      "tack_free_time",
+      "assembly_time",
+      "hardness",
+      "specific_gravity",
+      "specific_gravity",
+      "low_temperature_flexibility",
+      "thermal_stability",
+      "peel_strength",
+      "repairability",
+      "air_content",
+      "long_term_storage"
+    ],
+    "yon_celiskileri": [
+      {
+        "id": "application_time_type_ii_and_iv",
+        "sayfa": 14,
+        "metin_yonu": "aralik",
+        "model_yonu": "en_az",
+        "orijinal_metin": "At the end of the specified application time, measured from the beginning of the mixing period, the sealing compound shall be extruded through a Semco 440 nozzle, or equivalent, with an orifice of 0.125 ± 0.005 inch at 90 ± 5 psig air pressure onto a dish for 1 minute."
+      },
+      {
+        "id": "testing_machine",
+        "sayfa": 20,
+        "metin_yonu": "en_cok",
+        "model_yonu": "aralik",
+        "orijinal_metin": "The panels shall be individually tested in an autographic testing machine whose capacity shall be such that the tension at failure is not greater than 85 percent nor less than 15 percent of the full scale load."
+      }
+    ],
+    "toplam_sure_s": 820.065,
+    "test_sayisi": 54,
+    "devam_edilen_sayfalar": []
+  },
+  "hibrit_raporu": {
+    "kural_test_sayisi": 0,
+    "eklenen": [
+      "kits",
+      "sectional_type_kits",
+      "flow",
+      "application_life",
+      "tack_free_time",
+      "application_time",
+      "assembly_time",
+      "hardness",
+      "specific_gravity",
+      "specific_gravity_class_2",
+      "corrosion",
+      "low_temperature_flexibility",
+      "tensile_strength",
+      "elongation",
+      "anchorage",
+      "repairability",
+      "air_content",
+      "long_term_storage",
+      "appearance",
+      "color",
+      "nonvolatile_content",
+      "peel_strength",
+      "anchorage_wet_tape",
+      "unit_of_issue",
+      "warning_label",
+      "peel_strength_initial_adherend_1",
+      "standard_cure_cycle",
+      "flow_type_ii",
+      "flow_measurement",
+      "application_time_type_ii_and_iv",
+      "corrosion_testing",
+      "aluminum_corrosion_test_assemblies",
+      "threaded_fasteners",
+      "type_ii_sealing_compound",
+      "type_iii_sealing_compound",
+      "curing",
+      "scribing",
+      "stress_cycling",
+      "temperature_and_soak",
+      "tensile_strength_and_elongation",
+      "adherend_test",
+      "adhesion_determination",
+      "strip_cutting",
+      "panel_edge_usage",
+      "testing_machine",
+      "pendulum_type_machine",
+      "separation_rate",
+      "strip_mounting",
+      "sealant_cutting",
+      "sealant_separation",
+      "adhesion",
+      "three_test_runs"
+    ],
+    "kuralla_eslesen": [],
+    "kanitsiz": [
+      [
+        "thermal_stability",
+        "özgün metin sayfa 9 metninde yok"
+      ],
+      [
+        "distance_between_marks_b_and_c",
+        "özgün metin sayfa 23 metninde yok"
+      ]
+    ],
+    "sayi_atildi": [
+      "flow_measurement",
+      "application_time_type_ii_and_iv",
+      "separation_rate"
+    ],
+    "anlasmazliklar": [],
+    "anlasmazlik_sayisi": 0,
+    "anlasmazlikli_test_sayisi": 0,
+    "isaretlenemeyen": []
+  },
+  "olcum": {
+    "gold_taslak": {
+      "kural": 0.0,
+      "dil_modeli": 0.191,
+      "hibrit": 0.1741
+    },
+    "gold_codex": {
+      "kural": 0.0,
+      "dil_modeli": 0.0484,
+      "hibrit": 0.0457
+    }
+  }
+}
