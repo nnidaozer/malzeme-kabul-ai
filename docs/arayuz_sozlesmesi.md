@@ -1284,15 +1284,26 @@ tarihi önce gelir, bilinmeyenler sondadır. Anahtarlar:
 
 - `malzeme`, `lot`, `tedarikçi`, `durum`
 - `M&P`: işaret ya da boş
-- `kabul dokümanı`: raf ömrünün alındığı geçerli sürümün etiketi (ör.
-  `"MIL-PRF-23377K v1"`); sürüm demo onaylıysa sonuna
-  `" (DEMO ONAYI (M&P onayı değil))"` eklenir. Onaylı doküman yoksa boş.
+- `kabul dokümanı`: raf ömrünün alındığı sürümün etiketi (ör.
+  `"MIL-PRF-23377K v1"`): lotun sipariş revizyonunun (kırpılıp büyük harfe
+  çevrilerek) en son onaylı sürümü; malzemenin güncel revizyonu değil. Sürüm
+  demo onaylıysa sonuna `" (DEMO ONAYI (M&P onayı değil))"` eklenir. Sipariş
+  revizyonu için onaylı doküman yoksa boş.
 - `üretim`: ISO tarih
 - `son kullanma`: ISO tarih ya da boş
 - `kalan gün`: `int | None`
 - `raf`: `RAF_ETIKETI` değeri
 - `ömür uzatma testleri`: uyarılı partide test adları ya da "tanımlı değil"
 - `not`
+
+**Kaynak doküman**: satırlar `hat/raf_omru_raporu.raf_raporu`'dan gelir.
+Raf ömrü, demo işareti ve ömür uzatma testleri lotun sipariş revizyonunun en
+son onaylı kabul dokümanı sürümünden alınır. Malzeme kodu sonradan başka
+revizyona taşınsa da eski lot kendi revizyonunun süresini korur. Sipariş
+revizyonu için onaylı doküman yoksa `son kullanma` boş, `kalan gün` `None`,
+`raf` `RAF_ETIKETI["bilinmiyor"]`, `kabul dokümanı` boş olur ve `not`
+sipariş revizyonunu anar ("AST-N: sipariş revizyonu J (MIL-PRF-23377J) için
+onaylı kabul dokümanı yok"); malzemenin güncel revizyonuna düşülmez.
 
 **Raf ömrü seçimi** kural katmanında yapılır (`kural/raf_omru.raf_omru_sec`).
 Önce tip/sınıfa uygulanan kayıtlar alınır; hiç yoksa satır `bilinmiyor`
