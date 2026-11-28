@@ -6,6 +6,9 @@ sonuçlarını gösterir; iş kuralı ekranda değil burada ve alttaki katmanlar
 - M&P: `standart_yukle` (kural çıkarıcıyla taslak), `test_tablosu` /
   `tablodan_dokuman` (taslağı tabloda düzeltme), `taslak_duzelt`,
   `taslak_onayla`, `revizyon_izinli_mi`, `revizyon_raporu`.
+  Düzeltme döngüsü: `standart_yukle` taslağın tabanını, `taslak_duzelt` alan
+  düzeyindeki düzeltme olaylarını, `taslak_onayla` `onayla` olaylarını
+  `kayit/duzeltme_kaydi.py` deposuna, durum değişikliğiyle tek işlemde yazar.
 - Giriş kalite: `parti_hazirla`, `sertifika_karari`, `karar_tablosu`,
   `surum_etiketi`, `karar_basligi`.
 - Depo: `depo_tablosu`.
@@ -36,6 +39,7 @@ from malzeme_kabul.hat.katalog_karari import KatalogKarari, malzeme_koduyla_kont
 from malzeme_kabul.hat.raf_omru_raporu import raf_raporu
 from malzeme_kabul.katalog.veritabani import DEMO_ETIKETI, DokumanSurumu, Katalog, KatalogHatasi, Parti, Taslak
 from malzeme_kabul.kayit.denetim_kaydi import DenetimKaydi
+from malzeme_kabul.kayit.duzeltme_kaydi import DuzeltmeKaydi, alan_farklari
 from malzeme_kabul.revizyon.revizyon_karsilastirici import (
     guncelleme_onerileri,
     markdown_raporu,
@@ -79,14 +83,22 @@ def standart_izinli_mi(etiket: str, bolunme_yolu: Path = BOLUNME) -> tuple[bool,
 
 def standart_yukle(katalog: Katalog, pdf_yolu: str | Path, kullanici: str, bolunme_yolu: Path = BOLUNME,
                    belge_no: str | None = None, revizyon: str | None = None) -> Taslak:
-    """Standart PDF'inden kural çıkarıcıyla taslak üretir ve kaydeder."""
+    """Standart PDF'inden kural çıkarıcıyla taslak üretir; taslağı ve düzeltme tabanını tek işlemde kaydeder."""
     if not (belge_no and revizyon):
         belge_no, revizyon = belge_no_ve_revizyon(Path(pdf_yolu).name)
     izin, neden = standart_izinli_mi(f"{belge_no}{revizyon}", bolunme_yolu)
     if not izin:
         raise KatalogHatasi(neden)
-    return katalog.taslak_kaydet(cikar(pdf_yolu, belge_no, revizyon), kullanici)
+    dokuman = cikar(pdf_yolu, belge_no, revizyon)
+    kaydi = DuzeltmeKaydi(katalog.baglanti)  # şema işlem dışında kurulur
+    with katalog.islem():
+        taslak = katalog.taslak_kaydet(dokuman, kullanici)
+        kaydi.taban_kaydet(taslak.id, taslak.dokuman, URETEN_KURAL)
+    return taslak
 
+
+# Kural çıkarıcının ürettiği tabanın üreteni (dil modeli ve istem yok).
+URETEN_KURAL = {"yaklasim": "kural", "model": None, "istem_surumu": None}
 
 TABLO_SUTUNLARI = ["id", "test_adi", "kabul", "omur_uzatma", "yeterlilik", "kriter_turu", "alt", "ust", "birim",
                    "orijinal_metin", "madde", "sayfa", "sonuc_kaynagi"]
@@ -163,34 +175,44 @@ def degisiklik_ozeti(eski: KabulDokumani, yeni: KabulDokumani) -> list[str]:
     return farklar
 
 
-def taslak_duzelt(katalog: Katalog, defter: DenetimKaydi, taslak_id: int, yeni: KabulDokumani, kullanici: str) -> list[str]:
-    """Taslağı günceller ve farkları denetim kaydına `duzeltme` olarak yazar. Farkları döner.
+def taslak_duzelt(katalog: Katalog, defter: DenetimKaydi, taslak_id: int, yeni: KabulDokumani, kullanici: str,
+                  gerekce: str | None = None) -> list[str]:
+    """Taslağı günceller; farkları denetim kaydına `duzeltme` olarak ve alan düzeyinde düzeltme olayı olarak yazar.
 
+    Taslak güncellemesi, denetim kaydı ve düzeltme olayları tek işlemdir: biri
+    düşerse hepsi geri alınır. `gerekce` (isteğe bağlı) olaylara yazılır.
+    Farkları (insan okuyacak biçimde) döner; fark yoksa hiçbir şey yazılmaz.
     Defter katalogla aynı bağlantıyı paylaşmalıdır (yoksa KatalogHatasi, hiçbir şey yazılmaz).
     """
     if defter.baglanti is not katalog.baglanti:
         raise KatalogHatasi("denetim kaydı katalogla aynı bağlantıyı paylaşmalı (taslak ve kayıt tek işlem)")
-    eski = katalog.taslak(taslak_id).dokuman
-    farklar = degisiklik_ozeti(eski, yeni)
-    if not farklar:
-        return []
     std = yeni.standart
-    with katalog.islem():  # taslak ve kaydı tek işlem
+    kaydi = DuzeltmeKaydi(katalog.baglanti)  # şema işlem dışında kurulur
+    with katalog.islem():  # okuma, taslak, denetim kaydı ve düzeltme olayları tek işlem
+        # `eski` yazma kilidi altında okunur: araya başka bir kaydetme girip farkları bozamaz.
+        eski = katalog.taslak(taslak_id).dokuman
+        farklar = degisiklik_ozeti(eski, yeni)
+        if not farklar and not alan_farklari(eski, yeni):
+            return []
         katalog.taslak_guncelle(taslak_id, yeni)
-        defter.ekle("duzeltme", kullanici, {"taslak": taslak_id, "farklar": farklar},
+        defter.ekle("duzeltme", kullanici, {"taslak": taslak_id, "farklar": farklar, "gerekce": gerekce},
                     dokuman_surumu=f"{std.belge_no}{std.revizyon} taslak {taslak_id}")
+        kaydi.duzeltmeleri_kaydet(taslak_id, eski, yeni, kullanici, gerekce=gerekce)
     return farklar
 
 
 def taslak_onayla(katalog: Katalog, defter: DenetimKaydi, taslak_id: int, kullanici: str, not_: str | None = None) -> DokumanSurumu:
-    """Taslağı onaylı sürüm yapar ve onayı kaydeder; ikisi tek işlemdir.
+    """Taslağı onaylı sürüm yapar; onayı denetim kaydına ve `onayla` düzeltme olaylarını yazar; hepsi tek işlemdir.
 
     Defter katalogla aynı bağlantıyı paylaşmalıdır (yoksa KatalogHatasi, hiçbir şey yazılmaz).
     """
     if defter.baglanti is not katalog.baglanti:
         raise KatalogHatasi("denetim kaydı katalogla aynı bağlantıyı paylaşmalı (taslak ve kayıt tek işlem)")
+    kaydi = DuzeltmeKaydi(katalog.baglanti)  # şema işlem dışında kurulur
     with katalog.islem():
+        son = katalog.taslak(taslak_id).dokuman
         surum = katalog.taslagi_onayla(taslak_id, kullanici, not_)
+        kaydi.onaylari_kaydet(taslak_id, son, kullanici)
         defter.ekle("onay", kullanici, {"taslak": taslak_id, "dokuman_surumu": surum.etiket, "ozet": surum.ozet, "not": not_},
                     dokuman_surumu=surum.etiket)
     return surum
@@ -303,6 +325,7 @@ __all__ = [
     "ETIKETLER",
     "PARTI_ETIKETI",
     "TABLO_SUTUNLARI",
+    "URETEN_KURAL",
     "degisiklik_ozeti",
     "depo_tablosu",
     "hazir_revizyon_raporlari",

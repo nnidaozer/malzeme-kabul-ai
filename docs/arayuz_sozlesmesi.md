@@ -20,6 +20,8 @@ kısımlarını koda karşı denetlediği, hangilerini denetlemediği en sondaki
   - revizyon işaretleme: `hat/revizyon_etkisi`
   - saklama: `katalog/veritabani`
   - zincirli kayıt: `kayit/denetim_kaydi`
+  - mühendis düzeltme olayları, etiket adayı ve düzeltme panosu:
+    `kayit/duzeltme_kaydi`
 
   Katman adları docs/mimari.md "Klasör yapısı" bölümüyle aynıdır.
 - **Arayüz yalnız bu dokümandaki adları çağırır.** Ekranın arkasındaki işler
@@ -51,10 +53,11 @@ kısımlarını koda karşı denetlediği, hangilerini denetlemediği en sondaki
 |---|---|---|
 | giriş (oturum yok) | herkes | `kimlik.giris` |
 | `standart`: Standart yükle | `mp` | `ekran_verisi.standart_yukle`, `Katalog.taslaklar` |
-| `taslak`: Taslağı düzelt ve onayla | `mp` | `Katalog.taslaklar(yalniz_acik=True)`, `ekran_verisi.test_tablosu`, `TABLO_SUTUNLARI`, `tablodan_dokuman`, `taslak_duzelt`, `taslak_onayla` |
+| `taslak`: Taslağı düzelt ve onayla | `mp` | `Katalog.taslaklar(yalniz_acik=True)`, `ekran_verisi.test_tablosu`, `TABLO_SUTUNLARI`, `tablodan_dokuman`, `taslak_duzelt`, `taslak_onayla`, `uygulama.etiket_adayi_kaydet` (içinde `duzeltme_kaydi.etiket_adayi_yaz`) |
 | `revizyon`: Revizyon farkı ve M&P incelemesi | `mp` | `ekran_verisi.hazir_revizyon_raporlari`, `revizyon_izinli_mi`, `revizyon_raporu`, `revizyon_etkisi.yeni_revizyon_yukle`, `mp_bekleyenler`, `Katalog.malzeme`, `mp_incelemesini_kapat` |
 | `giris`: Giriş kalite: CoC kontrolü | `giris_kalite` | `Katalog.malzemeler`, `gecerli_dokuman`, `partiler`, `onayli_tedarikciler`, `ekran_verisi.parti_hazirla`, `json_sertifika_karari`, `hibrit_hat.sertifika_hatti`, `karar_tablosu`, `PARTI_ETIKETI`, `surum_etiketi`, `karar_basligi`, `DEMO_ETIKETI`; düzeltme formu: `PARTI_DURUMLARI`, `katalog_karari.karari_duzelt` |
 | `depo`: Depo: partiler ve raf ömrü | `mp`, `giris_kalite` | `ekran_verisi.depo_tablosu`, `RAF_ETIKETI`, `DEMO_ETIKETI` |
+| `pano`: Düzeltme panosu | `mp` | `duzeltme_kaydi.duzeltme_panosu` |
 | kenar çubuğu (her ekran) | herkes | `kimlik.yetkili_mi`, `kimlik.EKRANLAR`, `denetim_kaydi.sema_eksikleri` (defter kurulmadan önce), `DenetimKaydi.zinciri_dogrula` |
 
 ## Bağlantı ve kimlik
@@ -242,10 +245,10 @@ fonksiyonlara `kullanici.ad` olarak geçirir.
 ### `malzeme_kabul.arayuz.kimlik.EKRANLAR`
 
 `dict[str, str]`: ekran anahtarı → ekranda gösterilen ad. Anahtarlar:
-`standart`, `taslak`, `revizyon`, `giris`, `depo`. Rol yetkileri
-`kimlik.YETKILER` içindedir:
+`standart`, `taslak`, `revizyon`, `giris`, `depo`, `pano` ("Düzeltme
+panosu"). Rol yetkileri `kimlik.YETKILER` içindedir:
 
-- `mp` → standart, taslak, revizyon, depo
+- `mp` → standart, taslak, revizyon, depo, pano
 - `giris_kalite` → giris, depo
 
 ### `malzeme_kabul.arayuz.kimlik.giris(baglanti, ad, parola)`
@@ -329,8 +332,11 @@ denetler.
 - `FileNotFoundError`: PDF yok. Arayüz yakalamaz. Dosya önce kaydedildiği
   için olağan akışta oluşmaz.
 
-**Yan etkiler**: `taslaklar` tablosuna bir satır ekler. Denetim kaydına
-yazmaz, çünkü taslak henüz karar dayanağı değildir.
+**Yan etkiler**: tek işlemde (`Katalog.islem`) `taslaklar` tablosuna bir
+satır ve `duzeltme_tabanlari` tablosuna taslağın tabanını (sistem çıktısı;
+üreten `URETEN_KURAL` = `{"yaklasim": "kural", "model": None,
+"istem_surumu": None}`) ekler. Biri düşerse ikisi de geri alınır. Denetim
+kaydına yazmaz, çünkü taslak henüz karar dayanağı değildir.
 
 ### `malzeme_kabul.katalog.veritabani.Katalog.taslaklar(yalniz_acik)`
 
@@ -397,7 +403,7 @@ Düzeltilmiş tabloyu dokümana uygular ve sonucu şemaya göre baştan doğrula
 
 **Yan etkiler**: yok.
 
-### `malzeme_kabul.arayuz.ekran_verisi.taslak_duzelt(katalog, defter, taslak_id, yeni, kullanici)`
+### `malzeme_kabul.arayuz.ekran_verisi.taslak_duzelt(katalog, defter, taslak_id, yeni, kullanici, gerekce)`
 
 **Girdiler**
 
@@ -406,6 +412,9 @@ Düzeltilmiş tabloyu dokümana uygular ve sonucu şemaya göre baştan doğrula
 - `taslak_id` (`int`, zorunlu).
 - `yeni` (`KabulDokumani`, zorunlu): `tablodan_dokuman` çıktısı.
 - `kullanici` (`str`, zorunlu): düzelten kullanıcının adı.
+- `gerekce` (`str | None`, isteğe bağlı, varsayılan `None`): düzeltmenin
+  gerekçesi. Düzeltme olaylarına ve denetim kaydı içeriğine yazılır. Arayüz
+  "Düzeltme gerekçesi (isteğe bağlı)" kutusundan verir; boşsa `None`.
 
 **Çıktı**: `list[str]`: test düzeyindeki farklar, biçimi
 `"<test_id>.<alan>: <eski JSON> → <yeni JSON>"`. Fark yoksa boş liste
@@ -423,15 +432,23 @@ için hata verilmez, `[]` döner.
   Arayüz yakalar ve "meşgul" iletisini (`MESGUL`) gösterir; hiçbir şey
   yazılmamıştır.
 
-**Yan etkiler**: fark yoksa hiçbir şey yazmaz. Fark varsa tek işlemde
-(`Katalog.islem`, BEGIN IMMEDIATE) şunları yapar:
+**Yan etkiler**: eski taslak `Katalog.islem` (BEGIN IMMEDIATE) içinde,
+yazma kilidi alındıktan sonra okunur; araya başka bir kaydetme girip
+farkları bozamaz. Fark yoksa hiçbir şey yazmaz. Fark varsa aynı işlemde
+şunları yapar:
 
 1. Taslağın içeriğini ve `guncelleme` zamanını günceller.
 2. Denetim kaydına `duzeltme` türünde bir kayıt ekler. İçerik: `taslak`,
-   `farklar`. `dokuman_surumu`: `"<belge><rev> taslak <id>"`.
+   `farklar`, `gerekce`. `dokuman_surumu`: `"<belge><rev> taslak <id>"`.
+3. Alan düzeyindeki farkları (`duzeltme_kaydi.alan_farklari`; alanlar
+   `duzeltme_alanlari`: F1 ölçümünün alanları ve tablodan düzenlenen ek test
+   alanları `EK_ALANLAR` = `test.kaynak.sayfa`, `test.sinir.orijinal_metin`,
+   `test.sonuc_kaynagi`) `duzeltme_olaylari` tablosuna `degistir` / `ekle` /
+   `sil` olayları olarak yazar. Taslağın tabanı yoksa (eski taslak) o anki
+   içerik taban olur, üreten `{"yaklasim": "bilinmiyor"}`.
 
-Herhangi bir adım hata verirse ikisi de geri alınır: taslak değişmez, kayıt
-yazılmaz.
+Herhangi bir adım hata verirse hepsi geri alınır: taslak değişmez, kayıt ve
+olay yazılmaz.
 
 ### `malzeme_kabul.arayuz.ekran_verisi.taslak_onayla(katalog, defter, taslak_id, kullanici, not_)`
 
@@ -477,11 +494,75 @@ yapar:
 1. Standart yoksa `standartlar`'a ekler; `dokuman_surumleri`'ne yeni sürümü
    ekler.
 2. Taslağı `onaylandi` yapar ve sürüm numarasını yazar.
-3. Denetim kaydına bir `onay` kaydı ekler. İçerik: `taslak`,
+3. Tabanla son doküman arasında net değişmemiş her alan için (ek alanlar
+   dahil; boş sayfa alan sayılmaz) `duzeltme_olaylari` tablosuna bir
+   `onayla` olayı yazar (taban yoksa son
+   doküman taban olur, üreten `bilinmiyor`).
+4. Denetim kaydına bir `onay` kaydı ekler. İçerik: `taslak`,
    `dokuman_surumu`, `ozet`, `not`.
 
 Herhangi bir adım hata verirse hepsi geri alınır: sürüm onaylanmaz, taslak
-açık kalır, kayıt yazılmaz.
+açık kalır, kayıt ve olay yazılmaz.
+
+Etiket adayı bu fonksiyonda yazılmaz. Arayüz onay başarılı olduktan sonra
+uygulama içi `etiket_adayi_kaydet` yardımcısını çağırır; o adım düşerse onay
+geri alınmaz, uyarı gösterilir.
+
+**Uygulama içi yardımcı `uygulama.etiket_adayi_kaydet`.** İmza:
+`etiket_adayi_kaydet(katalog: Katalog, taslak_id: int, klasor: Path) -> tuple[list[Path], str | None]`.
+`etiket_adayi_yaz(katalog, taslak_id, klasor)` çağırır. Başarıda
+`(yazılan yollar, None)`, hatada `([], uyarı metni)` döner. `OSError`,
+`ValueError` (gold klasörü, onaylanmamış taslak ve `KatalogHatasi` dahil) ve
+`sqlite3.Error` (kilit ya da bozuk veritabanı) yakalanır. Uyarı metni
+istisnanın metnini içerir ve onayın kayıtlı olduğunu söyler. Hiçbir zaman
+"kaydedilmedi" demez, çünkü onay kaydedilmiştir. Taslak ekranı etiket
+adayını yalnız bu yardımcıyla yazar. Uyarıyı `st.warning`, yolları
+`st.caption` ile gösterir. Streamlit'e bağlı olduğu için ayrı başlığı
+yoktur. Davranışı tests/test_duzeltme_ekrani.py denetler.
+
+### `malzeme_kabul.kayit.duzeltme_kaydi.etiket_adayi_yaz(katalog, taslak_id, klasor, uzerine_yaz)`
+
+Onaylı taslağın son dokümanını ve düzeltme olaylarını yeni etiketli veri
+adayı olarak yazar. Gold'a proje sahibi elle taşır.
+
+**Girdiler**
+
+- `katalog` (`Katalog`, zorunlu): `taslak(id)` ve `baglanti` sağlayan katalog.
+- `taslak_id` (`int`, zorunlu): onaylı taslak.
+- `klasor` (`str | Path`, zorunlu): hedef klasör. Arayüzde
+  `uygulama.ETIKET_ADAYI` (`MALZEME_KABUL_ETIKET_ADAYI`, varsayılan
+  `data/calisma/etiket_adaylari`).
+
+- `uzerine_yaz` (`bool`, isteğe bağlı, varsayılan `True`): `False` iken iki
+  dosyadan biri varsa hiçbir şey yazılmaz, `FileExistsError` verilir
+  (`scripts/etiket_adaylari.py` bunu "atlandı" diye basar). Arayüz vermez.
+
+**Çıktı**: `list[Path]`: yazılan iki dosya (`klasor` altında),
+`<belge>_taslak<id>.json` (`KabulDokumani`) ve
+`<belge>_taslak<id>.olaylar.jsonl` (her satır bir olay). Dosya adında
+`[A-Za-z0-9._-]` dışındaki her karakter `_` olur. Belge numarasındaki `/`,
+`\` ya da `..` yol kaçışı yapamaz.
+
+**Hatalar**
+
+- `ValueError`: klasör `gold_yolu_mu` (data/gold/ korunur), taslak
+  onaylanmamış, son dosya yolu klasör dışına düşüyor ya da gold'daki bir
+  dosyaya işaret eden bağlantı. Hiçbir şey yazılmaz. Arayüz yakalar
+  (`etiket_adayi_kaydet`) ve uyarı gösterir.
+- `KatalogHatasi`: taslak bilinmiyor. Arayüz yakalar ve uyarı gösterir.
+- `FileExistsError`: yalnız `uzerine_yaz=False` iken ve aday zaten varsa.
+- `OSError`: dosya yazılamadı. Arayüz yakalar ve uyarı gösterir.
+
+`gold_yolu_mu(yol)` (aynı modülde, public), verilen (mutlak) yolu ve
+bağlantıları çözülmüş yolu denetler. Her parça büyük/küçük harfe duyarsız
+ve sondaki nokta ile boşluklar atılarak `gold` ile karşılaştırılır.
+`GOLD`, `Gold`, `gold.` ve `gold ` gold sayılır. `goldsmith` gold sayılmaz.
+
+**Yan etkiler**: klasörü gerekirse oluşturur ve klasörü oluşturduktan sonra
+yeniden denetler. Her dosyayı aynı klasörde geçici bir dosyaya yazar ve
+`os.replace` ile yerine taşır. Hedefteki dosya bağlantısı izlenmez,
+bağlantının kendisi değiştirilir. `uzerine_yaz=True` iken var olan adayın
+üzerine yazar. Veritabanına yazmaz.
 
 ### `malzeme_kabul.arayuz.ekran_verisi.hazir_revizyon_raporlari(klasor)`
 
@@ -681,6 +762,46 @@ yapar:
 
 Herhangi bir adım hata verirse hepsi geri alınır: revizyon da işaret de eski
 kalır, kayıt yazılmaz.
+
+## Düzeltme panosu
+
+### `malzeme_kabul.kayit.duzeltme_kaydi.duzeltme_panosu(baglanti)`
+
+**Girdiler**
+
+- `baglanti` (`sqlite3.Connection`, zorunlu): katalog bağlantısı
+  (`katalog.baglanti`).
+
+**Çıktı**: `PanoOzeti` (dataclass):
+
+- `toplam_alan`, `duzeltilen_alan` (`int`), `oran` (`float`, 0-1): yalnız
+  onaylı ve tabanı bilinen (yaklaşımı `bilinmiyor` olmayan) taslaklar
+  üzerinden hesaplanır. Bir taslağın alanları, tabanla son dokümanın
+  `duzeltme_alanlari` birleşimidir: F1 alanları ve dolu ek alanlar
+  (`EK_ALANLAR`). Düzeltilen alan, ikisi arasında net değişen alandır. Aynı
+  alanın birden çok düzeltmesi tek sayılır, geri alınan sayılmaz. Aynı
+  belgenin her taslağı ayrı sayılır.
+- `onay_bekleyen_duzeltme` (`int`): onaylanmamış taslaklardaki net düzeltilmiş
+  alan sayısı; orana girmez.
+- `tabani_bilinmeyen_taslak` (`int`): tabanı sonradan oluşmuş (üreten
+  `bilinmiyor`) onaylı taslak sayısı. Bu taslaklar ana orana ve belge, alan,
+  kayıt türü, mühendis ve gün kırılımlarına girmez. Yalnız
+  `yaklasim_bazinda` içinde `bilinmiyor` satırında görünür.
+- `belge_bazinda`, `alan_bazinda`, `kayit_turu_bazinda`, `yaklasim_bazinda`,
+  `muhendis_bazinda` (`list[dict]`): her satırda kırılım adı (`belge`,
+  `alan`, ...), `toplam`, `duzeltilen`, `oran`. Mühendis atfı şöyledir: net
+  düzeltilen alan o alanı son düzelten mühendise, düzeltilmeyen alan
+  onaylayana sayılır. Onaylayan, katalogdaki onaylı sürümden
+  (`dokuman_surumleri`) okunur.
+- `gun_bazinda` (`dict[str, float]`): taslağın onay günü (UTC,
+  `YYYY-MM-DD`, `dokuman_surumleri.onay_zamani`) → oran. Bütün alanları
+  düzeltilmiş bir taslak da düzeltme gününde değil, onay gününde sayılır.
+
+Tablolar yoksa (hiç düzeltme kaydı kurulmamış veritabanı) sıfırlı özet döner.
+
+**Hatalar**: yok (sqlite3 hataları dışında). Arayüz yakalamaz.
+
+**Yan etkiler**: yok; yalnız okur.
 
 ## Giriş kalite ekranı
 
@@ -1185,6 +1306,8 @@ Arayüzdeki yakalama tablosu (`main`, `uygulama.py`):
 | `standart_yukle` | KatalogHatasi, ValueError | sqlite3.OperationalError, FileNotFoundError ve diğer OSError'lar |
 | `tablodan_dokuman`, `taslak_duzelt` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
 | `taslak_onayla` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
+| `etiket_adayi_kaydet` → `etiket_adayi_yaz` (onaydan sonra) | OSError, ValueError (KatalogHatasi dahil), sqlite3.Error (uyarı; onay geri alınmaz) | |
+| `duzeltme_panosu` | hiçbiri | sqlite3 hataları |
 | `revizyon_izinli_mi` (dosyalar kaydedilmeden önce) | ValueError (izin yok gibi gösterilir) | |
 | `revizyon_raporu` | KatalogHatasi, ValueError | FileNotFoundError ve diğer OSError'lar |
 | `yeni_revizyon_yukle` | KatalogHatasi, ValueError (DenetimHatasi dahil); sqlite3.OperationalError ("meşgul") | diğer sqlite3 hataları |
@@ -1218,6 +1341,7 @@ Bu liste kodda okunan değişkenlerden çıkarıldı.
 |---|---|---|---|
 | `MALZEME_KABUL_DB` | `arayuz/uygulama.py`, `docker/baslat.sh` | `data/calisma/katalog.sqlite` (Docker: `/veri/katalog.sqlite`) | Katalog, denetim kaydı ve kullanıcıların SQLite dosyası |
 | `MALZEME_KABUL_YUKLEME` | `arayuz/uygulama.py` | `data/calisma/yuklenen` (Docker: `/veri/yuklenen`) | Yüklenen PDF ve JSON'ların yazıldığı klasör |
+| `MALZEME_KABUL_ETIKET_ADAYI` | `arayuz/uygulama.py` | `data/calisma/etiket_adaylari` | Onaylanan taslakların etiket adaylarının yazıldığı klasör; bir parçası `gold` olan klasör reddedilir |
 | `MALZEME_KABUL_MODU` | `hat/hibrit_hat.mod_sec` | `kural` | `mod` verilmezse hat modu. Arayüz modu her zaman açıkça verdiği için ekranda etkisi yoktur. |
 | `MALZEME_KABUL_MODELI` | `hat/hibrit_hat.ortamdan_istemci` | yok | Hibrit modda yerel model adı. Tanımsızsa hibrit mod `HatHatasi` verir. |
 | `MALZEME_KABUL_ARKA_UCU` | `hat/hibrit_hat.ortamdan_istemci` | `ollama` | `ollama` ya da `llamacpp` |

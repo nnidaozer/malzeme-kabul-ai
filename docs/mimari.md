@@ -39,6 +39,12 @@ gösterir. Çalıştırma: `streamlit run src/malzeme_kabul/arayuz/uygulama.py`
 --ornek-kullanicilar`; gerçek hesap: `scripts/kullanici_ekle.py`). Streamlit
 `requirements-arayuz.lock` ile kurulur. Kabul dokümanı ayrıca Markdown/Word
 olarak üretilebilir (`arayuz/dokuman_uretici.py`).
+Düzeltme döngüsü: M&P rolünün "Düzeltme panosu" ekranı, onaylanan
+taslaklarda mühendisin düzelttiği alanların oranını (belge, alan, kayıt türü,
+yaklaşım, mühendis ve gün kırılımlarıyla) gösterir; taslak ekranında isteğe
+bağlı düzeltme gerekçesi girilir ve onaydan sonra etiket adayı
+`data/calisma/etiket_adaylari/` altına yazılır (gold klasörüne değil; tasarım
+`docs/muhendis_duzeltmeleri_tasarimi.md`).
 
 ## 2. Malzeme kataloğu
 
@@ -128,6 +134,14 @@ Kayıtları şu fonksiyonlar yazar:
 - `arayuz/ekran_verisi`: `taslak_duzelt` (düzeltme), `taslak_onayla` (onay)
 - `hat/revizyon_etkisi`: `mp_incelemesini_kapat` (onay)
 - `scripts/katalog_kur.py --ornek`: örnek onaylar
+
+Mühendis düzeltmeleri ayrıca `kayit/duzeltme_kaydi.py` deposuna alan düzeyinde
+olay olarak yazılır (`duzeltme_tabanlari`, `duzeltme_olaylari`; ikisi de yalnız
+eklenir, tetikleyiciler UPDATE/DELETE/üzerine yazmayı reddeder):
+`standart_yukle` tabanı, `taslak_duzelt` `degistir`/`ekle`/`sil` olaylarını,
+`taslak_onayla` net değişmemiş alanlar için `onayla` olaylarını durum
+değişikliği ve denetim kaydıyla tek işlemde yazar. Alan adları F1 ölçümüyle
+aynıdır (`sozlesme/alanlar.py`). Etiket adayı: `scripts/etiket_adaylari.py`.
 
 Durum değişikliği ile kaydı tek işlemdir (`Katalog.islem` iç içe çağrıda
 SAVEPOINT olur; `DenetimKaydi.ekle` açık işleme SAVEPOINT ile katılır): kayıt
@@ -446,7 +460,7 @@ src/malzeme_kabul/
   kural/      birimler, karar motoru (kabul/red yalnız burada)
   revizyon/   revizyon farkları ve güncelleme önerileri
   katalog/    SQLite katalog, doküman sürümleri, onaylı tedarikçiler, partiler
-  kayit/      zincirli denetim kaydı (karar, onay, düzeltme)
+  kayit/      zincirli denetim kaydı (karar, onay, düzeltme), mühendis düzeltme olayları ve düzeltme panosu
   hat/        belge → okuma → kanıt → kural → karar → kayıt hattı (kural / hibrit), katalogla karar, revizyon etkisi, raf ömrü raporu
   arayuz/     Streamlit ekranları (uygulama.py), ekran verisi, kimlik, kabul dokümanı çıktısı (Markdown/Word); sözleşme: docs/arayuz_sozlesmesi.md
 deney/        yalnız dil modeli deneyi, ölçüm (F1, FAR), sentetik sertifika, gold taslak araçları
